@@ -15,6 +15,15 @@ This file tracks the implementation phases for `swingtradev3` based on `swingtra
 
 ### Completed
 
+- Repository structure cleanup completed before Phase 2:
+  - non-runtime docs moved under `docs/`
+  - design references moved under `docs/reference/`
+  - runbooks moved under `docs/runbooks/`
+  - progress tracking moved under `docs/progress/`
+  - tool modules grouped into `swingtradev3/tools/execution/` and `swingtradev3/tools/market/`
+  - Kite MCP client moved under `swingtradev3/integrations/kite/`
+  - duplicate top-level tool wrapper files removed after import migration
+  - internal imports updated to use grouped modules directly
 - Official Kite login flow implemented with code-based `request_token -> session` exchange.
 - Persisted Kite session storage implemented at `swingtradev3/context/auth/kite_session.json`.
 - Direct Kite client layer added in `swingtradev3/auth/kite/client.py`.
@@ -61,6 +70,10 @@ This file tracks the implementation phases for `swingtradev3` based on `swingtra
 - MCP fallback connectivity verified:
   - `search_instruments("INFY")` succeeded from the app container
   - MCP response content was present and readable
+- Post-cleanup validation completed:
+  - no stale imports remained for deleted top-level tool wrappers
+  - full Docker test suite passed after reorganization
+  - result: `14 passed`
 
 ### Validated But Limited By Current Free Plan
 
@@ -132,6 +145,15 @@ This file tracks the implementation phases for `swingtradev3` based on `swingtra
 
 ### To Complete
 
+- Telegram bot foundation completed:
+  - BotFather setup completed by user
+  - `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` configured in `.env`
+  - real Telegram outbound sending implemented in `swingtradev3/notifications/telegram_client.py`
+  - smoke-test entrypoint added in `swingtradev3/notifications/smoke_test.py`
+  - live Docker smoke test sent a real Telegram message successfully
+- Planned next Telegram step:
+  - convert the bot from one-way alerts into full two-way communication between the swingtrade agent and the user
+  - this will be planned later before implementation
 - Complete inbound Telegram approval flow.
 - Complete outbound alerts and daily briefing flow.
 - Complete trade review flow.
