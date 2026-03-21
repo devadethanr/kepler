@@ -47,6 +47,8 @@ services:
       APP_PORT: 8080
       APP_HOST: 0.0.0.0
       EXCLUDED_TOOLS: ${EXCLUDED_TOOLS:-}
+    ports:
+      - "8080:8080"
     expose:
       - "8080"
     healthcheck:
