@@ -82,7 +82,11 @@ class ExecutionAgent:
                         if elapsed.total_seconds() >= cfg.execution.corporate_action_handling.auto_adjust_timeout_hours * 3600:
                             position.stop_price = adjusted_stop
                             await self.gtt_manager.modify_gtt_async(
-                                position.entry_order_id or position.ticker, adjusted_stop
+                                position.stop_gtt_id or position.entry_order_id or position.ticker,
+                                adjusted_stop,
+                                ticker=position.ticker,
+                                target_price=position.target_price,
+                                quantity=position.quantity,
                             )
                 elif action.action_type in {"bonus", "split"}:
                     position.pending_corporate_action.type = action.action_type
@@ -102,24 +106,36 @@ class ExecutionAgent:
             if not position.current_price:
                 continue
             pnl_pct = ((position.current_price / position.entry_price) - 1) * 100
-            position_key = position.entry_order_id or position.ticker
+            position_key = position.stop_gtt_id or position.entry_order_id or position.ticker
             if pnl_pct >= cfg.execution.trail_to_pct:
                 new_stop = round(position.entry_price * (1 + cfg.execution.trail_stop_to_locked_profit_pct / 100), 2)
                 if new_stop > position.stop_price:
                     position.stop_price = new_stop
-                    await self.gtt_manager.modify_gtt_async(position_key, new_stop)
+                    await self.gtt_manager.modify_gtt_async(
+                        position_key,
+                        new_stop,
+                        ticker=position.ticker,
+                        target_price=position.target_price,
+                        quantity=position.quantity,
+                    )
             elif pnl_pct >= cfg.execution.trail_stop_at_pct:
                 new_stop = round(position.entry_price, 2)
                 if new_stop > position.stop_price:
                     position.stop_price = new_stop
-                    await self.gtt_manager.modify_gtt_async(position_key, new_stop)
+                    await self.gtt_manager.modify_gtt_async(
+                        position_key,
+                        new_stop,
+                        ticker=position.ticker,
+                        target_price=position.target_price,
+                        quantity=position.quantity,
+                    )
 
     async def _process_gtt_triggers(self, state: AccountState) -> None:
         remaining: list[PositionState] = []
         trades = read_json(CONTEXT_DIR / "trades.json", [])
         for position in state.positions:
-            key = position.entry_order_id or position.ticker
-            gtt = self.gtt_manager.get_gtt(key)
+            key = position.stop_gtt_id or position.entry_order_id or position.ticker
+            gtt = await self.gtt_manager.get_gtt_async(key)
             if gtt and gtt.status in {"triggered_stop", "triggered_target"}:
                 exit_price = gtt.stop_price if gtt.status == "triggered_stop" else gtt.target_price
                 pnl_abs = (exit_price - position.entry_price) * position.quantity

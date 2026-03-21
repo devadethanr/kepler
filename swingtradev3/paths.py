@@ -15,6 +15,7 @@ SCHEMAS_DIR = PROJECT_ROOT / "llm" / "schemas"
 def ensure_runtime_dirs() -> None:
     for path in [
         CONTEXT_DIR,
+        CONTEXT_DIR / "auth",
         CONTEXT_DIR / "daily",
         CONTEXT_DIR / "research",
         LOGS_DIR,

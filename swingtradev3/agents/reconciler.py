@@ -18,7 +18,7 @@ class Reconciler:
 
     async def reconcile(self, state: AccountState) -> AccountState:
         for position in state.positions:
-            gtt = self.gtt_manager.get_gtt(position.entry_order_id or position.ticker)
+            gtt = await self.gtt_manager.get_gtt_async(position.stop_gtt_id or position.entry_order_id or position.ticker)
             if gtt is None and position.stop_gtt_id:
                 await self.alerts.send_alert(
                     f"{position.ticker}: stop-loss GTT missing, manual review required",

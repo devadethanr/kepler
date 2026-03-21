@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import uuid
 
+from swingtradev3.auth.kite.client import has_kite_session, place_live_order
 from swingtradev3.config import cfg
 from swingtradev3.mcp_client import KiteMCPClient
 from swingtradev3.models import AccountState
@@ -70,27 +71,58 @@ class OrderExecutionTool:
         order_id = f"order-{uuid.uuid4().hex[:10]}"
         if cfg.trading.mode.value != "live":
             return self.place_order(state, ticker, side, score, price, stop_price, target_price)
-        await self.mcp_client.call_tool(
-            "place_order",
-            {
-                "exchange": cfg.trading.exchange,
-                "tradingsymbol": ticker,
-                "transaction_type": side.upper(),
-                "quantity": quantity,
-                "order_type": "LIMIT",
-                "product": "CNC",
-                "variety": "regular",
-                "price": price,
-            },
+        if has_kite_session():
+            try:
+                order_id = place_live_order(
+                    exchange=cfg.trading.exchange,
+                    ticker=ticker,
+                    side=side,
+                    quantity=quantity,
+                    price=price,
+                )
+            except Exception:
+                order_id = f"order-{uuid.uuid4().hex[:10]}"
+                await self.mcp_client.call_tool(
+                    "place_order",
+                    {
+                        "exchange": cfg.trading.exchange,
+                        "tradingsymbol": ticker,
+                        "transaction_type": side.upper(),
+                        "quantity": quantity,
+                        "order_type": "LIMIT",
+                        "product": "CNC",
+                        "variety": "regular",
+                        "price": price,
+                    },
+                )
+        else:
+            order_id = f"order-{uuid.uuid4().hex[:10]}"
+            await self.mcp_client.call_tool(
+                "place_order",
+                {
+                    "exchange": cfg.trading.exchange,
+                    "tradingsymbol": ticker,
+                    "transaction_type": side.upper(),
+                    "quantity": quantity,
+                    "order_type": "LIMIT",
+                    "product": "CNC",
+                    "variety": "regular",
+                    "price": price,
+                },
+            )
+        gtt = await self.gtt_manager.place_gtt_async(
+            order_id,
+            ticker,
+            stop_price,
+            target_price,
+            quantity=quantity,
         )
-        position_id = f"pos-{uuid.uuid4().hex[:10]}"
-        gtt = await self.gtt_manager.place_gtt_async(position_id, ticker, stop_price, target_price)
         return {
             "order_id": order_id,
             "status": "filled",
             "average_price": price,
             "quantity": quantity,
-            "position_id": position_id,
+            "position_id": order_id,
             "stop_gtt_id": gtt.position_id,
             "target_gtt_id": gtt.position_id,
         }

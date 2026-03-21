@@ -36,6 +36,20 @@ Notes:
 - `.backtest_cache` is kept in a named Docker volume
 - the `kite-mcp` service builds the real Zerodha server from source using `Dockerfile.kite-mcp`
 - override `KITE_MCP_REF` in `docker-compose.yml` if you want a different tag or branch
+- `kite-mcp` publishes port `8080` to the host so the local Zerodha login redirect can return to the self-hosted server
+
+### Kite login
+
+Use the official Kite Connect request-token flow for the app login:
+
+1. Set your Zerodha app redirect URL to a URL you can copy from after login.
+2. Start the stack with `docker compose up --build -d`.
+3. Run `docker compose exec app python -m swingtradev3.auth.kite.login`.
+4. Open the printed Kite login URL in your browser and complete the authorization.
+5. Copy the final redirected URL from the browser address bar and paste it into the helper.
+6. The helper exchanges `request_token` in code, verifies `profile()`, and stores the session in `swingtradev3/context/auth/kite_session.json`.
+
+The browser step is manual. The `request_token -> access_token` exchange is done in code.
 
 ## Current status
 
