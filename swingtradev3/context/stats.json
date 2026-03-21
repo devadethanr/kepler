@@ -1,0 +1,10 @@
+{
+  "avg_loser_pct": 0.0,
+  "avg_winner_pct": 0.0,
+  "best_setup_type": null,
+  "kelly_multiplier": 0.0,
+  "sharpe": 0.0,
+  "trade_count": 0,
+  "win_rate": 0.0,
+  "worst_setup_type": null
+}

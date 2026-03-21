@@ -205,3 +205,11 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# swingtradev3 runtime state
+swingtradev3/.env
+swingtradev3/.backtest_cache/
+swingtradev3/reports/
+swingtradev3/logs/*.log
+swingtradev3/context/daily/
+swingtradev3/context/research/*/

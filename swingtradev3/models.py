@@ -1,0 +1,172 @@
+from __future__ import annotations
+
+from datetime import date, datetime
+from enum import Enum
+from typing import Any, Literal
+
+from pydantic import BaseModel, Field
+
+
+class TradingMode(str, Enum):
+    BACKTEST = "backtest"
+    PAPER = "paper"
+    LIVE = "live"
+
+
+class AlertLevel(str, Enum):
+    INFO = "info"
+    WARNING = "warning"
+    CRITICAL = "critical"
+
+
+class PendingCorporateAction(BaseModel):
+    type: str | None = None
+    amount: float | None = None
+    ex_date: date | None = None
+    gtt_adjustment_sent: bool = False
+    adjustment_alert_sent_at: datetime | None = None
+    requires_manual_action: bool = False
+
+
+class PositionState(BaseModel):
+    ticker: str
+    quantity: int
+    entry_price: float
+    current_price: float | None = None
+    stop_price: float
+    target_price: float
+    opened_at: datetime
+    entry_order_id: str | None = None
+    stop_gtt_id: str | None = None
+    target_gtt_id: str | None = None
+    thesis_score: float | None = None
+    research_date: date | None = None
+    skill_version: str | None = None
+    sector: str | None = None
+    pending_corporate_action: PendingCorporateAction = Field(
+        default_factory=PendingCorporateAction
+    )
+
+
+class AccountState(BaseModel):
+    cash_inr: float = 0.0
+    realized_pnl: float = 0.0
+    unrealized_pnl: float = 0.0
+    drawdown_pct: float = 0.0
+    weekly_loss_pct: float = 0.0
+    consecutive_losses: int = 0
+    positions: list[PositionState] = Field(default_factory=list)
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+
+class EntryZone(BaseModel):
+    low: float
+    high: float
+
+
+class ResearchDecision(BaseModel):
+    ticker: str
+    score: float
+    setup_type: Literal["breakout", "pullback", "earnings_play", "sector_rotation", "skip"]
+    entry_zone: EntryZone
+    stop_price: float
+    target_price: float
+    holding_days_expected: int
+    confidence_reasoning: str
+    risk_flags: list[str] = Field(default_factory=list)
+    sector: str | None = None
+    research_date: date | None = None
+    skill_version: str | None = None
+    current_price: float | None = None
+
+
+class PendingApproval(BaseModel):
+    ticker: str
+    score: float
+    setup_type: str
+    entry_zone: EntryZone
+    stop_price: float
+    target_price: float
+    holding_days_expected: int
+    confidence_reasoning: str
+    risk_flags: list[str] = Field(default_factory=list)
+    sector: str | None = None
+    approved: bool | None = None
+    created_at: datetime
+    expires_at: datetime
+    research_date: date | None = None
+    skill_version: str | None = None
+
+
+class TradeRecord(BaseModel):
+    trade_id: str
+    ticker: str
+    quantity: int
+    entry_price: float
+    exit_price: float
+    opened_at: datetime
+    closed_at: datetime
+    exit_reason: str
+    pnl_abs: float
+    pnl_pct: float
+    setup_type: str | None = None
+    thesis_reasoning: str | None = None
+    research_date: date | None = None
+    skill_version: str | None = None
+    risk_flags: list[str] = Field(default_factory=list)
+
+
+class TradeObservation(BaseModel):
+    trade_id: str
+    ticker: str
+    observation: str
+    thesis_held: bool
+    exit_reason: str
+    created_at: datetime
+
+
+class StatsSnapshot(BaseModel):
+    win_rate: float = 0.0
+    sharpe: float = 0.0
+    avg_winner_pct: float = 0.0
+    avg_loser_pct: float = 0.0
+    kelly_multiplier: float = 0.0
+    best_setup_type: str | None = None
+    worst_setup_type: str | None = None
+    trade_count: int = 0
+
+
+class CorporateAction(BaseModel):
+    ticker: str
+    action_type: Literal["dividend", "bonus", "split", "rights"]
+    ex_date: date
+    value: float | None = None
+    ratio: str | None = None
+
+
+class GTTOrder(BaseModel):
+    position_id: str
+    ticker: str
+    stop_price: float
+    target_price: float
+    status: Literal["active", "triggered_stop", "triggered_target", "cancelled"] = "active"
+
+
+class FundamentalsSnapshot(BaseModel):
+    ticker: str
+    pe_ratio: float | None = None
+    eps_growth_3yr_pct: float | None = None
+    debt_equity: float | None = None
+    market_cap_cr: float | None = None
+    dividend_yield: float | None = None
+    promoter_holding_pct: float | None = None
+    promoter_pledge_pct: float | None = None
+    fii_holding_pct: float | None = None
+    dii_holding_pct: float | None = None
+    revenue_growth_pct: float | None = None
+    roce: float | None = None
+    sector: str | None = None
+    industry: str | None = None
+    is_stale: bool = False
+    as_of: date | None = None
+    source: str = "cache"
