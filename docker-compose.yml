@@ -1,0 +1,60 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: swingtradev3-app
+    restart: unless-stopped
+    working_dir: /app
+    env_file:
+      - ./swingtradev3/.env
+    environment:
+      TZ: Asia/Kolkata
+      PYTHONPATH: /app
+      KITE_MCP_URL: ${KITE_MCP_URL:-http://kite-mcp:8080/mcp}
+    command: ["python", "-m", "swingtradev3.main"]
+    volumes:
+      - ./swingtradev3/config.yaml:/app/swingtradev3/config.yaml
+      - ./swingtradev3/strategy:/app/swingtradev3/strategy
+      - ./swingtradev3/context:/app/swingtradev3/context
+      - ./swingtradev3/logs:/app/swingtradev3/logs
+      - ./swingtradev3/reports:/app/swingtradev3/reports
+      - swingtradev3_backtest_cache:/app/.backtest_cache
+    depends_on:
+      kite-mcp:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "python", "-c", "from swingtradev3.config import cfg; print(cfg.trading.mode.value)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  kite-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile.kite-mcp
+      args:
+        KITE_MCP_REPO: ${KITE_MCP_REPO:-https://github.com/zerodha/kite-mcp-server}
+        KITE_MCP_REF: ${KITE_MCP_REF:-v0.3.1}
+    container_name: swingtradev3-kite-mcp
+    restart: unless-stopped
+    env_file:
+      - ./swingtradev3/.env
+    environment:
+      TZ: Asia/Kolkata
+      APP_MODE: http
+      APP_PORT: 8080
+      APP_HOST: 0.0.0.0
+      EXCLUDED_TOOLS: ${EXCLUDED_TOOLS:-}
+    expose:
+      - "8080"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/ >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+volumes:
+  swingtradev3_backtest_cache:

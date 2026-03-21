@@ -121,7 +121,11 @@ class ResearchAgent:
         skill_version: str,
     ) -> ResearchDecision | None:
         async with self._semaphore:
-            market_data = self.market_tool.get_eod_data(ticker)
+            market_data = (
+                await self.market_tool.get_eod_data_async(ticker)
+                if cfg.trading.mode.value == "live"
+                else self.market_tool.get_eod_data(ticker)
+            )
             fundamentals = self.fundamental_tool.get_fundamentals(ticker)
             if not self._passes_quick_filter(market_data, fundamentals):
                 return None

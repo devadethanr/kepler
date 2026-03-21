@@ -81,7 +81,9 @@ class ExecutionAgent:
                         elapsed = datetime.utcnow() - pending.adjustment_alert_sent_at
                         if elapsed.total_seconds() >= cfg.execution.corporate_action_handling.auto_adjust_timeout_hours * 3600:
                             position.stop_price = adjusted_stop
-                            self.gtt_manager.modify_gtt(position.entry_order_id or position.ticker, adjusted_stop)
+                            await self.gtt_manager.modify_gtt_async(
+                                position.entry_order_id or position.ticker, adjusted_stop
+                            )
                 elif action.action_type in {"bonus", "split"}:
                     position.pending_corporate_action.type = action.action_type
                     position.pending_corporate_action.requires_manual_action = True
@@ -105,12 +107,12 @@ class ExecutionAgent:
                 new_stop = round(position.entry_price * (1 + cfg.execution.trail_stop_to_locked_profit_pct / 100), 2)
                 if new_stop > position.stop_price:
                     position.stop_price = new_stop
-                    self.gtt_manager.modify_gtt(position_key, new_stop)
+                    await self.gtt_manager.modify_gtt_async(position_key, new_stop)
             elif pnl_pct >= cfg.execution.trail_stop_at_pct:
                 new_stop = round(position.entry_price, 2)
                 if new_stop > position.stop_price:
                     position.stop_price = new_stop
-                    self.gtt_manager.modify_gtt(position_key, new_stop)
+                    await self.gtt_manager.modify_gtt_async(position_key, new_stop)
 
     async def _process_gtt_triggers(self, state: AccountState) -> None:
         remaining: list[PositionState] = []
@@ -168,7 +170,7 @@ class ExecutionAgent:
                     level="warning",
                 )
                 continue
-            result = self.order_tool.place_order(
+            result = await self.order_tool.place_order_async(
                 state=state,
                 ticker=approval["ticker"],
                 side="buy",
