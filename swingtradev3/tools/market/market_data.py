@@ -41,6 +41,10 @@ class MarketDataTool:
         indicators = calculate_all(candles, cfg.indicators, benchmark_close, sector_close, rank)
         latest = candles.iloc[-1].to_dict()
         latest["ticker"] = ticker
-        latest["change_pct"] = float((candles["close"].iloc[-1] / candles["close"].iloc[-2] - 1) * 100) if len(candles) > 1 else 0.0
+        latest["change_pct"] = (
+            float((candles["close"].iloc[-1] / candles["close"].iloc[-2] - 1) * 100)
+            if len(candles) > 1
+            else 0.0
+        )
         latest.update(indicators)
         return latest

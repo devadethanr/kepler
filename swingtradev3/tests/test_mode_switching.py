@@ -1,4 +1,4 @@
-from swingtradev3.tools.gtt_manager import GTTManager
+from swingtradev3.tools.execution.gtt_manager import GTTManager
 
 
 def test_gtt_manager_exposes_simulator_in_non_live_mode() -> None:

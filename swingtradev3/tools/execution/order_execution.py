@@ -4,11 +4,11 @@ import uuid
 
 from swingtradev3.auth.kite.client import has_kite_session, place_live_order
 from swingtradev3.config import cfg
-from swingtradev3.mcp_client import KiteMCPClient
+from swingtradev3.integrations.kite.mcp_client import KiteMCPClient
 from swingtradev3.models import AccountState
 from swingtradev3.paper.fill_engine import FillEngine
-from swingtradev3.tools.gtt_manager import GTTManager
-from swingtradev3.tools.risk_check import RiskCheckTool
+from swingtradev3.tools.execution.gtt_manager import GTTManager
+from swingtradev3.tools.execution.risk_check import RiskCheckTool
 
 
 class OrderExecutionTool:
@@ -43,7 +43,13 @@ class OrderExecutionTool:
             raise NotImplementedError("Live order execution requires Kite credentials")
         fill = self.fill_engine.fill(ticker, side, quantity, price, order_id)
         position_id = f"pos-{uuid.uuid4().hex[:10]}"
-        gtt = self.gtt_manager.place_gtt(position_id, ticker, stop_price, target_price)
+        gtt = self.gtt_manager.place_gtt(
+            position_id,
+            ticker,
+            stop_price,
+            target_price,
+            quantity=quantity,
+        )
         return {
             "order_id": fill.order_id,
             "status": fill.status,

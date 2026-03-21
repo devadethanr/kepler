@@ -11,9 +11,9 @@ from swingtradev3.models import AccountState, PositionState, TradeRecord
 from swingtradev3.notifications.telegram_handler import TelegramHandler
 from swingtradev3.paths import CONTEXT_DIR, PROJECT_ROOT
 from swingtradev3.storage import read_json, write_json
-from swingtradev3.tools.alerts import AlertsTool
-from swingtradev3.tools.gtt_manager import GTTManager
-from swingtradev3.tools.order_execution import OrderExecutionTool
+from swingtradev3.tools.execution.alerts import AlertsTool
+from swingtradev3.tools.execution.gtt_manager import GTTManager
+from swingtradev3.tools.execution.order_execution import OrderExecutionTool
 from swingtradev3.agents.reconciler import Reconciler
 
 

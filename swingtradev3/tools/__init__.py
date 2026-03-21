@@ -1,14 +1,14 @@
 """Tool registry."""
 
-from swingtradev3.tools.alerts import AlertsTool
-from swingtradev3.tools.fii_dii_data import FiiDiiDataTool
-from swingtradev3.tools.fundamental_data import FundamentalDataTool
-from swingtradev3.tools.gtt_manager import GTTManager
-from swingtradev3.tools.market_data import MarketDataTool
-from swingtradev3.tools.news_search import NewsSearchTool
-from swingtradev3.tools.options_data import OptionsDataTool
-from swingtradev3.tools.order_execution import OrderExecutionTool
-from swingtradev3.tools.risk_check import RiskCheckTool
+from swingtradev3.tools.execution.alerts import AlertsTool
+from swingtradev3.tools.execution.gtt_manager import GTTManager
+from swingtradev3.tools.execution.order_execution import OrderExecutionTool
+from swingtradev3.tools.execution.risk_check import RiskCheckTool
+from swingtradev3.tools.market.fii_dii_data import FiiDiiDataTool
+from swingtradev3.tools.market.fundamental_data import FundamentalDataTool
+from swingtradev3.tools.market.market_data import MarketDataTool
+from swingtradev3.tools.market.news_search import NewsSearchTool
+from swingtradev3.tools.market.options_data import OptionsDataTool
 
 
 TOOL_REGISTRY = {

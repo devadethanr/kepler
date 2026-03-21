@@ -9,7 +9,7 @@ from swingtradev3.auth.kite.client import (
     place_live_gtt,
 )
 from swingtradev3.config import cfg
-from swingtradev3.mcp_client import KiteMCPClient
+from swingtradev3.integrations.kite.mcp_client import KiteMCPClient
 from swingtradev3.models import GTTOrder
 from swingtradev3.paper.gtt_simulator import GTTSimulator
 

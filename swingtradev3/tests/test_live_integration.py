@@ -5,7 +5,7 @@ from datetime import datetime
 
 from swingtradev3.agents.execution_agent import ExecutionAgent
 from swingtradev3.models import AccountState, PositionState
-from swingtradev3.tools.order_execution import OrderExecutionTool
+from swingtradev3.tools.execution.order_execution import OrderExecutionTool
 
 
 class RecordingGTTManager:

@@ -38,6 +38,8 @@ Notes:
 - override `KITE_MCP_REF` in `docker-compose.yml` if you want a different tag or branch
 - `kite-mcp` publishes port `8080` to the host so the local Zerodha login redirect can return to the self-hosted server
 
+Supporting project docs live under [docs/README.md](/home/devadethanr/projects/kepler/docs/README.md).
+
 ### Kite login
 
 Use the official Kite Connect request-token flow for the app login:

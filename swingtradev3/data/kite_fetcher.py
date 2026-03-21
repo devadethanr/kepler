@@ -8,7 +8,7 @@ import pandas as pd
 
 from swingtradev3.auth.kite.client import fetch_historical_data, has_kite_session
 from swingtradev3.config import cfg
-from swingtradev3.mcp_client import KiteMCPClient
+from swingtradev3.integrations.kite.mcp_client import KiteMCPClient
 from swingtradev3.paths import PROJECT_ROOT
 
 

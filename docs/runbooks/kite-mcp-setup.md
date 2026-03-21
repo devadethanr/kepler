@@ -89,11 +89,11 @@ Direct session-backed helpers now cover:
 - profile
 - holdings
 - positions
-- LTP
+- GTT listing
+- order placement path wiring
 - instrument token lookup
-- historical candles
-- order placement
-- GTT placement / modification / deletion
+- historical candles path wiring
+- GTT placement / modification / deletion path wiring
 
 Key files:
 

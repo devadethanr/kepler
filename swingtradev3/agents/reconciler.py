@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from swingtradev3.logging_config import get_logger
 from swingtradev3.models import AccountState
-from swingtradev3.tools.alerts import AlertsTool
-from swingtradev3.tools.gtt_manager import GTTManager
+from swingtradev3.tools.execution.alerts import AlertsTool
+from swingtradev3.tools.execution.gtt_manager import GTTManager
 
 
 class Reconciler:
