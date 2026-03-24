@@ -38,6 +38,8 @@ class ResearchConfig(BaseModel):
     min_score_threshold: float
     max_shortlist: int
     max_same_sector_positions: int
+    exclude_earnings_within_days: int = 7
+    exclude_corporate_actions_within_days: int = 5
     async_scan: bool = True
     quick_filter: QuickFilterConfig
     analyst_loop: AnalystLoopConfig

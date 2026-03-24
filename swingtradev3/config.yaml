@@ -12,6 +12,8 @@ research:
   min_score_threshold: 7.0
   max_shortlist: 7
   max_same_sector_positions: 2
+  exclude_earnings_within_days: 7
+  exclude_corporate_actions_within_days: 5
   async_scan: true
   quick_filter:
     min_market_cap_cr: 5000

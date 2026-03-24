@@ -26,9 +26,13 @@ class PromptBuilder:
             ]
         )
         user_prompt = (
-            "Analyze this stock using the strategy documents and return only JSON with keys "
-            "score, setup_type, entry_zone, stop_price, target_price, holding_days_expected, "
-            "confidence_reasoning, risk_flags.\n\n"
+            "Analyze this stock using the strategy documents and return exactly one JSON object. "
+            "Do not wrap it in markdown. "
+            "Required keys: score, setup_type, entry_zone, stop_price, target_price, "
+            "holding_days_expected, confidence_reasoning, risk_flags. "
+            "Optional keys: sector, current_price. "
+            "entry_zone must be an object with numeric low and high. "
+            "If tools are available, call them when you need to verify or enrich the supplied context.\n\n"
             f"Stock context:\n{stock_context}"
         )
         return [

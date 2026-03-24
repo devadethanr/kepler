@@ -160,3 +160,13 @@ class LLMRouter:
                         text_parts.append(json.dumps(block["content"]))
             return "".join(text_parts)
         return json.dumps(response)
+
+    @staticmethod
+    def extract_tool_calls(payload: dict[str, Any]) -> list[dict[str, Any]]:
+        response = payload.get("response", {})
+        choices = response.get("choices", [])
+        if not choices:
+            return []
+        message = choices[0].get("message", {})
+        tool_calls = message.get("tool_calls", [])
+        return [item for item in tool_calls if isinstance(item, dict)]

@@ -107,19 +107,104 @@ This file tracks the implementation phases for `swingtradev3` based on `swingtra
 
 ## Phase 2: LLM-Driven Research Pipeline
 
-### To Complete
+### Completed So Far
 
-- Complete tool layer for research:
-  - market data
-  - fundamentals
-  - news
-  - FII/DII
-  - options
+- Research prompt tightened to require exactly one structured JSON object.
+- Research JSON parsing hardened to handle:
+  - fenced JSON
+  - extra explanatory text around the JSON object
+- Bounded LLM tool-calling loop added for research scoring:
+  - research-only tool registry exposed
+  - structured tool schemas exposed to the model
+  - tool calls are executed and fed back into the message loop
+  - tool-call loop is capped by `llm.max_tool_calls_per_stock`
+- Research agent now enforces upcoming event filters before scoring:
+  - hard F&O expiry avoidance for the last configured expiry-window trading days
+  - hard blocking for bonus, split, and rights corporate actions inside the configured window
+- Research agent now applies post-score earnings-aware filtering:
+  - skips non-earnings-play setups when earnings fall within the expected holding period
+- Research agent now adds corporate-action risk flags into shortlisted decisions and the briefing payload:
+  - dividend
+  - bonus
+  - split
+  - rights
+- Research universe handling is now explicit and aligned with the design:
+  - research universe uses Nifty 200
+  - options context is only attached for Nifty 50-eligible symbols
+  - the options tool now returns `not_applicable` outside the Nifty 50 universe
+- Universe update plumbing has been added:
+  - official-website-based universe updater added for Nifty 50 and Nifty 200 constituent downloads
+  - supports writing ticker + company-name entries into the runtime cache files
+  - `context/nifty50.json` added alongside `context/nifty200.json`
+  - runtime refresh executed successfully:
+    - `nifty50.json` populated with 50 entries
+    - `nifty200.json` populated with 200 entries
+- Research tool integrations are now materially more real:
+  - news search uses Tavily first and DDGS fallback with cache
+  - FII/DII tool now attempts official NSE report download + CSV parse with cache fallback
+  - fundamentals tool now supports fresher cache handling plus yfinance -> NSE -> Firecrawl-style fallback enrichment
+- Morning briefing now supports company-name enrichment when the universe cache includes names.
+- Research agent now honors `research.async_scan` instead of always forcing parallel gather.
+- Research fetch order is now tighter and closer to the design:
+  - market data -> fundamentals -> news -> shared FII/DII -> options (Nifty 50 only)
+  - FII/DII context is fetched once per run and reused across stocks
+  - normal research-agent scoring now sends prefetched context into the LLM without relying on model-driven tool calls
+- Research artifacts now align more closely with the design output:
+  - one per-stock JSON artifact is written for scored, shortlisted, skipped, filtered-out, below-threshold, and error outcomes
+- Morning briefing output is now richer and closer to the design doc:
+  - ticker
+  - score
+  - setup type
+  - entry zone
+  - stop
+  - target
+  - expected hold
+  - thesis
+  - risk flags
+- Per-stock research failures now fail soft:
+  - one broken ticker does not abort the whole research run
+  - the failure is captured as an `error` artifact
+- Monthly analyst-loop scaffolding has been added to the research layer:
+  - detects first-Sunday monthly cadence
+  - enforces the minimum-trades gate
+  - recalculates stats
+  - generates staged SKILL lessons
+  - sends Telegram notification when proposals are generated
+- Existing sector cap logic is now covered by dedicated tests.
+- Phase 2 test coverage added:
+  - `swingtradev3/tests/test_research_agent.py`
+  - `swingtradev3/tests/test_tool_executor.py`
+- Docker validation completed for the current Phase 2 increment:
+  - new universe/tool tests: `7 passed`
+  - focused research tests: `9 passed`
+  - focused post-refresh validation: `16 passed`
+  - full suite result after the current Phase 2 changes: `34 passed`
+
+### Alignment With `docs/reference/project_design.md`
+
+- Now aligned:
+  - research universe is Nifty 200
+  - startup prompt includes `SKILL.md`, `research_program.md`, open positions, and stats
+  - structured JSON research output contract
+  - score threshold gate and sector-cap shortlist logic
+  - evening research artifacts and pending approvals output
+  - morning briefing now carries the key trade details expected by the design
+  - earnings-aware holding-period check
+  - corporate-action awareness in briefing/risk flags
+  - F&O expiry hard rule
+  - Nifty 50-only options context gating
+  - monthly analyst-loop scaffolding
+- Still not fully aligned:
+  - the per-stock prefetch order is now enforced in the agent path, but the generic `ToolExecutor` still supports bounded tool-calling for non-agent use cases
+
+### Still To Complete
+
 - Complete structured LLM research output contract.
 - Complete async stock scan flow.
 - Complete shortlist generation flow.
-- Enforce sector caps, earnings checks, corporate-action guards, and score thresholds.
 - Tighten tool execution loop and provider fallback behavior.
+- Run the new universe updater against the official sources so `context/nifty200.json` and `context/nifty50.json` are populated for real scans.
+- If needed later, enforce a stricter fixed tool-call order instead of the current bounded model-driven loop.
 
 ## Phase 3: Execution Operations, Approvals, Reconciliation, And Safety Loops
 

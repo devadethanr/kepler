@@ -236,7 +236,7 @@ This project has a `quant-systems-architect` agent configured in `.claude/agents
 
 ## Documentation Reference
 
-See `project_design.md` for complete 44-page system specification including:
+See `docs/reference/project_design.md` for complete 44-page system specification including:
 - Full config.yaml reference
 - Complete directory structure
 - All tool I/O specifications
