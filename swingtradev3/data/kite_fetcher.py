@@ -27,9 +27,13 @@ class KiteFetcher:
         if cfg.trading.mode.value == "live":
             if has_kite_session():
                 try:
-                    candles = fetch_historical_data(ticker, cfg.trading.exchange, interval)
+                    candles = fetch_historical_data(
+                        ticker, cfg.trading.exchange, interval
+                    )
                     if not candles:
-                        raise RuntimeError(f"Kite returned no historical candles for {ticker}")
+                        raise RuntimeError(
+                            f"Kite returned no historical candles for {ticker}"
+                        )
                     df = pd.DataFrame(candles)
                     if "date" in df.columns:
                         df["date"] = pd.to_datetime(df["date"])
@@ -47,24 +51,33 @@ class KiteFetcher:
             )
             candles = result.get("candles") or result.get("data") or []
             if not candles:
-                raise RuntimeError(f"Kite MCP returned no historical candles for {ticker}")
+                raise RuntimeError(
+                    f"Kite MCP returned no historical candles for {ticker}"
+                )
             df = pd.DataFrame(candles)
             if "date" in df.columns:
                 df["date"] = pd.to_datetime(df["date"])
             return df
         if self.kite_client is None:
-            raise RuntimeError(f"No cached candles for {ticker} and no Kite client configured")
-        raise NotImplementedError("Direct Kite client fetching is not implemented; use the self-hosted MCP server")
+            raise RuntimeError(
+                f"No cached candles for {ticker} and no Kite client configured"
+            )
+        raise NotImplementedError(
+            "Direct Kite client fetching is not implemented; use the self-hosted MCP server"
+        )
 
     def fetch(self, ticker: str, interval: str = "day") -> pd.DataFrame:
         cache_path = self._cache_path(ticker, interval)
         if cache_path.exists():
             return pd.read_parquet(cache_path)
-        if cfg.trading.mode.value == "live" and has_kite_session():
+        # Use direct Kite in both live and paper modes if session exists
+        if cfg.trading.mode.value in ("live", "paper") and has_kite_session():
             try:
                 candles = fetch_historical_data(ticker, cfg.trading.exchange, interval)
                 if not candles:
-                    raise RuntimeError(f"Kite returned no historical candles for {ticker}")
+                    raise RuntimeError(
+                        f"Kite returned no historical candles for {ticker}"
+                    )
                 df = pd.DataFrame(candles)
                 if "date" in df.columns:
                     df["date"] = pd.to_datetime(df["date"])
@@ -74,5 +87,7 @@ class KiteFetcher:
                     f"Direct Kite historical access failed for {ticker}; use fetch_async() for MCP fallback"
                 ) from exc
         if self.kite_client is None:
-            raise RuntimeError(f"No cached candles for {ticker} and no Kite client configured")
+            raise RuntimeError(
+                f"No cached candles for {ticker} and no Kite client configured"
+            )
         raise NotImplementedError("Use fetch_async() for live MCP-backed data access")

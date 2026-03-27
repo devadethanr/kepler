@@ -92,6 +92,57 @@ This file tracks the implementation phases for `swingtradev3` based on `swingtra
 - Tighten MCP response normalization for market-data fallback payloads.
 - Add more live adapter tests around fallback behavior and real-response parsing.
 
+### Phase 1 Completion - Live Data Validation [COMPLETED]
+
+**Date:** March 28, 2026
+
+#### New Test File Added
+- `swingtradev3/tests/test_live_data_endpoints.py` - Tests for live data endpoints
+
+#### Code Fix Applied
+- `swingtradev3/data/kite_fetcher.py` - Allow direct Kite access in paper mode when session exists
+
+#### Final Test Results
+
+| Test | Result |
+|------|--------|
+| Kite LTP (N50) | ✅ PASSED |
+| Kite historical 30 days | ✅ PASSED |
+| Kite historical weekly | ✅ PASSED |
+| Kite quote | ✅ PASSED |
+| Kite fetcher N200 | ✅ PASSED |
+| Kite fetcher N50 | ✅ PASSED |
+| MCP instrument search | ✅ PASSED |
+| Market data tool | ✅ PASSED |
+| MCP historical fallback | ⚠️ SKIPPED (needs token in MCP) |
+
+#### Live Data Validation Results
+
+```
+=== LTP Test ===
+RELIANCE: ₹1348.10
+INFY: ₹1269.70
+HDFCBANK: ₹756.20
+TCS: ₹2389.80
+BAJFINANCE: ₹843.80
+
+=== Historical Data ===
+RELIANCE: 20 candles, Last close: ₹1348.1
+```
+
+#### Full Test Suite
+- **61 passed**, 1 skipped, 36 warnings
+- No regressions
+
+#### What Now Works
+
+1. ✅ Direct Kite LTP fetching
+2. ✅ Direct Kite historical data fetching
+3. ✅ Direct Kite quote fetching
+4. ✅ KiteFetcher for Nifty 50 and Nifty 200 tickers
+5. ✅ Market data tool integration
+6. ✅ MCP instrument search fallback
+
 ### Current Constraint
 
 - The current free/personal Kite developer profile allows:
@@ -208,14 +259,81 @@ This file tracks the implementation phases for `swingtradev3` based on `swingtra
 
 ## Phase 3: Execution Operations, Approvals, Reconciliation, And Safety Loops
 
-### To Complete
+### Completed So Far
 
-- Complete approval lifecycle.
-- Complete reconciliation loops.
-- Complete missing-GTT recovery handling.
-- Complete dividend adjustment flow.
-- Complete `PAUSE` handling and other operational safety behavior.
-- Complete circuit-breaker and expiry handling.
+- Reconciler fully rewritten per design doc section 4.3 — four scenarios:
+  - orphaned position (Kite has, state doesn't) → alert, never auto-close
+  - stale state (state has, Kite doesn't) → remove from state, log
+  - missing GTT (position exists, stop GTT missing) → alert + place emergency GTT
+  - full agreement → log "Reconciliation: OK"
+  - mode-aware: paper mode validates GTT simulator consistency, live mode compares against Kite holdings + GTTs
+- Execution agent startup sequence added per design doc section 4.2:
+  - token refresh via TokenManager
+  - reconciler runs against state.json
+  - load pending approvals
+  - PAUSE file check
+  - send "Execution agent online" Telegram with position/cash summary
+- Entry validation fixed:
+  - now fetches actual LTP from Kite for entry zone validation instead of using entry_zone high as price
+  - falls back to entry_zone high if Kite unavailable (paper mode or session missing)
+- GTT health check added to 30-min poll:
+  - alerts for GTTs that disappear without position close
+  - alerts for cancelled GTTs
+  - does NOT auto-replace (design doc: require user acknowledgement during polling)
+  - distinct from reconciler which is more aggressive at startup and places emergency GTTs
+- Circuit limit checker integrated into execution polling:
+  - checks held positions for circuit limit proximity
+  - alerts that GTT SL-M may not fill at circuit
+- Trailing stop logic retained and verified:
+  - +5% → stop to breakeven
+  - +10% → stop to entry + locked_profit_pct
+  - stops only tighten, never widen
+- Corporate action handling retained:
+  - dividend: auto-adjust stop after timeout, alert before
+  - bonus/split: flag for manual review
+  - rights: informational alert
+- Daily state snapshot added:
+  - writes `context/daily/YYYY-MM-DD.json` after each poll
+  - supports crash recovery per design doc section 3
+- Market hours enforcement added to `main.py`:
+  - execution polls guarded by 09:15–15:30 IST check
+  - startup() runs at market open
+  - research agent scheduled at 15:45
+  - token refresh at 08:50
+- Approval lifecycle:
+  - pending approvals processed in poll
+  - stale approvals auto-expired via TelegramHandler
+  - approved entries validated against current LTP, then risk-checked and executed
+  - GTT placement on fill (stop + target)
+  - trade exit recording on GTT trigger with PnL calculation
+  - trade reviewer logs observation per closed trade
+- PAUSE file handling verified:
+  - poll returns immediately when PAUSE file present
+  - startup alerts when paused
+- Phase 3 test coverage added:
+  - `swingtradev3/tests/test_reconciler.py` — 6 tests (paper reconciliation, helper methods)
+  - `swingtradev3/tests/test_execution_agent.py` — 14 tests (PAUSE, entry validity, approval expiry, trailing stops, GTT triggers, daily snapshot, GTT health check, startup, circuit limits)
+- Docker validation:
+  - Phase 3 tests: 20 passed
+  - full suite: 53 passed (no regressions)
+
+### Alignment With `docs/reference/project_design.md`
+
+- Now aligned:
+  - reconciler covers all 4 scenarios from design doc 4.3
+  - execution agent startup sequence matches design doc 4.2
+  - 30-min poll covers: approvals, trailing stops, GTT triggers, GTT health check, corporate actions, circuit limits
+  - market hours enforcement (09:15–15:30)
+  - PAUSE file blocks all order operations
+  - daily state snapshot for crash recovery
+  - entry validity window (max_entry_deviation_pct)
+
+### Still To Complete
+
+- Validate live reconciliation against real Kite positions/GTTs with paid key.
+- Validate live order placement + GTT lifecycle end-to-end with paid key.
+- Add circuit limit data from Kite instruments API (currently uses conservative ±20% bounds).
+- Wire thesis monitoring (evening re-score of open positions by research agent → alert if score drops below 5.0).
 
 ## Phase 4: Backtest Engine And Metrics
 
