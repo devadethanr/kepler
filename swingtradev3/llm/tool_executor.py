@@ -74,6 +74,9 @@ class ToolExecutor:
         decoded["setup_type"] = self._normalize_setup_type(
             decoded.get("setup_type", "skip")
         )
+        decoded["risk_flags"] = self._normalize_risk_flags(
+            decoded.get("risk_flags", [])
+        )
         return ResearchDecision.model_validate(decoded)
 
     def _normalize_setup_type(self, value: str) -> str:
@@ -87,6 +90,15 @@ class ToolExecutor:
         if "sector" in value_lower:
             return "sector_rotation"
         return "skip"
+
+    def _normalize_risk_flags(self, value: Any) -> list[str]:
+        if isinstance(value, list):
+            return [str(x) for x in value]
+        if isinstance(value, str):
+            if not value.strip():
+                return []
+            return [x.strip() for x in value.split(",")]
+        return []
 
     async def generate_lessons(
         self,

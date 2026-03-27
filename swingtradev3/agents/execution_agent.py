@@ -18,6 +18,7 @@ from swingtradev3.tools.execution.alerts import AlertsTool
 from swingtradev3.tools.execution.gtt_manager import GTTManager
 from swingtradev3.tools.execution.order_execution import OrderExecutionTool
 from swingtradev3.agents.reconciler import Reconciler
+from swingtradev3.data.nifty200_loader import Nifty200Loader
 
 
 class ExecutionAgent:
@@ -44,10 +45,16 @@ class ExecutionAgent:
         self.alerts = alerts or AlertsTool()
         self.telegram_handler = telegram_handler or TelegramHandler()
         self.corporate_actions = corporate_actions or CorporateActionsStore()
-        self.reconciler = reconciler or Reconciler(alerts=self.alerts, gtt_manager=self.gtt_manager)
+        self.reconciler = reconciler or Reconciler(
+            alerts=self.alerts, gtt_manager=self.gtt_manager
+        )
         self.trade_reviewer = trade_reviewer or TradeReviewer()
         self.token_manager = token_manager or TokenManager()
+        self.nifty_loader = Nifty200Loader()
         self.log = get_logger("trades")
+
+    def _company_name(self, ticker: str) -> str:
+        return self.nifty_loader.name_for(ticker)
 
     # -- State helpers --------------------------------------------------------
 
@@ -138,7 +145,8 @@ class ExecutionAgent:
     async def _handle_corporate_actions(self, state: AccountState) -> None:
         for position in state.positions:
             actions = self.corporate_actions.upcoming(
-                position.ticker, cfg.execution.corporate_action_handling.alert_days_before_exdate
+                position.ticker,
+                cfg.execution.corporate_action_handling.alert_days_before_exdate,
             )
             for action in actions:
                 if action.action_type == "dividend":
@@ -157,10 +165,16 @@ class ExecutionAgent:
                         )
                     elif pending.adjustment_alert_sent_at:
                         elapsed = datetime.utcnow() - pending.adjustment_alert_sent_at
-                        if elapsed.total_seconds() >= cfg.execution.corporate_action_handling.auto_adjust_timeout_hours * 3600:
+                        if (
+                            elapsed.total_seconds()
+                            >= cfg.execution.corporate_action_handling.auto_adjust_timeout_hours
+                            * 3600
+                        ):
                             position.stop_price = adjusted_stop
                             await self.gtt_manager.modify_gtt_async(
-                                position.stop_gtt_id or position.entry_order_id or position.ticker,
+                                position.stop_gtt_id
+                                or position.entry_order_id
+                                or position.ticker,
                                 adjusted_stop,
                                 ticker=position.ticker,
                                 target_price=position.target_price,
@@ -188,9 +202,15 @@ class ExecutionAgent:
             if not position.current_price:
                 continue
             pnl_pct = ((position.current_price / position.entry_price) - 1) * 100
-            position_key = position.stop_gtt_id or position.entry_order_id or position.ticker
+            position_key = (
+                position.stop_gtt_id or position.entry_order_id or position.ticker
+            )
             if pnl_pct >= cfg.execution.trail_to_pct:
-                new_stop = round(position.entry_price * (1 + cfg.execution.trail_stop_to_locked_profit_pct / 100), 2)
+                new_stop = round(
+                    position.entry_price
+                    * (1 + cfg.execution.trail_stop_to_locked_profit_pct / 100),
+                    2,
+                )
                 if new_stop > position.stop_price:
                     position.stop_price = new_stop
                     await self.gtt_manager.modify_gtt_async(
@@ -200,7 +220,12 @@ class ExecutionAgent:
                         target_price=position.target_price,
                         quantity=position.quantity,
                     )
-                    self.log.info("{}: trailing stop to {} (+{}%)", position.ticker, new_stop, cfg.execution.trail_stop_to_locked_profit_pct)
+                    self.log.info(
+                        "{}: trailing stop to {} (+{}%)",
+                        position.ticker,
+                        new_stop,
+                        cfg.execution.trail_stop_to_locked_profit_pct,
+                    )
             elif pnl_pct >= cfg.execution.trail_stop_at_pct:
                 new_stop = round(position.entry_price, 2)
                 if new_stop > position.stop_price:
@@ -212,7 +237,9 @@ class ExecutionAgent:
                         target_price=position.target_price,
                         quantity=position.quantity,
                     )
-                    self.log.info("{}: stop moved to breakeven {}", position.ticker, new_stop)
+                    self.log.info(
+                        "{}: stop moved to breakeven {}", position.ticker, new_stop
+                    )
 
     # -- GTT trigger processing -----------------------------------------------
 
@@ -223,7 +250,11 @@ class ExecutionAgent:
             key = position.stop_gtt_id or position.entry_order_id or position.ticker
             gtt = await self.gtt_manager.get_gtt_async(key)
             if gtt and gtt.status in {"triggered_stop", "triggered_target"}:
-                exit_price = gtt.stop_price if gtt.status == "triggered_stop" else gtt.target_price
+                exit_price = (
+                    gtt.stop_price
+                    if gtt.status == "triggered_stop"
+                    else gtt.target_price
+                )
                 pnl_abs = (exit_price - position.entry_price) * position.quantity
                 pnl_pct = ((exit_price / position.entry_price) - 1) * 100
                 trade = TradeRecord(
@@ -234,7 +265,9 @@ class ExecutionAgent:
                     exit_price=exit_price,
                     opened_at=position.opened_at,
                     closed_at=datetime.utcnow(),
-                    exit_reason="stop_loss" if gtt.status == "triggered_stop" else "target",
+                    exit_reason="stop_loss"
+                    if gtt.status == "triggered_stop"
+                    else "target",
                     pnl_abs=pnl_abs,
                     pnl_pct=pnl_pct,
                     setup_type="unknown",
@@ -246,12 +279,22 @@ class ExecutionAgent:
                 self.trade_reviewer.review(trade)
                 state.cash_inr += exit_price * position.quantity
                 state.realized_pnl += pnl_abs
-                await self.alerts.send_alert(
-                    f"{position.ticker} exited via {trade.exit_reason}. "
-                    f"PnL: ₹{pnl_abs:+,.0f} ({pnl_pct:+.1f}%)",
-                    level="info",
+                await self.alerts.send_profit_alert(
+                    ticker=position.ticker,
+                    company_name=self._company_name(position.ticker),
+                    quantity=position.quantity,
+                    entry_price=position.entry_price,
+                    exit_price=exit_price,
+                    pnl_amount=pnl_abs,
+                    pnl_percent=pnl_pct,
+                    exit_reason=trade.exit_reason,
                 )
-                self.log.info("{} closed: {} pnl={:.2f}%", position.ticker, trade.exit_reason, pnl_pct)
+                self.log.info(
+                    "{} closed: {} pnl={:.2f}%",
+                    position.ticker,
+                    trade.exit_reason,
+                    pnl_pct,
+                )
             else:
                 remaining.append(position)
         state.positions = remaining
@@ -274,7 +317,9 @@ class ExecutionAgent:
                     f"Original stop: {position.stop_price}. Acknowledge and review.",
                     level="critical",
                 )
-                self.log.warning("GTT {} missing for {}", position.stop_gtt_id, position.ticker)
+                self.log.warning(
+                    "GTT {} missing for {}", position.stop_gtt_id, position.ticker
+                )
             elif gtt and gtt.status == "cancelled":
                 await self.alerts.send_alert(
                     f"GTT CANCELLED: {position.ticker} stop-loss GTT was cancelled. "
@@ -305,14 +350,20 @@ class ExecutionAgent:
                     f"Manual intervention may be required.",
                     level="critical",
                 )
-                self.log.warning("Circuit limit alert for {} at {}", position.ticker, position.current_price)
+                self.log.warning(
+                    "Circuit limit alert for {} at {}",
+                    position.ticker,
+                    position.current_price,
+                )
 
     # -- Update positions with live prices ------------------------------------
 
     async def _refresh_position_prices(self, state: AccountState) -> None:
         """Fetch current prices for all held positions."""
         for position in state.positions:
-            price = await self._resolve_current_price(position.ticker, position.current_price or position.entry_price)
+            price = await self._resolve_current_price(
+                position.ticker, position.current_price or position.entry_price
+            )
             position.current_price = price
 
         # Update unrealized P&L
@@ -326,7 +377,9 @@ class ExecutionAgent:
     async def poll(self) -> AccountState:
         """30-min poll during market hours (09:15-15:30)."""
         if self._pause_active():
-            await self.alerts.send_alert("Execution paused via PAUSE file", level="warning")
+            await self.alerts.send_alert(
+                "Execution paused via PAUSE file", level="warning"
+            )
             return self._load_state()
 
         state = self._load_state()
@@ -334,7 +387,9 @@ class ExecutionAgent:
         # Expire stale approvals
         expired = self.telegram_handler.expire_stale()
         for ticker in expired:
-            await self.alerts.send_alert(f"{ticker} setup expired — not entered.", level="info")
+            await self.alerts.send_alert(
+                f"{ticker} setup expired — not entered.", level="info"
+            )
 
         # Process approved entries
         pending = self._load_pending()
@@ -391,10 +446,13 @@ class ExecutionAgent:
             )
             state.positions.append(position)
             state.cash_inr -= position.entry_price * position.quantity
-            await self.alerts.send_alert(
-                f"Entered {position.ticker}: qty {position.quantity} at ₹{position.entry_price:,.2f}. "
-                f"Stop ₹{position.stop_price:,.2f}, Target ₹{position.target_price:,.2f}.",
-                level="info",
+            await self.alerts.send_entry_alert(
+                ticker=position.ticker,
+                company_name=self._company_name(position.ticker),
+                quantity=position.quantity,
+                entry_price=position.entry_price,
+                stop_loss=position.stop_price,
+                target=position.target_price,
             )
         self._save_pending(remaining)
 

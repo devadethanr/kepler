@@ -14,7 +14,13 @@ from swingtradev3.learning.lesson_generator import LessonGenerator
 from swingtradev3.learning.stats_engine import StatsEngine
 from swingtradev3.llm.tool_executor import ToolExecutor
 from swingtradev3.logging_config import get_logger
-from swingtradev3.models import AccountState, PendingApproval, ResearchDecision, StatsSnapshot, TradingMode
+from swingtradev3.models import (
+    AccountState,
+    PendingApproval,
+    ResearchDecision,
+    StatsSnapshot,
+    TradingMode,
+)
 from swingtradev3.notifications.telegram_client import TelegramClient
 from swingtradev3.paths import CONTEXT_DIR
 from swingtradev3.storage import read_json, write_json
@@ -76,14 +82,24 @@ class ResearchAgent:
     def _open_position_tickers(self, state: AccountState) -> set[str]:
         return {position.ticker for position in state.positions}
 
-    def _passes_quick_filter(self, market_data: dict[str, Any], fundamentals: dict[str, Any]) -> bool:
-        if cfg.research.quick_filter.below_200ema_disqualify and not market_data.get("above_200ema"):
+    def _passes_quick_filter(
+        self, market_data: dict[str, Any], fundamentals: dict[str, Any]
+    ) -> bool:
+        if cfg.research.quick_filter.below_200ema_disqualify and not market_data.get(
+            "above_200ema"
+        ):
             return False
-        if (fundamentals.get("market_cap_cr") or 0) < cfg.research.quick_filter.min_market_cap_cr:
+        if (
+            fundamentals.get("market_cap_cr") or 0
+        ) < cfg.research.quick_filter.min_market_cap_cr:
             return False
-        if (market_data.get("volume", 0) or 0) < cfg.research.quick_filter.min_avg_volume:
+        if (
+            market_data.get("volume", 0) or 0
+        ) < cfg.research.quick_filter.min_avg_volume:
             return False
-        if (fundamentals.get("promoter_pledge_pct") or 0) > cfg.research.quick_filter.max_promoter_pledge_pct:
+        if (
+            fundamentals.get("promoter_pledge_pct") or 0
+        ) > cfg.research.quick_filter.max_promoter_pledge_pct:
             return False
         return True
 
@@ -109,7 +125,9 @@ class ResearchAgent:
             cursor += timedelta(days=1)
         return 0 < trading_days <= cfg.execution.avoid_fno_expiry_days + 1
 
-    def _fixed_event_block_reason(self, ticker: str, today: date | None = None) -> str | None:
+    def _fixed_event_block_reason(
+        self, ticker: str, today: date | None = None
+    ) -> str | None:
         if self._is_near_fno_expiry(today=today):
             return "near_fno_expiry"
 
@@ -117,7 +135,11 @@ class ResearchAgent:
             ticker,
             cfg.research.exclude_corporate_actions_within_days,
         )
-        blocking = [action.action_type for action in actions if action.action_type in {"bonus", "split", "rights"}]
+        blocking = [
+            action.action_type
+            for action in actions
+            if action.action_type in {"bonus", "split", "rights"}
+        ]
         if blocking:
             action_types = ",".join(sorted(set(blocking)))
             return f"upcoming_corporate_actions:{action_types}"
@@ -125,7 +147,9 @@ class ResearchAgent:
 
     def _event_risk_flags(self, ticker: str) -> list[str]:
         flags: list[str] = []
-        for action in self.corporate_actions.upcoming(ticker, cfg.research.exclude_corporate_actions_within_days):
+        for action in self.corporate_actions.upcoming(
+            ticker, cfg.research.exclude_corporate_actions_within_days
+        ):
             flags.append(f"upcoming_{action.action_type}:{action.ex_date.isoformat()}")
         return flags
 
@@ -144,7 +168,9 @@ class ResearchAgent:
             return f"earnings_within_holding_period:{earnings_date.isoformat()}"
         return None
 
-    def _rules_score(self, ticker: str, market_data: dict[str, Any], fundamentals: dict[str, Any]) -> ResearchDecision:
+    def _rules_score(
+        self, ticker: str, market_data: dict[str, Any], fundamentals: dict[str, Any]
+    ) -> ResearchDecision:
         score = 0.0
         if market_data.get("above_200ema"):
             score += 2.0
@@ -154,19 +180,28 @@ class ResearchAgent:
             score += 2.0
         if market_data.get("accumulation_flag"):
             score += 1.0
-        if (market_data.get("base_weeks") or 0) >= cfg.indicators.structure.base_consolidation_min_weeks:
+        if (
+            market_data.get("base_weeks") or 0
+        ) >= cfg.indicators.structure.base_consolidation_min_weeks:
             score += 1.0
         if (fundamentals.get("promoter_pledge_pct") or 0) < 20:
             score += 1.0
-        if (market_data.get("proximity_to_52w_high_pct") or 100) <= cfg.indicators.structure.high_52w_proximity_alert_pct:
+        if (
+            market_data.get("proximity_to_52w_high_pct") or 100
+        ) <= cfg.indicators.structure.high_52w_proximity_alert_pct:
             score += 1.0
         atr_stop = market_data.get("stop_distance") or 0
         close = market_data.get("close") or 0
         return ResearchDecision(
             ticker=ticker,
             score=min(score, 10.0),
-            setup_type="breakout" if market_data.get("proximity_to_52w_high_pct") else "pullback",
-            entry_zone={"low": round(close * 0.995, 2), "high": round(close * 1.005, 2)},
+            setup_type="breakout"
+            if market_data.get("proximity_to_52w_high_pct")
+            else "pullback",
+            entry_zone={
+                "low": round(close * 0.995, 2),
+                "high": round(close * 1.005, 2),
+            },
             stop_price=round(close - atr_stop, 2),
             target_price=round(close + (atr_stop * cfg.risk.min_rr_ratio), 2),
             holding_days_expected=10,
@@ -192,7 +227,9 @@ class ResearchAgent:
         stock_context: dict[str, Any] = {
             **market_data,
             "fundamentals": fundamentals,
-            "news": self.news_tool.search_news(f"{ticker} stock news India last 7 days"),
+            "news": self.news_tool.search_news(
+                f"{ticker} stock news India last 7 days"
+            ),
             "fii_dii": shared_fii_dii,
         }
         if self.options_tool.is_eligible(ticker):
@@ -223,7 +260,11 @@ class ResearchAgent:
                     )
                     return None
 
-                market_data, fundamentals, stock_context = await self._build_stock_context(ticker, shared_fii_dii)
+                (
+                    market_data,
+                    fundamentals,
+                    stock_context,
+                ) = await self._build_stock_context(ticker, shared_fii_dii)
                 if not self._passes_quick_filter(market_data, fundamentals):
                     self._write_research_artifact_payload(
                         ticker,
@@ -237,7 +278,10 @@ class ResearchAgent:
                     )
                     return None
 
-                if cfg.trading.mode == TradingMode.BACKTEST and not cfg.backtest.use_llm:
+                if (
+                    cfg.trading.mode == TradingMode.BACKTEST
+                    and not cfg.backtest.use_llm
+                ):
                     decision = self._rules_score(ticker, market_data, fundamentals)
                 else:
                     decision = await self.executor.score_stock(
@@ -249,7 +293,9 @@ class ResearchAgent:
                         allow_tool_calls=False,
                     )
 
-                post_score_block = self._apply_post_score_event_rules(decision, ticker, earnings_map)
+                post_score_block = self._apply_post_score_event_rules(
+                    decision, ticker, earnings_map
+                )
                 if post_score_block is not None:
                     self.log.info("Skipping {} due to {}", ticker, post_score_block)
                     self._write_research_artifact_payload(
@@ -263,7 +309,10 @@ class ResearchAgent:
                     )
                     return None
 
-                decision.risk_flags = [*decision.risk_flags, *self._event_risk_flags(ticker)]
+                decision.risk_flags = [
+                    *decision.risk_flags,
+                    *self._event_risk_flags(ticker),
+                ]
                 if decision.score < cfg.research.min_score_threshold:
                     self._write_research_artifact_payload(
                         ticker,
@@ -287,7 +336,9 @@ class ResearchAgent:
                 )
                 return None
 
-    def _sector_capped(self, decisions: list[ResearchDecision], state: AccountState) -> list[ResearchDecision]:
+    def _sector_capped(
+        self, decisions: list[ResearchDecision], state: AccountState
+    ) -> list[ResearchDecision]:
         counts: dict[str, int] = {}
         for position in state.positions:
             if position.sector:
@@ -309,11 +360,15 @@ class ResearchAgent:
     def _company_name(self, ticker: str) -> str:
         return self.nifty_loader.name_for(ticker)
 
-    def _write_research_artifact_payload(self, ticker: str, payload: dict[str, Any]) -> None:
+    def _write_research_artifact_payload(
+        self, ticker: str, payload: dict[str, Any]
+    ) -> None:
         artifact_path = self._artifact_dir() / f"{ticker}.json"
         write_json(artifact_path, payload)
 
-    def _write_research_artifact(self, decision: ResearchDecision, *, status: str = "scored") -> None:
+    def _write_research_artifact(
+        self, decision: ResearchDecision, *, status: str = "scored"
+    ) -> None:
         self._write_research_artifact_payload(
             decision.ticker,
             {
@@ -327,7 +382,9 @@ class ResearchAgent:
         for decision in shortlist:
             self._write_research_artifact(decision, status="shortlisted")
 
-    def _write_pending_approvals(self, shortlist: list[ResearchDecision]) -> list[PendingApproval]:
+    def _write_pending_approvals(
+        self, shortlist: list[ResearchDecision]
+    ) -> list[PendingApproval]:
         created_at = datetime.utcnow()
         approvals = [
             PendingApproval(
@@ -343,7 +400,9 @@ class ResearchAgent:
                 sector=item.sector,
                 created_at=created_at,
                 expires_at=created_at.replace(microsecond=0)
-                + __import__("datetime").timedelta(hours=cfg.execution.approval_timeout_hours),
+                + __import__("datetime").timedelta(
+                    hours=cfg.execution.approval_timeout_hours
+                ),
                 research_date=item.research_date,
                 skill_version=item.skill_version,
             )
@@ -357,11 +416,13 @@ class ResearchAgent:
 
     def _briefing_line(self, item: ResearchDecision) -> str:
         thesis = item.confidence_reasoning.strip()
-        flags = f" | flags: {', '.join(item.risk_flags)}" if item.risk_flags else ""
         return (
-            f"{self._company_name(item.ticker)} ({item.ticker}) | score {item.score:.1f} | {item.setup_type} | "
-            f"entry {item.entry_zone.low}-{item.entry_zone.high} | stop {item.stop_price} | "
-            f"target {item.target_price} | hold {item.holding_days_expected}d | thesis: {thesis}{flags}"
+            f"🔔 <b>{self._company_name(item.ticker)}</b> ({item.ticker})\n"
+            f"   📊 Score: {item.score:.1f}/10 | {item.setup_type.title()}\n"
+            f"   💰 Entry: ₹{item.entry_zone.low:,.0f} - ₹{item.entry_zone.high:,.0f}\n"
+            f"   🛡️ Stop: ₹{item.stop_price:,.0f} | 🎯 Target: ₹{item.target_price:,.0f}\n"
+            f"   ⏰ Hold: ~{item.holding_days_expected} days\n"
+            f"   💡 {thesis[:80]}{'...' if len(thesis) > 80 else ''}"
         )
 
     def _current_month_trade_count(self, today: date | None = None) -> int:
@@ -373,7 +434,9 @@ class ResearchAgent:
             if not closed_at:
                 continue
             try:
-                closed_date = datetime.fromisoformat(str(closed_at).replace("Z", "+00:00")).date()
+                closed_date = datetime.fromisoformat(
+                    str(closed_at).replace("Z", "+00:00")
+                ).date()
             except ValueError:
                 continue
             if closed_date.year == today.year and closed_date.month == today.month:
@@ -387,7 +450,9 @@ class ResearchAgent:
             return False
         return today.weekday() == 6 and 1 <= today.day <= 7
 
-    async def run_monthly_analyst_loop_if_due(self, today: date | None = None) -> str | None:
+    async def run_monthly_analyst_loop_if_due(
+        self, today: date | None = None
+    ) -> str | None:
         today = today or date.today()
         if not self._is_monthly_analyst_due(today):
             return None
@@ -417,29 +482,56 @@ class ResearchAgent:
     async def run(self) -> list[ResearchDecision]:
         state = self._load_state()
         stats = self._load_stats()
-        universe = [ticker for ticker in self.nifty_loader.load() if ticker not in self._open_position_tickers(state)]
+        universe = [
+            ticker
+            for ticker in self.nifty_loader.load()
+            if ticker not in self._open_position_tickers(state)
+        ]
         skill_version = _current_skill_version()
         earnings_map = self.earnings_calendar.load()
         shared_fii_dii = self.fii_dii_tool.get_fii_dii()
         if cfg.research.async_scan:
             results = await asyncio.gather(
                 *[
-                    self._analyze_one(ticker, state, stats, skill_version, earnings_map, shared_fii_dii)
+                    self._analyze_one(
+                        ticker,
+                        state,
+                        stats,
+                        skill_version,
+                        earnings_map,
+                        shared_fii_dii,
+                    )
                     for ticker in universe
                 ]
             )
         else:
             results = []
             for ticker in universe:
-                results.append(await self._analyze_one(ticker, state, stats, skill_version, earnings_map, shared_fii_dii))
+                results.append(
+                    await self._analyze_one(
+                        ticker,
+                        state,
+                        stats,
+                        skill_version,
+                        earnings_map,
+                        shared_fii_dii,
+                    )
+                )
         decisions = [item for item in results if item is not None]
         for decision in decisions:
             self._write_research_artifact(decision)
         capped = self._sector_capped(decisions, state)
         capacity = max(cfg.trading.max_positions - len(state.positions), 0)
-        shortlist = capped[: min(cfg.research.max_shortlist, capacity if capacity else cfg.research.max_shortlist)]
+        shortlist = capped[
+            : min(
+                cfg.research.max_shortlist,
+                capacity if capacity else cfg.research.max_shortlist,
+            )
+        ]
         self._mark_shortlist_artifacts(shortlist)
         self._write_pending_approvals(shortlist)
         await self._send_briefing(shortlist)
-        self.log.info("Research run completed with {} shortlisted setups", len(shortlist))
+        self.log.info(
+            "Research run completed with {} shortlisted setups", len(shortlist)
+        )
         return shortlist

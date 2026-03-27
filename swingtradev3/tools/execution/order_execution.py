@@ -38,9 +38,26 @@ class OrderExecutionTool:
         if not risk["approved"]:
             return {"status": "rejected", "reason": risk["reason"], "quantity": 0}
         quantity = int(risk["quantity"])
-        order_id = f"order-{uuid.uuid4().hex[:10]}"
+
         if cfg.trading.mode.value == "live":
-            raise NotImplementedError("Live order execution requires Kite credentials")
+            from swingtradev3.auth.kite.client import place_live_order
+
+            order_id = place_live_order(
+                exchange=cfg.trading.exchange,
+                ticker=ticker,
+                side=side,
+                quantity=quantity,
+                price=price,
+            )
+            return {
+                "order_id": order_id,
+                "status": "live",
+                "average_price": price,
+                "quantity": quantity,
+                "mode": "live",
+            }
+
+        order_id = f"order-{uuid.uuid4().hex[:10]}"
         fill = self.fill_engine.fill(ticker, side, quantity, price, order_id)
         position_id = f"pos-{uuid.uuid4().hex[:10]}"
         gtt = self.gtt_manager.place_gtt(
@@ -76,7 +93,9 @@ class OrderExecutionTool:
         quantity = int(risk["quantity"])
         order_id = f"order-{uuid.uuid4().hex[:10]}"
         if cfg.trading.mode.value != "live":
-            return self.place_order(state, ticker, side, score, price, stop_price, target_price)
+            return self.place_order(
+                state, ticker, side, score, price, stop_price, target_price
+            )
         if has_kite_session():
             try:
                 order_id = place_live_order(

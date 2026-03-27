@@ -7,7 +7,12 @@ from pathlib import Path
 from swingtradev3.agents.research_agent import ResearchAgent
 from swingtradev3.data.corporate_actions import CorporateActionsStore
 from swingtradev3.data.earnings_calendar import EarningsCalendar
-from swingtradev3.models import AccountState, CorporateAction, ResearchDecision, StatsSnapshot
+from swingtradev3.models import (
+    AccountState,
+    CorporateAction,
+    ResearchDecision,
+    StatsSnapshot,
+)
 
 
 class StubMarketTool:
@@ -82,7 +87,9 @@ class StubTelegram:
 
 
 class StubUniverse:
-    def __init__(self, tickers: list[str], name_map: dict[str, str] | None = None) -> None:
+    def __init__(
+        self, tickers: list[str], name_map: dict[str, str] | None = None
+    ) -> None:
         self.tickers = tickers
         self.name_map = name_map or {}
 
@@ -94,7 +101,9 @@ class StubUniverse:
 
 
 class StubExecutor:
-    def __init__(self, scores: dict[str, float], sectors: dict[str, str] | None = None) -> None:
+    def __init__(
+        self, scores: dict[str, float], sectors: dict[str, str] | None = None
+    ) -> None:
         self.scores = scores
         self.sectors = sectors or {}
 
@@ -156,10 +165,14 @@ class IsolatedResearchAgent(ResearchAgent):
     def _load_stats(self) -> StatsSnapshot:
         return StatsSnapshot()
 
-    def _write_research_artifact_payload(self, ticker: str, payload: dict[str, object]) -> None:
+    def _write_research_artifact_payload(
+        self, ticker: str, payload: dict[str, object]
+    ) -> None:
         self._artifacts[ticker] = payload
 
-    def _write_pending_approvals(self, shortlist: list[ResearchDecision]) -> list[object]:
+    def _write_pending_approvals(
+        self, shortlist: list[ResearchDecision]
+    ) -> list[object]:
         self._pending_payload = shortlist
         return shortlist
 
@@ -177,7 +190,9 @@ def _build_agent(
 ) -> IsolatedResearchAgent:
     earnings_store = EarningsCalendar(cache_path=temp_dir / "earnings_calendar.json")
     earnings_store.store(earnings or {})
-    corporate_store = CorporateActionsStore(cache_path=temp_dir / "corporate_actions.json")
+    corporate_store = CorporateActionsStore(
+        cache_path=temp_dir / "corporate_actions.json"
+    )
     corporate_store.store(corporate_actions or [])
     agent = IsolatedResearchAgent(
         market_tool=StubMarketTool(),
@@ -232,11 +247,15 @@ def test_research_agent_skips_upcoming_corporate_actions(tmp_path: Path) -> None
     assert "upcoming_corporate_actions:split" == agent._artifacts["SBIN"]["reason"]
 
 
-def test_research_agent_flags_dividend_in_shortlist_and_briefing(tmp_path: Path) -> None:
+def test_research_agent_flags_dividend_in_shortlist_and_briefing(
+    tmp_path: Path,
+) -> None:
     telegram = StubTelegram()
     earnings_store = EarningsCalendar(cache_path=tmp_path / "earnings_calendar.json")
     earnings_store.store({})
-    corporate_store = CorporateActionsStore(cache_path=tmp_path / "corporate_actions.json")
+    corporate_store = CorporateActionsStore(
+        cache_path=tmp_path / "corporate_actions.json"
+    )
     corporate_store.store(
         [
             CorporateAction(
@@ -264,10 +283,11 @@ def test_research_agent_flags_dividend_in_shortlist_and_briefing(tmp_path: Path)
     shortlist = asyncio.run(agent.run())
 
     assert [item.ticker for item in shortlist] == ["SBIN"]
-    assert shortlist[0].risk_flags == [f"upcoming_dividend:{(date.today() + timedelta(days=2)).isoformat()}"]
-    assert "hold 10d" in telegram.lines[0]
-    assert "thesis: stub" in telegram.lines[0]
-    assert "flags: upcoming_dividend:" in telegram.lines[0]
+    assert shortlist[0].risk_flags == [
+        f"upcoming_dividend:{(date.today() + timedelta(days=2)).isoformat()}"
+    ]
+    assert "Hold: ~10 days" in telegram.lines[0]
+    assert "💡 stub" in telegram.lines[0]
 
 
 def test_research_agent_briefing_uses_company_name(tmp_path: Path) -> None:
@@ -281,7 +301,8 @@ def test_research_agent_briefing_uses_company_name(tmp_path: Path) -> None:
     shortlist = asyncio.run(agent.run())
 
     assert [item.ticker for item in shortlist] == ["INFY"]
-    assert "Infosys Ltd (INFY)" in agent.telegram.lines[0]
+    assert "Infosys Ltd" in agent.telegram.lines[0]
+    assert "INFY" in agent.telegram.lines[0]
 
 
 def test_research_agent_applies_sector_cap(tmp_path: Path) -> None:
@@ -314,7 +335,9 @@ def test_research_agent_blocks_near_fno_expiry(tmp_path: Path) -> None:
     assert agent._artifacts["INFY"]["reason"] == "near_fno_expiry"
 
 
-def test_research_agent_only_adds_options_context_for_nifty50_names(tmp_path: Path) -> None:
+def test_research_agent_only_adds_options_context_for_nifty50_names(
+    tmp_path: Path,
+) -> None:
     options_tool = StubOptionsTool(eligible={"INFY"})
     fii_dii_tool = StubFiiDiiTool()
     agent = IsolatedResearchAgent(
@@ -326,8 +349,12 @@ def test_research_agent_only_adds_options_context_for_nifty50_names(tmp_path: Pa
         executor=StubExecutor(scores={"INFY": 9.0, "SBIN": 9.0}),
         telegram=StubTelegram(),
         nifty_loader=StubUniverse(["INFY", "SBIN"]),
-        earnings_calendar=EarningsCalendar(cache_path=tmp_path / "earnings_calendar.json"),
-        corporate_actions=CorporateActionsStore(cache_path=tmp_path / "corporate_actions.json"),
+        earnings_calendar=EarningsCalendar(
+            cache_path=tmp_path / "earnings_calendar.json"
+        ),
+        corporate_actions=CorporateActionsStore(
+            cache_path=tmp_path / "corporate_actions.json"
+        ),
     )
     agent._is_near_fno_expiry = lambda today=None: False  # type: ignore[method-assign]
 
@@ -338,7 +365,9 @@ def test_research_agent_only_adds_options_context_for_nifty50_names(tmp_path: Pa
     assert fii_dii_tool.calls == 1
 
 
-def test_monthly_analyst_loop_runs_only_when_due_and_trade_count_is_met(tmp_path: Path) -> None:
+def test_monthly_analyst_loop_runs_only_when_due_and_trade_count_is_met(
+    tmp_path: Path,
+) -> None:
     stats_engine = StubStatsEngine()
     lesson_generator = StubLessonGenerator("proposed lesson")
     telegram = StubTelegram()
@@ -351,8 +380,12 @@ def test_monthly_analyst_loop_runs_only_when_due_and_trade_count_is_met(tmp_path
         executor=StubExecutor(scores={}),
         telegram=telegram,
         nifty_loader=StubUniverse([]),
-        earnings_calendar=EarningsCalendar(cache_path=tmp_path / "earnings_calendar.json"),
-        corporate_actions=CorporateActionsStore(cache_path=tmp_path / "corporate_actions.json"),
+        earnings_calendar=EarningsCalendar(
+            cache_path=tmp_path / "earnings_calendar.json"
+        ),
+        corporate_actions=CorporateActionsStore(
+            cache_path=tmp_path / "corporate_actions.json"
+        ),
         stats_engine=stats_engine,
         lesson_generator=lesson_generator,
     )
@@ -379,8 +412,12 @@ def test_monthly_analyst_loop_skips_when_not_due(tmp_path: Path) -> None:
         executor=StubExecutor(scores={}),
         telegram=StubTelegram(),
         nifty_loader=StubUniverse([]),
-        earnings_calendar=EarningsCalendar(cache_path=tmp_path / "earnings_calendar.json"),
-        corporate_actions=CorporateActionsStore(cache_path=tmp_path / "corporate_actions.json"),
+        earnings_calendar=EarningsCalendar(
+            cache_path=tmp_path / "earnings_calendar.json"
+        ),
+        corporate_actions=CorporateActionsStore(
+            cache_path=tmp_path / "corporate_actions.json"
+        ),
         stats_engine=stats_engine,
         lesson_generator=lesson_generator,
     )

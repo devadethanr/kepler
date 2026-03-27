@@ -19,7 +19,7 @@ This file tracks the implementation phases for `swingtradev3` based on `swingtra
 |---------|-----------|--------|
 | **Zerodha Kite (Paid)** | ✅ `m0q3d9nvg75ug0zg` | ✅ LTP, Historical, Quote WORKING |
 | **NVIDIA NIM** | ✅ `nvapi-dZsJ...` | ✅ `meta/llama-3.1-70b-instruct` WORKING |
-| **Tavily (News)** | ❌ `TAVILY_API_KEY=` | ⚠️ DDGS fallback works |
+| **Tavily (News)** | ✅ `tvly-dev-...` | ✅ WORKING |
 | **Firecrawl (Fundamentals)** | ❌ `FIRECRAWL_API_KEY=` | ❌ NOT WORKING |
 | **Groq (LLM Fallback)** | ❌ `GROQ_API_KEY=` | ❌ NOT WORKING |
 | **Gemini (LLM Fallback)** | ❌ `GEMINI_API_KEY=` | ❌ NOT WORKING |
@@ -71,16 +71,32 @@ Research on SBIN:
 - Stop: 980
 - Target: 1100
 - Confidence: "strong bull structure above 200 EMA, pullback to 50 EMA"
+- News: Tavily working (5 articles)
 ```
 
+### Test Results
+**Quick scan (10 stocks):**
+- 360ONE: filtered
+- ABB: filtered
+- ACC: filtered
+- APLAPOLLO: score 7.5
+- AUBANK: score 7.5
+- ADANIENSOL: score 7.5
+- ADANIENT: filtered
+- ADANIGREEN: filtered
+- ADANIPORTS: filtered
+- ADANIPOWER: score 7.5
+
+**Estimated time for N200:** ~8.5 min
+
 ### What Needs Improvement
-- Tavily API key missing (using DDGS fallback) - optional
-- Full N200 scan not tested yet
+- Full N200 scan (costs NIM API calls)
 - Morning briefing not tested
+- Execution agent not tested
 
 ---
 
-## Phase 3: Execution Operations ❌ NOT FULLY TESTED
+## Phase 3: Execution Operations ⚠️ PAPER TESTED
 
 ### Design Requirement (from project_design.md)
 - Live order placement via Kite
@@ -95,15 +111,33 @@ Research on SBIN:
 - ✅ Reconciler exists
 - ❌ **NOT TESTED** - Live order placement not tested with real money
 
-### What Needs to Be Done
-- [ ] Test live order placement (change to `live` mode in config)
-- [ ] Test GTT placement with real broker
-- [ ] Test GTT modification (trailing stops)
-- [ ] Test GTT deletion
+### Test Results
+- ✅ Order placement in paper mode works
+- ✅ Risk check passes (score 8.0 = 40% capital = 32 shares)
+- ✅ Fill engine applies slippage
+- ✅ GTT simulation works
+- ⚠️ Live mode tested - code path works (verified Kite API call)
+- ❌ Live order failed - markets closed (tried at 1:30 AM IST)
+
+**Sample paper order:**
+```
+Ticker: SBIN
+Quantity: 32
+Entry: ₹1001 (slippage applied)
+Stop: ₹980
+Target: ₹1100
+Position ID: pos-ceb6bf0a57
+```
+
+### Live Testing Notes
+- To test live: change `config.yaml` `trading.mode: live`
+- Must test during market hours (9:15-15:30 IST)
+- Requires funds in Zerodha account
+- Code path verified - actually calls Kite API
 
 ---
 
-## Phase 4: Backtest Engine ❌ NOT STARTED
+## Phase 4: Backtest Engine ⚠️ BASIC STRUCTURE EXISTS
 
 ### Design Requirement (from project_design.md)
 - Historical replay engine
@@ -112,7 +146,11 @@ Research on SBIN:
 - QuantStats integration
 
 ### What's Implemented
-- ❌ Nothing significant
+- ⚠️ Basic structure exists (`backtest/candle_replay.py`)
+- ⚠️ Paper fill engine (`paper/fill_engine.py`) - 2 tests pass
+- ❌ No actual historical replay
+- ❌ No walk-forward validation
+- ❌ No QuantStats integration
 
 ### What Needs to Be Done
 - [ ] Implement `backtest/data_fetcher.py` - Chunk historical data with parquet cache
@@ -164,6 +202,60 @@ Research on SBIN:
 - [ ] Full paper-mode E2E test
 - [ ] Full live-mode E2E test (dry run)
 - [ ] MCP fallback E2E test
+
+---
+
+## Telegram Notifications - IMPROVED ✅
+
+New formatted messages with emojis and simple language:
+
+**Entry Alert:**
+```
+🟢 State Bank of India (SBIN) - ENTRY FILLED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 Quantity: 32 shares
+💰 Entry: ₹1,001.00
+🛡️ Stop Loss: ₹980.00
+🎯 Target: ₹1,100.00
+📈 Risk: ₹21.00 per share
+```
+
+**Profit Alert:**
+```
+💚 State Bank of India (SBIN) - TRADE CLOSED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 32 shares @ ₹1,100.00
+💵 P&L: ₹+3,200 (+10.0%)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔔 Reason: 🎯 Target Hit
+📈 Entry was: ₹1,000.00
+```
+
+**Loss Alert:**
+```
+❤️ Tata Consultancy (TCS) - TRADE CLOSED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 10 shares @ ₹3,800.00
+💵 P&L: ₹-2,000 (-5.0%)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔔 Reason: 🛡️ Stop Loss
+📈 Entry was: ₹4,000.00
+```
+
+**Approval Request:**
+```
+🔔 NEW TRADE SETUP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📉 Reliance Industries (RELIANCE)
+📊 Score: 8.5/10 | Pullback
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💰 Entry Zone: ₹2,800 - ₹2,850
+🛡️ Stop Loss: ₹2,700
+🎯 Target: ₹3,100
+⏰ Hold: ~15 days
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 Why: Strong momentum...
+```
 
 ---
 
