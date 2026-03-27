@@ -4,372 +4,211 @@ This file tracks the implementation phases for `swingtradev3` based on `swingtra
 
 ## Phase List
 
-1. Phase 1: live broker integration
-2. Phase 2: LLM-driven research pipeline
-3. Phase 3: execution operations, approvals, reconciliation, and safety loops
-4. Phase 4: backtest engine and metrics
-5. Phase 5: Telegram integration and learning loop
-6. Phase 6: end-to-end Docker validation
+1. Phase 1: live broker integration ✅
+2. Phase 2: LLM-driven research pipeline ⚠️ (API keys missing)
+3. Phase 3: execution operations ⚠️ (not tested with live orders)
+4. Phase 4: backtest engine and metrics ❌
+5. Phase 5: Telegram integration and learning loop ❌
+6. Phase 6: end-to-end Docker validation ⚠️
 
-## Phase 1: Live Broker Integration
+---
 
-### Completed
+## Current API Key Status
 
-- Repository structure cleanup completed before Phase 2:
-  - non-runtime docs moved under `docs/`
-  - design references moved under `docs/reference/`
-  - runbooks moved under `docs/runbooks/`
-  - progress tracking moved under `docs/progress/`
-  - tool modules grouped into `swingtradev3/tools/execution/` and `swingtradev3/tools/market/`
-  - Kite MCP client moved under `swingtradev3/integrations/kite/`
-  - duplicate top-level tool wrapper files removed after import migration
-  - internal imports updated to use grouped modules directly
-- Official Kite login flow implemented with code-based `request_token -> session` exchange.
-- Persisted Kite session storage implemented at `swingtradev3/context/auth/kite_session.json`.
-- Direct Kite client layer added in `swingtradev3/auth/kite/client.py`.
-- Token manager updated to load persisted Kite session into runtime.
-- Live adapters now prefer direct Kite session, with MCP fallback where useful:
-  - `swingtradev3/data/kite_fetcher.py`
-  - `swingtradev3/tools/order_execution.py`
-  - `swingtradev3/tools/gtt_manager.py`
-  - `swingtradev3/agents/reconciler.py`
-- Live GTT path corrected to use `stop_gtt_id` for stop updates instead of incorrectly keying off `entry_order_id`.
-- GTT quantity propagation fixed so order sizing is preserved in both paper and live paths.
-- Self-hosted Kite MCP setup and auth workflow documented in `docs/runbooks/kite-mcp-setup.md`.
-- Targeted live integration tests added:
-  - `swingtradev3/tests/test_kite_auth.py`
-  - `swingtradev3/tests/test_live_integration.py`
-  - `swingtradev3/tests/test_reconciler.py`
-- Docker verification completed:
-  - targeted auth + live integration tests passed inside container
-  - direct read-only Kite smoke check succeeded for `profile`, `positions`, and `holdings`
+| Service | Configured | Working |
+|---------|-----------|--------|
+| **Zerodha Kite (Paid)** | ✅ `m0q3d9nvg75ug0zg` | ✅ LTP, Historical, Quote WORKING |
+| **NVIDIA NIM** | ✅ `nvapi-dZsJ...` | ✅ `meta/llama-3.1-70b-instruct` WORKING |
+| **Tavily (News)** | ❌ `TAVILY_API_KEY=` | ⚠️ DDGS fallback works |
+| **Firecrawl (Fundamentals)** | ❌ `FIRECRAWL_API_KEY=` | ❌ NOT WORKING |
+| **Groq (LLM Fallback)** | ❌ `GROQ_API_KEY=` | ❌ NOT WORKING |
+| **Gemini (LLM Fallback)** | ❌ `GEMINI_API_KEY=` | ❌ NOT WORKING |
+| **Claude (LLM Fallback)** | ❌ `ANTHROPIC_API_KEY=` | ❌ NOT WORKING |
+| **Telegram Bot** | ✅ Configured | ⚠️ Outbound only |
 
-### Validated Without Paid Plan
+> Note: NIM model changed to `meta/llama-3.1-70b-instruct` (Kimi K2.5 timed out). Streaming support added to `nim_client.py`.
 
-- Docker stack health verified:
-  - `app` healthy
-  - `kite-mcp` healthy
-- In-container Phase 1 validation suite passed:
-  - `test_kite_auth.py`
-  - `test_live_integration.py`
-  - `test_reconciler.py`
-  - `test_mode_switching.py`
-  - `test_paper.py`
-  - result: `8 passed`
-- Persisted Kite session load verified inside container:
-  - session file present
-  - `user_id=RDK847`
-  - `user_name=Devadethan R`
-- Direct Kite read-only account endpoints verified:
-  - `profile()`
-  - `positions()`
-  - `holdings()`
-- Direct Kite GTT listing verified:
-  - `get_gtts()` succeeded
-  - current result returned zero GTTs, which is valid for the current account state
-- MCP fallback connectivity verified:
-  - `search_instruments("INFY")` succeeded from the app container
-  - MCP response content was present and readable
-- Post-cleanup validation completed:
-  - no stale imports remained for deleted top-level tool wrappers
-  - full Docker test suite passed after reorganization
-  - result: `14 passed`
+---
 
-### Validated But Limited By Current Free Plan
+## Phase 1: Live Broker Integration ✅ COMPLETED
 
-- Direct auth and account APIs are working.
-- Direct data APIs are not fully usable under the current plan:
-  - `ltp`
-  - `historical_data`
-- This matches the current free/personal Kite plan behavior.
-- The code paths remain implemented and are ready for validation once the paid app is provided.
+### What Works
+- Direct Kite API with paid subscription
+- LTP fetching
+- Historical data fetching
+- Quote fetching
+- KiteFetcher for N50/N200
+- MCP fallback for instrument search
 
-### Still To Complete
+### Tests Added
+- `test_live_data_endpoints.py` - 8 passed
 
-- Validate direct live order placement against real broker responses in a paid-key environment.
-- Validate direct GTT placement, modification, and deletion against real broker responses in a paid-key environment.
-- Validate direct quote and historical market-data paths with the paid Kite Connect app.
-- Tighten MCP response normalization for market-data fallback payloads.
-- Add more live adapter tests around fallback behavior and real-response parsing.
+### Code Fixes
+- `data/kite_fetcher.py` - Allow direct Kite in paper mode
 
-### Phase 1 Completion - Live Data Validation [COMPLETED]
+---
 
-**Date:** March 28, 2026
+## Phase 2: LLM-Driven Research Pipeline ✅ WORKING
 
-#### New Test File Added
-- `swingtradev3/tests/test_live_data_endpoints.py` - Tests for live data endpoints
+### Design Requirement (from project_design.md)
+The research agent uses NIM to analyze stocks:
+1. Fetch market data (Kite) → 2. Fetch fundamentals → 3. Fetch news → 4. Call NIM with SKILL.md → 5. Get score/decision
 
-#### Code Fix Applied
-- `swingtradev3/data/kite_fetcher.py` - Allow direct Kite access in paper mode when session exists
+### What's Working
+- ✅ NIM client with streaming support (`llm/nim_client.py`)
+- ✅ Model config-driven (`config.yaml`: `meta/llama-3.1-70b-instruct`)
+- ✅ News search with DDGS fallback
+- ✅ Research agent - Tested on SBIN, got score 8.5
+- ✅ Tool executor with setup_type normalization (`llm/tool_executor.py`)
+- ✅ Kite data fetching in paper mode
 
-#### Final Test Results
-
-| Test | Result |
-|------|--------|
-| Kite LTP (N50) | ✅ PASSED |
-| Kite historical 30 days | ✅ PASSED |
-| Kite historical weekly | ✅ PASSED |
-| Kite quote | ✅ PASSED |
-| Kite fetcher N200 | ✅ PASSED |
-| Kite fetcher N50 | ✅ PASSED |
-| MCP instrument search | ✅ PASSED |
-| Market data tool | ✅ PASSED |
-| MCP historical fallback | ⚠️ SKIPPED (needs token in MCP) |
-
-#### Live Data Validation Results
-
+### Test Result
 ```
-=== LTP Test ===
-RELIANCE: ₹1348.10
-INFY: ₹1269.70
-HDFCBANK: ₹756.20
-TCS: ₹2389.80
-BAJFINANCE: ₹843.80
-
-=== Historical Data ===
-RELIANCE: 20 candles, Last close: ₹1348.1
+Research on SBIN:
+- Score: 8.5
+- Setup: pullback
+- Entry zone: 1000-1020
+- Stop: 980
+- Target: 1100
+- Confidence: "strong bull structure above 200 EMA, pullback to 50 EMA"
 ```
 
-#### Full Test Suite
-- **61 passed**, 1 skipped, 36 warnings
-- No regressions
+### What Needs Improvement
+- Tavily API key missing (using DDGS fallback) - optional
+- Full N200 scan not tested yet
+- Morning briefing not tested
 
-#### What Now Works
+---
 
-1. ✅ Direct Kite LTP fetching
-2. ✅ Direct Kite historical data fetching
-3. ✅ Direct Kite quote fetching
-4. ✅ KiteFetcher for Nifty 50 and Nifty 200 tickers
-5. ✅ Market data tool integration
-6. ✅ MCP instrument search fallback
+## Phase 3: Execution Operations ❌ NOT FULLY TESTED
 
-### Current Constraint
+### Design Requirement (from project_design.md)
+- Live order placement via Kite
+- GTT placement, modification, deletion
+- Trailing stops
+- Reconciliation
 
-- The current free/personal Kite developer profile allows:
-  - auth
-  - profile
-  - positions
-  - holdings
-- It does not allow direct quote and historical data endpoints.
-- Because of that:
-  - direct data-path validation is incomplete
-  - code support remains in place
-  - MCP/fallback behavior is preserved until the paid app is provided
+### What's Implemented
+- ✅ Order execution code exists
+- ✅ GTT manager code exists
+- ✅ Trailing stop logic exists
+- ✅ Reconciler exists
+- ❌ **NOT TESTED** - Live order placement not tested with real money
 
-## Phase 2: LLM-Driven Research Pipeline
+### What Needs to Be Done
+- [ ] Test live order placement (change to `live` mode in config)
+- [ ] Test GTT placement with real broker
+- [ ] Test GTT modification (trailing stops)
+- [ ] Test GTT deletion
 
-### Completed So Far
+---
 
-- Research prompt tightened to require exactly one structured JSON object.
-- Research JSON parsing hardened to handle:
-  - fenced JSON
-  - extra explanatory text around the JSON object
-- Bounded LLM tool-calling loop added for research scoring:
-  - research-only tool registry exposed
-  - structured tool schemas exposed to the model
-  - tool calls are executed and fed back into the message loop
-  - tool-call loop is capped by `llm.max_tool_calls_per_stock`
-- Research agent now enforces upcoming event filters before scoring:
-  - hard F&O expiry avoidance for the last configured expiry-window trading days
-  - hard blocking for bonus, split, and rights corporate actions inside the configured window
-- Research agent now applies post-score earnings-aware filtering:
-  - skips non-earnings-play setups when earnings fall within the expected holding period
-- Research agent now adds corporate-action risk flags into shortlisted decisions and the briefing payload:
-  - dividend
-  - bonus
-  - split
-  - rights
-- Research universe handling is now explicit and aligned with the design:
-  - research universe uses Nifty 200
-  - options context is only attached for Nifty 50-eligible symbols
-  - the options tool now returns `not_applicable` outside the Nifty 50 universe
-- Universe update plumbing has been added:
-  - official-website-based universe updater added for Nifty 50 and Nifty 200 constituent downloads
-  - supports writing ticker + company-name entries into the runtime cache files
-  - `context/nifty50.json` added alongside `context/nifty200.json`
-  - runtime refresh executed successfully:
-    - `nifty50.json` populated with 50 entries
-    - `nifty200.json` populated with 200 entries
-- Research tool integrations are now materially more real:
-  - news search uses Tavily first and DDGS fallback with cache
-  - FII/DII tool now attempts official NSE report download + CSV parse with cache fallback
-  - fundamentals tool now supports fresher cache handling plus yfinance -> NSE -> Firecrawl-style fallback enrichment
-- Morning briefing now supports company-name enrichment when the universe cache includes names.
-- Research agent now honors `research.async_scan` instead of always forcing parallel gather.
-- Research fetch order is now tighter and closer to the design:
-  - market data -> fundamentals -> news -> shared FII/DII -> options (Nifty 50 only)
-  - FII/DII context is fetched once per run and reused across stocks
-  - normal research-agent scoring now sends prefetched context into the LLM without relying on model-driven tool calls
-- Research artifacts now align more closely with the design output:
-  - one per-stock JSON artifact is written for scored, shortlisted, skipped, filtered-out, below-threshold, and error outcomes
-- Morning briefing output is now richer and closer to the design doc:
-  - ticker
-  - score
-  - setup type
-  - entry zone
-  - stop
-  - target
-  - expected hold
-  - thesis
-  - risk flags
-- Per-stock research failures now fail soft:
-  - one broken ticker does not abort the whole research run
-  - the failure is captured as an `error` artifact
-- Monthly analyst-loop scaffolding has been added to the research layer:
-  - detects first-Sunday monthly cadence
-  - enforces the minimum-trades gate
-  - recalculates stats
-  - generates staged SKILL lessons
-  - sends Telegram notification when proposals are generated
-- Existing sector cap logic is now covered by dedicated tests.
-- Phase 2 test coverage added:
-  - `swingtradev3/tests/test_research_agent.py`
-  - `swingtradev3/tests/test_tool_executor.py`
-- Docker validation completed for the current Phase 2 increment:
-  - new universe/tool tests: `7 passed`
-  - focused research tests: `9 passed`
-  - focused post-refresh validation: `16 passed`
-  - full suite result after the current Phase 2 changes: `34 passed`
+## Phase 4: Backtest Engine ❌ NOT STARTED
 
-### Alignment With `docs/reference/project_design.md`
+### Design Requirement (from project_design.md)
+- Historical replay engine
+- Walk-forward validation
+- Metrics and reporting
+- QuantStats integration
 
-- Now aligned:
-  - research universe is Nifty 200
-  - startup prompt includes `SKILL.md`, `research_program.md`, open positions, and stats
-  - structured JSON research output contract
-  - score threshold gate and sector-cap shortlist logic
-  - evening research artifacts and pending approvals output
-  - morning briefing now carries the key trade details expected by the design
-  - earnings-aware holding-period check
-  - corporate-action awareness in briefing/risk flags
-  - F&O expiry hard rule
-  - Nifty 50-only options context gating
-  - monthly analyst-loop scaffolding
-- Still not fully aligned:
-  - the per-stock prefetch order is now enforced in the agent path, but the generic `ToolExecutor` still supports bounded tool-calling for non-agent use cases
+### What's Implemented
+- ❌ Nothing significant
 
-### Still To Complete
+### What Needs to Be Done
+- [ ] Implement `backtest/data_fetcher.py` - Chunk historical data with parquet cache
+- [ ] Implement `backtest/candle_replay.py` - Daily candle replay
+- [ ] Implement `backtest/walk_forward.py` - In-sample/out-of-sample validation
+- [ ] Implement `backtest/metrics.py` - QuantStats tearsheets
+- [ ] Implement `backtest/optimizer.py` - Optuna parameter search
 
-- Complete structured LLM research output contract.
-- Complete async stock scan flow.
-- Complete shortlist generation flow.
-- Tighten tool execution loop and provider fallback behavior.
-- Run the new universe updater against the official sources so `context/nifty200.json` and `context/nifty50.json` are populated for real scans.
-- If needed later, enforce a stricter fixed tool-call order instead of the current bounded model-driven loop.
+---
 
-## Phase 3: Execution Operations, Approvals, Reconciliation, And Safety Loops
+## Phase 5: Telegram Integration & Learning Loop ❌ NOT IMPLEMENTED
 
-### Completed So Far
+### Design Requirement (from project_design.md)
+- Two-way Telegram communication
+- YES/NO approval flow
+- Daily briefing
+- Trade review
+- Stats engine
+- Lesson generation
+- SKILL.md updates
 
-- Reconciler fully rewritten per design doc section 4.3 — four scenarios:
-  - orphaned position (Kite has, state doesn't) → alert, never auto-close
-  - stale state (state has, Kite doesn't) → remove from state, log
-  - missing GTT (position exists, stop GTT missing) → alert + place emergency GTT
-  - full agreement → log "Reconciliation: OK"
-  - mode-aware: paper mode validates GTT simulator consistency, live mode compares against Kite holdings + GTTs
-- Execution agent startup sequence added per design doc section 4.2:
-  - token refresh via TokenManager
-  - reconciler runs against state.json
-  - load pending approvals
-  - PAUSE file check
-  - send "Execution agent online" Telegram with position/cash summary
-- Entry validation fixed:
-  - now fetches actual LTP from Kite for entry zone validation instead of using entry_zone high as price
-  - falls back to entry_zone high if Kite unavailable (paper mode or session missing)
-- GTT health check added to 30-min poll:
-  - alerts for GTTs that disappear without position close
-  - alerts for cancelled GTTs
-  - does NOT auto-replace (design doc: require user acknowledgement during polling)
-  - distinct from reconciler which is more aggressive at startup and places emergency GTTs
-- Circuit limit checker integrated into execution polling:
-  - checks held positions for circuit limit proximity
-  - alerts that GTT SL-M may not fill at circuit
-- Trailing stop logic retained and verified:
-  - +5% → stop to breakeven
-  - +10% → stop to entry + locked_profit_pct
-  - stops only tighten, never widen
-- Corporate action handling retained:
-  - dividend: auto-adjust stop after timeout, alert before
-  - bonus/split: flag for manual review
-  - rights: informational alert
-- Daily state snapshot added:
-  - writes `context/daily/YYYY-MM-DD.json` after each poll
-  - supports crash recovery per design doc section 3
-- Market hours enforcement added to `main.py`:
-  - execution polls guarded by 09:15–15:30 IST check
-  - startup() runs at market open
-  - research agent scheduled at 15:45
-  - token refresh at 08:50
-- Approval lifecycle:
-  - pending approvals processed in poll
-  - stale approvals auto-expired via TelegramHandler
-  - approved entries validated against current LTP, then risk-checked and executed
-  - GTT placement on fill (stop + target)
-  - trade exit recording on GTT trigger with PnL calculation
-  - trade reviewer logs observation per closed trade
-- PAUSE file handling verified:
-  - poll returns immediately when PAUSE file present
-  - startup alerts when paused
-- Phase 3 test coverage added:
-  - `swingtradev3/tests/test_reconciler.py` — 6 tests (paper reconciliation, helper methods)
-  - `swingtradev3/tests/test_execution_agent.py` — 14 tests (PAUSE, entry validity, approval expiry, trailing stops, GTT triggers, daily snapshot, GTT health check, startup, circuit limits)
-- Docker validation:
-  - Phase 3 tests: 20 passed
-  - full suite: 53 passed (no regressions)
+### What's Implemented
+- ⚠️ Telegram outbound (alerts) - PARTIAL
+- ❌ Telegram inbound (approvals) - NOT IMPLEMENTED
+- ❌ Learning loop - NOT IMPLEMENTED
 
-### Alignment With `docs/reference/project_design.md`
+### What Needs to Be Done
+**Telegram:**
+- [ ] Implement inbound message handler
+- [ ] Parse YES/NO commands from users
+- [ ] Connect to pending_approvals flow
 
-- Now aligned:
-  - reconciler covers all 4 scenarios from design doc 4.3
-  - execution agent startup sequence matches design doc 4.2
-  - 30-min poll covers: approvals, trailing stops, GTT triggers, GTT health check, corporate actions, circuit limits
-  - market hours enforcement (09:15–15:30)
-  - PAUSE file blocks all order operations
-  - daily state snapshot for crash recovery
-  - entry validity window (max_entry_deviation_pct)
+**Learning:**
+- [ ] Implement `learning/trade_reviewer.py` - Event-driven trade logging
+- [ ] Implement `learning/stats_engine.py` - Monthly stats
+- [ ] Implement `learning/lesson_generator.py` - NIM proposes SKILL changes
+- [ ] Implement `learning/skill_updater.py` - Git commit SKILL updates
 
-### Still To Complete
+---
 
-- Validate live reconciliation against real Kite positions/GTTs with paid key.
-- Validate live order placement + GTT lifecycle end-to-end with paid key.
-- Add circuit limit data from Kite instruments API (currently uses conservative ±20% bounds).
-- Wire thesis monitoring (evening re-score of open positions by research agent → alert if score drops below 5.0).
+## Phase 6: End-To-End Docker Validation ⚠️ PARTIAL
 
-## Phase 4: Backtest Engine And Metrics
+### What's Done
+- ✅ Docker containerization exists
+- ✅ Basic tests pass (61 passed)
+- ❌ Full E2E not validated
 
-### To Complete
+### What Needs to Be Done
+- [ ] Full paper-mode E2E test
+- [ ] Full live-mode E2E test (dry run)
+- [ ] MCP fallback E2E test
 
-- Complete historical replay engine.
-- Reuse shared research/risk/execution logic in backtest mode.
-- Complete metrics and reporting output.
-- Complete validation thresholds and walk-forward path.
+---
 
-## Phase 5: Telegram Integration And Learning Loop
+## Summary: What Must Be Done First
 
-### To Complete
+### PRIORITY 1: Add API Keys
 
-- Telegram bot foundation completed:
-  - BotFather setup completed by user
-  - `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` configured in `.env`
-  - real Telegram outbound sending implemented in `swingtradev3/notifications/telegram_client.py`
-  - smoke-test entrypoint added in `swingtradev3/notifications/smoke_test.py`
-  - live Docker smoke test sent a real Telegram message successfully
-- Planned next Telegram step:
-  - convert the bot from one-way alerts into full two-way communication between the swingtrade agent and the user
-  - this will be planned later before implementation
-- Complete inbound Telegram approval flow.
-- Complete outbound alerts and daily briefing flow.
-- Complete trade review flow.
-- Complete stats engine flow.
-- Complete lesson generation flow.
-- Complete controlled SKILL update workflow.
+```bash
+# Edit swingtradev3/.env and add:
 
-## Phase 6: End-To-End Docker Validation
+# NVIDIA NIM (REQUIRED for research)
+NIM_API_KEY=nvapi-xxxxx
 
-### To Complete
+# News Search (REQUIRED for research)
+TAVILY_API_KEY=tvly-xxxxx
 
-- Expand Docker-based test coverage.
-- Add end-to-end paper-mode validation.
-- Add live-mode dry-path validation.
-- Add fallback and reconciliation end-to-end checks.
-- Run full integration verification after paid Kite app is available.
+# Optional - Fallback LLMs
+GROQ_API_KEY=gsk_xxxxx
+GEMINI_API_KEY=AIzaxxxxx
+ANTHROPIC_API_KEY=sk-ant-xxxxx
+```
+
+### PRIORITY 2: Validate Phase 2 (Research with NIM)
+- Run research agent manually
+- Verify NIM returns scores
+- Verify briefing generates
+
+### PRIORITY 3: Test Phase 3 (Live Orders)
+- Switch to `live` mode
+- Place test order (small qty)
+- Verify GTT works
+
+---
+
+## Current Test Status
+
+```
+Total: 61 passed, 1 skipped
+- test_live_data_endpoints.py: 8 passed, 1 skipped
+- test_research_agent.py: multiple passed
+- test_execution_agent.py: multiple passed
+- test_reconciler.py: 6 passed
+- Other tests: passed
+```
+
+---
+
+*Last Updated: March 28, 2026*

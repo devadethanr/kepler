@@ -1,0 +1,53 @@
+{
+  "HDFCBANK stock news India last 7 days": {
+    "fetched_at": "2026-03-27T20:07:29.668889",
+    "payload": {
+      "query": "HDFCBANK stock news India last 7 days",
+      "results": [],
+      "source": "ddgs"
+    }
+  },
+  "RELIANCE": {
+    "fetched_at": "2026-03-27T19:54:15.552141",
+    "payload": {
+      "query": "RELIANCE",
+      "results": [],
+      "source": "ddgs"
+    }
+  },
+  "RELIANCE stock news India last 7 days": {
+    "fetched_at": "2026-03-27T19:54:32.251364",
+    "payload": {
+      "query": "RELIANCE stock news India last 7 days",
+      "results": [],
+      "source": "ddgs"
+    }
+  },
+  "SBIN stock news India last 7 days": {
+    "fetched_at": "2026-03-27T20:05:58.915615",
+    "payload": {
+      "query": "SBIN stock news India last 7 days",
+      "results": [
+        {
+          "content": "Beware of Phishing attacks Phishing is a fraudulent attempt, usually made through email, phone calls, SMS etc seeking your personal \u2026",
+          "published_at": null,
+          "title": "State Bank of India - Personal Banking",
+          "url": "https://india.onlinesbi.com/retail.onlinesbi.com/retail/login.html"
+        },
+        {
+          "content": "Disclaimer: This application is meant to be used by Authorized Individuals only. All Rights Reserved. Unauthorized access is prohibited \u2026",
+          "published_at": null,
+          "title": "SBI SFG Gateway",
+          "url": "https://upi.onlinesbi.com/pkmslogin.form"
+        },
+        {
+          "content": "National Payment CORPORATION OF INDIA, State Bank of India, Conatc Us, SBI, Fastag, NETC, electronic toll collection, Lane, ETC Lane, \u2026",
+          "published_at": null,
+          "title": "SBI FASTAG",
+          "url": "https://www.fastag.onlinesbi.com/pgTopUP.aspx"
+        }
+      ],
+      "source": "ddgs"
+    }
+  }
+}

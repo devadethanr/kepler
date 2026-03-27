@@ -9,7 +9,11 @@ from swingtradev3.config import cfg
 from swingtradev3.llm.prompt_builder import PromptBuilder
 from swingtradev3.llm.router import LLMRouter
 from swingtradev3.models import AccountState, ResearchDecision, StatsSnapshot
-from swingtradev3.tools import RESEARCH_TOOL_REGISTRY, RESEARCH_TOOL_SCHEMAS, TOOL_REGISTRY
+from swingtradev3.tools import (
+    RESEARCH_TOOL_REGISTRY,
+    RESEARCH_TOOL_SCHEMAS,
+    TOOL_REGISTRY,
+)
 
 
 class ToolExecutor:
@@ -36,12 +40,16 @@ class ToolExecutor:
         skill_version: str,
         allow_tool_calls: bool = True,
     ) -> ResearchDecision:
-        messages = self.prompt_builder.build_research_messages(stock_context, state, stats)
+        messages = self.prompt_builder.build_research_messages(
+            stock_context, state, stats
+        )
         payload: dict[str, Any] | None = None
         tools = self.research_tool_schemas if allow_tool_calls else None
         attempts = cfg.llm.max_tool_calls_per_stock + 1 if allow_tool_calls else 1
         for _ in range(attempts):
-            payload = await self.router.complete("research", messages=messages, tools=tools)
+            payload = await self.router.complete(
+                "research", messages=messages, tools=tools
+            )
             if not allow_tool_calls:
                 break
             tool_calls = self.router.extract_tool_calls(payload)
@@ -55,13 +63,30 @@ class ToolExecutor:
         try:
             decoded = self._decode_json_text(text)
         except json.JSONDecodeError as exc:
-            raise RuntimeError(f"Research model returned non-JSON output for {ticker}: {text}") from exc
+            raise RuntimeError(
+                f"Research model returned non-JSON output for {ticker}: {text}"
+            ) from exc
         decoded["ticker"] = ticker
         decoded["research_date"] = date.today().isoformat()
         decoded["skill_version"] = skill_version
         decoded.setdefault("current_price", stock_context.get("close"))
         decoded.setdefault("sector", stock_context.get("sector"))
+        decoded["setup_type"] = self._normalize_setup_type(
+            decoded.get("setup_type", "skip")
+        )
         return ResearchDecision.model_validate(decoded)
+
+    def _normalize_setup_type(self, value: str) -> str:
+        value_lower = value.lower().strip()
+        if "breakout" in value_lower:
+            return "breakout"
+        if "pullback" in value_lower or "pull" in value_lower:
+            return "pullback"
+        if "earning" in value_lower:
+            return "earnings_play"
+        if "sector" in value_lower:
+            return "sector_rotation"
+        return "skip"
 
     async def generate_lessons(
         self,
@@ -104,7 +129,11 @@ class ToolExecutor:
             if name not in self.tool_registry:
                 raise RuntimeError(f"Unknown research tool requested: {name}")
             raw_arguments = function.get("arguments") or "{}"
-            arguments = json.loads(raw_arguments) if isinstance(raw_arguments, str) else raw_arguments
+            arguments = (
+                json.loads(raw_arguments)
+                if isinstance(raw_arguments, str)
+                else raw_arguments
+            )
             result = self.tool_registry[name](**arguments)
             messages.append(
                 {
@@ -120,7 +149,9 @@ class ToolExecutor:
     def _decode_json_text(text: str) -> dict[str, Any]:
         candidate = text.strip()
         if candidate.startswith("```"):
-            fenced = re.search(r"```(?:json)?\s*(\{.*\})\s*```", candidate, flags=re.DOTALL)
+            fenced = re.search(
+                r"```(?:json)?\s*(\{.*\})\s*```", candidate, flags=re.DOTALL
+            )
             if fenced:
                 candidate = fenced.group(1).strip()
         try:

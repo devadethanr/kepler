@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-from typing import Any
+from typing import Any, AsyncIterator
 
 
 class NIMClient:
@@ -19,20 +19,49 @@ class NIMClient:
         tools: list[dict[str, Any]] | None = None,
         temperature: float = 0.0,
         max_tokens: int = 1000,
-    ) -> dict[str, Any]:
+        stream: bool = False,
+    ) -> dict[str, Any] | AsyncIterator[dict[str, Any]]:
         if not self.api_key:
             raise RuntimeError("NIM_API_KEY is not configured")
-        try:
-            from openai import AsyncOpenAI
-        except ImportError as exc:
-            raise RuntimeError("openai package is required for NIM access") from exc
 
-        client = AsyncOpenAI(api_key=self.api_key, base_url=self.base_url)
-        response = await client.chat.completions.create(
-            model=model,
-            messages=messages,
-            tools=tools or [],
-            temperature=temperature,
-            max_tokens=max_tokens,
-        )
-        return response.model_dump()
+        import requests
+
+        invoke_url = f"{self.base_url.rstrip('/v1')}/v1/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Accept": "text/event-stream" if stream else "application/json",
+            "Content-Type": "application/json",
+        }
+
+        payload = {
+            "model": model,
+            "messages": messages,
+            "max_tokens": max_tokens,
+            "temperature": temperature,
+            "top_p": 1.0,
+            "stream": stream,
+        }
+
+        if stream:
+            response = requests.post(
+                invoke_url, headers=headers, json=payload, stream=True
+            )
+            response.raise_for_status()
+
+            async def event_stream() -> AsyncIterator[dict[str, Any]]:
+                for line in response.iter_lines():
+                    if line:
+                        decoded = line.decode("utf-8")
+                        if decoded.startswith("data: "):
+                            data = decoded[6:]
+                            if data == "[DONE]":
+                                break
+                            import json
+
+                            yield json.loads(data)
+
+            return event_stream()
+        else:
+            response = requests.post(invoke_url, headers=headers, json=payload)
+            response.raise_for_status()
+            return response.json()
