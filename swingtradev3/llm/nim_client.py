@@ -63,5 +63,11 @@ class NIMClient:
             return event_stream()
         else:
             response = requests.post(invoke_url, headers=headers, json=payload)
-            response.raise_for_status()
-            return response.json()
+            try:
+                response.raise_for_status()
+                return response.json()
+            except requests.exceptions.HTTPError as e:
+                error_detail = response.text
+                print(f"NIM API Error: {e}")
+                print(f"Response: {error_detail[:500]}")
+                raise RuntimeError(f"NIM API failed: {error_detail[:200]}") from e

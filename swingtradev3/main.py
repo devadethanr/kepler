@@ -13,6 +13,7 @@ from swingtradev3.auth.token_manager import TokenManager
 from swingtradev3.backtest.candle_replay import run_backtest
 from swingtradev3.config import cfg
 from swingtradev3.logging_config import get_logger, setup_logging
+from swingtradev3.notifications.telegram_handler import TelegramInboundHandler
 from swingtradev3.paths import ensure_runtime_dirs
 
 
@@ -56,6 +57,12 @@ async def _run_scheduled() -> None:
     research_agent = ResearchAgent()
     execution_agent = ExecutionAgent()
     token_manager = TokenManager()
+    # Use persistent last_update_id (dedup via processed IDs file now)
+    telegram_handler = TelegramInboundHandler()
+
+    # Run Telegram inbound polling in background (cancellable)
+    polling_task = asyncio.create_task(telegram_handler.start_polling(interval=5))
+    log.info("Telegram polling task started")
 
     # Startup: run once immediately if within market hours
     if _is_market_hours():
