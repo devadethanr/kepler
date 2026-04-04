@@ -1,0 +1,15 @@
+{
+  "cash_inr": 50000,
+  "realized_pnl": 1500,
+  "unrealized_pnl": 850,
+  "positions": [
+    {
+      "ticker": "SBIN",
+      "quantity": 10,
+      "entry_price": 800,
+      "current_price": 850,
+      "stop_price": 775,
+      "target_price": 900
+    }
+  ]
+}

@@ -32,8 +32,8 @@ import yaml
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field, model_validator
 
-from .models import TradingMode
-from .paths import PROJECT_ROOT
+from models import TradingMode
+from paths import PROJECT_ROOT
 
 
 # ═══════════════════════════════════════════════════════════

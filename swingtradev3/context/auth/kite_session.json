@@ -1,0 +1,36 @@
+{
+  "user_type": "individual/res_no_nn",
+  "email": "devadethan1122@gmail.com",
+  "user_name": "Devadethan R",
+  "user_shortname": "Devadethan",
+  "broker": "ZERODHA",
+  "exchanges": [
+    "NSE",
+    "BSE",
+    "MF"
+  ],
+  "products": [
+    "CNC",
+    "NRML",
+    "MIS",
+    "BO",
+    "CO"
+  ],
+  "order_types": [
+    "MARKET",
+    "LIMIT",
+    "SL",
+    "SL-M"
+  ],
+  "avatar_url": null,
+  "user_id": "RDK847",
+  "api_key": "m0q3d9nvg75ug0zg",
+  "access_token": "Mdzyi8i0gNaxZKFcQqzB2loOYxygoFG6",
+  "public_token": "S9xpH5wP21yf1UNJg4iLlCxN03zjgOzV",
+  "refresh_token": "",
+  "enctoken": "jObbAXRQTosuErPmgBe/6TtOu/cVLnHeEdsgIfDmzGUEuDhlWREDR/dFG0Gh1A9IUPXG+5nxA36vaNNxDnqogXH1XhWTCaiC7IvoBVjg6MJHg6psozz53TmbA5GORWU=",
+  "login_time": "2026-04-05T01:06:28",
+  "meta": {
+    "demat_consent": "consent"
+  }
+}

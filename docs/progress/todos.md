@@ -297,21 +297,25 @@
 - [x] Created `docker-compose.dev.yml` — 2 services: app + kite-mcp (at project root)
 - [x] Created `requirements.txt` with all new packages
 - [x] Created `pyproject.toml` for editable install
-- [x] Created `Makefile` — dev, test, lint, logs, stop, clean, shell, health
+- [x] Created `Makefile` — dev, test, lint, logs, stop, clean, shell, health, **login**
 - [x] Created `.dockerignore`
 - [x] Created `models.py` — shared Pydantic models (layer contracts + v2 models)
 - [x] Created `paths.py` — path constants
 - [x] Created `api/main.py` — FastAPI app with health + ws routes
 - [x] Created `api/routes/health.py` — GET /health endpoint
-- [x] Created `api/routes/ws.py` — WebSocket /ws/alerts
+- [x] Created `api/routes/ws.py` — WebSocket /ws/alerts with broadcast utility
 - [x] Created `api/schemas/health.py` — Health response schema
 - [x] Created `dashboard/app.py` — Streamlit dashboard skeleton with 4 metrics cards
+- [x] Created `auth/kite/login.py` — Kite login helper (browser → request_token → access_token → session save)
+- [x] Kite login working via `make login` — session saved to `context/auth/kite_session.json`
+- [x] Authenticated user: Devadethan R (RDK847), ZERODHA
 
 ### Verified Working
 - [x] FastAPI `/health` returns 200: `{"status":"ok","mode":"paper","services":{"app":"running","kite-mcp":"unknown"}}`
 - [x] Streamlit dashboard loads at `localhost:8502` (HTTP 200)
 - [x] Docker build succeeds, hot reload active
-- [x] Ports: FastAPI → 8001, Streamlit → 8502, Kite-MCP → 8081 (8000/8501/3000 occupied)
+- [x] `make login` — interactive Kite auth with datetime serialization fix
+- [x] Ports: FastAPI → 8001, Streamlit → 8502, Kite-MCP → 8081 (8000/8501/3000 occupied locally)
 
 ### Phase 1: Foundation
 - [ ] Not started
@@ -335,4 +339,5 @@
 - **Hot reload** — Dev mode uses `uvicorn --reload` + volume mounts
 - **File-based persistence** — No database, JSON files in `context/`
 - **Single container** — FastAPI + Streamlit run in same Docker container (ports 8000 + 8501)
-- **Kite MCP** — Built from `Dockerfile.kite-mcp` at project root (clones zerodha/kite-mcp-server)
+- **Kite auth** — Direct session via `make login`, MCP sidecar available as fallback
+- **TimesFM** — Commented out in requirements (v2.5 not on PyPI yet, only 1.0.0 available)

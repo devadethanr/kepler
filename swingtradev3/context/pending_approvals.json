@@ -1,0 +1,15 @@
+[
+  {
+    "ticker": "INFY",
+    "company_name": "Infosys Ltd",
+    "score": 8.2,
+    "setup_type": "breakout",
+    "entry_zone": {
+      "low": 1850,
+      "high": 1900
+    },
+    "stop_price": 1800,
+    "target_price": 2100,
+    "status": "pending"
+  }
+]
