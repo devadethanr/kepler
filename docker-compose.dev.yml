@@ -1,0 +1,53 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: swingtradev3-app
+    ports:
+      - "8001:8000"
+      - "8502:8501"
+    volumes:
+      - ./swingtradev3:/app
+      - ./swingtradev3/context:/app/context
+      - ./swingtradev3/logs:/app/logs
+      - ./swingtradev3/strategy:/app/strategy
+    env_file:
+      - swingtradev3/.env
+    environment:
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - kite-mcp
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    # Override CMD for dev: hot reload for FastAPI, auto-refresh for Streamlit
+    command: >
+      sh -c "
+        uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload &
+        streamlit run dashboard/app.py --server.port 8501 --server.address 0.0.0.0 --server.enableCORS false
+      "
+
+  kite-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile.kite-mcp
+    container_name: swingtradev3-kite-mcp
+    ports:
+      - "8081:8080"
+    env_file:
+      - swingtradev3/.env
+    environment:
+      - KITE_API_KEY=${KITE_API_KEY}
+      - KITE_API_SECRET=${KITE_API_SECRET}
+      - KITE_ACCESS_TOKEN=${KITE_ACCESS_TOKEN}
+      - KITE_REDIRECT_URL=${KITE_REDIRECT_URL:-http://localhost:5000}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

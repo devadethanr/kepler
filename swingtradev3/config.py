@@ -1,5 +1,29 @@
+"""
+swingtradev3 Configuration
+==========================
+
+All configuration models loaded from config.yaml via Pydantic.
+Single source of truth for all tunable values.
+
+Sections:
+  - Trading (mode, capital, universe)
+  - Research (scan times, thresholds, filters, analyst loop)
+  - Execution (polling, trailing, corporate actions)
+  - Risk (per-trade limits, drawdown, position sizing)
+  - Indicators (momentum, trend, volatility, volume, structure, RS, patterns)
+  - LLM (models, temperatures, fallback chain, ADK routing)
+  - Learning (trade review, lesson generation)
+  - Schedule (market hours, 24-hour cycle timings)
+  - Notifications (Telegram settings)
+  - Backtest (dates, thresholds, walk-forward, optimizer)
+  - API (FastAPI host, port, CORS, auth, rate limits)
+  - Dashboard (Streamlit host, port, refresh)
+  - Data (rate limits, cache TTLs)
+"""
+
 from __future__ import annotations
 
+import os
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -12,7 +36,25 @@ from .models import TradingMode
 from .paths import PROJECT_ROOT
 
 
+# ═══════════════════════════════════════════════════════════
+# TRADING
+# ═══════════════════════════════════════════════════════════
+
+class TradingConfig(BaseModel):
+    mode: TradingMode
+    capital_inr: float
+    exchange: str
+    universe: str
+    max_positions: int
+    min_cash_reserve_pct: float
+
+
+# ═══════════════════════════════════════════════════════════
+# RESEARCH
+# ═══════════════════════════════════════════════════════════
+
 class QuickFilterConfig(BaseModel):
+    """Fast Python-based filters applied before LLM analysis."""
     min_market_cap_cr: float
     min_avg_volume: int
     max_promoter_pledge_pct: float
@@ -20,6 +62,7 @@ class QuickFilterConfig(BaseModel):
 
 
 class AnalystLoopConfig(BaseModel):
+    """Monthly SKILL.md review and improvement loop."""
     enabled: bool = True
     cadence: str = "monthly"
     day_of_month: int = 1
@@ -28,8 +71,22 @@ class AnalystLoopConfig(BaseModel):
 
 
 class QuarterlyAuditConfig(BaseModel):
+    """Quarterly strategy audit requiring minimum trade count."""
     enabled: bool = True
     min_trades_required: int
+
+
+class ResearchFilterConfig(BaseModel):
+    """V2: Multi-signal candidate selection funnel thresholds."""
+    min_priority_signals: int = 1
+    batch_size: int = 10
+    news_sweep_query: str = "Indian stock market today Nifty 200 news"
+    options_pcr_threshold: float = 1.2
+    options_oi_spike_pct: float = 20
+    trend_filter_ema: int = 200
+    min_volume_ratio: float = 1.0
+    max_pledging_pct: float = 25
+    min_delivery_pct: float = 50
 
 
 class ResearchConfig(BaseModel):
@@ -44,7 +101,12 @@ class ResearchConfig(BaseModel):
     quick_filter: QuickFilterConfig
     analyst_loop: AnalystLoopConfig
     quarterly_audit: QuarterlyAuditConfig
+    filter: ResearchFilterConfig = Field(default_factory=ResearchFilterConfig)
 
+
+# ═══════════════════════════════════════════════════════════
+# EXECUTION
+# ═══════════════════════════════════════════════════════════
 
 class CorporateActionHandlingConfig(BaseModel):
     dividend_adjust_stop: bool = True
@@ -65,6 +127,10 @@ class ExecutionConfig(BaseModel):
     corporate_action_handling: CorporateActionHandlingConfig
 
 
+# ═══════════════════════════════════════════════════════════
+# RISK
+# ═══════════════════════════════════════════════════════════
+
 class ConfidenceBucketConfig(BaseModel):
     min_score: float
     capital_pct: float
@@ -82,6 +148,10 @@ class RiskConfig(BaseModel):
     min_rr_ratio: float
     confidence_sizing: ConfidenceSizingConfig
 
+
+# ═══════════════════════════════════════════════════════════
+# INDICATORS
+# ═══════════════════════════════════════════════════════════
 
 class IndicatorMomentumConfig(BaseModel):
     rsi_length: int
@@ -150,6 +220,10 @@ class IndicatorsConfig(BaseModel):
     patterns: IndicatorPatternsConfig
 
 
+# ═══════════════════════════════════════════════════════════
+# LLM
+# ═══════════════════════════════════════════════════════════
+
 class LLMRoleConfig(BaseModel):
     provider: str
     model: str
@@ -168,18 +242,36 @@ class LLMRolesConfig(BaseModel):
     analyst: LLMRoleConfig
 
 
+class LlmAdkConfig(BaseModel):
+    """V2: ADK model routing via LiteLLM for each agent type."""
+    root_model: str = "meta/llama-3.1-70b-instruct"
+    research_model: str = "meta/llama-3.1-70b-instruct"
+    execution_model: str = "meta/llama-3.1-70b-instruct"
+    learning_model: str = "meta/llama-3.1-70b-instruct"
+    judge_model: str = "meta/llama-3.1-70b-instruct"
+
+
 class LLMConfig(BaseModel):
     timeout_seconds: float
     max_tool_calls_per_stock: int
     roles: LLMRolesConfig
     fallback_chain: list[LLMFallbackConfig] = Field(default_factory=list)
+    adk: LlmAdkConfig = Field(default_factory=LlmAdkConfig)
 
+
+# ═══════════════════════════════════════════════════════════
+# LEARNING
+# ═══════════════════════════════════════════════════════════
 
 class LearningConfig(BaseModel):
     min_trades_for_lesson: int
     min_trades_for_kelly: int
     max_lessons_per_month: int
 
+
+# ═══════════════════════════════════════════════════════════
+# SCHEDULE
+# ═══════════════════════════════════════════════════════════
 
 class ScheduleConfig(BaseModel):
     auth_refresh: str
@@ -189,6 +281,10 @@ class ScheduleConfig(BaseModel):
     briefing_time: str
     timezone: str
 
+
+# ═══════════════════════════════════════════════════════════
+# NOTIFICATIONS
+# ═══════════════════════════════════════════════════════════
 
 class TelegramConfig(BaseModel):
     enabled: bool = True
@@ -201,6 +297,10 @@ class TelegramConfig(BaseModel):
 class NotificationsConfig(BaseModel):
     telegram: TelegramConfig
 
+
+# ═══════════════════════════════════════════════════════════
+# BACKTEST
+# ═══════════════════════════════════════════════════════════
 
 class WalkForwardConfig(BaseModel):
     enabled: bool = True
@@ -241,16 +341,130 @@ class BacktestConfig(BaseModel):
     optimizer: OptimizerConfig
 
 
-class TradingConfig(BaseModel):
-    mode: TradingMode
-    capital_inr: float
-    exchange: str
-    universe: str
-    max_positions: int
-    min_cash_reserve_pct: float
+# ═══════════════════════════════════════════════════════════
+# V2 ADDITIONS — API, DASHBOARD, SCHEDULER, DATA
+# ═══════════════════════════════════════════════════════════
 
+class ApiRateLimitConfig(BaseModel):
+    requests_per_minute: int = 60
+    burst: int = 10
+
+
+class ApiConfig(BaseModel):
+    """V2: FastAPI server settings."""
+    enabled: bool = True
+    host: str = "0.0.0.0"
+    port: int = 8000
+    cors_origins: list[str] = Field(default_factory=lambda: ["http://localhost:8501"])
+    api_key_env: str = "FASTAPI_API_KEY"
+    rate_limit: ApiRateLimitConfig = Field(default_factory=ApiRateLimitConfig)
+
+    @property
+    def api_key(self) -> str:
+        return os.environ.get(self.api_key_env, "")
+
+
+class DashboardConfig(BaseModel):
+    """V2: Streamlit dashboard settings."""
+    enabled: bool = True
+    host: str = "0.0.0.0"
+    port: int = 8501
+    refresh_interval_seconds: int = 30
+    theme: str = "light"
+
+
+class SchedulerOvernightConfig(BaseModel):
+    start_time: str = "22:00"
+    end_time: str = "06:00"
+    global_market_tracking_minutes: int = 120
+    news_monitoring_minutes: int = 30
+    macro_updates_hours: int = 4
+    gift_nifty_minutes: int = 15
+    gift_nifty_start: str = "05:00"
+
+
+class SchedulerMorningConfig(BaseModel):
+    news_digest_time: str = "06:00"
+    regime_check_time: str = "06:30"
+    fii_dii_check_time: str = "07:00"
+    earnings_check_time: str = "07:30"
+    briefing_generation_time: str = "08:00"
+    briefing_send_time: str = "08:30"
+    approval_reminder_time: str = "08:45"
+    premarket_setup_time: str = "09:00"
+
+
+class SchedulerMarketHoursConfig(BaseModel):
+    opening_range_end: str = "09:45"
+    position_monitoring_minutes: int = 15
+    gtt_health_check_minutes: int = 30
+    intraday_news_minutes: int = 60
+    entry_window_start: str = "10:30"
+    mid_morning_regime_check: str = "11:00"
+    lunch_volume_check_start: str = "12:00"
+    lunch_volume_check_end: str = "13:00"
+    afternoon_review: str = "13:00"
+    late_day_news: str = "14:00"
+    final_entry_window: str = "14:30"
+    closing_prep: str = "15:00"
+    market_close_actions: str = "15:30"
+
+
+class SchedulerPostMarketConfig(BaseModel):
+    eod_data_collection: str = "15:30"
+    pnl_calculation: str = "15:45"
+    fii_dii_final: str = "16:00"
+    options_analysis: str = "16:15"
+    corporate_action_check: str = "16:30"
+    observation_logging: str = "17:00"
+    state_snapshot: str = "17:30"
+
+
+class SchedulerEveningResearchConfig(BaseModel):
+    start_time: str = "18:00"
+    signal_sweep_minutes: int = 15
+    filtering_minutes: int = 15
+    deep_analysis_minutes: int = 90
+    scoring_minutes: int = 30
+    briefing_send_time: str = "20:30"
+    approval_window_open: str = "20:45"
+
+
+class SchedulerWindDownConfig(BaseModel):
+    final_news_scan: str = "21:00"
+    state_persistence: str = "21:15"
+    log_rotation: str = "21:30"
+    health_check: str = "21:45"
+    overnight_mode_start: str = "22:00"
+
+
+class SchedulerConfig(BaseModel):
+    """V2: 24-hour operational cycle timings."""
+    overnight: SchedulerOvernightConfig = Field(default_factory=SchedulerOvernightConfig)
+    morning: SchedulerMorningConfig = Field(default_factory=SchedulerMorningConfig)
+    market_hours: SchedulerMarketHoursConfig = Field(default_factory=SchedulerMarketHoursConfig)
+    post_market: SchedulerPostMarketConfig = Field(default_factory=SchedulerPostMarketConfig)
+    evening_research: SchedulerEveningResearchConfig = Field(default_factory=SchedulerEveningResearchConfig)
+    wind_down: SchedulerWindDownConfig = Field(default_factory=SchedulerWindDownConfig)
+
+
+class DataConfig(BaseModel):
+    """V2: Data layer settings — rate limits, cache TTLs."""
+    kite_rate_limit_per_second: int = 3
+    cache_ttl_minutes: int = 30
+    parquet_cache_enabled: bool = True
+    parquet_cache_dir: str = ".backtest_cache"
+    news_cache_ttl_minutes: int = 60
+    fundamentals_cache_ttl_hours: int = 24
+    macro_cache_ttl_hours: int = 4
+
+
+# ═══════════════════════════════════════════════════════════
+# ROOT CONFIG
+# ═══════════════════════════════════════════════════════════
 
 class AppConfig(BaseModel):
+    # Core
     trading: TradingConfig
     research: ResearchConfig
     execution: ExecutionConfig
@@ -261,6 +475,12 @@ class AppConfig(BaseModel):
     schedule: ScheduleConfig
     notifications: NotificationsConfig
     backtest: BacktestConfig
+
+    # V2 additions
+    api: ApiConfig = Field(default_factory=ApiConfig)
+    dashboard: DashboardConfig = Field(default_factory=DashboardConfig)
+    scheduler: SchedulerConfig = Field(default_factory=SchedulerConfig)
+    data: DataConfig = Field(default_factory=DataConfig)
 
     @model_validator(mode="after")
     def validate_thresholds(self) -> "AppConfig":

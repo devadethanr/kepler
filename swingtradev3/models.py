@@ -19,6 +19,19 @@ class AlertLevel(str, Enum):
     CRITICAL = "critical"
 
 
+class MarketRegime(str, Enum):
+    BULL = "bull"
+    BEAR = "bear"
+    CHOPPY = "choppy"
+    TRANSITION = "transition"
+
+
+class VolatilityState(str, Enum):
+    LOW = "low"
+    NORMAL = "normal"
+    HIGH = "high"
+
+
 class PendingCorporateAction(BaseModel):
     type: str | None = None
     amount: float | None = None
@@ -170,3 +183,90 @@ class FundamentalsSnapshot(BaseModel):
     is_stale: bool = False
     as_of: date | None = None
     source: str = "cache"
+
+
+# ─────────────────────────────────────────────────────────────
+# V2 Models — Layer Contracts
+# ─────────────────────────────────────────────────────────────
+
+
+class RegimeState(BaseModel):
+    regime: MarketRegime
+    confidence: float
+    volatility_state: VolatilityState
+    nifty_trend: str | None = None
+    vix: float | None = None
+    fii_flow_direction: str | None = None
+    as_of: datetime | None = None
+
+
+class SignalData(BaseModel):
+    ticker: str
+    priority: int = 0
+    signals: dict[str, bool] = Field(default_factory=dict)
+    technical: dict[str, Any] = Field(default_factory=dict)
+    fundamentals: dict[str, Any] = Field(default_factory=dict)
+    sentiment: dict[str, Any] = Field(default_factory=dict)
+    options: dict[str, Any] = Field(default_factory=dict)
+
+
+class StockScore(BaseModel):
+    ticker: str
+    score: float
+    setup_type: str
+    entry_zone: EntryZone
+    stop_price: float
+    target_price: float
+    holding_days_expected: int
+    confidence_reasoning: str
+    bull_case: list[str] = Field(default_factory=list)
+    bear_case: list[str] = Field(default_factory=list)
+    risk_flags: list[str] = Field(default_factory=list)
+    sector: str | None = None
+    signals: dict[str, bool] = Field(default_factory=dict)
+
+
+class ScanResult(BaseModel):
+    scan_date: date
+    regime: RegimeState | None = None
+    total_screened: int = 0
+    qualified_count: int = 0
+    shortlist: list[StockScore] = Field(default_factory=list)
+
+
+class ApprovalRequest(BaseModel):
+    approval_id: str
+    ticker: str
+    score: float
+    setup_type: str
+    entry_zone: EntryZone
+    stop_price: float
+    target_price: float
+    confidence_reasoning: str
+    created_at: datetime
+    expires_at: datetime
+
+
+class ApprovalResponse(BaseModel):
+    approval_id: str
+    decision: Literal["approved", "rejected", "expired"]
+    ticker: str
+    order_id: str | None = None
+    gtt_stop_id: str | None = None
+    gtt_target_id: str | None = None
+    message: str | None = None
+
+
+class HealthResponse(BaseModel):
+    status: str
+    mode: TradingMode
+    uptime_seconds: float | None = None
+    services: dict[str, str] = Field(default_factory=dict)
+
+
+class ScanStatusResponse(BaseModel):
+    status: Literal["idle", "running", "completed", "failed"]
+    started_at: datetime | None = None
+    completed_at: datetime | None = None
+    progress: str | None = None
+    result: ScanResult | None = None

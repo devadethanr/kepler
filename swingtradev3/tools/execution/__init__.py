@@ -1,1 +1,0 @@
-"""Execution-oriented tool adapters."""

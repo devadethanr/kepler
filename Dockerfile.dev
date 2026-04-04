@@ -1,0 +1,38 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# System dependencies
+RUN apt-get update && apt-get install -y \
+    wget \
+    tar \
+    gcc \
+    g++ \
+    make \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# TA-Lib C library
+RUN wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz \
+    && tar -xzf ta-lib-0.4.0-src.tar.gz \
+    && cd ta-lib/ \
+    && ./configure --prefix=/usr \
+    && make \
+    && make install \
+    && cd .. \
+    && rm -rf ta-lib ta-lib-0.4.0-src.tar.gz
+
+# Python dependencies
+COPY swingtradev3/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# App code
+COPY swingtradev3/ .
+
+# Install in editable mode for hot reload
+RUN pip install -e .
+
+EXPOSE 8000 8501
+
+# Dev mode: run FastAPI with reload + Streamlit
+CMD ["sh", "-c", "uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload & streamlit run dashboard/app.py --server.port 8501 --server.address 0.0.0.0 --server.enableCORS false"]

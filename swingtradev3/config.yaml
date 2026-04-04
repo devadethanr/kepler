@@ -29,6 +29,16 @@ research:
   quarterly_audit:
     enabled: true
     min_trades_required: 20
+  filter:
+    min_priority_signals: 1
+    batch_size: 10
+    news_sweep_query: "Indian stock market today Nifty 200 news"
+    options_pcr_threshold: 1.2
+    options_oi_spike_pct: 20
+    trend_filter_ema: 200
+    min_volume_ratio: 1.0
+    max_pledging_pct: 25
+    min_delivery_pct: 50
 
 execution:
   poll_interval_minutes: 30
@@ -138,6 +148,12 @@ llm:
       model: "gemini-2.0-flash"
     - provider: anthropic
       model: "claude-3-7-sonnet-latest"
+  adk:
+    root_model: "meta/llama-3.1-70b-instruct"
+    research_model: "meta/llama-3.1-70b-instruct"
+    execution_model: "meta/llama-3.1-70b-instruct"
+    learning_model: "meta/llama-3.1-70b-instruct"
+    judge_model: "meta/llama-3.1-70b-instruct"
 
 learning:
   min_trades_for_lesson: 8
@@ -192,3 +208,88 @@ backtest:
       indicators.volatility.atr_stop_multiplier: [1.0, 2.5]
       indicators.trend.adx_trend_threshold: [20, 30]
       risk.confidence_sizing.medium.capital_pct: [0.15, 0.35]
+
+# ─────────────────────────────────────────────────────────────
+# V2 ADDITIONS (ADK + FastAPI + Streamlit + 24-Hour Cycle)
+# ─────────────────────────────────────────────────────────────
+
+api:
+  enabled: true
+  host: "0.0.0.0"
+  port: 8000
+  cors_origins: ["http://localhost:8501"]
+  api_key_env: "FASTAPI_API_KEY"
+  rate_limit:
+    requests_per_minute: 60
+    burst: 10
+
+dashboard:
+  enabled: true
+  host: "0.0.0.0"
+  port: 8501
+  refresh_interval_seconds: 30
+  theme: "light"
+
+scheduler:
+  overnight:
+    start_time: "22:00"
+    end_time: "06:00"
+    global_market_tracking_minutes: 120
+    news_monitoring_minutes: 30
+    macro_updates_hours: 4
+    gift_nifty_minutes: 15
+    gift_nifty_start: "05:00"
+  morning:
+    news_digest_time: "06:00"
+    regime_check_time: "06:30"
+    fii_dii_check_time: "07:00"
+    earnings_check_time: "07:30"
+    briefing_generation_time: "08:00"
+    briefing_send_time: "08:30"
+    approval_reminder_time: "08:45"
+    premarket_setup_time: "09:00"
+  market_hours:
+    opening_range_end: "09:45"
+    position_monitoring_minutes: 15
+    gtt_health_check_minutes: 30
+    intraday_news_minutes: 60
+    entry_window_start: "10:30"
+    mid_morning_regime_check: "11:00"
+    lunch_volume_check_start: "12:00"
+    lunch_volume_check_end: "13:00"
+    afternoon_review: "13:00"
+    late_day_news: "14:00"
+    final_entry_window: "14:30"
+    closing_prep: "15:00"
+    market_close_actions: "15:30"
+  post_market:
+    eod_data_collection: "15:30"
+    pnl_calculation: "15:45"
+    fii_dii_final: "16:00"
+    options_analysis: "16:15"
+    corporate_action_check: "16:30"
+    observation_logging: "17:00"
+    state_snapshot: "17:30"
+  evening_research:
+    start_time: "18:00"
+    signal_sweep_minutes: 15
+    filtering_minutes: 15
+    deep_analysis_minutes: 90
+    scoring_minutes: 30
+    briefing_send_time: "20:30"
+    approval_window_open: "20:45"
+  wind_down:
+    final_news_scan: "21:00"
+    state_persistence: "21:15"
+    log_rotation: "21:30"
+    health_check: "21:45"
+    overnight_mode_start: "22:00"
+
+data:
+  kite_rate_limit_per_second: 3
+  cache_ttl_minutes: 30
+  parquet_cache_enabled: true
+  parquet_cache_dir: ".backtest_cache"
+  news_cache_ttl_minutes: 60
+  fundamentals_cache_ttl_hours: 24
+  macro_cache_ttl_hours: 4

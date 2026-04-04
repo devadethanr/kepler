@@ -1,1 +1,0 @@
-"""MCP-specific authentication helpers."""

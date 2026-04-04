@@ -9,7 +9,7 @@ CONTEXT_DIR = PROJECT_ROOT / "context"
 LOGS_DIR = PROJECT_ROOT / "logs"
 REPORTS_DIR = PROJECT_ROOT / "reports"
 STRATEGY_DIR = PROJECT_ROOT / "strategy"
-SCHEMAS_DIR = PROJECT_ROOT / "llm" / "schemas"
+OLD_DIR = PROJECT_ROOT / "old"
 
 
 def ensure_runtime_dirs() -> None:

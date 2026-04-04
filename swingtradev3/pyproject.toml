@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "swingtradev3"
+version = "2.0.0"
+description = "Autonomous AI Swing Trading System for Indian Equities"
+requires-python = ">=3.12"
+dependencies = [
+    "kiteconnect>=4.2.0",
+    "pandas>=2.0.0",
+    "numpy>=1.26.0",
+    "pyarrow>=15.0.0",
+    "pydantic>=2.6.0",
+    "PyYAML>=6.0.0",
+    "python-dotenv>=1.0.0",
+    "requests>=2.31.0",
+    "aiohttp>=3.9.0",
+    "tenacity>=8.2.0",
+    "loguru>=0.7.0",
+    "schedule>=1.2.0",
+    "tqdm>=4.66.0",
+    "openai>=1.30.0",
+    "anthropic>=0.26.0",
+    "google-adk>=1.0.0",
+    "litellm>=1.0.0",
+    "transformers>=4.40.0",
+    "yfinance>=0.2.40",
+    "nsepython>=2.9",
+    "nsetools>=1.0.0",
+    "firecrawl-py>=1.0.0",
+    "beautifulsoup4>=4.12.0",
+    "tavily-python>=0.3.0",
+    "duckduckgo-search>=5.0.0",
+    "feedparser>=6.0.0",
+    "praw>=7.7.0",
+    "pytrends>=4.9.0",
+    "pandas-ta>=0.3.14b",
+    "TA-Lib>=0.4.28",
+    "vectorbt>=0.26.0",
+    "quantstats>=0.0.62",
+    "optuna>=3.6.0",
+    "plotly>=5.20.0",
+    "scikit-learn>=1.4.0",
+    "scipy>=1.12.0",
+    "pyotp>=2.9.0",
+    "gitpython>=3.1.0",
+    "fastapi[standard]>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+    "streamlit>=1.40.0",
+    "python-telegram-bot>=21.0",
+    "mcp>=1.2.0",
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.8.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["*"]
+exclude = ["old*", "tests*"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"

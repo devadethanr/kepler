@@ -12,6 +12,7 @@ __pycache__
 *.pyo
 *.pyd
 .env
+.env.example
 swingtradev3/.env
 swingtradev3/.backtest_cache
 swingtradev3/reports
@@ -21,3 +22,4 @@ swingtradev3/context/daily
 swingtradev3/__pycache__
 swingtradev3/*/__pycache__
 swingtradev3/*/*/__pycache__
+swingtradev3/old/
