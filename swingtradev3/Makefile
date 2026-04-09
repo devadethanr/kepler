@@ -9,7 +9,7 @@ dev-detach:
 	docker compose -f $(COMPOSE_FILE) up --build -d
 
 login:
-	docker compose -f $(COMPOSE_FILE) run --rm -it app python auth/kite/login.py
+	docker compose -f $(COMPOSE_FILE) exec -it app python -m auth.kite.login
 
 test:
 	docker compose -f $(COMPOSE_FILE) exec app pytest tests/ -v

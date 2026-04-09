@@ -9,7 +9,8 @@
       "entry_price": 800,
       "current_price": 850,
       "stop_price": 775,
-      "target_price": 900
+      "target_price": 900,
+      "opened_at": "2026-04-01T10:00:00"
     }
   ]
 }

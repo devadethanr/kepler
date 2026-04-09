@@ -13,13 +13,13 @@
 - [x] **Zerodha Kite** — Already have (`m0q3d9nvg75ug0zg`)
 - [x] **NVIDIA NIM** — Already have (`nvapi-dZsJ...`)
 - [x] **Tavily** — Already have (`tvly-dev-...`)
-- [ ] **Firecrawl** — Get API key from firecrawl.dev (free tier: 500 credits/mo)
-- [ ] **Groq** — Get API key from console.groq.com (free tier)
+- [x] **Firecrawl** — Get API key from firecrawl.dev (free tier: 500 credits/mo)
+- [x] **Groq** — Get API key from console.groq.com (free tier)
 - [ ] **Gemini** — Get API key from aistudio.google.com (free tier: 15 RPM)
 - [x] **Telegram Bot Token** — Already have via BotFather
 - [x] **Telegram Chat ID** — Already have (your user ID)
-- [ ] **API Key for FastAPI** — Generate a random string for API auth
-- [ ] **Action:** Edit `swingtradev3/.env` with all keys
+- [x] **API Key for FastAPI** — Generate a random string for API auth
+- [x] **Action:** Edit `swingtradev3/.env` with all keys
 
 ### 0.2 Config.yaml Audit
 - [x] Copied old config.yaml with all existing magic numbers
@@ -30,8 +30,8 @@
   - [x] `dashboard` — Streamlit port, refresh interval
   - [x] `llm.adk` — ADK model routing
   - [x] `data` — Kite rate limits, cache TTLs
-- [ ] Config.py Pydantic model update for v2 fields
-- [ ] Add validation for critical thresholds
+- [x] Config.py Pydantic model update for v2 fields
+- [x] Add validation for critical thresholds
 
 ### 0.3 Docker Setup with Hot Reload
 - [x] Created `Dockerfile.dev` — Dev mode with `uvicorn --reload` + Streamlit in same container
@@ -39,7 +39,7 @@
 - [x] Created `docker-compose.dev.yml` — 2 services: app (8000 + 8501) + kite-mcp (3000)
 - [x] Kite MCP Dockerfile exists at project root (`Dockerfile.kite-mcp`) — builds from zerodha/kite-mcp-server repo
 - [x] Created `.dockerignore` to exclude `context/`, `logs/`, `__pycache__`, `.git`, `old/`
-- [ ] Test: `docker compose -f docker-compose.dev.yml up` — both services start
+- [x] Test: `docker compose -f docker-compose.dev.yml up` — both services start
 - [ ] Test hot reload: Change a FastAPI route → auto-reloads within 2s
 - [ ] Test hot reload: Change a Streamlit page → auto-reloads within 2s
 - [ ] Test: FastAPI `/health` endpoint returns 200
@@ -128,48 +128,48 @@
 **Goal:** Replace `research_agent.py` with ADK SequentialAgent pipeline with multi-signal funnel.
 
 ### 2.1 Data Layer Enhancements
-- [ ] Implement `data/market_regime.py` — Market regime detection
-- [ ] Implement `data/institutional_flows.py` — FII/DII/block deals tracking
-- [ ] Implement `data/news_aggregator.py` — Multi-source news (Tavily + RSS + Reddit)
-- [ ] Implement `data/earnings_analyzer.py` — Earnings quality analysis
-- [ ] Implement `data/events_calendar.py` — RBI, budget, rebalancing dates
-- [ ] Implement `data/options_analyzer.py` — Options chain intelligence
-- [ ] Implement `data/macro_indicators.py` — Macro data layer
-- [ ] Implement `data/timesfm_forecaster.py` — Google TimesFM 2.5 price/volume forecasting (200M params, local, free)
-- [ ] Enhance `data/indicators/volume.py` — Add VWAP, CMF, volume profile
-- [ ] Enhance `data/indicators/relative_strength.py` — Add multi-benchmark RS, RS rank
+- [x] Implement `data/market_regime.py` — Market regime detection
+- [x] Implement `data/institutional_flows.py` — FII/DII/block deals tracking
+- [x] Implement `data/news_aggregator.py` — Multi-source news (Tavily + RSS + Reddit)
+- [x] Implement `data/earnings_analyzer.py` — Earnings quality analysis
+- [x] Implement `data/events_calendar.py` — RBI, budget, rebalancing dates
+- [x] Implement `data/options_analyzer.py` — Options chain intelligence
+- [x] Implement `data/macro_indicators.py` — Macro data layer
+- [x] Implement `data/timesfm_forecaster.py` — Google TimesFM 2.5 price/volume forecasting (200M params, local, free)
+- [x] Enhance `data/indicators/volume.py` — Add VWAP, CMF, volume profile
+- [x] Enhance `data/indicators/relative_strength.py` — Add multi-benchmark RS, RS rank
 
 ### 2.2 Signal Engine Tools
-- [ ] Implement `tools/analysis/sentiment_analysis.py` — FinBERT + LLM sentiment
-- [ ] Implement `tools/analysis/regime_detection.py` — Market regime classification
-- [ ] Implement `tools/analysis/correlation_check.py` — Portfolio correlation check
-- [ ] Implement `tools/analysis/entry_timing.py` — Smart entry timing
-- [ ] Implement `tools/analysis/timesfm_forecast.py` — @tool def forecast_timeseries(ticker, horizon) → point + quantile forecasts
-- [ ] Enhance `tools/market/market_data.py` — Multi-timeframe support
-- [ ] Enhance `tools/market/fundamental_data.py` — Earnings quality analysis
+- [x] Implement `tools/analysis/sentiment_analysis.py` — FinBERT + LLM sentiment (no fallbacks, torch installed)
+- [x] Implement `tools/analysis/regime_detection.py` — Market regime classification
+- [x] Implement `tools/analysis/correlation_check.py` — Portfolio correlation check
+- [x] Implement `tools/analysis/entry_timing.py` — Smart entry timing
+- [x] Implement `tools/analysis/timesfm_forecast.py` — @tool def forecast_timeseries(ticker, horizon) → point + quantile forecasts
+- [x] Enhance `tools/market/market_data.py` — Multi-timeframe support
+- [x] Enhance `tools/market/fundamental_data.py` — Earnings quality analysis
 
 ### 2.3 ADK Research Agents
-- [ ] Implement `agents/research/filter_agent.py` — Multi-signal candidate selection funnel (Layer 0-2)
-- [ ] Implement `agents/research/regime_agent.py` — Market regime detection agent
-- [ ] Implement `agents/research/market_data_agent.py` — OHLCV + indicators agent
-- [ ] Implement `agents/research/fundamentals_agent.py` — Fundamental analysis agent
-- [ ] Implement `agents/research/sentiment_agent.py` — News + social sentiment agent
-- [ ] Implement `agents/research/options_agent.py` — Options chain analysis agent
-- [ ] Implement `agents/research/timesfm_agent.py` — TimesFM forecast integration agent
-- [ ] Implement `agents/research/scorer_agent.py` — Final scoring + shortlisting agent
-- [ ] Implement `agents/research/scanner.py` — BatchScannerAgent (dynamic parallel)
-- [ ] Wire `agents/research/pipeline.py` — SequentialAgent: regime → filter → scan → score
+- [x] Implement `agents/research/filter_agent.py` — Multi-signal candidate selection funnel (Layer 0-2)
+- [x] Implement `agents/research/regime_agent.py` — Market regime detection agent
+- [x] Implement `agents/research/market_data_agent.py` — OHLCV + indicators agent
+- [x] Implement `agents/research/fundamentals_agent.py` — Fundamental analysis agent
+- [x] Implement `agents/research/sentiment_agent.py` — News + social sentiment agent
+- [x] Implement `agents/research/options_agent.py` — Options chain analysis agent
+- [x] Implement `agents/research/timesfm_agent.py` — TimesFM forecast integration agent
+- [x] Implement `agents/research/scorer_agent.py` — Final scoring + shortlisting agent
+- [x] Implement `agents/research/scanner.py` — BatchScannerAgent (dynamic parallel)
+- [x] Wire `agents/research/pipeline.py` — SequentialAgent: regime → filter → scan → score
 
 ### 2.4 Risk Enhancement
-- [ ] Implement `risk/correlation_checker.py` — Portfolio correlation + VaR
-- [ ] Enhance `risk/engine.py` — Regime-adjusted sizing
+- [x] Implement `risk/correlation_checker.py` — Portfolio correlation + VaR
+- [x] Enhance `risk/engine.py` — Regime-adjusted sizing
 
 ### 2.5 Testing
-- [ ] Implement `tests/test_agents/test_research_pipeline.py`
-- [ ] Test multi-signal funnel: 200 stocks → ~15-25 qualified
-- [ ] Test parallel scanner: batches of 10, concurrent analysis
-- [ ] Test scorer agent: chain-of-thought, bull/bear cases, scoring
-- [ ] Verify research pipeline produces same/better scores vs old baseline
+- [x] Implement `tests/test_agents/test_research_pipeline.py`
+- [x] Test multi-signal funnel: 200 stocks → ~15-25 qualified
+- [x] Test parallel scanner: batches of 10, concurrent analysis
+- [x] Test scorer agent: chain-of-thought, bull/bear cases, scoring
+- [x] Verify research pipeline produces same/better scores vs old baseline
 
 **Deliverable:** ADK-based research pipeline with regime detection, multi-signal funnel, sentiment analysis, and parallel scanning.
 
@@ -180,16 +180,16 @@
 **Goal:** Replace `execution_agent.py` + learning modules with ADK agents.
 
 ### 3.1 ADK Execution Agents
-- [ ] Implement `agents/execution/monitor.py` — LoopAgent: 30-min position polling
-- [ ] Implement `agents/execution/order_agent.py` — LlmAgent: entry decisions + human-in-loop
-- [ ] Implement `agents/execution/gtt_agent.py` — LlmAgent: GTT lifecycle management
-- [ ] Implement `agents/execution/exit_agent.py` — LlmAgent: exit intelligence
-- [ ] Wire ADK human-in-the-loop to FastAPI `/approvals` endpoints
+- [x] Implement `agents/execution/monitor.py` — LoopAgent: 30-min position polling
+- [x] Implement `agents/execution/order_agent.py` — LlmAgent: entry decisions + human-in-loop
+- [x] Implement `agents/execution/gtt_agent.py` — LlmAgent: GTT lifecycle management
+- [x] Implement `agents/execution/exit_agent.py` — LlmAgent: exit intelligence
+- [x] Wire ADK human-in-the-loop to FastAPI `/approvals` endpoints
 
 ### 3.2 ADK Learning Agents
-- [ ] Implement `agents/learning/reviewer.py` — LlmAgent: trade review on close
-- [ ] Implement `agents/learning/stats_agent.py` — LlmAgent: monthly stats calculation
-- [ ] Implement `agents/learning/lesson_agent.py` — LlmAgent: SKILL.md improvement proposals
+- [x] Implement `agents/learning/reviewer.py` — LlmAgent: trade review on close
+- [x] Implement `agents/learning/stats_agent.py` — LlmAgent: monthly stats calculation
+- [x] Implement `agents/learning/lesson_agent.py` — LlmAgent: SKILL.md improvement proposals
 
 ### 3.3 24-Hour Scheduler Integration
 - [ ] Implement `api/tasks/overnight_monitor.py` — Phase 1: Global markets, news, macro
@@ -233,8 +233,8 @@
 - [ ] Create eval dataset from historical research runs
 
 ### 4.2 Security & Production
-- [ ] Implement `api/middleware/auth.py` — Full API key authentication
-- [ ] Implement `api/middleware/rate_limit.py` — Rate limiting per endpoint
+- [x] Implement `api/middleware/auth.py` — Full API key authentication
+- [x] Implement `api/middleware/rate_limit.py` — Rate limiting per endpoint (Disabled per user request for local dev)
 - [ ] Add request logging with correlation IDs
 - [ ] Add error handling with structured error responses
 - [ ] Add health check endpoints for Docker healthchecks
@@ -321,10 +321,10 @@
 - [ ] Not started
 
 ### Phase 2: Research Pipeline
-- [ ] Not started
+- [x] Complete. All research agents and pipeline implemented using ADK.
 
 ### Phase 3: Execution + Learning
-- [ ] Not started
+- [x] ADK agents for execution, monitoring, and learning have been implemented.
 
 ### Phase 4: Evaluation + Polish
 - [ ] Not started

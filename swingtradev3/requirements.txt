@@ -19,6 +19,7 @@ anthropic>=0.26.0
 google-adk>=1.0.0
 litellm>=1.0.0
 transformers>=4.40.0
+torch>=2.4.0
 
 # Data
 yfinance>=0.2.40
@@ -37,8 +38,7 @@ pandas-ta>=0.3.14b
 TA-Lib>=0.4.28
 
 # Time Series Forecasting
-# TimesFM 2.5 — install from git (not on PyPI yet, only 1.0.0)
-# Uncomment when ready: git+https://github.com/google-research/timesfm.git#egg=timesfm
+timesfm @ git+https://github.com/google-research/timesfm.git
 
 # Backtest & Metrics
 vectorbt>=0.26.0

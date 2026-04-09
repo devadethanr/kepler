@@ -1,0 +1,207 @@
+{
+  "0b8b2e156221a82da243febfb3780642": {
+    "analyzed_at": "2026-04-05T00:25:08.164112",
+    "catalyst_type": [
+      "management",
+      "macro"
+    ],
+    "finbert_score": 0.744,
+    "keyword_score": 0.0,
+    "novelty": "unknown",
+    "sentiment_label": "bullish",
+    "sentiment_score": 0.446,
+    "source_count": 2
+  },
+  "286b6269ee17915e01361cd492f3ee78": {
+    "analyzed_at": "2026-04-05T00:22:22.488505",
+    "catalyst_type": [
+      "upgrade",
+      "downgrade",
+      "contract"
+    ],
+    "finbert_score": 0.0,
+    "keyword_score": 0.2,
+    "novelty": "unknown",
+    "sentiment_label": "neutral",
+    "sentiment_score": 0.08,
+    "source_count": 2
+  },
+  "33a35d3eec9c3cc38ed664b43c98c052": {
+    "analyzed_at": "2026-04-05T00:22:22.842444",
+    "catalyst_type": [
+      "upgrade",
+      "downgrade",
+      "management"
+    ],
+    "finbert_score": -0.949,
+    "keyword_score": 0.0,
+    "novelty": "unknown",
+    "sentiment_label": "bearish",
+    "sentiment_score": -0.569,
+    "source_count": 2
+  },
+  "54c2bd80efe44ba01d2db9a23adbc6d5": {
+    "analyzed_at": "2026-04-05T00:22:22.653686",
+    "catalyst_type": [
+      "upgrade",
+      "macro",
+      "earnings",
+      "management",
+      "downgrade"
+    ],
+    "finbert_score": 0.0,
+    "keyword_score": 0.2,
+    "novelty": "unknown",
+    "sentiment_label": "neutral",
+    "sentiment_score": 0.08,
+    "source_count": 2
+  },
+  "5d113ff0c788990c608d339b022993ee": {
+    "analyzed_at": "2026-04-04T21:06:29.842989",
+    "catalyst_type": [
+      "regulatory"
+    ],
+    "finbert_score": -0.871,
+    "keyword_score": -0.2,
+    "novelty": "unknown",
+    "sentiment_label": "bearish",
+    "sentiment_score": -0.603,
+    "source_count": 2
+  },
+  "6cb95d79218f54907b919ca8d7bbc945": {
+    "analyzed_at": "2026-04-05T00:22:23.185379",
+    "catalyst_type": [
+      "upgrade",
+      "downgrade",
+      "management"
+    ],
+    "finbert_score": -0.943,
+    "keyword_score": 0.0,
+    "novelty": "unknown",
+    "sentiment_label": "bearish",
+    "sentiment_score": -0.566,
+    "source_count": 2
+  },
+  "79ca318b78da4ff9a251a01e5f0caa6b": {
+    "analyzed_at": "2026-04-05T00:30:49.104650",
+    "catalyst_type": [
+      "upgrade"
+    ],
+    "finbert_score": 0.0,
+    "keyword_score": 0.2,
+    "novelty": "unknown",
+    "sentiment_label": "neutral",
+    "sentiment_score": 0.08,
+    "source_count": 2
+  },
+  "87ffb09025b7a3c4533338d7bfaffe64": {
+    "analyzed_at": "2026-04-05T00:28:56.931193",
+    "catalyst_type": [
+      "contract"
+    ],
+    "finbert_score": 0.622,
+    "keyword_score": 0.2,
+    "novelty": "unknown",
+    "sentiment_label": "bullish",
+    "sentiment_score": 0.453,
+    "source_count": 2
+  },
+  "9a4360417ee485828c08683e05ab666f": {
+    "analyzed_at": "2026-04-05T00:25:07.902526",
+    "catalyst_type": [
+      "upgrade",
+      "regulatory",
+      "downgrade",
+      "management",
+      "macro",
+      "earnings"
+    ],
+    "finbert_score": 0.0,
+    "keyword_score": 0.0,
+    "novelty": "unknown",
+    "sentiment_label": "neutral",
+    "sentiment_score": 0.0,
+    "source_count": 2
+  },
+  "9bc22455504a98413dc0a6c7294cceb0": {
+    "analyzed_at": "2026-04-05T00:30:49.068468",
+    "catalyst_type": [
+      "earnings"
+    ],
+    "finbert_score": 0.955,
+    "keyword_score": 0.2,
+    "novelty": "unknown",
+    "sentiment_label": "bullish",
+    "sentiment_score": 0.653,
+    "source_count": 2
+  },
+  "aa814ea62fb65dec7eb90f667267dc8d": {
+    "analyzed_at": "2026-04-05T00:22:23.020325",
+    "catalyst_type": [
+      "upgrade",
+      "contract"
+    ],
+    "finbert_score": 0.0,
+    "keyword_score": 0.4,
+    "novelty": "unknown",
+    "sentiment_label": "neutral",
+    "sentiment_score": 0.16,
+    "source_count": 2
+  },
+  "c9f06e74e2988c006c70046b95a0f2f9": {
+    "analyzed_at": "2026-04-05T00:25:08.451790",
+    "catalyst_type": [
+      "corporate_action"
+    ],
+    "finbert_score": 0.0,
+    "keyword_score": 0.0,
+    "novelty": "unknown",
+    "sentiment_label": "neutral",
+    "sentiment_score": 0.0,
+    "source_count": 2
+  },
+  "dfe60189ef3c170d10c65aef9a786ae7": {
+    "analyzed_at": "2026-04-05T00:25:08.043128",
+    "catalyst_type": [
+      "macro",
+      "upgrade",
+      "contract",
+      "earnings"
+    ],
+    "finbert_score": 0.884,
+    "keyword_score": 0.6,
+    "novelty": "unknown",
+    "sentiment_label": "bullish",
+    "sentiment_score": 0.77,
+    "source_count": 2
+  },
+  "eb1fbac84aec770bb5e54450a405a2ce": {
+    "analyzed_at": "2026-04-04T20:49:17.924480",
+    "catalyst_type": [
+      "contract",
+      "upgrade"
+    ],
+    "finbert_score": 0.0,
+    "keyword_score": 0.4,
+    "novelty": "unknown",
+    "sentiment_label": "bullish",
+    "sentiment_score": 0.4,
+    "source_count": 1
+  },
+  "fdf25f60ad68b613ccd71f91fab9dcfd": {
+    "analyzed_at": "2026-04-05T00:25:08.612328",
+    "catalyst_type": [
+      "upgrade",
+      "downgrade",
+      "corporate_action",
+      "macro",
+      "earnings"
+    ],
+    "finbert_score": 0.935,
+    "keyword_score": 0.2,
+    "novelty": "unknown",
+    "sentiment_label": "bullish",
+    "sentiment_score": 0.641,
+    "source_count": 2
+  }
+}
