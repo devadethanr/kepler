@@ -8,7 +8,10 @@ from config import cfg
 
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
-async def get_api_key(api_key_header: str = Security(api_key_header)):
+async def get_api_key(request: Request, api_key_header: str = Security(api_key_header)):
+    if request.url.path == "/health":
+        return True
+        
     if not cfg.api.enabled:
         return True
         

@@ -3,16 +3,15 @@ from __future__ import annotations
 import time
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from .routes import health, ws, positions, trades, approvals, scan, regime, stats
 from .tasks.scheduler import scheduler
 from .middleware.auth import get_api_key
-from fastapi import Depends
 
 START_TIME = time.time()
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -33,6 +32,13 @@ app = FastAPI(
     lifespan=lifespan,
     dependencies=[Depends(get_api_key)]
 )
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal Server Error", "message": str(exc)},
+    )
 
 app.add_middleware(
     CORSMiddleware,

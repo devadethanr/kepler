@@ -33,6 +33,7 @@ async def approve_trade(ticker: str):
             from google.adk import Runner
             from google.adk.sessions import InMemorySessionService
             from agents.execution.order_agent import order_agent
+            from google.genai import types
             
             runner = Runner(
                 app_name="swingtradev3",
@@ -44,7 +45,11 @@ async def approve_trade(ticker: str):
             # Run in background to not block the API
             async def run_order_bg():
                 try:
-                    async for _ in runner.run_async(user_id="system", session_id="order_session"):
+                    async for _ in runner.run_async(
+                        user_id="system", 
+                        session_id="order_session",
+                        new_message=types.Content(role="user", parts=[types.Part(text=f"Execute approved trade for {ticker}")])
+                    ):
                         pass
                 except Exception as e:
                     print(f"Order agent failed: {e}")

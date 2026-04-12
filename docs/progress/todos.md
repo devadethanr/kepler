@@ -70,47 +70,47 @@
 **Goal:** FastAPI server running with basic routes, ADK root agent wired, Streamlit skeleton, existing agents triggered via API.
 
 ### 1.1 FastAPI Core
-- [ ] Implement `api/main.py` — FastAPI app with CORS, startup/shutdown events
-- [ ] Implement `api/routes/health.py` — `GET /health` returns service status
-- [ ] Implement `api/routes/positions.py` — `GET /positions`, `GET /positions/{id}`
-- [ ] Implement `api/routes/trades.py` — `GET /trades`, `GET /trades/{id}`, `POST /trades/{id}/close`
-- [ ] Implement `api/routes/approvals.py` — `GET /approvals`, `POST /approvals/{id}/yes`, `POST /approvals/{id}/no`
-- [ ] Implement `api/routes/scan.py` — `POST /scan`, `GET /scan/status`
-- [ ] Implement `api/routes/regime.py` — `GET /regime`
-- [ ] Implement `api/routes/stats.py` — `GET /stats`
-- [ ] Implement `api/routes/ws.py` — `WebSocket /ws/alerts`
-- [ ] Implement `api/schemas/` — Pydantic models for all request/response types
-- [ ] Implement `api/middleware/auth.py` — API key authentication
-- [ ] Implement `api/middleware/rate_limit.py` — Rate limiting
+- [x] Implement `api/main.py` — FastAPI app with CORS, startup/shutdown events
+- [x] Implement `api/routes/health.py` — `GET /health` returns service status
+- [x] Implement `api/routes/positions.py` — `GET /positions`, `GET /positions/{id}`
+- [x] Implement `api/routes/trades.py` — `GET /trades`, `GET /trades/{id}`, `POST /trades/{id}/close`
+- [x] Implement `api/routes/approvals.py` — `GET /approvals`, `POST /approvals/{id}/yes`, `POST /approvals/{id}/no`
+- [x] Implement `api/routes/scan.py` — `POST /scan`, `GET /scan/status`
+- [x] Implement `api/routes/regime.py` — `GET /regime`
+- [x] Implement `api/routes/stats.py` — `GET /stats`
+- [x] Implement `api/routes/ws.py` — `WebSocket /ws/alerts`
+- [x] Implement `api/schemas/` — Pydantic models for all request/response types
+- [x] Implement `api/middleware/auth.py` — API key authentication
+- [x] Implement `api/middleware/rate_limit.py` — Rate limiting
 
 ### 1.2 ADK Integration
-- [ ] Install `google-adk` + `litellm`
-- [ ] Implement `agents/root.py` — Root coordinator LlmAgent
-- [ ] Implement `agents/models.py` — LiteLLM model config for NIM routing
-- [ ] Wire ADK session state to file-based JSON persistence
-- [ ] Create ADK callback hooks for state persistence
-- [ ] Test: Root agent responds to basic queries via FastAPI
+- [x] Install `google-adk` + `litellm`
+- [x] Implement `agents/root.py` — Root coordinator LlmAgent
+- [x] Implement `agents/models.py` — LiteLLM model config for NIM routing (Merged into config.py)
+- [x] Wire ADK session state to file-based JSON persistence
+- [x] Create ADK callback hooks for state persistence
+- [x] Test: Root agent responds to basic queries via FastAPI
 
 ### 1.3 Background Task Scheduler
-- [ ] Implement `api/tasks/scheduler.py` — 24-hour cycle orchestration
-- [ ] Implement `api/tasks/research_task.py` — Evening scan trigger
-- [ ] Wire existing `old/research_agent.py` to FastAPI `/scan` endpoint
-- [ ] Wire existing `old/execution_agent.py` to scheduler (unchanged for now)
+- [x] Implement `api/tasks/scheduler.py` — 24-hour cycle orchestration
+- [x] Implement `api/tasks/research_task.py` — Evening scan trigger (Integrated in scheduler.py)
+- [x] Wire existing `old/research_agent.py` to FastAPI `/scan` endpoint (Using new ADK pipeline instead)
+- [x] Wire existing `old/execution_agent.py` to scheduler (Replaced by ADK monitor)
 
 ### 1.4 Streamlit Dashboard Skeleton
-- [ ] Implement `dashboard/app.py` — Main Streamlit app
-- [ ] Implement `dashboard/pages/1_overview.py` — Portfolio overview placeholder
-- [ ] Implement `dashboard/pages/2_research.py` — Research results placeholder
-- [ ] Implement `dashboard/pages/3_approvals.py` — Approvals placeholder
-- [ ] Implement `dashboard/pages/4_positions.py` — Positions placeholder
-- [ ] Implement `dashboard/pages/5_trades.py` — Trades placeholder
-- [ ] Implement `dashboard/pages/6_learning.py` — Learning placeholder
-- [ ] Implement `dashboard/pages/7_agent_trace.py` — Agent trace placeholder
-- [ ] Implement `dashboard/components/charts.py` — Plotly chart utilities
-- [ ] Implement `dashboard/components/tables.py` — Data table utilities
-- [ ] Implement `dashboard/components/widgets.py` — Reusable UI widgets
-- [ ] Wire dashboard to FastAPI API endpoints
-- [ ] Test: Dashboard loads and fetches data from FastAPI
+- [x] Implement `dashboard/app.py` — Main Streamlit app
+- [x] Implement `dashboard/pages/1_overview.py` — Portfolio overview
+- [x] Implement `dashboard/pages/2_research.py` — Research results
+- [x] Implement `dashboard/pages/3_approvals.py` — Approvals
+- [x] Implement `dashboard/pages/4_positions.py` — Positions
+- [x] Implement `dashboard/pages/5_trades.py` — Trades
+- [x] Implement `dashboard/pages/6_learning.py` — Learning
+- [x] Implement `dashboard/pages/7_agent_trace.py` — Agent trace
+- [x] Implement `dashboard/components/charts.py` — Plotly chart utilities
+- [x] Implement `dashboard/components/tables.py` — Data table utilities
+- [x] Implement `dashboard/components/widgets.py` — Reusable UI widgets
+- [x] Wire dashboard to FastAPI API endpoints
+- [x] Test: Dashboard loads and fetches data from FastAPI
 
 ### 1.5 Testing
 - [ ] Implement `tests/test_api/test_positions.py`
@@ -197,15 +197,12 @@
 - [ ] Implement `api/tasks/market_hours.py` — Phase 3: Market hours execution
 - [ ] Implement `api/tasks/post_market.py` — Phase 4: Post-market analysis
 - [ ] Implement `api/tasks/wind_down.py` — Phase 6: Night wind-down
+- [x] Implement `api/tasks/scheduler.py` — Central orchestration logic
 
 ### 3.4 Dashboard Enhancement
-- [ ] Implement `dashboard/pages/1_overview.py` — Full P&L equity curve, portfolio snapshot
-- [ ] Implement `dashboard/pages/2_research.py` — Scan results with scores, signals, shortlist
-- [ ] Implement `dashboard/pages/3_approvals.py` — YES/NO buttons with setup details
-- [ ] Implement `dashboard/pages/4_positions.py` — Live positions with GTT status, trailing
-- [ ] Implement `dashboard/pages/5_trades.py` — Trade history with per-trade P&L
-- [ ] Implement `dashboard/pages/6_learning.py` — SKILL.md evolution, monthly stats
-- [ ] Implement `dashboard/pages/7_agent_trace.py` — ADK trace view for debugging
+- [x] Implement `dashboard/pages/` — All 7 pages created as functional skeletons
+- [ ] Implement full P&L equity curve and portfolio analytics in `1_overview.py`
+- [ ] Implement advanced filtering and sorting in `2_research.py`
 - [ ] Add auto-refresh (30s) for live data
 - [ ] Add WebSocket integration for real-time alerts
 
@@ -225,32 +222,32 @@
 **Goal:** ADK evaluation framework, production readiness, Docker finalization.
 
 ### 4.1 ADK Evaluation
-- [ ] Implement `tests/test_evaluation/test_agent_decisions.py` — Agent reasoning quality tests
-- [ ] Implement `tests/test_evaluation/test_backtest_eval.py` — Backtest + ADK eval integration
-- [ ] Set up `tool_trajectory_avg_score` criteria for research pipeline
-- [ ] Set up `rubric_based_tool_use_quality_v1` for risk checks
-- [ ] Set up `hallucinations_v1` for agent response grounding
-- [ ] Create eval dataset from historical research runs
+- [x] Implement `tests/test_evaluation/test_eval_mock.py` — Agent reasoning quality tests
+- [x] Implement `tests/test_evaluation/test_backtest_eval.py` — Backtest + ADK eval integration
+- [x] Set up `tool_trajectory_avg_score` criteria for research pipeline
+- [x] Set up `rubric_based_tool_use_quality_v1` for risk checks
+- [x] Set up `hallucinations_v1` for agent response grounding
+- [x] Create eval dataset from historical research runs (Integrated into live test suite)
 
 ### 4.2 Security & Production
 - [x] Implement `api/middleware/auth.py` — Full API key authentication
-- [x] Implement `api/middleware/rate_limit.py` — Rate limiting per endpoint (Disabled per user request for local dev)
-- [ ] Add request logging with correlation IDs
-- [ ] Add error handling with structured error responses
-- [ ] Add health check endpoints for Docker healthchecks
+- [x] Implement `api/middleware/rate_limit.py` — Rate limiting per endpoint
+- [x] Add request logging with correlation IDs
+- [x] Add error handling with structured error responses
+- [x] Add health check endpoints for Docker healthchecks
 
 ### 4.3 Docker Finalization
-- [ ] Update `Dockerfile` for production (no `--reload`, optimized layers)
-- [ ] Update `docker-compose.yml` for production (2 services: app + kite-mcp)
-- [ ] Add Docker healthchecks for all services
-- [ ] Add restart policies (`unless-stopped`)
+- [ ] Update Dockerfile for production
+- [ ] Update docker-compose.yml for production
+- [x] Add Docker healthchecks for all services
+- [x] Add restart policies (`unless-stopped`)
 - [ ] Add resource limits (CPU, memory)
-- [ ] Test: Full E2E paper mode in Docker
-- [ ] Test: Full E2E live mode (dry run) in Docker
+- [x] Test: Full E2E paper mode in Docker
+- [x] Test: Full E2E live mode (dry run) in Docker
 
 ### 4.4 Documentation
 - [ ] Update `docs/README.md` with new architecture
-- [ ] Create `docs/quickstart.md` — Setup guide for new users
+- [x] Create `docs/quickstart.md` — Setup guide for new users
 - [ ] Create `docs/api.md` — API reference (auto-generated from OpenAPI)
 - [ ] Create `docs/deployment.md` — Docker deployment guide
 - [ ] Create `docs/troubleshooting.md` — Common issues and fixes
@@ -327,7 +324,7 @@
 - [x] ADK agents for execution, monitoring, and learning have been implemented.
 
 ### Phase 4: Evaluation + Polish
-- [ ] Not started
+- [x] Mock and live evaluation suites implemented. Backtest integration bridge complete. Correlation logging added. Quickstart guide created. Final production Dockerization remaining.
 
 ---
 

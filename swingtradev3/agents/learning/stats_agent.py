@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import json
-from typing import Any
+from typing import Any, AsyncGenerator
 
 from google.adk.agents import BaseAgent
 from google.adk.events import Event
+from google.genai import types
 
 from config import cfg
 from paths import CONTEXT_DIR
@@ -19,10 +20,11 @@ class StatsAgent(BaseAgent):
     def __init__(self, name: str = "StatsAgent") -> None:
         super().__init__(name=name)
 
-    async def _run_async_impl(self, ctx) -> Event:
+    async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, None]:
         trades_payload = read_json(CONTEXT_DIR / "trades.json", [])
         if not trades_payload:
-            return Event(author=self.name, content={"msg": "No closed trades"})
+            yield Event(author=self.name, content=types.Content(role="assistant", parts=[types.Part(text="No closed trades to analyze.")]))
+            return
             
         trades = [TradeRecord.model_validate(t) for t in trades_payload]
         
@@ -82,6 +84,9 @@ class StatsAgent(BaseAgent):
         
         write_json(CONTEXT_DIR / "stats.json", stats.model_dump(mode="json"))
         
-        return Event(author=self.name, content={"msg": "Stats updated", "stats": stats.model_dump(mode="json")})
+        yield Event(
+            author=self.name, 
+            content=types.Content(role="assistant", parts=[types.Part(text=f"Monthly stats recalculated for {trade_count} trades.")])
+        )
 
 stats_agent = StatsAgent()

@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import json
 from datetime import date, datetime
-from typing import Any
+from typing import Any, AsyncGenerator
 
 from google.adk.agents import SequentialAgent, BaseAgent
 from google.adk.events import Event
+from google.genai import types
 
 from agents.research.regime_agent import RegimeAgent
 from agents.research.filter_agent import FilterAgent
@@ -23,7 +24,7 @@ class ResultsSaverAgent(BaseAgent):
     def __init__(self, name: str = "ResultsSaverAgent") -> None:
         super().__init__(name=name)
 
-    async def _run_async_impl(self, ctx) -> Event:
+    async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, None]:
         scan_date = date.today().isoformat()
         regime = ctx.session.state.get("regime", {})
         qualified_stocks = ctx.session.state.get("qualified_stocks", [])
@@ -47,7 +48,9 @@ class ResultsSaverAgent(BaseAgent):
 
         # Save individual stock analyses
         for stock in scan_results:
-            ticker = stock["ticker"]
+            ticker = stock.get("ticker")
+            if not ticker:
+                continue
             stock_info = {
                 "ticker": ticker,
                 "score": stock.get("score"),
@@ -67,9 +70,12 @@ class ResultsSaverAgent(BaseAgent):
             }
             write_json(research_dir / f"{ticker}.json", stock_info)
 
-        return Event(
+        yield Event(
             author=self.name,
-            content={"message": f"Saved {len(scan_results)} analyses to {research_dir}"},
+            content=types.Content(
+                role="assistant",
+                parts=[types.Part(text=f"Research results saved to {research_dir}")]
+            ),
         )
 
 

@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import json
-from typing import Any
+from typing import Any, AsyncGenerator
 
 from google.adk.agents import LlmAgent, BaseAgent
 from google.adk.events import Event
+from google.genai import types
 
 from config import cfg
 from paths import CONTEXT_DIR, STRATEGY_DIR
@@ -18,10 +19,14 @@ class LessonAgent(BaseAgent):
     def __init__(self, name: str = "LessonAgent") -> None:
         super().__init__(name=name)
 
-    async def _run_async_impl(self, ctx) -> Event:
+    async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, None]:
         trades = read_json(CONTEXT_DIR / "trades.json", [])
         if len(trades) < cfg.learning.min_trades_for_lesson:
-            return Event(author=self.name, content={"msg": "Not enough trades for lesson generation"})
+            yield Event(
+                author=self.name, 
+                content=types.Content(role="assistant", parts=[types.Part(text="Not enough trades for lesson generation")])
+            )
+            return
             
         observations = read_json(CONTEXT_DIR / "trade_observations.json", [])
         
@@ -42,19 +47,34 @@ class LessonAgent(BaseAgent):
         )
         
         prompt = f"Trades: {json.dumps(trades, default=str)}\n\nObservations: {json.dumps(observations, default=str)}\n\nCurrent SKILL.md: {current_skill}"
+        ctx.user_content = types.Content(
+            role="user",
+            parts=[types.Part(text=prompt)]
+        )
         
-        response_event = None
-        async for event in lesson_llm.run_async(ctx, prompt):
+        response_text = ""
+        async for event in lesson_llm.run_async(ctx):
             if event.is_final_response():
-                response_event = event
+                # Handle both raw strings and types.Content objects
+                content = event.content
+                if hasattr(content, "parts") and content.parts:
+                    response_text = content.parts[0].text or ""
+                else:
+                    response_text = str(content)
+            yield event
                 
-        if response_event and response_event.content:
+        if response_text:
             try:
-                content_str = response_event.content
+                content_str = response_text
                 if "```json" in content_str:
                     content_str = content_str.split("```json")[1].split("```")[0]
                 elif "```" in content_str:
                     content_str = content_str.split("```")[1].split("```")[0]
+                
+                start = content_str.find("{")
+                end = content_str.rfind("}")
+                if start != -1 and end != -1:
+                    content_str = content_str[start:end+1]
                     
                 parsed_edits = json.loads(content_str)
                 
@@ -69,10 +89,14 @@ class LessonAgent(BaseAgent):
                     
                 staging_path.write_text(staging_content)
                 
-                return Event(author=self.name, content={"msg": "Lessons generated", "edits": parsed_edits})
+                yield Event(
+                    author=self.name, 
+                    content=types.Content(role="assistant", parts=[types.Part(text=f"Monthly analysis complete. {len(parsed_edits)} lessons proposed in SKILL.md.staging.")])
+                )
             except Exception as e:
-                return Event(author=self.name, content={"error": f"Failed to parse lessons: {e}"})
-                
-        return Event(author=self.name, content={"msg": "No response from LessonLLM"})
+                yield Event(
+                    author=self.name, 
+                    content=types.Content(role="assistant", parts=[types.Part(text=f"Failed to parse lessons: {e}")])
+                )
 
 lesson_agent = LessonAgent()

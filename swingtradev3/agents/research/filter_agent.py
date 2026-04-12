@@ -10,10 +10,11 @@ Pure computation — no LLM, no decisions.
 """
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, AsyncGenerator
 
 from google.adk.agents import BaseAgent
 from google.adk.events import Event
+from google.genai import types
 
 from config import cfg
 from data.nifty200_loader import Nifty200Loader
@@ -32,7 +33,7 @@ class FilterAgent(BaseAgent):
     def __init__(self, name: str = "FilterAgent") -> None:
         super().__init__(name=name)
 
-    async def _run_async_impl(self, ctx) -> Event:
+    async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, None]:
         """
         Run the full multi-signal funnel asynchronously.
         """
@@ -91,9 +92,12 @@ class FilterAgent(BaseAgent):
                 })
 
         ctx.session.state["qualified_stocks"] = qualified
-        return Event(
+        yield Event(
             author=self.name,
-            content={"qualified_count": len(qualified), "stocks": qualified},
+            content=types.Content(
+                role="assistant",
+                parts=[types.Part(text=f"Funnel completed: {len(qualified)} stocks qualified for deep analysis.")]
+            ),
         )
 
     def _sweep_news(self, news_aggregator, filter_cfg, universe: list[str]) -> list[str]:

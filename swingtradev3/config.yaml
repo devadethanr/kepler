@@ -149,11 +149,11 @@ llm:
     - provider: anthropic
       model: "claude-3-7-sonnet-latest"
   adk:
-    root_model: "meta/llama-3.1-70b-instruct"
-    research_model: "meta/llama-3.1-70b-instruct"
-    execution_model: "meta/llama-3.1-70b-instruct"
-    learning_model: "meta/llama-3.1-70b-instruct"
-    judge_model: "meta/llama-3.1-70b-instruct"
+    root_model: "openai/meta/llama-3.1-70b-instruct"
+    research_model: "openai/meta/llama-3.1-70b-instruct"
+    execution_model: "openai/meta/llama-3.1-70b-instruct"
+    learning_model: "openai/meta/llama-3.1-70b-instruct"
+    judge_model: "openai/meta/llama-3.1-70b-instruct"
 
 learning:
   min_trades_for_lesson: 8

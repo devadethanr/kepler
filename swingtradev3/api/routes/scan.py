@@ -32,6 +32,7 @@ async def run_research_pipeline_bg():
         from agents.research.pipeline import research_pipeline
         from google.adk import Runner
         from google.adk.sessions import InMemorySessionService
+        from google.genai import types
         
         # We can use a simple in-memory session since results are saved to disk
         # by the ResultsSaverAgent.
@@ -42,7 +43,11 @@ async def run_research_pipeline_bg():
             auto_create_session=True
         )
         
-        async for event in runner.run_async(user_id="system", session_id="scan_session", new_message={"role": "user", "content": "Run research pipeline"}):
+        async for event in runner.run_async(
+            user_id="system", 
+            session_id="scan_session", 
+            new_message=types.Content(role="user", parts=[types.Part(text="Run research pipeline")])
+        ):
             # Could stream events via websockets if needed
             pass
             

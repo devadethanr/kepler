@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, AsyncGenerator
 
 from google.adk.agents import BaseAgent
 from google.adk.events import Event
+from google.genai import types
 
 from tools.market.options_data import OptionsDataTool
 
@@ -12,25 +13,29 @@ class OptionsAgent(BaseAgent):
     """
     Options chain analysis agent.
     """
-    def __init__(self, ticker: str, name: str | None = None) -> None:
-        super().__init__(name=name or f"OptionsAgent_{ticker}")
-        self.ticker = ticker
-        self.tool = OptionsDataTool()
+    def __init__(self, ticker: str) -> None:
+        super().__init__(name=f"OptionsAgent_{ticker}")
 
-    async def _run_async_impl(self, ctx) -> Event:
+    async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, None]:
+        ticker = self.name.split("_")[-1]
+        tool = OptionsDataTool()
+        
         try:
-            data = self.tool.get_options_data(self.ticker)
+            data = tool.get_options_data(ticker)
         except Exception as e:
             data = {"error": str(e)}
 
         if "stock_data" not in ctx.session.state:
             ctx.session.state["stock_data"] = {}
-        if self.ticker not in ctx.session.state["stock_data"]:
-            ctx.session.state["stock_data"][self.ticker] = {}
+        if ticker not in ctx.session.state["stock_data"]:
+            ctx.session.state["stock_data"][ticker] = {}
 
-        ctx.session.state["stock_data"][self.ticker]["options"] = data
+        ctx.session.state["stock_data"][ticker]["options"] = data
 
-        return Event(
+        yield Event(
             author=self.name,
-            content={"ticker": self.ticker, "options": data},
+            content=types.Content(
+                role="assistant",
+                parts=[types.Part(text=f"Options data analyzed for {ticker}")]
+            ),
         )

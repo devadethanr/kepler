@@ -69,7 +69,6 @@ class AccountState(BaseModel):
     weekly_loss_pct: float = 0.0
     consecutive_losses: int = 0
     positions: list[PositionState] = Field(default_factory=list)
-    metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class EntryZone(BaseModel):
@@ -186,7 +185,7 @@ class FundamentalsSnapshot(BaseModel):
 
 
 # ─────────────────────────────────────────────────────────────
-# V2 Models — Layer Contracts
+# V2 Models — Layer Contracts (Gemini Compatible)
 # ─────────────────────────────────────────────────────────────
 
 
@@ -200,14 +199,12 @@ class RegimeState(BaseModel):
     as_of: datetime | None = None
 
 
-class SignalData(BaseModel):
-    ticker: str
-    priority: int = 0
-    signals: dict[str, bool] = Field(default_factory=dict)
-    technical: dict[str, Any] = Field(default_factory=dict)
-    fundamentals: dict[str, Any] = Field(default_factory=dict)
-    sentiment: dict[str, Any] = Field(default_factory=dict)
-    options: dict[str, Any] = Field(default_factory=dict)
+class Signals(BaseModel):
+    news: bool = False
+    fii: bool = False
+    breakout: bool = False
+    mean_reversion: bool = False
+    backtest: bool = False
 
 
 class StockScore(BaseModel):
@@ -223,7 +220,7 @@ class StockScore(BaseModel):
     bear_case: list[str] = Field(default_factory=list)
     risk_flags: list[str] = Field(default_factory=list)
     sector: str | None = None
-    signals: dict[str, bool] = Field(default_factory=dict)
+    signals: Signals = Field(default_factory=Signals)
 
 
 class ScanResult(BaseModel):

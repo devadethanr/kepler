@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, AsyncGenerator
 import json
 
 from google.adk.agents import LlmAgent, BaseAgent
 from google.adk.events import Event
+from google.genai import types
 
 from config import cfg
 from paths import CONTEXT_DIR
@@ -21,25 +22,26 @@ class ExitAgent(BaseAgent):
         super().__init__(name=name)
         self.alerts_tool = AlertsTool()
 
-    async def _run_async_impl(self, ctx) -> Event:
+    async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, None]:
         state_payload = read_json(CONTEXT_DIR / "state.json", {})
         if not state_payload:
-            return Event(author=self.name, content={"msg": "No active state"})
+            yield Event(author=self.name, content=types.Content(role="assistant", parts=[types.Part(text="No active state")]))
+            return
             
         state = AccountState.model_validate(state_payload)
         
         if not state.positions:
-            return Event(author=self.name, content={"msg": "No open positions to evaluate"})
+            yield Event(author=self.name, content=types.Content(role="assistant", parts=[types.Part(text="No open positions to evaluate")]))
+            return
             
         # Example of dynamic exit intelligence evaluation
         for pos in state.positions:
             # We would use LlmAgent to evaluate exit signals here
-            # using recent OHLCV, volume, news, etc.
-            
-            # Simple placeholder logic
-            # e.g., if price hasn't moved in 10 days
             pass
             
-        return Event(author=self.name, content={"msg": "Exit intelligence evaluated", "positions_count": len(state.positions)})
+        yield Event(
+            author=self.name, 
+            content=types.Content(role="assistant", parts=[types.Part(text=f"Exit intelligence evaluated for {len(state.positions)} positions")])
+        )
 
 exit_agent = ExitAgent()

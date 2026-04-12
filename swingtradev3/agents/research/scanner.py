@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+from typing import AsyncGenerator
 from google.adk.agents import BaseAgent, ParallelAgent, SequentialAgent
 from google.adk.events import Event
+from google.genai import types
 
 from config import cfg
 from agents.research.market_data_agent import MarketDataAgent
@@ -18,7 +20,7 @@ class BatchScannerAgent(BaseAgent):
     def __init__(self, name: str = "BatchScannerAgent") -> None:
         super().__init__(name=name)
 
-    async def _run_async_impl(self, ctx) -> Event:
+    async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, None]:
         qualified = ctx.session.state.get("qualified_stocks", [])
         batch_size = cfg.research.filter.batch_size
         
@@ -35,12 +37,15 @@ class BatchScannerAgent(BaseAgent):
             )
             
             async for event in parallel_scanner.run_async(ctx):
-                # We just let it run. The sub-agents store data in ctx.session.state
-                pass
+                # Optionally yield events from sub-agents
+                yield event
                 
-        return Event(
+        yield Event(
             author=self.name,
-            content={"stocks_analyzed": len(qualified)},
+            content=types.Content(
+                role="assistant",
+                parts=[types.Part(text=f"Deep analysis completed for {len(qualified)} stocks.")]
+            ),
         )
 
     def _create_stock_analyzer(self, ticker: str) -> SequentialAgent:

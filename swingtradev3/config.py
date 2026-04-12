@@ -244,11 +244,11 @@ class LLMRolesConfig(BaseModel):
 
 class LlmAdkConfig(BaseModel):
     """V2: ADK model routing via LiteLLM for each agent type."""
-    root_model: str = "meta/llama-3.1-70b-instruct"
-    research_model: str = "meta/llama-3.1-70b-instruct"
-    execution_model: str = "meta/llama-3.1-70b-instruct"
-    learning_model: str = "meta/llama-3.1-70b-instruct"
-    judge_model: str = "meta/llama-3.1-70b-instruct"
+    root_model: str = "openai/meta/llama-3.1-70b-instruct"
+    research_model: str = "openai/meta/llama-3.1-70b-instruct"
+    execution_model: str = "openai/meta/llama-3.1-70b-instruct"
+    learning_model: str = "openai/meta/llama-3.1-70b-instruct"
+    judge_model: str = "openai/meta/llama-3.1-70b-instruct"
 
 
 class LLMConfig(BaseModel):

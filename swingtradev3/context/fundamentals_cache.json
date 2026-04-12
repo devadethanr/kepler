@@ -208,6 +208,25 @@
     "source": "yfinance",
     "ticker": "BAJFINANCE"
   },
+  "BSE": {
+    "as_of": "2026-04-09",
+    "debt_equity": 0.0,
+    "dii_holding_pct": null,
+    "dividend_yield": 0.18,
+    "eps_growth_3yr_pct": 1.716,
+    "fii_holding_pct": null,
+    "industry": "Financial Data & Stock Exchanges",
+    "is_stale": false,
+    "market_cap_cr": 132292.4900352,
+    "pe_ratio": 60.8,
+    "promoter_holding_pct": null,
+    "promoter_pledge_pct": null,
+    "revenue_growth_pct": null,
+    "roce": null,
+    "sector": "Financial Services",
+    "source": "yfinance",
+    "ticker": "BSE"
+  },
   "HDFCBANK": {
     "as_of": "2026-03-28",
     "debt_equity": null,

@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, AsyncGenerator
 
 from google.adk.agents import BaseAgent
 from google.adk.events import Event
+from google.genai import types
 
 from tools.market.market_data import MarketDataTool
 
@@ -12,30 +13,32 @@ class MarketDataAgent(BaseAgent):
     """
     Fetches and analyzes OHLCV and indicators for a given stock.
     """
-    def __init__(self, ticker: str, name: str | None = None) -> None:
-        super().__init__(name=name or f"MarketDataAgent_{ticker}")
-        self.ticker = ticker
-        self.tool = MarketDataTool()
+    def __init__(self, ticker: str) -> None:
+        super().__init__(name=f"MarketDataAgent_{ticker}")
 
-    async def _run_async_impl(self, ctx) -> Event:
-        # Fetch EOD data asynchronously
+    async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, None]:
+        ticker = self.name.split("_")[-1]
+        tool = MarketDataTool()
+        
         try:
-            data = await self.tool.get_eod_data_async(self.ticker)
+            data = await tool.get_eod_data_async(ticker)
         except Exception as e:
-            # Fallback
             try:
-                data = self.tool.get_eod_data(self.ticker)
+                data = tool.get_eod_data(ticker)
             except Exception as inner_e:
                 data = {"error": str(inner_e)}
 
         if "stock_data" not in ctx.session.state:
             ctx.session.state["stock_data"] = {}
-        if self.ticker not in ctx.session.state["stock_data"]:
-            ctx.session.state["stock_data"][self.ticker] = {}
+        if ticker not in ctx.session.state["stock_data"]:
+            ctx.session.state["stock_data"][ticker] = {}
 
-        ctx.session.state["stock_data"][self.ticker]["technical"] = data
+        ctx.session.state["stock_data"][ticker]["technical"] = data
 
-        return Event(
+        yield Event(
             author=self.name,
-            content={"ticker": self.ticker, "technical": data},
+            content=types.Content(
+                role="assistant",
+                parts=[types.Part(text=f"Market data fetched for {ticker}")]
+            ),
         )
