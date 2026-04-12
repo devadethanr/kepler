@@ -79,7 +79,7 @@
   },
   "CACHED_TEST_5": {
     "data": {
-      "as_of": "2026-04-12T15:02:04.433715",
+      "as_of": "2026-04-12T19:11:14.969526",
       "forecast_direction": "flat",
       "forecast_lower_10": [
         75.94,
@@ -108,11 +108,11 @@
       "source": "timesfm",
       "ticker": "CACHED_TEST"
     },
-    "fetched_at": "2026-04-12T15:02:04.433989"
+    "fetched_at": "2026-04-12T19:11:14.970004"
   },
   "RELIANCE_20": {
     "data": {
-      "as_of": "2026-04-12T15:02:04.788329",
+      "as_of": "2026-04-12T19:11:15.537992",
       "forecast_direction": "flat",
       "forecast_lower_10": [
         1318.29,
@@ -186,11 +186,11 @@
       "source": "timesfm",
       "ticker": "RELIANCE"
     },
-    "fetched_at": "2026-04-12T15:02:04.788615"
+    "fetched_at": "2026-04-12T19:11:15.538238"
   },
   "TCS_20": {
     "data": {
-      "as_of": "2026-04-12T15:02:05.511709",
+      "as_of": "2026-04-12T19:11:15.954216",
       "forecast_direction": "flat",
       "forecast_lower_10": [
         2458.17,
@@ -264,11 +264,11 @@
       "source": "timesfm",
       "ticker": "TCS"
     },
-    "fetched_at": "2026-04-12T15:02:05.511940"
+    "fetched_at": "2026-04-12T19:11:15.954607"
   },
   "TEST_10": {
     "data": {
-      "as_of": "2026-04-12T15:02:04.172775",
+      "as_of": "2026-04-12T19:11:14.703614",
       "forecast_direction": "flat",
       "forecast_lower_10": [
         75.94,
@@ -312,6 +312,6 @@
       "source": "timesfm",
       "ticker": "TEST"
     },
-    "fetched_at": "2026-04-12T15:02:04.173144"
+    "fetched_at": "2026-04-12T19:11:14.705335"
   }
 }
