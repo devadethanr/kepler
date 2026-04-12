@@ -14,6 +14,7 @@ from config import cfg
 from models import StockScore
 from paths import STRATEGY_DIR
 from llm_bridge import SmartRouter
+from knowledge.wiki_renderer import get_stock_context, format_context_for_llm
 
 
 class ScorerAgent(LlmAgent):
@@ -50,7 +51,10 @@ class ScorerAgent(LlmAgent):
                 continue
 
             prompt = f"Analyze and score this stock setup: {json.dumps(data, default=str)}"
-            system_instruction = self._build_system_instruction(ticker)
+
+            # Inline KG read: get historical context for comparative scoring
+            kg_context = get_stock_context(ticker)
+            system_instruction = self._build_system_instruction(ticker, kg_context)
 
             # Universal Fallback Call
             try:
@@ -88,8 +92,20 @@ class ScorerAgent(LlmAgent):
             )
         )
 
-    def _build_system_instruction(self, ticker: str) -> str:
+    def _build_system_instruction(self, ticker: str, kg_context=None) -> str:
         skill_md = self._load_skill_md()
+        
+        # Build historical context section
+        history_section = ""
+        if kg_context and kg_context.has_history:
+            history_section = f"""
+        HISTORICAL CONTEXT (from Knowledge Graph):
+        {format_context_for_llm(kg_context)}
+        
+        Use this context to make COMPARATIVE judgments. What has materially changed
+        since the last scan? Is the setup improving or degrading?
+        """
+        
         return f"""
         You are a professional equity research analyst.
         Analyze the provided data block for {ticker} and return a StockScore JSON object.
@@ -97,7 +113,7 @@ class ScorerAgent(LlmAgent):
         CRITICAL RULES:
         1. Base analysis ONLY on provided data. DO NOT use external training data.
         2. Current Price for {ticker} is in the 'technical' block. Use it for entry zones.
-        
+        {history_section}
         TRADING PHILOSOPHY:
         {skill_md}
         """

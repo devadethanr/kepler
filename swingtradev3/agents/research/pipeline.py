@@ -12,6 +12,7 @@ from agents.research.regime_agent import RegimeAgent
 from agents.research.filter_agent import FilterAgent
 from agents.research.scanner import BatchScannerAgent
 from agents.research.scorer_agent import ScorerAgent
+from agents.research.knowledge_graph_agent import KnowledgeGraphAgent
 
 from paths import CONTEXT_DIR
 from storage import write_json
@@ -38,7 +39,7 @@ class ResultsSaverAgent(BaseAgent):
             "total_screened": 200,
             "qualified_count": len(qualified_stocks),
             "shortlist": shortlist,
-            "analyzed_at": datetime.utcnow().isoformat(),
+            "analyzed_at": datetime.now().isoformat(),
         }
 
         # Save to context
@@ -87,6 +88,7 @@ research_pipeline = SequentialAgent(
         BatchScannerAgent(),
         ScorerAgent(),
         ResultsSaverAgent(),
+        KnowledgeGraphAgent(),
     ],
-    description="Complete research pipeline: regime → filter → scan → score → save",
+    description="Complete research pipeline: regime → filter → scan → score → save → knowledge graph",
 )

@@ -35,14 +35,21 @@ app = FastAPI(
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
+    import logging
+    logging.getLogger("swingtradev3").error(f"Unhandled exception: {exc}", exc_info=True)
     return JSONResponse(
         status_code=500,
-        content={"detail": "Internal Server Error", "message": str(exc)},
+        content={"detail": "Internal Server Error"},
     )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:8502",
+        "http://localhost:3000",
+        "http://127.0.0.1:8502",
+        "http://127.0.0.1:3000",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
