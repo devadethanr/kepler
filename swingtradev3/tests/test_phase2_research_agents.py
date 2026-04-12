@@ -3,7 +3,6 @@ import pytest
 from unittest.mock import patch, MagicMock
 
 from agents.research.filter_agent import FilterAgent
-from agents.research.scorer_agent import ScorerAgent
 from agents.research.pipeline import research_pipeline
 
 
@@ -64,55 +63,6 @@ class TestFilterAgent:
             passed, reason = await agent._fast_filter_async(kite_fetcher, cfg.research.filter, "TEST")
             assert passed is True
             assert reason == "passed"
-
-
-class TestScorerAgent:
-    def test_parse_valid_json(self):
-        """Test parsing valid JSON response."""
-        scorer = ScorerAgent()
-        response = '''
-        {
-            "score": 8.0,
-            "setup_type": "pullback",
-            "entry_zone": {"low": 1000, "high": 1020},
-            "stop_price": 980,
-            "target_price": 1100,
-            "holding_days": 15,
-            "reasoning": "Test reasoning",
-            "bull_case": ["reason1"],
-            "bear_case": ["reason2"]
-        }
-        '''
-        result = scorer._parse_response(response)
-        assert result is not None
-        assert result["score"] == 8.0
-        assert result["setup_type"] == "pullback"
-
-    def test_parse_json_with_markdown(self):
-        """Test parsing JSON wrapped in markdown code blocks."""
-        scorer = ScorerAgent()
-        response = '''```json
-        {
-            "score": 7.5,
-            "setup_type": "breakout",
-            "entry_zone": {"low": 500, "high": 510},
-            "stop_price": 490,
-            "target_price": 550,
-            "holding_days": 10,
-            "reasoning": "Test",
-            "bull_case": [],
-            "bear_case": []
-        }
-        ```'''
-        result = scorer._parse_response(response)
-        assert result is not None
-        assert result["score"] == 7.5
-
-    def test_parse_invalid_json(self):
-        """Test parsing invalid JSON returns None."""
-        scorer = ScorerAgent()
-        result = scorer._parse_response("not valid json")
-        assert result is None
 
 
 class TestResearchPipeline:

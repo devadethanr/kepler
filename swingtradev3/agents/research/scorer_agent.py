@@ -7,27 +7,30 @@ from google.adk.agents import LlmAgent
 from google.adk.agents.invocation_context import InvocationContext
 from google.adk.events import Event
 from google.adk.events.event_actions import EventActions
-from google.adk.models.llm_request import LlmRequest
 from google.genai import types
-from pydantic import BaseModel
+from pydantic import BaseModel, PrivateAttr
 
 from config import cfg
 from models import StockScore
 from paths import STRATEGY_DIR
+from llm_bridge import SmartRouter
 
 
 class ScorerAgent(LlmAgent):
     """
     V2 ADK Scorer Agent.
-    Scores stocks one-by-one with strict data grounding.
+    Scores stocks one-by-one with a universal smart router for fallback/retry.
     """
+    _router: SmartRouter = PrivateAttr()
+
     def __init__(self, name: str = "ScorerAgent") -> None:
-        super().__init__(name=name)
+        super().__init__(name=name, model=cfg.llm.adk.research_model)
+        self._router = SmartRouter(role="research")
 
     async def _run_async_impl(self, ctx: InvocationContext) -> AsyncGenerator[Event, None]:
         qualified_stocks = ctx.session.state.get("qualified_stocks", [])
         stock_data = ctx.session.state.get("stock_data", {})
-        
+
         if not qualified_stocks:
             yield Event(
                 author=self.name, 
@@ -39,7 +42,6 @@ class ScorerAgent(LlmAgent):
             return
 
         final_scores: list[StockScore] = []
-        model = self.canonical_model
 
         for stock in qualified_stocks:
             ticker = stock["ticker"]
@@ -47,40 +49,26 @@ class ScorerAgent(LlmAgent):
             if not data:
                 continue
 
-            # ONE-BY-ONE SCORING: Direct model call for maximum focus
-            prompt = f"""
-            ### DATA FOR {ticker}:
-            {json.dumps(data, indent=2, default=str)}
-            
-            ### TASK:
-            Analyze ONLY the numbers above for {ticker}.
-            If a value is missing (null), you must not invent it.
-            Assign a score based on the SKILL.md rules.
-            """
-            
-            llm_request = LlmRequest(
-                model=model.model,
-                contents=[types.Content(role="user", parts=[types.Part(text=prompt)])],
-                config=types.GenerateContentConfig(
-                    system_instruction=self._build_system_instruction(ticker),
-                    response_mime_type="application/json",
-                    response_schema=StockScore,
-                    temperature=0.1
+            prompt = f"Analyze and score this stock setup: {json.dumps(data, default=str)}"
+            system_instruction = self._build_system_instruction(ticker)
+
+            # Universal Fallback Call
+            try:
+                score_obj = await self._router.generate_structured(
+                    prompt=prompt,
+                    system_instruction=system_instruction,
+                    response_model=StockScore
                 )
-            )
-            
-            async for response in model.generate_content_async(llm_request):
-                if response.content and response.content.parts:
-                    text = response.content.parts[0].text
-                    if text:
-                        try:
-                            # Direct Pydantic validation of the structured output
-                            score_obj = StockScore.model_validate_json(text)
-                            # Anchor the ticker to ensure no INFY/TCS leakage
-                            score_obj.ticker = ticker
-                            final_scores.append(score_obj)
-                        except Exception as e:
-                            print(f"Error parsing {ticker} response: {e}")
+                score_obj.ticker = ticker # Anchor
+                final_scores.append(score_obj)
+                
+                # Progress yield
+                yield Event(
+                    author=self.name,
+                    content=types.Content(role="assistant", parts=[types.Part(text=f"Analyzed {ticker}: Score {score_obj.score}")])
+                )
+            except Exception as e:
+                print(f"FAILED to score {ticker} after all fallbacks: {e}")
 
         # PERSISTENCE
         shortlist = [s.model_dump() for s in final_scores if s.score >= 7.0]
@@ -108,8 +96,7 @@ class ScorerAgent(LlmAgent):
         
         CRITICAL RULES:
         1. Base analysis ONLY on provided data. DO NOT use external training data.
-        2. If data is missing (null/empty), you MUST acknowledge it. Do not invent EPS or Debt numbers.
-        3. Current Price for {ticker} is provided in the 'technical' block. Use it for entry zones.
+        2. Current Price for {ticker} is in the 'technical' block. Use it for entry zones.
         
         TRADING PHILOSOPHY:
         {skill_md}

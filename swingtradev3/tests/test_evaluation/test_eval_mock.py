@@ -3,11 +3,13 @@ from __future__ import annotations
 import pytest
 import json
 import uuid
+from unittest.mock import patch, MagicMock
 from google.adk import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
 
 from agents.research.scorer_agent import ScorerAgent
+from models import StockScore
 
 @pytest.mark.asyncio
 async def test_scorer_rejects_bad_fundamentals():
@@ -17,7 +19,7 @@ async def test_scorer_rejects_bad_fundamentals():
     session_service = InMemorySessionService()
     agent = ScorerAgent()
     runner = Runner(
-        app_name="research", # MUST MATCH AGENT APP NAME
+        app_name="research",
         agent=agent,
         session_service=session_service,
         auto_create_session=True
@@ -46,12 +48,25 @@ async def test_scorer_rejects_bad_fundamentals():
         state=initial_state
     )
     
-    async for event in runner.run_async(
-        user_id=u_id,
-        session_id=s_id,
-        new_message=types.Content(role="user", parts=[types.Part(text="Score stocks")])
-    ):
-        pass
+    # Mock the router to return a low score
+    with patch("llm_bridge.SmartRouter.generate_structured") as mock_gen:
+        mock_gen.return_value = StockScore(
+            ticker="TERRIBLE",
+            score=2.5,
+            setup_type="skip",
+            entry_zone={"low": 0, "high": 0},
+            stop_price=0,
+            target_price=0,
+            holding_days_expected=0,
+            confidence_reasoning="Bearish setup"
+        )
+        
+        async for event in runner.run_async(
+            user_id=u_id,
+            session_id=s_id,
+            new_message=types.Content(role="user", parts=[types.Part(text="Score stocks")])
+        ):
+            pass
         
     session = await session_service.get_session(app_name="research", user_id=u_id, session_id=s_id)
     shortlist = session.state.get("shortlist", [])
@@ -66,7 +81,7 @@ async def test_scorer_accepts_perfect_setup():
     session_service = InMemorySessionService()
     agent = ScorerAgent()
     runner = Runner(
-        app_name="research", # MUST MATCH AGENT APP NAME
+        app_name="research",
         agent=agent,
         session_service=session_service,
         auto_create_session=True
@@ -107,28 +122,28 @@ async def test_scorer_accepts_perfect_setup():
         state=initial_state
     )
     
-    response_text = ""
-    async for event in runner.run_async(
-        user_id=u_id,
-        session_id=s_id,
-        new_message=types.Content(role="user", parts=[types.Part(text="Score stocks")])
-    ):
-        if event.is_final_response():
-            content = event.content
-            if hasattr(content, "parts") and content.parts:
-                response_text = content.parts[0].text or ""
-            else:
-                response_text = str(content)
-    
-    if response_text:
-        print(f"\nRAW AI RESPONSE:\n{response_text}\n")
+    # Mock the router to return a high score
+    with patch("llm_bridge.SmartRouter.generate_structured") as mock_gen:
+        mock_gen.return_value = StockScore(
+            ticker="PERFECT",
+            score=8.5,
+            setup_type="breakout",
+            entry_zone={"low": 150, "high": 155},
+            stop_price=140,
+            target_price=180,
+            holding_days_expected=10,
+            confidence_reasoning="Perfect setup"
+        )
+        
+        async for event in runner.run_async(
+            user_id=u_id,
+            session_id=s_id,
+            new_message=types.Content(role="user", parts=[types.Part(text="Score stocks")])
+        ):
+            pass
         
     session = await session_service.get_session(app_name="research", user_id=u_id, session_id=s_id)
     all_scored = session.state.get("scan_results", [])
-    
-    if not all_scored:
-        print(f"DEBUG: Final session state keys: {list(session.state.keys())}")
-        
     assert len(all_scored) == 1
     stock_res = all_scored[0]
     assert stock_res["score"] >= 7.0

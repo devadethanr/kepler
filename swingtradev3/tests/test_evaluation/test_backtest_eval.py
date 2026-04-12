@@ -3,13 +3,14 @@ from __future__ import annotations
 import pytest
 import pandas as pd
 from datetime import date, datetime
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 from backtest.engine import BacktestEngine, BacktestState
 from agents.research.pipeline import research_pipeline
 from google.adk import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
+from models import StockScore
 
 class ADKBacktestEngine(BacktestEngine):
     """
@@ -37,7 +38,9 @@ class ADKBacktestEngine(BacktestEngine):
         scorer = ScorerAgent()
         
         async for event in scorer._run_async_impl(ctx):
-            pass
+            # IMPORTANT: We must manually apply state_delta in this manual test loop
+            if event.actions and event.actions.state_delta:
+                ctx.session.state.update(event.actions.state_delta)
             
         return ctx.session.state.get("shortlist", [])
 
@@ -66,19 +69,29 @@ async def test_backtest_integration_with_adk():
         def __init__(self):
             self.session = type('MockSession', (), {'state': {}, 'id': 'backtest_session'})()
             self.user_content = None
+            self.app_name = "research"
+            self.user_id = "test_user"
+            self.session_service = InMemorySessionService()
+            
+        def model_copy(self, update=None):
+            return self
             
     ctx = MockContext()
     
     # Test if we can get a signal using ADK logic for day 70
-    with patch("google.adk.agents.LlmAgent.run_async") as mock_run:
-        from unittest.mock import MagicMock
-        mock_event = MagicMock()
-        mock_event.is_final_response.return_value = True
-        mock_event.content = '{"score": 8.5, "setup_type": "breakout", "entry_zone": {"low": 170, "high": 175}, "stop_price": 160, "target_price": 200, "reasoning": "Strong trend"}'
-        
-        async def mock_gen(*args, **kwargs):
-            yield mock_event
-        mock_run.return_value = mock_gen()
+    # Mock the SMART ROUTER instead of LlmAgent
+    with patch("llm_bridge.SmartRouter.generate_structured") as mock_gen:
+        mock_score = StockScore(
+            ticker=ticker,
+            score=8.5,
+            setup_type="breakout",
+            entry_zone={"low": 170, "high": 175},
+            stop_price=160,
+            target_price=200,
+            holding_days_expected=15,
+            confidence_reasoning="Strong trend"
+        )
+        mock_gen.return_value = mock_score
         
         signals = await engine._check_signals_adk(ctx, ticker, data, 70)
         

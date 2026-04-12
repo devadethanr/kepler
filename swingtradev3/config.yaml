@@ -141,13 +141,13 @@ llm:
       max_tokens: 2000
   fallback_chain:
     - provider: nim
-      model: "stepfun-ai/step-3.5-flash"
+      model: "openai/stepfun-ai/step-3.5-flash"
     - provider: groq
-      model: "llama-3.3-70b-versatile"
+      model: "openai/llama-3.3-70b-versatile"
     - provider: gemini
       model: "gemini-2.0-flash"
     - provider: anthropic
-      model: "claude-3-7-sonnet-latest"
+      model: "anthropic/claude-3-7-sonnet-latest"
   adk:
     root_model: "openai/meta/llama-3.1-70b-instruct"
     research_model: "openai/meta/llama-3.1-70b-instruct"

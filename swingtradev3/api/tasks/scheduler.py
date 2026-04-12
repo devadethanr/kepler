@@ -41,7 +41,8 @@ class TradingScheduler:
 
     def _generate_morning_briefing(self):
         print(f"[{datetime.now().isoformat()}] Triggering Morning Briefing...")
-        # To be implemented
+        from api.tasks.morning_briefing import generate_morning_briefing
+        asyncio.create_task(generate_morning_briefing())
 
     def _trigger_research_pipeline(self):
         print(f"[{datetime.now().isoformat()}] Triggering Evening Research Pipeline...")

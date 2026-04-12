@@ -7,6 +7,7 @@ from typing import Any
 
 from paths import CONTEXT_DIR
 from storage import read_json, write_json
+from health_manager import update_service_status
 
 
 class NewsSearchTool:
@@ -56,7 +57,9 @@ class NewsSearchTool:
                 search_depth="basic",
                 max_results=5,
             )
-        except Exception:
+            update_service_status("news_search", True)
+        except Exception as e:
+            update_service_status("news_search", False, str(e))
             return None
 
         results = []

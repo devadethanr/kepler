@@ -10,6 +10,7 @@ from auth.kite.client import fetch_historical_data, has_kite_session
 from config import cfg
 from integrations.kite.mcp_client import KiteMCPClient
 from paths import PROJECT_ROOT
+from health_manager import update_service_status
 
 
 @dataclass
@@ -37,27 +38,33 @@ class KiteFetcher:
                     df = pd.DataFrame(candles)
                     if "date" in df.columns:
                         df["date"] = pd.to_datetime(df["date"])
+                    update_service_status("kite_api", True)
                     return df
                 except Exception:
                     pass
-            client = self.mcp_client or KiteMCPClient()
-            result = await client.call_tool(
-                "get_historical_data",
-                {
-                    "tradingsymbol": ticker,
-                    "exchange": cfg.trading.exchange,
-                    "interval": interval,
-                },
-            )
-            candles = result.get("candles") or result.get("data") or []
-            if not candles:
-                raise RuntimeError(
-                    f"Kite MCP returned no historical candles for {ticker}"
+            try:
+                client = self.mcp_client or KiteMCPClient()
+                result = await client.call_tool(
+                    "get_historical_data",
+                    {
+                        "tradingsymbol": ticker,
+                        "exchange": cfg.trading.exchange,
+                        "interval": interval,
+                    },
                 )
-            df = pd.DataFrame(candles)
-            if "date" in df.columns:
-                df["date"] = pd.to_datetime(df["date"])
-            return df
+                candles = result.get("candles") or result.get("data") or []
+                if not candles:
+                    raise RuntimeError(
+                        f"Kite MCP returned no historical candles for {ticker}"
+                    )
+                df = pd.DataFrame(candles)
+                if "date" in df.columns:
+                    df["date"] = pd.to_datetime(df["date"])
+                update_service_status("kite_api", True)
+                return df
+            except Exception as e:
+                update_service_status("kite_api", False, str(e))
+                raise e
         if self.kite_client is None:
             raise RuntimeError(
                 f"No cached candles for {ticker} and no Kite client configured"
@@ -81,8 +88,10 @@ class KiteFetcher:
                 df = pd.DataFrame(candles)
                 if "date" in df.columns:
                     df["date"] = pd.to_datetime(df["date"])
+                update_service_status("kite_api", True)
                 return df
             except Exception as exc:
+                update_service_status("kite_api", False, str(exc))
                 raise RuntimeError(
                     f"Direct Kite historical access failed for {ticker}; use fetch_async() for MCP fallback"
                 ) from exc
