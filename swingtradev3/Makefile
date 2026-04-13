@@ -2,7 +2,7 @@ COMPOSE_FILE := ../docker-compose.dev.yml
 ENV_FILE := .env
 DOCKER_COMPOSE := docker compose -f $(COMPOSE_FILE) --env-file $(ENV_FILE)
 
-.PHONY: dev dev-detach test test-file lint format logs logs-app logs-mcp stop clean shell health login
+.PHONY: dev dev-detach test test-file lint format logs logs-app logs-mcp logs-dashboard stop clean shell health login
 
 dev:
 	$(DOCKER_COMPOSE) up --build
@@ -33,6 +33,9 @@ logs-app:
 
 logs-mcp:
 	$(DOCKER_COMPOSE) logs -f kite-mcp
+
+logs-dashboard:
+	$(DOCKER_COMPOSE) logs -f dashboard
 
 stop:
 	$(DOCKER_COMPOSE) down

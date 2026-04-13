@@ -1,0 +1,173 @@
+{"type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T04:22:19.659423","source":"scheduler"}
+{"type":"phase_started","payload":{"phase":"market_hours"},"timestamp":"2026-04-13T04:22:19.659966","source":"scheduler"}
+{"type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T04:22:46.213621","source":"scheduler"}
+{"type":"phase_started","payload":{"phase":"market_hours"},"timestamp":"2026-04-13T04:22:46.214558","source":"scheduler"}
+{"type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T04:22:59.437502","source":"scheduler"}
+{"type":"phase_started","payload":{"phase":"market_hours"},"timestamp":"2026-04-13T04:22:59.438457","source":"scheduler"}
+{"type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T04:23:33.981663","source":"scheduler"}
+{"type":"phase_started","payload":{"phase":"market_hours"},"timestamp":"2026-04-13T04:23:33.982590","source":"scheduler"}
+{"type":"scan_completed","payload":{"count":5},"timestamp":"2026-04-13T04:27:05.337422","source":"test"}
+{"type":"phase_started","payload":{},"timestamp":"2026-04-13T04:27:05.439765","source":"test"}
+{"type":"error","payload":{},"timestamp":"2026-04-13T04:27:05.541837","source":"test"}
+{"type":"health_check","payload":{"i":0},"timestamp":"2026-04-13T04:27:05.644037","source":"test"}
+{"type":"health_check","payload":{"i":1},"timestamp":"2026-04-13T04:27:05.644159","source":"test"}
+{"type":"health_check","payload":{"i":2},"timestamp":"2026-04-13T04:27:05.644225","source":"test"}
+{"type":"health_check","payload":{"i":3},"timestamp":"2026-04-13T04:27:05.644303","source":"test"}
+{"type":"health_check","payload":{"i":4},"timestamp":"2026-04-13T04:27:05.644418","source":"test"}
+{"type":"scan_started","payload":{},"timestamp":"2026-04-13T04:27:05.645757","source":"test"}
+{"type":"scan_completed","payload":{"count":5},"timestamp":"2026-04-13T04:27:17.993894","source":"test"}
+{"type":"phase_started","payload":{},"timestamp":"2026-04-13T04:27:18.096155","source":"test"}
+{"type":"error","payload":{},"timestamp":"2026-04-13T04:27:18.198216","source":"test"}
+{"type":"health_check","payload":{"i":0},"timestamp":"2026-04-13T04:27:18.300011","source":"test"}
+{"type":"health_check","payload":{"i":1},"timestamp":"2026-04-13T04:27:18.300134","source":"test"}
+{"type":"health_check","payload":{"i":2},"timestamp":"2026-04-13T04:27:18.300218","source":"test"}
+{"type":"health_check","payload":{"i":3},"timestamp":"2026-04-13T04:27:18.300302","source":"test"}
+{"type":"health_check","payload":{"i":4},"timestamp":"2026-04-13T04:27:18.300389","source":"test"}
+{"type":"scan_started","payload":{},"timestamp":"2026-04-13T04:27:18.302007","source":"test"}
+{"id":"7811883c4b2f","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T04:41:56.184905","source":"scheduler"}
+{"id":"a07c1bb2a56d","type":"phase_started","payload":{"phase":"market_hours"},"timestamp":"2026-04-13T04:41:56.185491","source":"scheduler"}
+{"id":"28f83cb806bc","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T04:42:33.550738","source":"scheduler"}
+{"id":"9d82067bde13","type":"phase_started","payload":{"phase":"market_hours"},"timestamp":"2026-04-13T04:42:33.551656","source":"scheduler"}
+{"id":"e6758c5a1b30","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T04:43:12.043486","source":"scheduler"}
+{"id":"8e555dffc9f2","type":"phase_started","payload":{"phase":"market_hours"},"timestamp":"2026-04-13T04:43:12.044453","source":"scheduler"}
+{"id":"b8265ebb818e","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T04:43:52.948146","source":"scheduler"}
+{"id":"67b23c920453","type":"phase_started","payload":{"phase":"market_hours"},"timestamp":"2026-04-13T04:43:52.949152","source":"scheduler"}
+{"id":"f702126db2a1","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T04:45:17.479310","source":"scheduler"}
+{"id":"6ecb2d6de33d","type":"phase_started","payload":{"phase":"market_hours"},"timestamp":"2026-04-13T04:45:17.479882","source":"scheduler"}
+{"id":"1363710b6bd2","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T04:45:39.248698","source":"scheduler"}
+{"id":"22f1c68c43d2","type":"phase_started","payload":{"phase":"market_hours"},"timestamp":"2026-04-13T04:45:39.249290","source":"scheduler"}
+{"id":"32831aef1c95","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T04:46:44.746449","source":"scheduler"}
+{"id":"0cd575b041e1","type":"phase_started","payload":{"phase":"market_hours"},"timestamp":"2026-04-13T04:46:44.747393","source":"scheduler"}
+{"id":"b91e5c81fb6f","type":"error","payload":{},"timestamp":"2026-04-13T04:48:55.220752","source":"test"}
+{"id":"891c833f34a3","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T04:49:22.852603","source":"scheduler"}
+{"id":"a75bd52aba3e","type":"phase_started","payload":{"phase":"market_hours"},"timestamp":"2026-04-13T04:49:22.853584","source":"scheduler"}
+{"id":"3ac667f95352","type":"error","payload":{},"timestamp":"2026-04-13T04:49:38.462946","source":"test"}
+{"id":"f81f0538ec54","type":"scan_completed","payload":{"count":5},"timestamp":"2026-04-13T04:50:11.080228","source":"test"}
+{"id":"7a0a6d468c1c","type":"phase_started","payload":{},"timestamp":"2026-04-13T04:50:11.182534","source":"test"}
+{"id":"e76e3eb7741e","type":"error","payload":{},"timestamp":"2026-04-13T04:50:11.284738","source":"test"}
+{"id":"5de44fb34e4b","type":"health_check","payload":{"i":0},"timestamp":"2026-04-13T04:50:11.387408","source":"test"}
+{"id":"1b9c01df6925","type":"health_check","payload":{"i":1},"timestamp":"2026-04-13T04:50:11.387535","source":"test"}
+{"id":"f84aa2491a1e","type":"health_check","payload":{"i":2},"timestamp":"2026-04-13T04:50:11.387624","source":"test"}
+{"id":"292e4b4ecf2e","type":"health_check","payload":{"i":3},"timestamp":"2026-04-13T04:50:11.387712","source":"test"}
+{"id":"f2a8b733326e","type":"health_check","payload":{"i":4},"timestamp":"2026-04-13T04:50:11.387800","source":"test"}
+{"id":"a66f36ce235c","type":"scan_started","payload":{},"timestamp":"2026-04-13T04:50:11.389126","source":"test"}
+{"id":"eab4da7ad08a","type":"error","payload":{},"timestamp":"2026-04-13T04:50:11.628026","source":"test"}
+{"id":"cac9c2fffb03","type":"error","payload":{"job":"overnight_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T05:19:23.251384","source":"scheduler"}
+{"id":"c9a3ded2cffd","type":"error","payload":{"job":"intraday_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T05:49:23.653932","source":"scheduler"}
+{"id":"e5bcd841552a","type":"error","payload":{"job":"overnight_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T05:49:23.655030","source":"scheduler"}
+{"id":"a9e5c2eb7464","type":"error","payload":{"job":"morning_news_digest","error":"object dict can't be used in 'await' expression"},"timestamp":"2026-04-13T06:00:00.837454","source":"scheduler"}
+{"id":"5313fac7d8af","type":"error","payload":{"job":"overnight_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T06:19:24.085715","source":"scheduler"}
+{"id":"cb21ebf5ddaf","type":"error","payload":{"job":"morning_regime_check","error":"'MarketRegimeDetector' object has no attribute 'detect'"},"timestamp":"2026-04-13T06:30:00.196827","source":"scheduler"}
+{"id":"3a55a96688ae","type":"error","payload":{"job":"intraday_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T06:49:24.447618","source":"scheduler"}
+{"id":"17bb660e65aa","type":"error","payload":{"job":"overnight_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T06:49:24.448498","source":"scheduler"}
+{"id":"82aabf3973b4","type":"error","payload":{"job":"overnight_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T07:19:24.901263","source":"scheduler"}
+{"id":"69b67f831502","type":"error","payload":{"job":"intraday_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T07:49:25.248922","source":"scheduler"}
+{"id":"1f531820a44c","type":"error","payload":{"job":"overnight_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T07:49:25.250105","source":"scheduler"}
+{"id":"81fef07ac4e1","type":"error","payload":{"job":"overnight_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T08:19:25.626332","source":"scheduler"}
+{"id":"af88d7835f93","type":"error","payload":{"job":"intraday_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T08:49:25.979011","source":"scheduler"}
+{"id":"a9fcb55d1952","type":"error","payload":{"job":"overnight_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T08:49:25.980152","source":"scheduler"}
+{"id":"a9b2dac92af6","type":"error","payload":{"job":"overnight_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T09:19:26.386238","source":"scheduler"}
+{"id":"b21fb3239482","type":"error","payload":{"job":"intraday_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T09:49:26.777432","source":"scheduler"}
+{"id":"7918a2018d04","type":"error","payload":{"job":"overnight_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T09:49:26.778697","source":"scheduler"}
+{"id":"0636a2a51bfb","type":"phase_started","payload":{"phase":"post_market"},"timestamp":"2026-04-13T10:00:00.900851","source":"scheduler"}
+{"id":"7550c7a8ff7d","type":"error","payload":{"job":"overnight_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T10:19:27.155230","source":"scheduler"}
+{"id":"53126036f8c5","type":"error","payload":{"job":"overnight_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T10:49:27.534447","source":"scheduler"}
+{"id":"311c63ab6e7b","type":"error","payload":{"job":"overnight_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T11:19:27.915919","source":"scheduler"}
+{"id":"0dd855f50068","type":"error","payload":{"job":"overnight_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T11:49:28.300361","source":"scheduler"}
+{"id":"d3b51f392653","type":"error","payload":{"job":"overnight_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T12:19:28.696806","source":"scheduler"}
+{"id":"f5a113882769","type":"phase_started","payload":{"phase":"evening_research"},"timestamp":"2026-04-13T12:30:00.820313","source":"scheduler"}
+{"id":"c87f0a5433e5","type":"error","payload":{"job":"overnight_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T12:49:29.091636","source":"scheduler"}
+{"id":"ecdc08cd85e3","type":"error","payload":{"job":"overnight_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T13:19:29.530527","source":"scheduler"}
+{"id":"e5dbd1e54070","type":"error","payload":{"job":"overnight_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T13:49:29.947248","source":"scheduler"}
+{"id":"51f43e750f29","type":"error","payload":{"job":"overnight_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T14:19:30.353673","source":"scheduler"}
+{"id":"f7b9dbf41fcb","type":"error","payload":{"job":"overnight_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T14:49:30.716350","source":"scheduler"}
+{"id":"38eaf63345c2","type":"error","payload":{"job":"overnight_news_sweep","error":"'NewsAggregator' object has no attribute 'search_news_async'"},"timestamp":"2026-04-13T15:19:31.100038","source":"scheduler"}
+{"id":"9a0bf5540ccf","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T15:30:00.231126","source":"scheduler"}
+{"id":"72ba994f0e66","type":"phase_completed","payload":{"phase":"eod_data_collection"},"timestamp":"2026-04-13T15:30:00.232061","source":"scheduler"}
+{"id":"62e1aaf5b613","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T15:47:53.063506","source":"scheduler"}
+{"id":"e5f05d6f7127","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T15:47:53.064432","source":"scheduler"}
+{"id":"f2805b5bc0c2","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T15:48:05.228120","source":"scheduler"}
+{"id":"5ad0021d27b0","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T15:48:05.229048","source":"scheduler"}
+{"id":"bba82bc37a4c","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T15:48:15.854859","source":"scheduler"}
+{"id":"7a3c73c8b392","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T15:48:15.855866","source":"scheduler"}
+{"id":"323debdf1e89","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T15:49:49.899232","source":"scheduler"}
+{"id":"3fe1b3f252b5","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T15:49:49.899769","source":"scheduler"}
+{"id":"ffd4f0d0139d","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T15:50:00.940020","source":"scheduler"}
+{"id":"5664b1e3ba58","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T15:50:00.940873","source":"scheduler"}
+{"id":"47048e43d07f","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T15:50:12.717906","source":"scheduler"}
+{"id":"06450a766f8d","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T15:50:12.718842","source":"scheduler"}
+{"id":"78a08f0b5657","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T15:51:18.252661","source":"scheduler"}
+{"id":"5b2a6ce7e3ce","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T15:51:18.253588","source":"scheduler"}
+{"id":"a3624d2e760e","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T15:51:32.364012","source":"scheduler"}
+{"id":"cbb93b5f5926","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T15:51:32.365156","source":"scheduler"}
+{"id":"492190e30122","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T15:52:02.280432","source":"scheduler"}
+{"id":"555d1e069db7","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T15:52:02.324556","source":"scheduler"}
+{"id":"739f20a16463","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T15:52:13.139101","source":"scheduler"}
+{"id":"ec849d23e18f","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T15:52:13.139939","source":"scheduler"}
+{"id":"c23be560c847","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T15:54:07.520519","source":"scheduler"}
+{"id":"f3a10143b5c1","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T15:54:07.521345","source":"scheduler"}
+{"id":"5dacea20a1bc","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T15:54:10.602300","source":"scheduler"}
+{"id":"77b499793f6e","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T15:54:10.604934","source":"scheduler"}
+{"id":"05a968f2c1ed","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T15:54:29.553414","source":"scheduler"}
+{"id":"15b177554493","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T15:54:29.554305","source":"scheduler"}
+{"id":"95de08907243","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T15:54:37.313479","source":"scheduler"}
+{"id":"ccd82a2ac44f","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T15:54:37.314343","source":"scheduler"}
+{"id":"30122e957e39","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T21:28:01.958504","source":"scheduler"}
+{"id":"22375e9f5ce9","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T21:28:01.959541","source":"scheduler"}
+{"id":"a758c49b9798","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T21:29:56.886072","source":"scheduler"}
+{"id":"e9fd785df52b","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T21:29:56.886933","source":"scheduler"}
+{"id":"5e9f9bc56864","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T21:30:50.852381","source":"scheduler"}
+{"id":"c63fb273226c","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T21:30:50.853345","source":"scheduler"}
+{"id":"c2922ff380cb","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T21:31:04.587346","source":"scheduler"}
+{"id":"9f0344137285","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T21:31:04.588509","source":"scheduler"}
+{"id":"6f5ac4fcfa5e","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T21:31:28.263657","source":"scheduler"}
+{"id":"749b70124762","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T21:31:28.264700","source":"scheduler"}
+{"id":"bf0164b2ed18","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T21:32:08.120520","source":"scheduler"}
+{"id":"cb720946d425","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T21:32:08.123142","source":"scheduler"}
+{"id":"60334b9424c8","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T21:34:37.115902","source":"scheduler"}
+{"id":"cd4bd2cd19b0","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T21:34:37.117061","source":"scheduler"}
+{"id":"72945c8e2c9a","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T21:42:47.639628","source":"scheduler"}
+{"id":"884e4f215732","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T21:42:47.640405","source":"scheduler"}
+{"id":"237a6bda1849","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T21:44:35.444739","source":"scheduler"}
+{"id":"b82604577362","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T21:44:35.448780","source":"scheduler"}
+{"id":"6c67392f9db1","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T21:44:53.141459","source":"scheduler"}
+{"id":"febb36c19eda","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T21:44:53.142280","source":"scheduler"}
+{"id":"a81342e378c9","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T21:46:47.425548","source":"scheduler"}
+{"id":"4b731af1ac6d","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T21:46:47.426489","source":"scheduler"}
+{"id":"22ba7e4a817c","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T21:46:59.714196","source":"scheduler"}
+{"id":"57914c81dea9","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T21:46:59.735685","source":"scheduler"}
+{"id":"bd31c9b18aa6","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T21:47:19.832796","source":"scheduler"}
+{"id":"d0a1cb3e6c80","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T21:47:19.833590","source":"scheduler"}
+{"id":"833ba5bbf57d","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T21:47:56.801325","source":"scheduler"}
+{"id":"91dfd382b521","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T21:47:56.802276","source":"scheduler"}
+{"id":"b0cbaf7dfde8","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T21:48:08.975266","source":"scheduler"}
+{"id":"68ec85a5f79c","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T21:48:08.976226","source":"scheduler"}
+{"id":"3f7a7cfe3894","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T21:51:59.739402","source":"scheduler"}
+{"id":"5d084ae19e9d","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T21:51:59.740490","source":"scheduler"}
+{"id":"ed1a3c2478ec","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T21:56:24.935676","source":"scheduler"}
+{"id":"b55fdba204b9","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T21:56:24.936612","source":"scheduler"}
+{"id":"440f64bfe68c","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T21:56:55.789810","source":"scheduler"}
+{"id":"5ae0e7de0d1a","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T21:56:55.790670","source":"scheduler"}
+{"id":"fbef1fa812b3","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T21:57:08.797348","source":"scheduler"}
+{"id":"bf17d94ea017","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T21:57:08.798184","source":"scheduler"}
+{"id":"c81351195394","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T21:57:18.928611","source":"scheduler"}
+{"id":"57f673682e58","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-13T21:57:18.929507","source":"scheduler"}
+{"id":"4c29125c22b8","type":"phase_started","payload":{"phase":"overnight_monitoring"},"timestamp":"2026-04-13T22:00:00.963074","source":"scheduler"}
+{"id":"5c3b9173a967","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T22:02:50.917858","source":"scheduler"}
+{"id":"83b432ba1b69","type":"phase_started","payload":{"phase":"overnight_monitoring"},"timestamp":"2026-04-13T22:02:50.918777","source":"scheduler"}
+{"id":"53b68c255318","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T22:03:00.746016","source":"scheduler"}
+{"id":"a937590952e0","type":"phase_started","payload":{"phase":"overnight_monitoring"},"timestamp":"2026-04-13T22:03:00.747027","source":"scheduler"}
+{"id":"ed182f66c0c4","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T22:03:20.438134","source":"scheduler"}
+{"id":"364bcf2a165e","type":"phase_started","payload":{"phase":"overnight_monitoring"},"timestamp":"2026-04-13T22:03:20.439036","source":"scheduler"}
+{"id":"e794bd306621","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T22:03:35.343079","source":"scheduler"}
+{"id":"72f6de5432b7","type":"phase_started","payload":{"phase":"overnight_monitoring"},"timestamp":"2026-04-13T22:03:35.343935","source":"scheduler"}
+{"id":"a23737b756de","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T22:03:48.445847","source":"scheduler"}
+{"id":"c962f56d0aac","type":"phase_started","payload":{"phase":"overnight_monitoring"},"timestamp":"2026-04-13T22:03:48.446730","source":"scheduler"}
+{"id":"d2bbcc0ef55c","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T22:03:57.517507","source":"scheduler"}
+{"id":"0fba13ae5489","type":"phase_started","payload":{"phase":"overnight_monitoring"},"timestamp":"2026-04-13T22:03:57.518177","source":"scheduler"}
+{"id":"2e7e261047b3","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T22:04:08.289181","source":"scheduler"}
+{"id":"484160c25dd6","type":"phase_started","payload":{"phase":"overnight_monitoring"},"timestamp":"2026-04-13T22:04:08.290090","source":"scheduler"}
+{"id":"c92e5f94cd2f","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T22:04:18.542065","source":"scheduler"}
+{"id":"b3960738a59e","type":"phase_started","payload":{"phase":"overnight_monitoring"},"timestamp":"2026-04-13T22:04:18.542869","source":"scheduler"}
+{"id":"72319456cd2b","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-13T22:04:34.102357","source":"scheduler"}
+{"id":"4f1a63ad876d","type":"phase_started","payload":{"phase":"overnight_monitoring"},"timestamp":"2026-04-13T22:04:34.103222","source":"scheduler"}

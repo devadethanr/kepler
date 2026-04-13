@@ -1,4 +1,16 @@
 {
+  "05c32ad6232734e395c7ac8fc64256d4": {
+    "analyzed_at": "2026-04-13T03:48:20.346750",
+    "catalyst_type": [
+      "downgrade"
+    ],
+    "finbert_score": -0.964,
+    "keyword_score": -0.2,
+    "novelty": "unknown",
+    "sentiment_label": "bearish",
+    "sentiment_score": -0.658,
+    "source_count": 2
+  },
   "0b8b2e156221a82da243febfb3780642": {
     "analyzed_at": "2026-04-05T00:25:08.164112",
     "catalyst_type": [
@@ -38,6 +50,21 @@
     "novelty": "unknown",
     "sentiment_label": "bullish",
     "sentiment_score": 0.352,
+    "source_count": 2
+  },
+  "160ea99fe2b726f6eb1bec3bdf7c01f1": {
+    "analyzed_at": "2026-04-13T03:48:20.776940",
+    "catalyst_type": [
+      "contract",
+      "corporate_action",
+      "macro",
+      "earnings"
+    ],
+    "finbert_score": 0.0,
+    "keyword_score": 0.4,
+    "novelty": "unknown",
+    "sentiment_label": "neutral",
+    "sentiment_score": 0.16,
     "source_count": 2
   },
   "286b6269ee17915e01361cd492f3ee78": {

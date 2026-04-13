@@ -6,7 +6,6 @@ services:
     container_name: swingtradev3-app
     ports:
       - "8001:8000"
-      - "8502:8501"
     volumes:
       - ./swingtradev3:/app
       - ./swingtradev3/context:/app/context
@@ -16,6 +15,7 @@ services:
       - swingtradev3/.env
     environment:
       - PYTHONUNBUFFERED=1
+      - TZ=Asia/Kolkata
     depends_on:
       - kite-mcp
     restart: unless-stopped
@@ -24,12 +24,28 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-    # Override CMD for dev: hot reload for FastAPI, auto-refresh for Streamlit
+    # Override CMD for dev: hot reload for FastAPI
     command: >
       sh -c "
-        uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload &
-        streamlit run dashboard/app.py --server.port 8501 --server.address 0.0.0.0 --server.enableCORS false
+        uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
       "
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dashboard
+    container_name: swingtradev3-dashboard
+    ports:
+      - "8502:3000"
+      - "8002:8000"
+    environment:
+      - FASTAPI_URL=http://app:8000
+      - TZ=Asia/Kolkata
+    volumes:
+      - ./swingtradev3/dashboard:/app
+    depends_on:
+      - app
+    restart: unless-stopped
 
   kite-mcp:
     build:
