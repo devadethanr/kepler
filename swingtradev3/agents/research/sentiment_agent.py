@@ -5,6 +5,7 @@ from typing import Any, AsyncGenerator
 from google.adk.agents import BaseAgent
 from google.adk.events import Event
 from google.genai import types
+import asyncio
 
 from tools.market.news_search import NewsSearchTool
 from tools.analysis.sentiment_analysis import SentimentAnalyzer
@@ -23,8 +24,8 @@ class SentimentAgent(BaseAgent):
         sentiment_analyzer = SentimentAnalyzer()
         
         try:
-            news = news_tool.search_news(f"{ticker} stock news today")
-            data = sentiment_analyzer.analyze_news_list(news.get("results", []))
+            news = await asyncio.to_thread(news_tool.search_news, f"{ticker} stock news today")
+            data = await asyncio.to_thread(sentiment_analyzer.analyze_news_list, news.get("results", []))
         except Exception as e:
             data = {"error": str(e)}
 

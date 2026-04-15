@@ -13,13 +13,37 @@ from .middleware.auth import get_api_key
 
 START_TIME = time.time()
 
+def load_models():
+    import logging
+    try:
+        from tools.analysis.sentiment_analysis import _get_finbert
+        logging.getLogger("swingtradev3").info("Warming up FinBERT model...")
+        _get_finbert()
+        logging.getLogger("swingtradev3").info("FinBERT warmed up.")
+    except Exception as e:
+        logging.getLogger("swingtradev3").error(f"Failed to load FinBERT: {e}")
+
+    try:
+        from data.timesfm_forecaster import _get_timesfm_model
+        logging.getLogger("swingtradev3").info("Warming up TimesFM model...")
+        _get_timesfm_model()
+        logging.getLogger("swingtradev3").info("TimesFM warmed up.")
+    except Exception as e:
+        logging.getLogger("swingtradev3").error(f"Failed to load TimesFM: {e}")
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Startup and shutdown events."""
     # Startup
     from paths import ensure_runtime_dirs
+    import asyncio
     ensure_runtime_dirs()
     await scheduler.start()
+    
+    # Warm up large models in the background so slow agent execution is purely inference
+    asyncio.create_task(asyncio.to_thread(load_models))
+    
     yield
     # Shutdown
     await scheduler.stop()

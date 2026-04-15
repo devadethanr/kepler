@@ -1,18 +1,188 @@
 {
   "agents": {
+    "BatchScannerAgent": {
+      "agent_name": "BatchScannerAgent",
+      "completed_at": null,
+      "current_task": "Deep analysis completed for 2 stocks.",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-14T18:00:12.706984",
+      "status": "running"
+    },
+    "FilterAgent": {
+      "agent_name": "FilterAgent",
+      "completed_at": null,
+      "current_task": "Funnel completed: 2 stocks qualified for deep analysis.",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-14T18:00:10.682672",
+      "status": "running"
+    },
+    "FundamentalsAgent_BSE": {
+      "agent_name": "FundamentalsAgent_BSE",
+      "completed_at": null,
+      "current_task": "Fundamentals fetched for BSE",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-14T18:00:10.890082",
+      "status": "running"
+    },
+    "FundamentalsAgent_OIL": {
+      "agent_name": "FundamentalsAgent_OIL",
+      "completed_at": null,
+      "current_task": "Fundamentals fetched for OIL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-14T18:00:10.888609",
+      "status": "running"
+    },
+    "KnowledgeGraphAgent": {
+      "agent_name": "KnowledgeGraphAgent",
+      "completed_at": null,
+      "current_task": "Knowledge graph updated: 2 stocks, 2 sectors.",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-14T18:00:35.100403",
+      "status": "running"
+    },
+    "MarketDataAgent_BSE": {
+      "agent_name": "MarketDataAgent_BSE",
+      "completed_at": null,
+      "current_task": "Market data fetched for BSE",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-14T18:00:10.887159",
+      "status": "running"
+    },
+    "MarketDataAgent_OIL": {
+      "agent_name": "MarketDataAgent_OIL",
+      "completed_at": null,
+      "current_task": "Market data fetched for OIL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-14T18:00:10.880904",
+      "status": "running"
+    },
+    "OptionsAgent_BSE": {
+      "agent_name": "OptionsAgent_BSE",
+      "completed_at": null,
+      "current_task": "Options data analyzed for BSE",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-14T18:00:12.103793",
+      "status": "running"
+    },
+    "OptionsAgent_OIL": {
+      "agent_name": "OptionsAgent_OIL",
+      "completed_at": null,
+      "current_task": "Options data analyzed for OIL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-14T18:00:12.371114",
+      "status": "running"
+    },
+    "RegimeAgent": {
+      "agent_name": "RegimeAgent",
+      "completed_at": null,
+      "current_task": "Market regime detected: bear",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-14T18:00:07.714249",
+      "status": "running"
+    },
+    "ResearchPipeline": {
+      "agent_name": "ResearchPipeline",
+      "completed_at": "2026-04-14T18:00:35.101664",
+      "current_task": "Full evening research scan",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-14T18:00:00.949617",
+      "status": "completed"
+    },
+    "ResultsSaverAgent": {
+      "agent_name": "ResultsSaverAgent",
+      "completed_at": null,
+      "current_task": "Research results saved to /app/context/research/2026-04-14",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-14T18:00:35.094951",
+      "status": "running"
+    },
+    "ScorerAgent": {
+      "agent_name": "ScorerAgent",
+      "completed_at": null,
+      "current_task": "Scoring completed. 2 shortlisted from 2 scored.",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-14T18:00:35.092572",
+      "status": "running"
+    },
+    "SentimentAgent_BSE": {
+      "agent_name": "SentimentAgent_BSE",
+      "completed_at": null,
+      "current_task": "Sentiment analyzed for BSE",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-14T18:00:12.101295",
+      "status": "running"
+    },
+    "SentimentAgent_OIL": {
+      "agent_name": "SentimentAgent_OIL",
+      "completed_at": null,
+      "current_task": "Sentiment analyzed for OIL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-14T18:00:12.366443",
+      "status": "running"
+    },
+    "TimesfmAgent_BSE": {
+      "agent_name": "TimesfmAgent_BSE",
+      "completed_at": null,
+      "current_task": "TimesFM forecast generated for BSE",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-14T18:00:12.522405",
+      "status": "running"
+    },
+    "TimesfmAgent_OIL": {
+      "agent_name": "TimesfmAgent_OIL",
+      "completed_at": null,
+      "current_task": "TimesFM forecast generated for OIL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-14T18:00:12.705316",
+      "status": "running"
+    },
     "scheduler": {
       "agent_name": "scheduler",
-      "completed_at": "2026-04-13T22:19:34.291569",
+      "completed_at": "2026-04-15T11:18:01.524270",
       "current_task": "position_monitor",
       "last_error": null,
       "metadata": {
-        "last_job": "position_monitor"
+        "last_job": "overnight_news_sweep"
       },
       "progress": null,
-      "started_at": "2026-04-13T22:19:34.291033",
+      "started_at": "2026-04-15T11:18:01.520568",
       "status": "completed"
     }
   },
-  "last_updated": "2026-04-13T22:19:34.291573",
-  "scheduler_phase": "overnight_monitoring"
+  "last_updated": "2026-04-15T11:18:01.524273",
+  "scheduler_phase": "market_hours"
 }

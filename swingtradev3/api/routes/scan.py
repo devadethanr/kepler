@@ -8,6 +8,8 @@ from pydantic import BaseModel
 from paths import CONTEXT_DIR
 from storage import read_json, write_json
 from models import ScanResult, ScanStatusResponse
+from api.sse_broadcaster import broadcaster
+from api.tasks.activity_manager import activity_manager
 
 router = APIRouter()
 
@@ -43,6 +45,7 @@ async def run_research_pipeline_bg():
         status["started_at"] = datetime.now().isoformat()
         status["completed_at"] = None
         _save_status(status)
+        await broadcaster.broadcast("scan_update", status)
 
         try:
             from agents.research.pipeline import research_pipeline
@@ -65,8 +68,10 @@ async def run_research_pipeline_bg():
                 session_id=session_id,
                 new_message=types.Content(role="user", parts=[types.Part(text="Run research pipeline")])
             ):
-                # Could stream events via websockets if needed
-                pass
+                if hasattr(event, "author") and hasattr(event, "content") and event.content.parts:
+                    text = event.content.parts[0].text
+                    await activity_manager.start_activity(event.author, text)
+                    print(f"[{event.author}] {text}")
                 
             status["status"] = "completed"
         except Exception as e:
@@ -76,6 +81,7 @@ async def run_research_pipeline_bg():
         finally:
             status["completed_at"] = datetime.now().isoformat()
             _save_status(status)
+            await broadcaster.broadcast("scan_update", status)
 
 @router.post("", response_model=ScanResponse)
 async def trigger_scan(background_tasks: BackgroundTasks):

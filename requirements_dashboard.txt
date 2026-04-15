@@ -3,3 +3,5 @@ httpx>=0.27.0
 plotly>=5.20.0
 reflex-motion
 httpx-sse>=0.4.0
+numpy
+pandas

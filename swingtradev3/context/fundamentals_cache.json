@@ -284,6 +284,25 @@
     "source": "yfinance",
     "ticker": "KOTAKBANK"
   },
+  "OIL": {
+    "as_of": "2026-04-14",
+    "debt_equity": 58.174,
+    "dii_holding_pct": null,
+    "dividend_yield": 2.41,
+    "eps_growth_3yr_pct": -0.107,
+    "fii_holding_pct": null,
+    "industry": "Oil & Gas Integrated",
+    "is_stale": false,
+    "market_cap_cr": 77641.023488,
+    "pe_ratio": 13.3,
+    "promoter_holding_pct": null,
+    "promoter_pledge_pct": null,
+    "revenue_growth_pct": null,
+    "roce": null,
+    "sector": "Energy",
+    "source": "yfinance",
+    "ticker": "OIL"
+  },
   "RELIANCE": {
     "as_of": "2026-04-13",
     "debt_equity": 35.651,

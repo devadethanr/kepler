@@ -51,7 +51,7 @@ def agent_card(agent_name: rx.Var[str], state_agent: rx.Var[dict]) -> rx.Compone
         ),
         # A subtle pulse animation if running
         animation=rx.cond(
-            state_agent["status"] == "running",
+            state_agent["status"].to(str) == "running",
             "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
             "none"
         ),
@@ -62,7 +62,7 @@ def agent_card(agent_name: rx.Var[str], state_agent: rx.Var[dict]) -> rx.Compone
         margin_bottom="1rem"
     )
 
-def overview_metric(title: str, value: str, icon_tag: str, color: str) -> rx.Component:
+def overview_metric(title: str, value: any, icon_tag: str, color: str) -> rx.Component:
     return rx.box(
         rx.hstack(
             rx.box(

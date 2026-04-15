@@ -38,9 +38,12 @@ services:
     ports:
       - "8502:3000"
       - "8002:8000"
+    env_file:
+      - swingtradev3/.env
     environment:
       - FASTAPI_URL=http://app:8000
       - TZ=Asia/Kolkata
+      - API_KEY=${FASTAPI_API_KEY}
     volumes:
       - ./swingtradev3/dashboard:/app
     depends_on:

@@ -1,0 +1,21 @@
+{
+  "last_updated": "2026-04-14T18:00:35.098448",
+  "stocks": {
+    "BSE": {
+      "avg_score": 45.0,
+      "last_scanned": "2026-04-14",
+      "note_path": "wiki/stocks/BSE.md",
+      "scan_count": 1,
+      "sector": "Financial Services",
+      "ticker": "BSE"
+    },
+    "OIL": {
+      "avg_score": 45.0,
+      "last_scanned": "2026-04-14",
+      "note_path": "wiki/stocks/OIL.md",
+      "scan_count": 1,
+      "sector": "Energy",
+      "ticker": "OIL"
+    }
+  }
+}

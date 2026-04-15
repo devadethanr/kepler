@@ -33,12 +33,10 @@ async def get_portfolio_summary() -> dict[str, Any]:
     sector_exposure: dict[str, float] = {}
     total_invested = 0.0
     for pos in state.positions:
-        val = pos.quantity * pos.current_price
+        val = pos.quantity * (pos.current_price or pos.entry_price)
         total_invested += val
-        # Just putting 'Unknown' if sector not available in PositionState
-        # Need to check models.py for sector in PositionState
-        # Assumed here as a generic tracker
-        sector_exposure["Generic"] = sector_exposure.get("Generic", 0.0) + val
+        sector = pos.sector or "Unknown"
+        sector_exposure[sector] = sector_exposure.get(sector, 0.0) + val
 
     return {
         "cash_inr": state.cash_inr,

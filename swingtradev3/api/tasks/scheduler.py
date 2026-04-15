@@ -237,7 +237,8 @@ class TradingScheduler:
         news = NewsAggregator()
 
         for pos in state.positions:
-            headlines = await news.search_news_async(pos.ticker, max_results=3)
+            news_data = await asyncio.to_thread(news.search_news, pos.ticker)
+            headlines = news_data.get("results", [])[:3]
             if headlines:
                 await event_bus.publish(BusEvent(
                     type=EventType.NEWS_BREAK,
@@ -261,7 +262,7 @@ class TradingScheduler:
         """06:00 — Sweep market news for overnight developments."""
         from data.news_aggregator import NewsAggregator
         news = NewsAggregator()
-        await news.sweep_market_news()
+        await asyncio.to_thread(news.sweep_market_news)
         print(f"[{_now_ist().isoformat()}] Morning news digest completed")
 
     async def _morning_regime_check(self) -> None:
@@ -352,7 +353,8 @@ class TradingScheduler:
         news = NewsAggregator()
 
         for pos in state.positions:
-            headlines = await news.search_news_async(pos.ticker, max_results=3)
+            news_data = await asyncio.to_thread(news.search_news, pos.ticker)
+            headlines = news_data.get("results", [])[:3]
             if headlines:
                 await event_bus.publish(BusEvent(
                     type=EventType.NEWS_BREAK,
