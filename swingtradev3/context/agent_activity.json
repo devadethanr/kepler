@@ -3,21 +3,21 @@
     "BatchScannerAgent": {
       "agent_name": "BatchScannerAgent",
       "completed_at": null,
-      "current_task": "Deep analysis completed for 1 stocks.",
+      "current_task": "Deep analysis completed for 0 stocks.",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-16T02:19:44.671346",
+      "started_at": "2026-04-16T04:35:44.098992",
       "status": "running"
     },
     "FilterAgent": {
       "agent_name": "FilterAgent",
       "completed_at": null,
-      "current_task": "Funnel completed: 1 stocks qualified for deep analysis.",
+      "current_task": "Funnel completed: 0 stocks qualified for deep analysis.",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-16T02:19:32.876919",
+      "started_at": "2026-04-16T04:35:44.097502",
       "status": "running"
     },
     "FundamentalsAgent_BSE": {
@@ -43,11 +43,11 @@
     "KnowledgeGraphAgent": {
       "agent_name": "KnowledgeGraphAgent",
       "completed_at": null,
-      "current_task": "Knowledge graph updated: 1 stocks, 1 sectors.",
+      "current_task": "No scan results to update knowledge graph.",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-16T02:19:51.513925",
+      "started_at": "2026-04-16T04:35:44.149021",
       "status": "running"
     },
     "MarketDataAgent_BSE": {
@@ -90,6 +90,16 @@
       "started_at": "2026-04-16T02:19:39.395102",
       "status": "running"
     },
+    "Pipeline": {
+      "agent_name": "Pipeline",
+      "completed_at": null,
+      "current_task": "Research scan",
+      "last_error": null,
+      "metadata": {},
+      "progress": "3/10 stocks scored",
+      "started_at": "2026-04-16T04:34:19.232895",
+      "status": "running"
+    },
     "RegimeAgent": {
       "agent_name": "RegimeAgent",
       "completed_at": null,
@@ -97,7 +107,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-16T02:19:27.407562",
+      "started_at": "2026-04-16T04:35:36.588503",
       "status": "running"
     },
     "ResearchPipeline": {
@@ -117,17 +127,17 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-16T02:19:51.508100",
+      "started_at": "2026-04-16T04:35:44.122236",
       "status": "running"
     },
     "ScorerAgent": {
       "agent_name": "ScorerAgent",
       "completed_at": null,
-      "current_task": "Scoring completed. 0 shortlisted from 1 scored. (regime: bear, min_score: 8.0)",
+      "current_task": "No qualified stocks to score.",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-16T02:19:51.504167",
+      "started_at": "2026-04-16T04:35:44.120513",
       "status": "running"
     },
     "SentimentAgent_BSE": {
@@ -172,17 +182,17 @@
     },
     "scheduler": {
       "agent_name": "scheduler",
-      "completed_at": "2026-04-16T03:02:18.162634",
+      "completed_at": "2026-04-16T03:53:52.086230",
       "current_task": "position_monitor",
       "last_error": null,
       "metadata": {
-        "last_job": "overnight_news_sweep"
+        "last_job": "position_monitor"
       },
       "progress": null,
-      "started_at": "2026-04-16T03:02:18.160743",
+      "started_at": "2026-04-16T03:53:52.085530",
       "status": "completed"
     }
   },
-  "last_updated": "2026-04-16T03:38:51.850167",
-  "scheduler_phase": "overnight_monitoring"
+  "last_updated": "2026-04-16T04:35:44.149041",
+  "scheduler_phase": "market_hours"
 }

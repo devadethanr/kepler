@@ -7,6 +7,7 @@ Each handler responds to a specific EventType and takes action:
 - Knowledge graph updates
 - Regime adjustments
 """
+
 from __future__ import annotations
 
 from datetime import datetime
@@ -19,6 +20,7 @@ from api.tasks.activity_manager import activity_manager
 # Handler implementations
 # ─────────────────────────────────────────────────────────────
 
+
 async def handle_gtt_triggered(event: BusEvent) -> None:
     """GTT order triggered (stop or target hit). Log trade, update state, alert."""
     ticker = event.payload.get("ticker", "unknown")
@@ -30,12 +32,11 @@ async def handle_gtt_triggered(event: BusEvent) -> None:
     # Send Telegram
     try:
         from notifications.telegram_client import TelegramClient
+
         tg = TelegramClient()
         emoji = "🛑" if trigger_type == "stop" else "🎯"
         await tg.send_briefing(
-            f"{emoji} GTT Triggered: {ticker}\n"
-            f"Type: {trigger_type.upper()}\n"
-            f"Price: ₹{price}"
+            f"{emoji} GTT Triggered: {ticker}", f"Type: {trigger_type.upper()}", f"Price: ₹{price}"
         )
     except Exception as e:
         print(f"handle_gtt_triggered: Telegram failed: {e}")
@@ -68,11 +69,12 @@ async def handle_vix_spike(event: BusEvent) -> None:
     # Send Telegram
     try:
         from notifications.telegram_client import TelegramClient
+
         tg = TelegramClient()
         await tg.send_briefing(
-            f"📈 VIX Spike Alert: {vix_level}\n"
-            f"Action: {action}\n"
-            f"Stops tightened by 20% on all positions."
+            f"📈 VIX Spike Alert: {vix_level}",
+            f"Action: {action}",
+            f"Stops tightened by 20% on all positions.",
         )
     except Exception as e:
         print(f"handle_vix_spike: Telegram failed: {e}")
@@ -90,11 +92,10 @@ async def handle_position_news(event: BusEvent) -> None:
 
     try:
         from notifications.telegram_client import TelegramClient
+
         tg = TelegramClient()
         news_text = "\n".join(f"• {h}" for h in headlines[:5])
-        await tg.send_briefing(
-            f"📰 News Alert: {ticker}\n\n{news_text}"
-        )
+        await tg.send_briefing(f"📰 News Alert: {ticker}", news_text)
     except Exception as e:
         print(f"handle_position_news: Telegram failed: {e}")
 
@@ -112,16 +113,19 @@ async def handle_stop_hit(event: BusEvent) -> None:
     try:
         from storage import read_json, write_json
         from paths import CONTEXT_DIR
+
         observations = read_json(CONTEXT_DIR / "observations.json", [])
-        observations.append({
-            "timestamp": datetime.now().isoformat(),
-            "type": "stop_hit",
-            "ticker": ticker,
-            "entry_price": entry_price,
-            "stop_price": stop_price,
-            "pnl_pct": pnl_pct,
-            "lesson": f"{ticker} stopped out at ₹{stop_price} ({pnl_pct:.1f}%)",
-        })
+        observations.append(
+            {
+                "timestamp": datetime.now().isoformat(),
+                "type": "stop_hit",
+                "ticker": ticker,
+                "entry_price": entry_price,
+                "stop_price": stop_price,
+                "pnl_pct": pnl_pct,
+                "lesson": f"{ticker} stopped out at ₹{stop_price} ({pnl_pct:.1f}%)",
+            }
+        )
         write_json(CONTEXT_DIR / "observations.json", observations)
     except Exception as e:
         print(f"handle_stop_hit: observation failed: {e}")
@@ -129,12 +133,16 @@ async def handle_stop_hit(event: BusEvent) -> None:
     # Update knowledge graph
     try:
         from knowledge.wiki_renderer import WikiRenderer
+
         renderer = WikiRenderer()
-        renderer.upsert_stock_note(ticker, {
-            "date": datetime.now().strftime("%Y-%m-%d"),
-            "event": "stop_hit",
-            "pnl_pct": pnl_pct,
-        })
+        renderer.upsert_stock_note(
+            ticker,
+            {
+                "date": datetime.now().strftime("%Y-%m-%d"),
+                "event": "stop_hit",
+                "pnl_pct": pnl_pct,
+            },
+        )
     except Exception as e:
         print(f"handle_stop_hit: KG update failed: {e}")
 
@@ -152,16 +160,19 @@ async def handle_target_hit(event: BusEvent) -> None:
     try:
         from storage import read_json, write_json
         from paths import CONTEXT_DIR
+
         observations = read_json(CONTEXT_DIR / "observations.json", [])
-        observations.append({
-            "timestamp": datetime.now().isoformat(),
-            "type": "target_hit",
-            "ticker": ticker,
-            "entry_price": entry_price,
-            "target_price": target_price,
-            "pnl_pct": pnl_pct,
-            "lesson": f"{ticker} hit target at ₹{target_price} (+{pnl_pct:.1f}%)",
-        })
+        observations.append(
+            {
+                "timestamp": datetime.now().isoformat(),
+                "type": "target_hit",
+                "ticker": ticker,
+                "entry_price": entry_price,
+                "target_price": target_price,
+                "pnl_pct": pnl_pct,
+                "lesson": f"{ticker} hit target at ₹{target_price} (+{pnl_pct:.1f}%)",
+            }
+        )
         write_json(CONTEXT_DIR / "observations.json", observations)
     except Exception as e:
         print(f"handle_target_hit: observation failed: {e}")
@@ -169,12 +180,16 @@ async def handle_target_hit(event: BusEvent) -> None:
     # Update knowledge graph
     try:
         from knowledge.wiki_renderer import WikiRenderer
+
         renderer = WikiRenderer()
-        renderer.upsert_stock_note(ticker, {
-            "date": datetime.now().strftime("%Y-%m-%d"),
-            "event": "target_hit",
-            "pnl_pct": pnl_pct,
-        })
+        renderer.upsert_stock_note(
+            ticker,
+            {
+                "date": datetime.now().strftime("%Y-%m-%d"),
+                "event": "target_hit",
+                "pnl_pct": pnl_pct,
+            },
+        )
     except Exception as e:
         print(f"handle_target_hit: KG update failed: {e}")
 
@@ -188,11 +203,12 @@ async def handle_auth_expiring(event: BusEvent) -> None:
 
     try:
         from notifications.telegram_client import TelegramClient
+
         tg = TelegramClient()
         await tg.send_briefing(
-            f"🔑 Auth Expiring: {service}\n"
-            f"Hours remaining: {hours_remaining}\n"
-            f"Please re-authenticate to avoid disruption."
+            f"🔑 Auth Expiring: {service}",
+            f"Hours remaining: {hours_remaining}",
+            f"Please re-authenticate to avoid disruption.",
         )
     except Exception as e:
         print(f"handle_auth_expiring: Telegram failed: {e}")
@@ -208,6 +224,7 @@ async def handle_regime_change(event: BusEvent) -> None:
     # Log regime change
     try:
         from regime_adapter import RegimeAdaptiveConfig
+
         adapted = RegimeAdaptiveConfig(new_regime)
         print(f"  → Overlay: {adapted.label}")
         print(f"  → Position size: {adapted.overlay.position_size_pct}%")
@@ -219,10 +236,11 @@ async def handle_regime_change(event: BusEvent) -> None:
     # Send Telegram
     try:
         from notifications.telegram_client import TelegramClient
+
         tg = TelegramClient()
         await tg.send_briefing(
-            f"🔄 Regime Change: {old_regime} → {new_regime}\n"
-            f"Position sizing and stops adjusted automatically."
+            f"🔄 Regime Change: {old_regime} → {new_regime}",
+            f"Position sizing and stops adjusted automatically.",
         )
     except Exception as e:
         print(f"handle_regime_change: Telegram failed: {e}")
@@ -231,6 +249,7 @@ async def handle_regime_change(event: BusEvent) -> None:
 # ─────────────────────────────────────────────────────────────
 # Registration
 # ─────────────────────────────────────────────────────────────
+
 
 def register_all_handlers(bus=None) -> None:
     """Register all event handlers with the event bus."""

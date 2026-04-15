@@ -315,7 +315,7 @@ class TradingScheduler:
 
                 tg = TelegramClient()
                 await tg.send_briefing(
-                    f"⏳ {len(pending)} trade(s) awaiting approval.\n📊 Review in dashboard."
+                    f"⏳ {len(pending)} trade(s) awaiting approval.", f"📊 Review in dashboard."
                 )
             except Exception as e:
                 print(f"Approval reminder failed: {e}")
@@ -539,12 +539,12 @@ class TradingScheduler:
 
             tg = TelegramClient()
             await tg.send_briefing(
-                f"📊 Daily Summary — {_now_ist().strftime('%Y-%m-%d')}\n\n"
-                f"Positions: {positions_count}\n"
-                f"Unrealized P&L: ₹{pnl:.2f}\n"
-                f"Scheduler phase: {self._current_phase}\n"
-                f"Failed events: {failed_count}\n"
-                f"\n🌙 Entering overnight mode."
+                f"📊 Daily Summary — {_now_ist().strftime('%Y-%m-%d')}",
+                f"Positions: {positions_count}",
+                f"Unrealized P&L: ₹{pnl:.2f}",
+                f"Scheduler phase: {self._current_phase}",
+                f"Failed events: {failed_count}",
+                f"🌙 Entering overnight mode.",
             )
         except Exception as e:
             print(f"Daily summary Telegram failed: {e}")

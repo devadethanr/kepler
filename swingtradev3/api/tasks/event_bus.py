@@ -202,10 +202,10 @@ class EventBus:
             tg = TelegramClient()
             count = sum(1 for f in self._failed_events if f.permanently_failed)
             await tg.send_briefing(
-                f"⚠️ {count} event(s) permanently failed after retries.\n"
-                f"Latest: {failed.handler_name} → {failed.event.type}\n"
-                f"Error: {failed.error}\n"
-                f"📊 Check dashboard for details."
+                f"⚠️ {count} event(s) permanently failed after retries.",
+                f"Latest: {failed.handler_name} → {failed.event.type}",
+                f"Error: {failed.error}",
+                f"📊 Check dashboard for details.",
             )
         except Exception as e:
             print(f"EventBus: failed to send Telegram alert: {e}")
@@ -317,9 +317,9 @@ class EventBus:
 
                 tg = TelegramClient()
                 await tg.send_briefing(
-                    f"⚠️ {count} failed event(s) recovered from previous session.\n"
-                    f"{perm_count} permanently failed.\n"
-                    f"📊 Check Agent Activity in dashboard."
+                    f"⚠️ {count} failed event(s) recovered from previous session.",
+                    f"{perm_count} permanently failed.",
+                    f"📊 Check Agent Activity in dashboard.",
                 )
             except Exception as e:
                 print(f"EventBus: failed to send recovery alert: {e}")

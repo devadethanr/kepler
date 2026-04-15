@@ -63,9 +63,7 @@ class TelegramClient:
         reply_markup = InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton(
-                        btn["text"], callback_data=btn["callback_data"]
-                    )
+                    InlineKeyboardButton(btn["text"], callback_data=btn["callback_data"])
                     for btn in row
                 ]
                 for row in keyboard
@@ -153,15 +151,17 @@ class TelegramClient:
         ]
 
         message_id = await self.send_text_with_keyboard(message, keyboard)
-        self.log.info(
-            f"Sent approval request for {ticker} with message_id {message_id}"
-        )
+        self.log.info(f"Sent approval request for {ticker} with message_id {message_id}")
         return message_id
 
-    async def send_briefing(self, lines: list[str]) -> None:
-        """Send morning briefing without approval buttons."""
-        message = "📋 <b>MORNING BRIEFING</b>\n" + "━" * 20 + "\n"
-        message += "\n".join(lines)
+    async def send_briefing(self, *args: str) -> None:
+        """Send briefing message. Accepts either a single string or multiple strings joined."""
+        if not args:
+            return
+        if len(args) == 1:
+            message = args[0]
+        else:
+            message = "\n".join(args)
         await self.send_text(message)
 
     async def send_daily_summary(
@@ -185,9 +185,7 @@ class TelegramClient:
         message = self.formatter.system_status(message, is_warning)
         await self.send_text(message)
 
-    async def get_updates(
-        self, offset: int = 0, limit: int = 100
-    ) -> list[dict[str, Any]]:
+    async def get_updates(self, offset: int = 0, limit: int = 100) -> list[dict[str, Any]]:
         """Get incoming updates (for polling)."""
         if not self._is_configured():
             return []
@@ -267,9 +265,7 @@ class TelegramClient:
             reply_markup = InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton(
-                            btn["text"], callback_data=btn["callback_data"]
-                        )
+                        InlineKeyboardButton(btn["text"], callback_data=btn["callback_data"])
                         for btn in row
                     ]
                     for row in keyboard

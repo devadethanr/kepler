@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "event": {
+      "id": "c98a9b3e4103",
+      "type": "error",
+      "payload": {},
+      "timestamp": "2026-04-16T04:35:36.120492",
+      "source": "test"
+    },
+    "handler_name": "always_fails",
+    "error": "Always fails",
+    "retry_count": 2,
+    "max_retries": 2,
+    "created_at": "2026-04-16T04:35:36.120519",
+    "last_retry_at": "2026-04-16T04:35:36.142535",
+    "permanently_failed": true
+  }
+]

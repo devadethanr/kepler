@@ -8,7 +8,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 from dashboard.components.knowledge_graph_plotly import create_knowledge_graph_figure
 
-FASTAPI_URL = os.getenv("FASTAPI_URL", "http://127.0.0.1:8000")
+FASTAPI_URL = os.getenv("FASTAPI_URL", "http://app:8000")
 API_KEY = os.getenv(
     "FASTAPI_API_KEY", "67cb4e282a4935b76110bb41299784c7edf612b45abbe42ae33c6087394ce629"
 )
@@ -50,6 +50,10 @@ class GlobalState(rx.State):
     recent_events: list[dict] = []
     failed_events_count: int = 0
     failed_events: list[dict] = []
+    pending_approvals: list[dict] = []
+    approved_approvals: list[dict] = []
+    rejected_approvals: list[dict] = []
+    sse_connected: bool = False
 
     @rx.var(cache=True)
     def formatted_total_invested(self) -> str:
@@ -221,11 +225,15 @@ class GlobalState(rx.State):
 
                 # Fetch failed events
                 await self.fetch_failed_events()
+
+                # Fetch approvals
+                await self.fetch_approvals()
         except Exception as e:
             print(f"Error fetching initial data: {e}")
 
         # Start background SSE connection
-        return GlobalState.connect_sse
+        await self.start_sse_listener()
+        return None
 
     @rx.event
     async def fetch_positions(self):
@@ -382,3 +390,81 @@ class GlobalState(rx.State):
                 return rx.toast(f"Error: {res.status_code}")
         except Exception as e:
             return rx.toast(f"Error retrying event: {str(e)}")
+
+    @rx.event
+    async def fetch_approvals(self):
+        """Fetch all approvals from API and sort by status."""
+        headers = {"X-API-Key": API_KEY}
+        try:
+            async with httpx.AsyncClient() as client:
+                res = await client.get(f"{FASTAPI_URL}/approvals", headers=headers)
+                if res.status_code == 200:
+                    all_approvals = res.json()
+                    pending = [a for a in all_approvals if a.get("approved") is None]
+                    approved = [a for a in all_approvals if a.get("approved") is True]
+                    rejected = [a for a in all_approvals if a.get("approved") is False]
+                    self.pending_approvals = pending
+                    self.approved_approvals = approved
+                    self.rejected_approvals = rejected
+        except Exception as e:
+            print(f"Error fetching approvals: {e}")
+
+    @rx.event
+    async def approve_trade(self, ticker: str):
+        """Approve a trade."""
+        headers = {"X-API-Key": API_KEY}
+        try:
+            async with httpx.AsyncClient() as client:
+                res = await client.post(f"{FASTAPI_URL}/approvals/{ticker}/yes", headers=headers)
+                if res.status_code == 200:
+                    await self.fetch_approvals()
+                    return rx.toast(f"{ticker} approved!")
+                return rx.toast(f"Error: {res.status_code}")
+        except Exception as e:
+            return rx.toast(f"Error approving: {str(e)}")
+
+    @rx.event
+    async def reject_trade(self, ticker: str):
+        """Reject a trade."""
+        headers = {"X-API-Key": API_KEY}
+        try:
+            async with httpx.AsyncClient() as client:
+                res = await client.post(f"{FASTAPI_URL}/approvals/{ticker}/no", headers=headers)
+                if res.status_code == 200:
+                    await self.fetch_approvals()
+                    return rx.toast(f"{ticker} rejected")
+                return rx.toast(f"Error: {res.status_code}")
+        except Exception as e:
+            return rx.toast(f"Error rejecting: {str(e)}")
+
+    async def start_sse_listener(self):
+        """Connect to SSE for real-time updates."""
+        import asyncio
+
+        async def connect_sse():
+            while True:
+                try:
+                    async with httpx.AsyncClient() as client:
+                        async with client.stream(
+                            "GET",
+                            f"{FASTAPI_URL}/sse/live",
+                            headers={"Accept": "text/event-stream"},
+                            timeout=30.0,
+                        ) as response:
+                            self.sse_connected = True
+                            async for line in response.aiter_lines():
+                                if line.startswith("data: "):
+                                    data = line[6:]
+                                    try:
+                                        import json
+
+                                        event = json.loads(data)
+                                        if event.get("type") == "approvals_update":
+                                            await self.fetch_approvals()
+                                    except:
+                                        pass
+                except Exception as e:
+                    self.sse_connected = False
+                    await asyncio.sleep(5)
+
+        asyncio.create_task(connect_sse())
