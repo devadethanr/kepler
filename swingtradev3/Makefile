@@ -17,7 +17,7 @@ test:
 	$(DOCKER_COMPOSE) exec app pytest tests/ -v
 
 test-file:
-	$(DOCKER_COMPOSE) exec app pytest tests/$(file) -v
+	$(DOCKER_COMPOSE) exec app pytest $(file) -v
 
 lint:
 	$(DOCKER_COMPOSE) exec app ruff check .

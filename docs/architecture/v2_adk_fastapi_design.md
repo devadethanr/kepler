@@ -1,49 +1,95 @@
-# swingtradev3 v2 Architecture Design: ADK + FastAPI + Streamlit
+# swingtradev3 Current Architecture: ADK + FastAPI + Reflex
 
-## Document Control
+> Last Updated: April 16, 2026
+> This top section is the current source of truth. The older draft below is retained only as historical appendix material.
 
-| Field | Value |
-|-------|-------|
-| **Version** | 2.0 |
-| **Date** | April 4, 2026 |
-| **Status** | Approved |
-| **Author** | AI Assistant |
-| **Based On** | swingtradev3_design_v6.pdf + Google ADK research + Kite Connect v3 docs |
+## Current Runtime Summary
 
----
+The shipped runtime is a **Docker-first FastAPI + Google ADK + Reflex** system with file-backed state under `swingtradev3/context/`.
 
-## Main Objective
+### Active Services
 
-Build an **autonomous, AI-powered institutional-grade swing trading system** for Indian equities (Nifty 200) that:
+| Service | Purpose | Dev Port |
+|---------|---------|----------|
+| `app` | FastAPI API, scheduler, ADK agents, file-backed runtime state | `8001 -> 8000` |
+| `dashboard` | Reflex frontend and backend | `8502 -> 3000`, `8002 -> 8000` |
+| `kite-mcp` | Zerodha MCP sidecar used alongside direct Kite session handling | `8081 -> 8080` |
 
-1. **Thinks like an experienced trader** — Analyzes market regime, institutional flows, sentiment, options data, macro indicators, and technical patterns before making any decision
-2. **Reasons through scenarios** — Evaluates bull case, bear case, base case with probabilities before scoring a stock
-3. **Manages risk first** — Every trade starts with "how much can I lose?" — regime-adjusted sizing, correlation checks, portfolio VaR
-4. **Times entries and exits intelligently** — Not just "what" to buy but "when" — avoids market open noise, waits for VWAP pullbacks, detects momentum decay
-5. **Learns from every trade** — Monthly review of all trades, identifies patterns in winners/losers, proposes SKILL.md improvements with evidence
-6. **Gives you full control via web** — Streamlit dashboard with charts, real-time P&L, position monitoring, approval buttons, agent trace debugging
-7. **Runs fully locally** — Self-hosted, no cloud dependencies beyond Kite API and NIM, file-based persistence, Docker-orchestrated
+### Startup Behavior
 
-**The edge doesn't come from one thing — it comes from the combination of all these layers working together, with LLM agents reasoning on top of structured data from every dimension.**
+- `api/main.py` creates runtime directories, starts the scheduler, and warms FinBERT and TimesFM asynchronously.
+- Global API-key auth is applied through FastAPI dependencies.
+- CORS is restricted to the local Reflex frontend/backend origins.
 
----
+## Core Architecture Decisions Reflected In Code
 
-## Architecture Decisions Summary
+| Decision | Current Implementation |
+|----------|------------------------|
+| UI stack | Reflex, not Streamlit |
+| Research orchestration | ADK `SequentialAgent` pipeline |
+| Scheduling | `schedule` library inside FastAPI lifespan, with IST-aware phase detection |
+| Eventing | in-process async event bus with JSONL history and failed-event persistence |
+| Agent visibility | `AgentActivityManager` + SSE updates to the dashboard |
+| Knowledge model | markdown wiki + `_index.json` + `_graph.json` |
+| Persistence | file-backed JSON/markdown/parquet under `context/`, `reports/`, and `.backtest_cache` |
+| Control plane | dashboard + REST API first, Telegram second |
 
-| Decision | Choice | Rationale |
-|----------|--------|-----------|
-| **LLM Bridge** | LiteLLM → NIM models | ADK supports LiteLLM natively, routes our existing NIM models through ADK's LlmAgent |
-| **Session Persistence** | File-based JSON | Zero extra dependencies, matches current `context/` pattern, perfect for single-user local setup |
-| **P&L Evaluation** | Keep existing backtest engine | ADK eval is for agent reasoning quality, NOT financial metrics (P&L, Sharpe, win rate) |
-| **Agent Evaluation** | ADK eval for reasoning quality | Tool trajectory validation, hallucination detection, rubric-based tool use quality |
-| **Web UI** | Streamlit dashboard + FastAPI API | Best financial charting (Plotly), pure Python, lightweight, approval buttons, real-time updates |
-| **Docker** | 3 services: app + kite-mcp + dashboard | Self-hosted, same proven auth flow, clean separation |
-| **Kite Auth** | Unchanged — manual browser → Python exchange | Proven working: browser login → copy redirected URL → `auth/kite/login.py` exchanges `request_token` → `access_token` → persists to `context/auth/kite_session.json` |
-| **Telegram** | Keep as notification channel | FastAPI + Streamlit for primary control and approvals, Telegram for mobile alerts |
+## Main Runtime Flows
 
----
+### Research Flow
 
-## Current Architecture Problems
+`RegimeAgent -> FilterAgent -> BatchScannerAgent -> ScorerAgent -> ResultsSaverAgent -> KnowledgeGraphAgent`
+
+- `ScorerAgent` reads historical stock context inline from the knowledge graph before scoring.
+- `ResultsSaverAgent` writes per-scan JSON under `context/research/YYYY-MM-DD/`.
+- `KnowledgeGraphAgent` updates markdown notes and graph/index artifacts after results are saved.
+
+### Execution Flow
+
+- `/approvals/{ticker}/yes` updates `pending_approvals.json` and triggers the ADK order agent in the background.
+- `OrderExecutionAgent` applies regime-aware sizing, risk checks, and order placement.
+- `execution_monitor` checks GTT state and trailing-stop logic during market hours.
+
+### Scheduler / Events / UI Flow
+
+- `TradingScheduler` owns the 24-hour cycle and publishes phase changes.
+- `EventBus` persists event history and retries failed handlers with backoff.
+- `AgentActivityManager` persists live status and broadcasts via SSE.
+- Reflex bootstraps via REST and stays live through `/sse/live`.
+
+## Current Dashboard Surface
+
+Implemented pages in `dashboard/dashboard/dashboard.py`:
+
+- Command Center
+- Portfolio
+- Research
+- Approvals
+- Knowledge Graph
+- Agent Activity
+
+Still missing as first-class pages:
+
+- Trade Journal
+- Learning
+
+The Approvals page currently exists as UI shell but still needs live data and action wiring.
+
+## Current Known Validation Gap
+
+Dockerized validation must use the `swingtradev3/Makefile`. Current known failing test:
+
+- `make test-file file=tests/test_agents/test_execution_monitor.py`
+
+Reason:
+
+- the execution monitor now skips work outside market hours, but the trailing-stop test still assumes unconditional execution
+
+## Archived Draft Below
+
+The remainder of this file documents earlier design thinking. It is useful for historical context, but it is no longer the authoritative architecture spec.
+
+## Archived Early Draft
 
 ### 1. Manual Agent Orchestration
 ```python

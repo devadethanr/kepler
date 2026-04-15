@@ -1,51 +1,75 @@
-# swingtradev3 Quickstart Guide (v2.0)
+# swingtradev3 Quickstart
 
-Get your institutional-grade AI swing trader running in 5 minutes.
+This project is run from Docker via the `swingtradev3/Makefile`. Use the Makefile commands instead of running tests or services directly on the host.
 
-## 📋 Prerequisites
-1. **Zerodha Account** with Kite Connect API subscription (₹500/mo).
-2. **NVIDIA NIM API Key** (Free tier).
-3. **Tavily API Key** (Free tier).
-4. **Docker** installed on your machine.
+## Prerequisites
 
-## 🚀 Step 1: Configuration
-1. Open `swingtradev3/.env` and fill in your keys:
-   - `KITE_API_KEY`, `KITE_API_SECRET`, `KITE_TOTP_SECRET`
-   - `NIM_API_KEY`
-   - `TAVILY_API_KEY`
-   - `FASTAPI_API_KEY` (Generate any random string)
+1. Docker and Docker Compose
+2. Zerodha Kite Connect credentials
+3. NVIDIA NIM API key
+4. Tavily API key
+5. Optional: Firecrawl, Groq, Gemini, Telegram credentials
 
-2. Review `config.yaml` to adjust your trading capital and risk limits.
+## 1. Configure the app
 
-## 🏗️ Step 2: Build & Start
-Run the following command from the `swingtradev3` directory:
+Run all local commands from `swingtradev3/`:
+
+```bash
+cd swingtradev3
+cp .env.example .env
+```
+
+Fill `.env` with the credentials you actually use, then review `config.yaml` for trading mode, capital, and risk settings. The default mode should stay `paper` until the full workflow has been validated.
+
+## 2. Start the local stack
+
 ```bash
 make dev-detach
 ```
-*Note: The first build will take 15-30 minutes because it downloads massive ML libraries (PyTorch/TimesFM). Future starts will be instant.*
 
-## 🔑 Step 3: Kite Authentication
-Once the build is done, you must authorize the bot to access your Zerodha account:
+The dev stack currently exposes:
+
+- FastAPI API: `http://localhost:8001`
+- Reflex frontend: `http://localhost:8502`
+- Reflex backend: `http://localhost:8002`
+- Kite MCP sidecar: `http://localhost:8081`
+
+Use `make logs-app`, `make logs-dashboard`, or `make logs-mcp` if a service does not come up cleanly.
+
+## 3. Authenticate Kite
+
 ```bash
 make login
 ```
-1. Open the printed URL in your browser.
-2. Login and authorize.
-3. Paste the final redirected URL back into your terminal.
 
-## 📈 Step 4: Access the Dashboard
-Open your browser to:
-**http://localhost:8502**
+Open the printed Kite login URL, complete the browser flow, and paste the final redirected URL back into the terminal. The session is persisted under `swingtradev3/context/auth/kite_session.json`.
 
-- Go to the **Research** page.
-- Click **"Trigger New Scan"**.
-- Watch the **Agent Trace** page to see the AI analyze the Nifty 200 in real-time.
+## 4. Use the system
 
-## 🧪 Step 5: Verification
-Run the automated test suite to ensure everything is perfect:
+Open `http://localhost:8502` and use the current dashboard pages:
+
+- Command Center
+- Portfolio
+- Research
+- Approvals
+- Knowledge Graph
+- Agent Activity
+
+The research pipeline can be triggered from the Research page or through `POST /scan`. Approved trades flow through `/approvals/{ticker}/yes`, which triggers the ADK order agent in the background.
+
+## 5. Validate and debug
+
+All validation runs in Docker:
+
 ```bash
 make test
+make test-file file=tests/test_api/test_scan.py
 ```
 
-## 🛡️ Safety Note
-The bot starts in `trading.mode: paper`. It will use real market data but only simulate trades. Only switch to `live` once you have verified the system for at least 2-4 weeks.
+At the time of this refresh, `tests/test_agents/test_execution_monitor.py` is a known failing test because the execution monitor now skips work outside market hours and the test has not been updated for that guard.
+
+## Safety Notes
+
+- Keep `trading.mode: paper` until the full order and GTT flow is validated in market hours.
+- `context/`, `logs/`, and `reports/` contain runtime state; review changes there carefully before committing.
+- Telegram should currently be treated as a notifications-first channel. The dashboard and API are the primary control plane.

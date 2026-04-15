@@ -1,29 +1,59 @@
-# Phase 5: Professional Autonomous Swing Trader — Extended Implementation Plan
+# Current Implementation Roadmap
 
-> Transform swingtradev3 from a "smart research tool" (4.9/10) into a **professional-grade autonomous swing trader** (8+/10).
-> All decisions finalized. All feasibility issues resolved.
-> Last Updated: April 13, 2026
+> Last Updated: April 16, 2026
+> This top section reflects the current codebase. The older detailed draft below is retained only as archived planning context.
 
----
+## Implemented Decisions
 
-## Finalized Decisions
+| Decision | Current Code Reality |
+|----------|----------------------|
+| Dashboard | Reflex in a separate Docker service |
+| Scheduler | `schedule` library running inside FastAPI lifespan |
+| Knowledge graph | markdown wiki plus index and graph JSON artifacts |
+| Research context loading | `ScorerAgent` reads historical stock context inline before scoring |
+| Telegram | notifications-first; dashboard/API are the main control surface |
+| Failed events | persisted, retried with backoff, surfaced to the dashboard |
+| Docker workflow | local commands run through `swingtradev3/Makefile` |
 
-| Item | Decision | Rationale |
-|------|----------|-----------|
-| **Dashboard** | Reflex (separate Docker service) | Mobile-responsive, reactive WebSocket UI, no Streamlit reruns |
-| **Dashboard Docker** | New `Dockerfile.dashboard` | Needs Node.js 20 for Reflex compilation, separate from FastAPI |
-| **Dashboard Port** | 3000 internal → 8502 external | Avoids conflict with FastAPI on 8000 |
-| **Knowledge Graph** | Karpathy-style Markdown | Git-versionable, LLM-native, zero dependencies |
-| **KG Context Loading** | ScorerAgent calls `get_stock_context()` inline | Reads PREVIOUS scans' files before scoring, KG agent writes AFTER pipeline |
-| **Scheduler** | Keep `schedule` library | Proven with asyncio.create_task, no thread issues like APScheduler |
-| **Timezone** | `TZ=Asia/Kolkata` in docker-compose | All market time logic uses IST |
-| **Telegram** | Notifications only | Approvals via dashboard. Remove callbacks, keyboards, polling |
-| **Failed Events** | Persist + auto-retry + alert user | Dashboard shows failed events, Telegram alerts, 3x retry with backoff |
-| **ngrok** | For phone access to dashboard | `make tunnel` for quick access |
+## What Is Shipped Now
 
----
+- FastAPI API with scan, approvals, portfolio, dashboard, SSE, and websocket routes
+- ADK research pipeline and ADK-backed execution/learning agents
+- 24-hour scheduler, event bus, activity manager, and knowledge graph integration
+- Reflex pages for Command Center, Portfolio, Research, Approvals, Knowledge Graph, and Agent Activity
+- File-backed runtime state under `context/`
 
-## Architecture: Final Design
+## Remaining Roadmap
+
+### High Priority
+
+- finish the live Approvals UX instead of the current placeholder page
+- add Trade Journal and Learning pages to the Reflex app
+- fix the execution-monitor trailing test and re-run the full Dockerized suite
+
+### Medium Priority
+
+- complete failed-event manual retry behavior beyond the current placeholder response
+- add current API reference documentation
+- validate the live execution path in market hours with the current direct-Kite session handling
+
+### Lower Priority
+
+- document or implement the remote dashboard tunnel workflow
+- add final Docker hardening such as resource limits after functionality stabilizes
+
+## Validation Snapshot
+
+Known current issue from Dockerized validation:
+
+- `make test-file file=tests/test_agents/test_execution_monitor.py`
+- failure cause: the execution monitor gained a market-hours guard, but the test still expects trailing-stop logic to run unconditionally
+
+## Archived Draft Below
+
+The remainder of this file contains the earlier detailed rollout plan that led to the current implementation. It is preserved for history, not as the current roadmap.
+
+## Archived Detailed Draft
 
 ```
 ┌─────────────────────────────────────────────────────────┐

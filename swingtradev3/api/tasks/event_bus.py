@@ -8,6 +8,7 @@ Provides:
 - Fire-and-forget semantics (handlers run as tasks, don't block publisher)
 - Failed event persistence + auto-retry with exponential backoff
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -26,6 +27,7 @@ from paths import CONTEXT_DIR
 # ─────────────────────────────────────────────────────────────
 # Event Types
 # ─────────────────────────────────────────────────────────────
+
 
 class EventType(str, Enum):
     # Scheduler lifecycle
@@ -63,6 +65,7 @@ class EventType(str, Enum):
 
 class BusEvent(BaseModel):
     """A single event on the bus."""
+
     id: str = Field(default_factory=lambda: uuid4().hex[:12])
     type: EventType
     payload: dict[str, Any] = Field(default_factory=dict)
@@ -72,6 +75,7 @@ class BusEvent(BaseModel):
 
 class FailedEvent(BaseModel):
     """An event whose handler(s) failed."""
+
     event: BusEvent
     handler_name: str
     error: str
@@ -122,9 +126,7 @@ class EventBus:
     def unsubscribe(self, event_type: EventType, handler: HandlerFn) -> None:
         """Remove a handler."""
         if event_type in self._handlers:
-            self._handlers[event_type] = [
-                h for h in self._handlers[event_type] if h != handler
-            ]
+            self._handlers[event_type] = [h for h in self._handlers[event_type] if h != handler]
 
     async def publish(self, event: BusEvent) -> None:
         """
@@ -134,7 +136,7 @@ class EventBus:
         # Persist to event log
         self._history.append(event)
         if len(self._history) > self._max_history:
-            self._history = self._history[-self._max_history:]
+            self._history = self._history[-self._max_history :]
         self._persist_event(event)
 
         # Dispatch to handlers
@@ -163,8 +165,10 @@ class EventBus:
         while failed.retry_count < failed.max_retries and not failed.permanently_failed:
             failed.retry_count += 1
             delay = RETRY_BASE_SECONDS * (RETRY_MULTIPLIER ** (failed.retry_count - 1))
-            print(f"EventBus: retry #{failed.retry_count} for {failed.handler_name} "
-                  f"in {delay}s (event: {failed.event.type})")
+            print(
+                f"EventBus: retry #{failed.retry_count} for {failed.handler_name} "
+                f"in {delay}s (event: {failed.event.type})"
+            )
             await asyncio.sleep(delay)
 
             try:
@@ -183,8 +187,10 @@ class EventBus:
         if not failed.permanently_failed:
             failed.permanently_failed = True
             self._persist_failed_events()
-            print(f"EventBus: PERMANENTLY FAILED — {failed.handler_name} for "
-                  f"{failed.event.type} after {failed.max_retries} retries")
+            print(
+                f"EventBus: PERMANENTLY FAILED — {failed.handler_name} for "
+                f"{failed.event.type} after {failed.max_retries} retries"
+            )
             # Try to send Telegram alert
             await self._alert_permanent_failure(failed)
 
@@ -192,6 +198,7 @@ class EventBus:
         """Send Telegram alert for permanently failed events."""
         try:
             from notifications.telegram_client import TelegramClient
+
             tg = TelegramClient()
             count = sum(1 for f in self._failed_events if f.permanently_failed)
             await tg.send_briefing(
@@ -232,6 +239,20 @@ class EventBus:
         """Get all failed events."""
         return list(self._failed_events)
 
+    def retry_failed_event(self, handler_name: str, event_id: str) -> bool:
+        """Manually retry a specific failed event by event ID."""
+        for failed in self._failed_events:
+            if failed.event.id == event_id:
+                handler = self._handlers.get(handler_name)
+                if handler:
+                    if failed.permanently_failed:
+                        failed.permanently_failed = False
+                        failed.retry_count = 0
+                        failed.last_retry_at = None
+                    asyncio.create_task(self._auto_retry(failed, handler))
+                    return True
+        return False
+
     def get_permanently_failed(self) -> list[FailedEvent]:
         """Get only permanently failed events (for dashboard alert banner)."""
         return [f for f in self._failed_events if f.permanently_failed]
@@ -253,6 +274,10 @@ class EventBus:
                         failed.last_retry_at = datetime.now()
                         self._persist_failed_events()
                         return False
+                else:
+                    self._failed_events = [f for f in self._failed_events if f is not failed]
+                    self._persist_failed_events()
+                    return True
         return False
 
     def load_history(self) -> None:
@@ -262,7 +287,7 @@ class EventBus:
         try:
             lines = EVENTS_LOG_PATH.read_text().strip().split("\n")
             # Only load last N events
-            for line in lines[-self._max_history:]:
+            for line in lines[-self._max_history :]:
                 if line.strip():
                     self._history.append(BusEvent.model_validate_json(line))
         except Exception as e:
@@ -289,6 +314,7 @@ class EventBus:
             print(f"EventBus: recovered {count} failed events ({perm_count} permanent)")
             try:
                 from notifications.telegram_client import TelegramClient
+
                 tg = TelegramClient()
                 await tg.send_briefing(
                     f"⚠️ {count} failed event(s) recovered from previous session.\n"

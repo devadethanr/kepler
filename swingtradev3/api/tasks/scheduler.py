@@ -16,6 +16,7 @@ Key design:
 - Activity manager for dashboard visibility
 - Crash recovery: persists scheduler state to disk
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -64,6 +65,7 @@ class TradingScheduler:
 
         # Register event handlers
         from api.tasks.event_handlers import register_all_handlers
+
         register_all_handlers()
 
         # ── Phase 1: Overnight Monitoring (22:00 → 06:00) ──
@@ -148,11 +150,13 @@ class TradingScheduler:
         self._task = asyncio.create_task(self._loop())
         await activity_manager.set_scheduler_phase("running")
 
-        await event_bus.publish(BusEvent(
-            type=EventType.PHASE_STARTED,
-            payload={"phase": "scheduler_initialized"},
-            source="scheduler",
-        ))
+        await event_bus.publish(
+            BusEvent(
+                type=EventType.PHASE_STARTED,
+                payload={"phase": "scheduler_initialized"},
+                source="scheduler",
+            )
+        )
 
         print(f"[{_now_ist().isoformat()}] Scheduler started with {len(schedule.get_jobs())} jobs")
 
@@ -174,11 +178,13 @@ class TradingScheduler:
             if new_phase != self._current_phase:
                 self._current_phase = new_phase
                 await activity_manager.set_scheduler_phase(new_phase)
-                await event_bus.publish(BusEvent(
-                    type=EventType.PHASE_STARTED,
-                    payload={"phase": new_phase},
-                    source="scheduler",
-                ))
+                await event_bus.publish(
+                    BusEvent(
+                        type=EventType.PHASE_STARTED,
+                        payload={"phase": new_phase},
+                        source="scheduler",
+                    )
+                )
 
             schedule.run_pending()
             await asyncio.sleep(1)
@@ -213,11 +219,13 @@ class TradingScheduler:
         except Exception as e:
             print(f"[{_now_ist().isoformat()}] Scheduler job '{name}' failed: {e}")
             await activity_manager.error_activity("scheduler", f"{name}: {e}")
-            await event_bus.publish(BusEvent(
-                type=EventType.ERROR,
-                payload={"job": name, "error": str(e)},
-                source="scheduler",
-            ))
+            await event_bus.publish(
+                BusEvent(
+                    type=EventType.ERROR,
+                    payload={"job": name, "error": str(e)},
+                    source="scheduler",
+                )
+            )
 
     # ─────────────────────────────────────────────────────────────
     # Phase 1: Overnight Monitoring
@@ -240,11 +248,13 @@ class TradingScheduler:
             news_data = await asyncio.to_thread(news.search_news, pos.ticker)
             headlines = news_data.get("results", [])[:3]
             if headlines:
-                await event_bus.publish(BusEvent(
-                    type=EventType.NEWS_BREAK,
-                    payload={"ticker": pos.ticker, "headlines": headlines[:3]},
-                    source="overnight_monitor",
-                ))
+                await event_bus.publish(
+                    BusEvent(
+                        type=EventType.NEWS_BREAK,
+                        payload={"ticker": pos.ticker, "headlines": headlines[:3]},
+                        source="overnight_monitor",
+                    )
+                )
 
     async def _gift_nifty_check(self) -> None:
         """Check GIFT Nifty / global markets overnight."""
@@ -261,6 +271,7 @@ class TradingScheduler:
     async def _morning_news_digest(self) -> None:
         """06:00 — Sweep market news for overnight developments."""
         from data.news_aggregator import NewsAggregator
+
         news = NewsAggregator()
         await asyncio.to_thread(news.sweep_market_news)
         print(f"[{_now_ist().isoformat()}] Morning news digest completed")
@@ -268,14 +279,17 @@ class TradingScheduler:
     async def _morning_regime_check(self) -> None:
         """06:30 — Check regime for any overnight shifts."""
         from data.market_regime import MarketRegimeDetector
+
         detector = MarketRegimeDetector()
         regime = await detector.detect()
 
-        await event_bus.publish(BusEvent(
-            type=EventType.REGIME_CHANGE,
-            payload={"regime": regime},
-            source="morning_regime",
-        ))
+        await event_bus.publish(
+            BusEvent(
+                type=EventType.REGIME_CHANGE,
+                payload={"regime": regime},
+                source="morning_regime",
+            )
+        )
 
     async def _fii_dii_check(self) -> None:
         """07:00 — Check FII/DII data from previous session."""
@@ -285,21 +299,23 @@ class TradingScheduler:
     async def _generate_morning_briefing(self) -> None:
         """08:00 — Generate and send the morning briefing."""
         from api.tasks.morning_briefing import generate_morning_briefing
+
         await generate_morning_briefing()
 
     async def _approval_reminder(self) -> None:
         """08:45 — Remind about pending approvals."""
         from storage import read_json
+
         approvals = read_json(CONTEXT_DIR / "pending_approvals.json", [])
         pending = [a for a in approvals if a.get("approved") is None]
         if pending:
             print(f"[{_now_ist().isoformat()}] {len(pending)} pending approval(s)")
             try:
                 from notifications.telegram_client import TelegramClient
+
                 tg = TelegramClient()
                 await tg.send_briefing(
-                    f"⏳ {len(pending)} trade(s) awaiting approval.\n"
-                    f"📊 Review in dashboard."
+                    f"⏳ {len(pending)} trade(s) awaiting approval.\n📊 Review in dashboard."
                 )
             except Exception as e:
                 print(f"Approval reminder failed: {e}")
@@ -308,6 +324,7 @@ class TradingScheduler:
         """09:00 — Prepare approved orders for market open."""
         print(f"[{_now_ist().isoformat()}] Pre-market setup: checking approved orders...")
         from storage import read_json
+
         approvals = read_json(CONTEXT_DIR / "pending_approvals.json", [])
         approved = [a for a in approvals if a.get("approved") is True]
         if approved:
@@ -356,11 +373,13 @@ class TradingScheduler:
             news_data = await asyncio.to_thread(news.search_news, pos.ticker)
             headlines = news_data.get("results", [])[:3]
             if headlines:
-                await event_bus.publish(BusEvent(
-                    type=EventType.NEWS_BREAK,
-                    payload={"ticker": pos.ticker, "headlines": headlines[:3]},
-                    source="intraday_news",
-                ))
+                await event_bus.publish(
+                    BusEvent(
+                        type=EventType.NEWS_BREAK,
+                        payload={"ticker": pos.ticker, "headlines": headlines[:3]},
+                        source="intraday_news",
+                    )
+                )
 
     # ─────────────────────────────────────────────────────────────
     # Phase 4: Post-Market
@@ -370,11 +389,13 @@ class TradingScheduler:
         """15:30 — Collect end-of-day data."""
         print(f"[{_now_ist().isoformat()}] EOD data collection started")
         # Trigger KG update for any new positions/exits
-        await event_bus.publish(BusEvent(
-            type=EventType.PHASE_COMPLETED,
-            payload={"phase": "eod_data_collection"},
-            source="scheduler",
-        ))
+        await event_bus.publish(
+            BusEvent(
+                type=EventType.PHASE_COMPLETED,
+                payload={"phase": "eod_data_collection"},
+                source="scheduler",
+            )
+        )
 
     async def _pnl_calculation(self) -> None:
         """15:45 — Calculate daily PnL."""
@@ -413,26 +434,29 @@ class TradingScheduler:
 
     async def _trigger_research_pipeline(self) -> None:
         """18:00 — Run the full research pipeline (now with KG)."""
-        await event_bus.publish(BusEvent(
-            type=EventType.SCAN_STARTED,
-            source="scheduler",
-        ))
-
-        await activity_manager.start_activity(
-            "ResearchPipeline", "Full evening research scan"
+        await event_bus.publish(
+            BusEvent(
+                type=EventType.SCAN_STARTED,
+                source="scheduler",
+            )
         )
+
+        await activity_manager.start_activity("ResearchPipeline", "Full evening research scan")
 
         try:
             from api.routes.scan import run_research_pipeline_bg
+
             await run_research_pipeline_bg()
             await activity_manager.complete_activity("ResearchPipeline")
         except Exception as e:
             await activity_manager.error_activity("ResearchPipeline", str(e))
 
-        await event_bus.publish(BusEvent(
-            type=EventType.SCAN_COMPLETED,
-            source="scheduler",
-        ))
+        await event_bus.publish(
+            BusEvent(
+                type=EventType.SCAN_COMPLETED,
+                source="scheduler",
+            )
+        )
 
     # ─────────────────────────────────────────────────────────────
     # Phase 6: Wind-Down
@@ -445,11 +469,11 @@ class TradingScheduler:
         snapshot = {
             "timestamp": _now_ist().isoformat(),
             "activity": activity_manager.get_snapshot().model_dump(mode="json"),
-            "recent_events": [
-                e.model_dump(mode="json") for e in event_bus.get_recent(limit=50)
-            ],
+            "recent_events": [e.model_dump(mode="json") for e in event_bus.get_recent(limit=50)],
         }
-        write_json(CONTEXT_DIR / "daily" / f"snapshot_{_now_ist().strftime('%Y-%m-%d')}.json", snapshot)
+        write_json(
+            CONTEXT_DIR / "daily" / f"snapshot_{_now_ist().strftime('%Y-%m-%d')}.json", snapshot
+        )
         print(f"[{_now_ist().isoformat()}] State snapshot saved")
 
     async def _log_rotation(self) -> None:
@@ -468,17 +492,21 @@ class TradingScheduler:
     async def _health_check(self) -> None:
         """21:45 — Run system health check."""
         from health_manager import get_all_statuses
+
         statuses = get_all_statuses()
 
         unhealthy = [k for k, v in statuses.items() if v != "healthy"]
         if unhealthy:
-            await event_bus.publish(BusEvent(
-                type=EventType.HEALTH_CHECK,
-                payload={"unhealthy": unhealthy, "statuses": statuses},
-                source="scheduler",
-            ))
+            await event_bus.publish(
+                BusEvent(
+                    type=EventType.HEALTH_CHECK,
+                    payload={"unhealthy": unhealthy, "statuses": statuses},
+                    source="scheduler",
+                )
+            )
             try:
                 from notifications.telegram_client import TelegramClient
+
                 tg = TelegramClient()
                 await tg.send_briefing(
                     f"⚠️ Health Check Alert\nUnhealthy services: {', '.join(unhealthy)}"
@@ -508,6 +536,7 @@ class TradingScheduler:
 
         try:
             from notifications.telegram_client import TelegramClient
+
             tg = TelegramClient()
             await tg.send_briefing(
                 f"📊 Daily Summary — {_now_ist().strftime('%Y-%m-%d')}\n\n"
@@ -532,11 +561,36 @@ class TradingScheduler:
 
     def get_schedule_info(self) -> dict:
         """Get schedule info for the dashboard."""
+        next_run_str = None
+        if schedule.next_run():
+            from datetime import datetime, timezone
+            from zoneinfo import ZoneInfo
+
+            tz = ZoneInfo("Asia/Kolkata")
+            now = datetime.now(tz)
+            next_run = schedule.next_run()
+            if next_run:
+                # Make naive datetime timezone-aware by adding IST
+                next_run_aware = next_run.replace(tzinfo=tz)
+                delta = next_run_aware - now
+                minutes = int(delta.total_seconds() / 60)
+                if minutes < 60:
+                    next_run_str = f"In {minutes} min"
+                else:
+                    next_run_str = f"In {minutes // 60}h {minutes % 60}m"
+
+        # Get failed events count
+        from api.tasks.event_bus import event_bus
+
+        failed_count = len(event_bus.get_failed_events())
+
         return {
             "is_running": self.is_running,
             "current_phase": self._current_phase,
             "total_jobs": len(schedule.get_jobs()),
             "next_run": str(schedule.next_run()) if schedule.get_jobs() else None,
+            "next_task": next_run_str,
+            "failed_events": failed_count,
         }
 
 

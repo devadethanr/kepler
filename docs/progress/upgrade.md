@@ -1,4 +1,11 @@
-# swingtradev3 Upgrade Blueprint
+# Historical Upgrade Blueprint
+
+> Historical ideation document. Many items below were later implemented, renamed, or superseded.
+> For current system behavior and backlog, use:
+> `docs/architecture/v2_adk_fastapi_design.md`,
+> `docs/architecture/implementation_plan+extended.md`,
+> `docs/progress/current-task.md`, and
+> `docs/progress/todo+extended.md`.
 
 ## Making swingtradev3 a World-Class AI Swing Trader
 

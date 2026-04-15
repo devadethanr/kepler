@@ -1,4 +1,11 @@
-# swingtradev3 - Phase 1 Full System Design Document v6.0
+# Historical Project Design Reference (v1/v6)
+
+> Historical design reference. This document describes the earlier two-agent architecture and other pre-ADK decisions.
+> The current implementation uses FastAPI + Google ADK + Reflex with scheduler, event bus, activity tracking, and knowledge graph support.
+> For current source-of-truth docs, use:
+> `docs/architecture/v2_adk_fastapi_design.md`,
+> `docs/architecture/implementation_plan+extended.md`, and
+> `docs/quickstart.md`.
 
 **Swing Trading Autonomous Agent** · Nifty 200 · Zerodha Kite · NVIDIA NIM · GTT Exits · Human-in-Loop
 

@@ -1,4 +1,16 @@
 {
+  "0143f4df5928c42fd9f094616edd99b8": {
+    "analyzed_at": "2026-04-15T20:49:39.388716",
+    "catalyst_type": [
+      "macro"
+    ],
+    "finbert_score": -0.939,
+    "keyword_score": 0.0,
+    "novelty": "unknown",
+    "sentiment_label": "bearish",
+    "sentiment_score": -0.563,
+    "source_count": 2
+  },
   "01e21e164a22740143b1691b282449b8": {
     "analyzed_at": "2026-04-14T03:34:11.957703",
     "catalyst_type": [
@@ -79,6 +91,19 @@
     "novelty": "unknown",
     "sentiment_label": "neutral",
     "sentiment_score": 0.16,
+    "source_count": 2
+  },
+  "1dcb7af8436094c51969e06139f02ba2": {
+    "analyzed_at": "2026-04-15T12:07:17.427147",
+    "catalyst_type": [
+      "macro",
+      "contract"
+    ],
+    "finbert_score": -0.717,
+    "keyword_score": 0.2,
+    "novelty": "unknown",
+    "sentiment_label": "bearish",
+    "sentiment_score": -0.35,
     "source_count": 2
   },
   "286b6269ee17915e01361cd492f3ee78": {
@@ -396,6 +421,18 @@
     "sentiment_label": "bullish",
     "sentiment_score": 0.4,
     "source_count": 1
+  },
+  "ebbd8bdc5e0903dbf225557fa870da44": {
+    "analyzed_at": "2026-04-15T12:07:17.630418",
+    "catalyst_type": [
+      "regulatory"
+    ],
+    "finbert_score": -0.879,
+    "keyword_score": -0.2,
+    "novelty": "unknown",
+    "sentiment_label": "bearish",
+    "sentiment_score": -0.607,
+    "source_count": 2
   },
   "fdf25f60ad68b613ccd71f91fab9dcfd": {
     "analyzed_at": "2026-04-05T00:25:08.612328",
