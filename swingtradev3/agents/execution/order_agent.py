@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-from typing import Any, AsyncGenerator
-import json
+from datetime import datetime
+from typing import AsyncGenerator
 
-from google.adk.agents import BaseAgent, LlmAgent
+from google.adk.agents import BaseAgent
 from google.adk.events import Event
 from google.genai import types
 
-from config import cfg
+from config import cfg, runtime_flags
 from paths import CONTEXT_DIR
 from storage import read_json, write_json
 from models import AccountState
@@ -52,9 +52,26 @@ class OrderExecutionAgent(BaseAgent):
 
         executed_count = 0
         new_approvals = []
+        live_entry_block_reason = runtime_flags.live_entry_block_reason(cfg.trading.mode)
 
         for approval in approvals:
             if not approval.get("approved"):
+                new_approvals.append(approval)
+                continue
+            if not approval.get("execution_requested"):
+                new_approvals.append(approval)
+                continue
+            expires_at = approval.get("expires_at")
+            if expires_at and datetime.fromisoformat(str(expires_at)) <= datetime.now():
+                continue
+
+            if live_entry_block_reason is not None:
+                await alerts_tool.send_alert(
+                    f"⚠️ {approval['ticker']} approval retained. Live execution blocked "
+                    f"({live_entry_block_reason})."
+                )
+                approval["execution_requested"] = False
+                approval["execution_request_id"] = None
                 new_approvals.append(approval)
                 continue
 
@@ -86,6 +103,9 @@ class OrderExecutionAgent(BaseAgent):
                             ],
                         ),
                     )
+                    approval["execution_requested"] = False
+                    approval["execution_request_id"] = None
+                    new_approvals.append(approval)
                     continue
 
                 # Use adjusted quantity for order
@@ -100,15 +120,29 @@ class OrderExecutionAgent(BaseAgent):
                         target_price=target_price,
                         quantity=adjusted_qty,
                     )
-                    await alerts_tool.send_alert(f"🟢 Order placed for {ticker}: {result}")
-                    executed_count += 1
+                    status = str(result.get("status", "unknown"))
+                    if status in {"filled", "submitted", "live"}:
+                        await alerts_tool.send_alert(f"🟢 Order placed for {ticker}: {result}")
+                        executed_count += 1
+                    else:
+                        await alerts_tool.send_alert(
+                            f"⚠️ Order not placed for {ticker}: {result.get('reason', status)}"
+                        )
+                        approval["execution_requested"] = False
+                        approval["execution_request_id"] = None
+                        new_approvals.append(approval)
                 except Exception as e:
                     await alerts_tool.send_alert(f"🔴 Order failed for {ticker}: {e}")
+                    approval["execution_requested"] = False
+                    approval["execution_request_id"] = None
                     new_approvals.append(approval)
             else:
                 await alerts_tool.send_alert(
                     f"⚠️ Risk check failed for {ticker} post-approval: {risk_decision['reason']}"
                 )
+                approval["execution_requested"] = False
+                approval["execution_request_id"] = None
+                new_approvals.append(approval)
 
         write_json(CONTEXT_DIR / "pending_approvals.json", new_approvals)
 

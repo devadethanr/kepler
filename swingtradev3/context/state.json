@@ -2,32 +2,7 @@
   "cash_inr": 50000.0,
   "consecutive_losses": 0,
   "drawdown_pct": 0.0,
-  "positions": [
-    {
-      "current_price": 850.0,
-      "entry_order_id": null,
-      "entry_price": 800.0,
-      "opened_at": "2026-04-01T10:00:00",
-      "pending_corporate_action": {
-        "adjustment_alert_sent_at": null,
-        "amount": null,
-        "ex_date": null,
-        "gtt_adjustment_sent": false,
-        "requires_manual_action": false,
-        "type": null
-      },
-      "quantity": 10,
-      "research_date": null,
-      "sector": null,
-      "skill_version": null,
-      "stop_gtt_id": null,
-      "stop_price": 791.81,
-      "target_gtt_id": null,
-      "target_price": 900.0,
-      "thesis_score": null,
-      "ticker": "SBIN"
-    }
-  ],
+  "positions": [],
   "realized_pnl": 1500.0,
   "unrealized_pnl": 500.0,
   "weekly_loss_pct": 0.0

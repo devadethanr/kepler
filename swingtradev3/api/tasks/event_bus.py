@@ -16,7 +16,6 @@ import json
 from datetime import datetime
 from enum import Enum
 from typing import Any, Callable, Coroutine
-from pathlib import Path
 from uuid import uuid4
 
 from pydantic import BaseModel, Field
@@ -239,18 +238,20 @@ class EventBus:
         """Get all failed events."""
         return list(self._failed_events)
 
-    def retry_failed_event(self, handler_name: str, event_id: str) -> bool:
-        """Manually retry a specific failed event by event ID."""
+    def retry_failed_event_by_handler(self, handler_name: str, event_id: str) -> bool:
+        """Legacy helper: retry a failed event by handler name and event id."""
         for failed in self._failed_events:
-            if failed.event.id == event_id:
-                handler = self._handlers.get(handler_name)
-                if handler:
-                    if failed.permanently_failed:
-                        failed.permanently_failed = False
-                        failed.retry_count = 0
-                        failed.last_retry_at = None
-                    asyncio.create_task(self._auto_retry(failed, handler))
-                    return True
+            if failed.event.id != event_id or failed.handler_name != handler_name:
+                continue
+            handlers = self._handlers.get(failed.event.type, [])
+            target = next((handler for handler in handlers if handler.__name__ == handler_name), None)
+            if target is not None:
+                if failed.permanently_failed:
+                    failed.permanently_failed = False
+                    failed.retry_count = 0
+                    failed.last_retry_at = None
+                asyncio.create_task(self._auto_retry(failed, target))
+                return True
         return False
 
     def get_permanently_failed(self) -> list[FailedEvent]:
@@ -264,20 +265,15 @@ class EventBus:
                 handlers = self._handlers.get(failed.event.type, [])
                 target = [h for h in handlers if h.__name__ == failed.handler_name]
                 if target:
-                    try:
-                        await target[0](failed.event)
-                        self._failed_events = [f for f in self._failed_events if f is not failed]
-                        self._persist_failed_events()
-                        return True
-                    except Exception as e:
-                        failed.error = str(e)
-                        failed.last_retry_at = datetime.now()
-                        self._persist_failed_events()
-                        return False
-                else:
-                    self._failed_events = [f for f in self._failed_events if f is not failed]
+                    failed.permanently_failed = False
+                    failed.retry_count = 0
+                    failed.last_retry_at = None
                     self._persist_failed_events()
+                    asyncio.create_task(self._auto_retry(failed, target[0]))
                     return True
+                self._failed_events = [f for f in self._failed_events if f is not failed]
+                self._persist_failed_events()
+                return True
         return False
 
     def load_history(self) -> None:

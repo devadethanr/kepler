@@ -2,7 +2,7 @@ COMPOSE_FILE := ../docker-compose.dev.yml
 ENV_FILE := .env
 DOCKER_COMPOSE := docker compose -f $(COMPOSE_FILE) --env-file $(ENV_FILE)
 
-.PHONY: dev dev-detach test test-file lint format logs logs-app logs-mcp logs-dashboard stop clean shell health login
+.PHONY: dev dev-detach test test-file lint format logs logs-app logs-mcp logs-dashboard stop clean shell health login phase0-check phase0-reconcile-state
 
 dev:
 	$(DOCKER_COMPOSE) up --build
@@ -49,3 +49,9 @@ shell:
 
 health:
 	curl -s http://localhost:8001/health | python3 -m json.tool
+
+phase0-check:
+	$(DOCKER_COMPOSE) exec app python -m ops.phase0_check
+
+phase0-reconcile-state:
+	$(DOCKER_COMPOSE) exec app python -m ops.reconcile_local_state

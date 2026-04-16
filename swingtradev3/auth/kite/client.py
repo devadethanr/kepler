@@ -88,6 +88,11 @@ def fetch_holdings() -> list[dict[str, Any]]:
     return client.holdings()
 
 
+def fetch_margins() -> dict[str, Any]:
+    client = build_kite_client()
+    return client.margins()
+
+
 def fetch_gtts() -> list[dict[str, Any]]:
     client = build_kite_client()
     return client.get_gtts()

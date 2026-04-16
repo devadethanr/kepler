@@ -25,7 +25,7 @@ from zoneinfo import ZoneInfo
 
 import schedule
 
-from config import cfg
+from config import cfg, runtime_flags
 from paths import CONTEXT_DIR
 from api.tasks.event_bus import event_bus, BusEvent, EventType
 from api.tasks.activity_manager import activity_manager
@@ -210,6 +210,14 @@ class TradingScheduler:
         """Wrapper: schedule expects sync callables, so we create a task."""
         asyncio.create_task(self._run_job(name, coro_fn))
 
+    @staticmethod
+    def _exit_protection_enabled() -> bool:
+        return (
+            cfg.trading.mode.value == "live"
+            and runtime_flags.live_trading_enabled
+            and runtime_flags.exit_only_mode
+        )
+
     async def _run_job(self, name: str, coro_fn) -> None:
         """Run a scheduled job with activity tracking and error isolation."""
         await activity_manager.start_activity("scheduler", name)
@@ -339,15 +347,44 @@ class TradingScheduler:
         now = _now_ist().time()
         if not (dt_time(9, 15) <= now <= dt_time(15, 30)):
             return  # Only during market hours
+        if not self._exit_protection_enabled():
+            return
+
+        from storage import read_json
+
+        state_data = read_json(CONTEXT_DIR / "state.json", {})
+        if not state_data or not state_data.get("positions"):
+            return
 
         print(f"[{_now_ist().isoformat()}] Position monitor tick")
-        # The monitor agent checks GTTs, detects triggers, and trails stops
-        # It has its own market hours guard and emits events for triggers
+        from agents.execution.monitor import execution_monitor
+        from google.adk import Runner
+        from google.adk.sessions import InMemorySessionService
+        from google.genai import types
+
+        session_id = f"position_monitor_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        runner = Runner(
+            app_name="swingtradev3",
+            agent=execution_monitor,
+            session_service=InMemorySessionService(),
+            auto_create_session=True,
+        )
+        async for _ in runner.run_async(
+            user_id="system",
+            session_id=session_id,
+            new_message=types.Content(
+                role="user",
+                parts=[types.Part(text="Run exit-only position monitor")],
+            ),
+        ):
+            pass
 
     async def _gtt_health_check(self) -> None:
         """Every N minutes: verify GTT orders are alive."""
         now = _now_ist().time()
         if not (dt_time(9, 15) <= now <= dt_time(15, 30)):
+            return
+        if self._exit_protection_enabled():
             return
 
         print(f"[{_now_ist().isoformat()}] GTT health check tick")

@@ -1,18 +1,18 @@
 [
   {
     "event": {
-      "id": "be2d987e9599",
+      "id": "f74c7156de0e",
       "type": "error",
       "payload": {},
-      "timestamp": "2026-04-16T04:42:49.793690",
+      "timestamp": "2026-04-16T22:29:46.478500",
       "source": "test"
     },
-    "handler_name": "always_fails",
-    "error": "Always fails",
-    "retry_count": 2,
-    "max_retries": 2,
-    "created_at": "2026-04-16T04:42:49.793713",
-    "last_retry_at": "2026-04-16T04:42:49.815442",
-    "permanently_failed": true
+    "handler_name": "bad_handler",
+    "error": "boom",
+    "retry_count": 0,
+    "max_retries": 3,
+    "created_at": "2026-04-16T22:29:46.478676",
+    "last_retry_at": null,
+    "permanently_failed": false
   }
 ]

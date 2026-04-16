@@ -502,3 +502,49 @@ def load_config(config_path: Path | None = None) -> AppConfig:
 
 
 cfg = load_config()
+
+
+def _env_bool(name: str, default: bool = False) -> bool:
+    raw = os.getenv(name)
+    if raw is None:
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
+
+
+class RuntimeFlags:
+    """Environment-controlled safety gates for the live runtime."""
+
+    @property
+    def live_trading_enabled(self) -> bool:
+        return _env_bool("LIVE_TRADING_ENABLED", False)
+
+    @property
+    def new_entries_enabled(self) -> bool:
+        return _env_bool("NEW_ENTRIES_ENABLED", False)
+
+    @property
+    def exit_only_mode(self) -> bool:
+        return _env_bool("EXIT_ONLY_MODE", False)
+
+    @property
+    def use_slow_brain(self) -> bool:
+        return _env_bool("USE_SLOW_BRAIN", False)
+
+    @property
+    def use_exception_analyst(self) -> bool:
+        return _env_bool("USE_EXCEPTION_ANALYST", False)
+
+    def live_entry_block_reason(self, mode: TradingMode | str) -> str | None:
+        mode_value = mode.value if isinstance(mode, TradingMode) else str(mode)
+        if mode_value != TradingMode.LIVE.value:
+            return None
+        if not self.live_trading_enabled:
+            return "LIVE_TRADING_ENABLED=false"
+        if self.exit_only_mode:
+            return "EXIT_ONLY_MODE=true"
+        if not self.new_entries_enabled:
+            return "NEW_ENTRIES_ENABLED=false"
+        return None
+
+
+runtime_flags = RuntimeFlags()

@@ -164,7 +164,7 @@ Use explicit state machines, not booleans.
 
 ## Phase Plan
 
-### Phase 0: Preconditions And Freeze
+### Phase 0 [X]: Preconditions And Freeze
 
 Before writing new live features:
 
@@ -179,6 +179,8 @@ Immediate cleanup items:
 - fix the `quantity` signature mismatch between `order_agent.py` and `order_execution.py`
 - remove the duplicate `retry_failed_event` definition in `event_bus.py`
 - stop treating placed live orders as filled
+
+Phase 0 completion means guardrails, preflight, WebSocket readiness, and local-state reconciliation are in place. It does not mean multi-day unattended holdings management is enabled; that remains blocked until broker-side holdings authorization moves out of `demat_consent=consent`.
 
 ### Phase 1: Create The Execution Core
 
