@@ -2,6 +2,7 @@
 
 > Last Updated: April 16, 2026
 > This top section reflects the current codebase. The older detailed draft below is retained only as archived planning context.
+> For the live-trading rebuild plan that supersedes the remaining execution roadmap here, see `live_trading_one_shot_plan.md`.
 
 ## Implemented Decisions
 

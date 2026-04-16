@@ -7,7 +7,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-16T04:35:44.098992",
+      "started_at": "2026-04-16T19:51:07.770117",
       "status": "running"
     },
     "FilterAgent": {
@@ -17,7 +17,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-16T04:35:44.097502",
+      "started_at": "2026-04-16T19:51:07.769355",
       "status": "running"
     },
     "FundamentalsAgent_BSE": {
@@ -47,7 +47,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-16T04:35:44.149021",
+      "started_at": "2026-04-16T19:51:07.772554",
       "status": "running"
     },
     "MarketDataAgent_BSE": {
@@ -90,16 +90,6 @@
       "started_at": "2026-04-16T02:19:39.395102",
       "status": "running"
     },
-    "Pipeline": {
-      "agent_name": "Pipeline",
-      "completed_at": null,
-      "current_task": "Research scan",
-      "last_error": null,
-      "metadata": {},
-      "progress": "3/10 stocks scored",
-      "started_at": "2026-04-16T04:34:19.232895",
-      "status": "running"
-    },
     "RegimeAgent": {
       "agent_name": "RegimeAgent",
       "completed_at": null,
@@ -107,17 +97,17 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-16T04:35:36.588503",
+      "started_at": "2026-04-16T19:51:07.761440",
       "status": "running"
     },
     "ResearchPipeline": {
       "agent_name": "ResearchPipeline",
-      "completed_at": "2026-04-15T18:00:19.837802",
+      "completed_at": "2026-04-16T19:51:07.773481",
       "current_task": "Full evening research scan",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-15T18:00:00.885290",
+      "started_at": "2026-04-16T19:51:05.122856",
       "status": "completed"
     },
     "ResultsSaverAgent": {
@@ -127,7 +117,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-16T04:35:44.122236",
+      "started_at": "2026-04-16T19:51:07.771883",
       "status": "running"
     },
     "ScorerAgent": {
@@ -137,7 +127,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-16T04:35:44.120513",
+      "started_at": "2026-04-16T19:51:07.770844",
       "status": "running"
     },
     "SentimentAgent_BSE": {
@@ -182,17 +172,17 @@
     },
     "scheduler": {
       "agent_name": "scheduler",
-      "completed_at": "2026-04-16T03:53:52.086230",
+      "completed_at": "2026-04-16T21:51:06.525829",
       "current_task": "position_monitor",
       "last_error": null,
       "metadata": {
-        "last_job": "position_monitor"
+        "last_job": "overnight_news_sweep"
       },
       "progress": null,
-      "started_at": "2026-04-16T03:53:52.085530",
+      "started_at": "2026-04-16T21:51:06.523523",
       "status": "completed"
     }
   },
-  "last_updated": "2026-04-16T04:35:44.149041",
-  "scheduler_phase": "market_hours"
+  "last_updated": "2026-04-16T22:00:00.624423",
+  "scheduler_phase": "overnight_monitoring"
 }

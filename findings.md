@@ -67,6 +67,7 @@ Findings:
 - The live path returns `status: "filled"` immediately after `place_order()`, assumes `average_price == requested price`, and never waits for broker confirmation.
 - The MCP fallback invents a local `order_id` if direct placement fails and does not persist the real broker order id returned by the tool call.
 - No successful execution path appends a new open position to `state.json`, updates `cash_inr`, or emits `ORDER_PLACED` / `ORDER_FILLED`.
+- `ORDER_PLACED`, `ORDER_FILLED`, `POSITION_CLOSED`, `APPROVAL_REQUESTED`, and `APPROVAL_RECEIVED` exist as event types, but the live path does not publish them.
 
 Impact:
 
@@ -195,7 +196,7 @@ Code refs:
 Findings:
 
 - Approval tests only cover the "not found" path.
-- The execution monitor test currently fails.
+- The execution monitor test currently fails because the agent now has a market-hours guard while the test still expects trailing behavior without forcing market hours.
 - Event-handler tests mainly verify that handlers do not raise and can log observations.
 - There is no end-to-end test for: approval -> broker order placed -> fill confirmed -> GTT armed -> exit triggered -> position closed -> trade recorded -> recovery after restart.
 - The codebase is not using static type checks, which is one reason the `quantity` call-signature mismatch slipped through.
