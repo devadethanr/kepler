@@ -7,6 +7,7 @@ from paths import CONTEXT_DIR
 from storage import read_json
 from models import AccountState
 from api.tasks.event_bus import event_bus
+from execution.operator_controls import request_failed_event_retry
 
 router = APIRouter()
 
@@ -53,13 +54,11 @@ async def get_portfolio_summary() -> dict[str, Any]:
 @router.get("/failed-events")
 async def get_failed_events():
     """List all failed events."""
-    return [fp.model_dump(mode="json") for fp in event_bus.get_failed_events()]
+    return [fp.model_dump(mode="json") for fp in event_bus.get_failed_events(refresh_from_disk=True)]
 
 
 @router.post("/failed-events/{event_id}/retry")
 async def retry_failed_event(event_id: str):
     """Manually retry a failed event by event ID."""
-    success = await event_bus.retry_failed_event(event_id)
-    if success:
-        return {"message": "Retry scheduled"}
-    return {"error": "Event not found"}, 404
+    request_failed_event_retry(event_id)
+    return {"message": "Retry queued for worker"}

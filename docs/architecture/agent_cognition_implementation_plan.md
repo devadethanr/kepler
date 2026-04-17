@@ -1,6 +1,6 @@
 # Agent Cognition Implementation Plan
 
-> Last Updated: April 16, 2026
+> Last Updated: April 17, 2026
 > This document is the repo-specific implementation plan for the cognitive and execution overhaul described in `agent_cognition_architecture.md`.
 
 ## Scope
@@ -38,7 +38,7 @@ Implement from the bottom up:
 5. Dashboard and read-side migration
 6. Staged live enablement
 
-## Phase 0: Guardrails And Freeze
+## Phase 0 [X]: Guardrails And Freeze
 
 ### Objectives
 
@@ -58,12 +58,19 @@ Implement from the bottom up:
   - duplicate `retry_failed_event` definition
   - live order path marking `submitted` as `filled`
 - document daily operator bootstrap
+- add Dockerized Phase 0 preflight, WebSocket readiness probing, and local-state reconciliation
+- keep live entries disabled by default and allow only guarded exit-only monitoring in live mode
 
 ### Files
 
 - `agents/execution/order_agent.py`
 - `tools/execution/order_execution.py`
 - `api/tasks/event_bus.py`
+- `api/tasks/scheduler.py`
+- `ops/phase0_check.py`
+- `ops/reconcile_local_state.py`
+- `auth/kite/websocket.py`
+- `Makefile`
 - `.env.example`
 - `docs/quickstart.md`
 
@@ -71,8 +78,9 @@ Implement from the bottom up:
 
 - no known blocking correctness bug remains in the current execution path
 - live entry flow is disabled by default until worker migration is complete
+- preflight exists and runs through `swingtradev3/Makefile`
 
-## Phase 1: Postgres Foundation
+## Phase 1 [X]: Postgres Foundation
 
 ### Objectives
 
@@ -84,6 +92,7 @@ Implement from the bottom up:
 - `swingtradev3/memory/models.py`
 - `swingtradev3/memory/repositories.py`
 - `swingtradev3/memory/projections.py`
+- `swingtradev3/memory/bootstrap.py`
 - `swingtradev3/memory/migrations/`
 
 ### Technology
@@ -116,6 +125,7 @@ Continue generating:
 - `context/state.json`
 - `context/trades.json`
 - `context/pending_approvals.json`
+- `context/auth/kite_session.json`
 
 from Postgres projections so existing routes and the dashboard keep functioning during rollout.
 
@@ -135,13 +145,18 @@ Import:
 - `api/routes/positions.py`
 - `api/routes/trades.py`
 - `api/routes/approvals.py`
+- `api/main.py`
+- `docker-compose.dev.yml`
+- `Makefile`
+- `alembic.ini`
 
 ### Exit Criteria
 
 - Postgres is the source of truth for positions, trades, and approvals
 - legacy JSON files are regenerated, not authored directly
+- app bootstraps the memory layer on startup and current read routes continue to work through the compatibility bridge
 
-## Phase 2: Worker Ownership
+## Phase 2 [X]: Worker Ownership
 
 ### Objectives
 

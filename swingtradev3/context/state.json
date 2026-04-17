@@ -4,6 +4,6 @@
   "drawdown_pct": 0.0,
   "positions": [],
   "realized_pnl": 1500.0,
-  "unrealized_pnl": 500.0,
+  "unrealized_pnl": 0.0,
   "weekly_loss_pct": 0.0
 }

@@ -204,7 +204,7 @@ class EventBus:
                 f"⚠️ {count} event(s) permanently failed after retries.",
                 f"Latest: {failed.handler_name} → {failed.event.type}",
                 f"Error: {failed.error}",
-                f"📊 Check dashboard for details.",
+                "📊 Check dashboard for details.",
             )
         except Exception as e:
             print(f"EventBus: failed to send Telegram alert: {e}")
@@ -227,15 +227,47 @@ class EventBus:
         except Exception as e:
             print(f"EventBus: failed to persist failed events: {e}")
 
-    def get_recent(self, event_type: EventType | None = None, limit: int = 20) -> list[BusEvent]:
+    def _reload_history_from_disk(self) -> None:
+        self._history = []
+        if not EVENTS_LOG_PATH.exists():
+            return
+        try:
+            lines = EVENTS_LOG_PATH.read_text().strip().split("\n")
+            for line in lines[-self._max_history :]:
+                if line.strip():
+                    self._history.append(BusEvent.model_validate_json(line))
+        except Exception as e:
+            print(f"EventBus: failed to reload history: {e}")
+
+    def _reload_failed_events_from_disk(self) -> None:
+        if not FAILED_EVENTS_PATH.exists():
+            self._failed_events = []
+            return
+        try:
+            data = json.loads(FAILED_EVENTS_PATH.read_text())
+            self._failed_events = [FailedEvent.model_validate(fe) for fe in data]
+        except Exception as e:
+            print(f"EventBus: failed to reload failed events: {e}")
+
+    def get_recent(
+        self,
+        event_type: EventType | None = None,
+        limit: int = 20,
+        *,
+        refresh_from_disk: bool = False,
+    ) -> list[BusEvent]:
         """Get recent events, optionally filtered by type."""
+        if refresh_from_disk:
+            self._reload_history_from_disk()
         events = self._history
         if event_type:
             events = [e for e in events if e.type == event_type]
         return events[-limit:]
 
-    def get_failed_events(self) -> list[FailedEvent]:
+    def get_failed_events(self, *, refresh_from_disk: bool = False) -> list[FailedEvent]:
         """Get all failed events."""
+        if refresh_from_disk:
+            self._reload_failed_events_from_disk()
         return list(self._failed_events)
 
     def retry_failed_event_by_handler(self, handler_name: str, event_id: str) -> bool:
@@ -254,8 +286,10 @@ class EventBus:
                 return True
         return False
 
-    def get_permanently_failed(self) -> list[FailedEvent]:
+    def get_permanently_failed(self, *, refresh_from_disk: bool = False) -> list[FailedEvent]:
         """Get only permanently failed events (for dashboard alert banner)."""
+        if refresh_from_disk:
+            self._reload_failed_events_from_disk()
         return [f for f in self._failed_events if f.permanently_failed]
 
     async def retry_failed_event(self, event_id: str) -> bool:
@@ -278,28 +312,12 @@ class EventBus:
 
     def load_history(self) -> None:
         """Load event history from disk on startup."""
-        if not EVENTS_LOG_PATH.exists():
-            return
-        try:
-            lines = EVENTS_LOG_PATH.read_text().strip().split("\n")
-            # Only load last N events
-            for line in lines[-self._max_history :]:
-                if line.strip():
-                    self._history.append(BusEvent.model_validate_json(line))
-        except Exception as e:
-            print(f"EventBus: failed to load history: {e}")
+        self._reload_history_from_disk()
 
     def load_failed_events(self) -> int:
         """Load failed events from disk on startup. Returns count loaded."""
-        if not FAILED_EVENTS_PATH.exists():
-            return 0
-        try:
-            data = json.loads(FAILED_EVENTS_PATH.read_text())
-            self._failed_events = [FailedEvent.model_validate(fe) for fe in data]
-            return len(self._failed_events)
-        except Exception as e:
-            print(f"EventBus: failed to load failed events: {e}")
-            return 0
+        self._reload_failed_events_from_disk()
+        return len(self._failed_events)
 
     async def startup_recovery(self) -> None:
         """On startup: load failed events + send Telegram alert if any."""
@@ -315,7 +333,7 @@ class EventBus:
                 await tg.send_briefing(
                     f"⚠️ {count} failed event(s) recovered from previous session.",
                     f"{perm_count} permanently failed.",
-                    f"📊 Check Agent Activity in dashboard.",
+                    "📊 Check Agent Activity in dashboard.",
                 )
             except Exception as e:
                 print(f"EventBus: failed to send recovery alert: {e}")

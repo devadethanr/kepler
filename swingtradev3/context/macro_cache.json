@@ -1,13 +1,13 @@
 {
   "data": {
-    "crude_usd": null,
-    "date": "2026-04-16",
-    "india_vix": null,
-    "nasdaq": null,
+    "crude_usd": 87.42,
+    "date": "2026-04-17",
+    "india_vix": 17.2,
+    "nasdaq": 24102.7,
     "source": "yahoo_finance",
-    "sp500": null,
-    "us_10y_yield": null,
-    "usd_inr": null
+    "sp500": 7041.28,
+    "us_10y_yield": 4.309,
+    "usd_inr": 92.722
   },
-  "fetched_at": "2026-04-16T14:21:07.758439"
+  "fetched_at": "2026-04-17T12:30:02.020686"
 }

@@ -1,6 +1,6 @@
 # Agent Cognition Architecture
 
-> Last Updated: April 16, 2026
+> Last Updated: April 17, 2026
 > This document defines the target cognitive architecture for `swingtradev3`.
 > It complements `live_trading_one_shot_plan.md` by specifying the agent roles, memory model, decision rights, and phase-by-phase orchestration.
 

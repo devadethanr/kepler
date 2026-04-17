@@ -8,7 +8,7 @@ from fastapi import APIRouter
 
 from api.tasks.event_bus import event_bus, EventType
 from api.tasks.activity_manager import activity_manager
-from api.tasks.scheduler import scheduler
+from execution.operator_controls import read_worker_status
 from knowledge.wiki_renderer import (
     get_stock_context,
     INDEX_PATH,
@@ -69,7 +69,7 @@ async def get_agent_status(agent_name: str):
 async def get_recent_events(limit: int = 20, event_type: str | None = None):
     """Get recent events from the event bus."""
     et = EventType(event_type) if event_type else None
-    events = event_bus.get_recent(event_type=et, limit=limit)
+    events = event_bus.get_recent(event_type=et, limit=limit, refresh_from_disk=True)
     return [e.model_dump(mode="json") for e in events]
 
 
@@ -80,4 +80,14 @@ async def get_recent_events(limit: int = 20, event_type: str | None = None):
 @router.get("/scheduler")
 async def get_scheduler_info():
     """Get scheduler status and current phase."""
-    return scheduler.get_schedule_info()
+    status = read_worker_status()
+    if status is not None:
+        return status
+    return {
+        "is_running": False,
+        "current_phase": "stopped",
+        "total_jobs": 0,
+        "next_run": None,
+        "next_task": None,
+        "failed_events": len(event_bus.get_failed_events(refresh_from_disk=True)),
+    }

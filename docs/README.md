@@ -17,12 +17,12 @@ This directory now separates current source-of-truth docs from historical planni
 
 ## Historical References
 
-These files are kept for context, not as active specifications:
+These files are kept under `docs/old/` for context, not as active specifications:
 
-- `progress/todos.md`
-- `progress/upgrade.md`
-- `reference/project_design.md`
-- `reference/swingtradev3_design_v6.pdf`
+- `old/todos.md`
+- `old/upgrade.md`
+- `old/project_design.md`
+- `old/swingtradev3_design_v6.pdf`
 
 If a historical doc conflicts with code, config, or the current architecture docs, trust the code and the current docs.
 

@@ -137,10 +137,12 @@ class AgentActivityManager:
 
     def get_snapshot(self) -> ActivitySnapshot:
         """Get current activity snapshot (non-async for API routes)."""
+        self._load()
         return self._snapshot
 
     def get_agent_status(self, agent_name: str) -> AgentActivity | None:
         """Get a specific agent's status."""
+        self._load()
         return self._snapshot.agents.get(agent_name)
 
 

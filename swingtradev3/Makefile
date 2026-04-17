@@ -2,13 +2,19 @@ COMPOSE_FILE := ../docker-compose.dev.yml
 ENV_FILE := .env
 DOCKER_COMPOSE := docker compose -f $(COMPOSE_FILE) --env-file $(ENV_FILE)
 
-.PHONY: dev dev-detach test test-file lint format logs logs-app logs-mcp logs-dashboard stop clean shell health login phase0-check phase0-reconcile-state
+.PHONY: dev dev-detach worker-up worker-smoke test test-file lint format logs logs-app logs-worker logs-mcp logs-dashboard stop clean shell health login phase0-check phase0-reconcile-state db-upgrade
 
 dev:
 	$(DOCKER_COMPOSE) up --build
 
 dev-detach:
 	$(DOCKER_COMPOSE) up --build -d
+
+worker-up:
+	$(DOCKER_COMPOSE) up -d worker
+
+worker-smoke:
+	$(DOCKER_COMPOSE) exec app sh -lc 'timeout 10 python -m execution.worker || test $$? -eq 124'
 
 login:
 	$(DOCKER_COMPOSE) exec -it app python -m auth.kite.login
@@ -31,6 +37,9 @@ logs:
 logs-app:
 	$(DOCKER_COMPOSE) logs -f app
 
+logs-worker:
+	$(DOCKER_COMPOSE) logs -f worker
+
 logs-mcp:
 	$(DOCKER_COMPOSE) logs -f kite-mcp
 
@@ -48,10 +57,13 @@ shell:
 	$(DOCKER_COMPOSE) exec app bash
 
 health:
-	curl -s http://localhost:8001/health | python3 -m json.tool
+	$(DOCKER_COMPOSE) exec app sh -lc 'curl -s -H "X-API-Key: $$FASTAPI_API_KEY" http://localhost:8000/health | python3 -m json.tool'
 
 phase0-check:
 	$(DOCKER_COMPOSE) exec app python -m ops.phase0_check
 
 phase0-reconcile-state:
 	$(DOCKER_COMPOSE) exec app python -m ops.reconcile_local_state
+
+db-upgrade:
+	$(DOCKER_COMPOSE) exec app alembic upgrade head

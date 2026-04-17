@@ -1,9 +1,9 @@
 # Live Trading One-Shot Plan
 
-> Last Updated: April 16, 2026
-> This is the active implementation plan for turning `swingtradev3` into a broker-truth-driven live trading system.
-> It is based on `findings.md`, official Kite/Zerodha docs, and open-source live-trading architecture research.
-> For the explicit Slow Brain / Fast Brain design and agent-role model, see `agent_cognition_architecture.md` and `agent_cognition_implementation_plan.md`.
+> Last Updated: April 17, 2026
+> This is the active end-to-end implementation plan for turning `swingtradev3` into a broker-truth-driven, bounded-autonomy live trading system.
+> It merges the execution hardening work from `findings.md` with the Slow Brain / Fast Brain architecture in `agent_cognition_architecture.md` and `agent_cognition_implementation_plan.md`.
+> Phases 0-9 build the execution-safe floor. Phases 10-13 add the cognition, policy, and memory layers required for the final non-linear autonomous system.
 
 ## Goal
 
@@ -13,6 +13,15 @@ Build a version of `swingtradev3` that can safely support:
 - autonomous intraday monitoring and trailing
 - reliable stop/target handling with broker-confirmed state
 - restart-safe, auditable real-money operation
+
+And, after the execution floor is stable, extend it into the full target architecture:
+
+- **Slow Brain**: overnight and pre-market multi-agent deliberation
+- **Fast Brain**: market-hours deterministic execution and risk control
+- **Memory**: knowledge graph plus Postgres execution and trade history
+- **Policy Layer**: bounded dynamic overlays, not raw `config.yaml` mutation
+- **Execution Core**: broker-truth single-writer worker
+- **Recovery Layer**: reconciliation, kill switches, and operator controls
 
 ## Reality Check
 
@@ -41,13 +50,13 @@ That means the real target is:
 ## Target Runtime
 
 ```text
-Research / Approval UI / Telegram
+ Slow Brain Desk / Telegram / UI
               |
               v
        FastAPI control plane
               |
               v
-      order_intents / controls
+   intents / approvals / controls
               |
               v
        execution-worker (single writer)
@@ -58,9 +67,12 @@ Kite REST   Kite WS   Reconciler   GTT watchdog
       \        |         |          /
                v
             Postgres
-               |
-      projections + audit log
-               |
+          /     |      \
+         /      |       \
+        v       v        v
+   projections audit   read-only
+               log     Toolbox views
+                |
       dashboard / SSE / reports
 ```
 
@@ -76,6 +88,7 @@ Kite REST   Kite WS   Reconciler   GTT watchdog
 
 - `worker`: the only service allowed to submit orders, modify GTTs, close positions, or write execution state
 - `db`: Postgres for transactional execution state
+- `toolbox`: Google MCP Toolbox for read-only agent access to curated Postgres views
 
 ## Why Postgres, Not JSON
 
@@ -100,10 +113,14 @@ Create these tables first:
 - `positions`
 - `trades`
 - `execution_events`
+- `policy_overlays`
 - `reconciliation_runs`
 - `auth_sessions`
 - `operator_controls`
 - `failure_incidents`
+- `universes`
+- `universe_memberships`
+- `universe_runs`
 
 ### Core IDs
 
@@ -162,6 +179,15 @@ Use explicit state machines, not booleans.
 - `disabled`
 - `recreate_required`
 
+### Multi-Universe Rule
+
+Support multiple research universes, but one unified book.
+
+- research can run across several universes in parallel
+- `entry_intents` must carry `source_universe_id`
+- duplicate symbols across universes must merge into one canonical instrument before allocation
+- one global portfolio allocator and one execution worker own the final decision and execution path
+
 ## Phase Plan
 
 ### Phase 0 [X]: Preconditions And Freeze
@@ -182,16 +208,15 @@ Immediate cleanup items:
 
 Phase 0 completion means guardrails, preflight, WebSocket readiness, and local-state reconciliation are in place. It does not mean multi-day unattended holdings management is enabled; that remains blocked until broker-side holdings authorization moves out of `demat_consent=consent`.
 
-### Phase 1: Create The Execution Core
+### Phase 1 [X]: Create The Execution Core
 
 New modules:
 
-- `swingtradev3/execution/db.py`
-- `swingtradev3/execution/models.py`
-- `swingtradev3/execution/repositories.py`
-- `swingtradev3/execution/events.py`
-- `swingtradev3/execution/state_machine.py`
-- `swingtradev3/execution/projections.py`
+- `swingtradev3/memory/db.py`
+- `swingtradev3/memory/models.py`
+- `swingtradev3/memory/repositories.py`
+- `swingtradev3/memory/projections.py`
+- `swingtradev3/memory/migrations/`
 
 Existing modules to refactor:
 
@@ -205,6 +230,7 @@ Implementation:
 
 - add Alembic migrations
 - import `context/state.json`, `trades.json`, `pending_approvals.json`, and `context/auth/kite_session.json`
+- build the DB-backed compatibility bridge under `storage.py`
 - keep writing JSON compatibility projections for the dashboard during migration
 - model `state.json` and `trades.json` as derived outputs from DB state, not primary data
 
@@ -212,8 +238,9 @@ Definition of done:
 
 - Postgres becomes the source of truth for positions, trades, approvals, and execution events
 - JSON files are regenerated from projections
+- the app can boot and serve current routes entirely from Postgres-backed projections
 
-### Phase 2: Separate The Worker
+### Phase 2 [X]: Separate The Worker
 
 Move live execution out of FastAPI lifespan.
 
@@ -459,6 +486,97 @@ Enablement ladder:
 5. same-day unattended live mode
 6. multi-day unattended mode only after DDPI/POA confirmation and stable daily login operations
 
+### Phase 10: Policy Layer And Effective Policy
+
+Implementation:
+
+- keep `config.yaml` as the slow-changing base config
+- add `policy_overlays` with hard bounds, reason, proposer, expiry, rollback handle, and optional approver
+- build `effective_policy` from:
+  - base config
+  - operator controls
+  - active bounded overlays
+- allow dynamic changes only through approved overlay keys such as:
+  - `min_score_threshold`
+  - `max_position_size_pct`
+  - `new_entries_enabled`
+  - `max_same_sector_positions`
+  - `trail_stop_at_pct`
+  - `trail_to_pct`
+  - `debate_top_n`
+
+Definition of done:
+
+- no runtime path mutates `config.yaml`
+- adaptive behavior is bounded, auditable, and reversible
+
+### Phase 11: Memory Views And Google MCP Toolbox
+
+Implementation:
+
+- add compact Postgres-backed views for:
+  - regime snapshots
+  - portfolio risk
+  - open positions
+  - similar past trades
+  - execution incidents
+  - effective policy
+  - session readiness
+- add read-only Google MCP Toolbox toolsets for:
+  - research
+  - allocator
+  - post-trade review
+  - ops diagnostics
+- do not allow unrestricted SQL and do not allow writes through Toolbox
+
+Definition of done:
+
+- LLM agents read compact, curated Postgres views instead of raw JSON or unrestricted tables
+- Toolbox remains fully out of the execution hot path
+
+### Phase 12: Slow Brain Desk And Session Planning
+
+Implementation:
+
+- add the overnight and pre-market agent desk:
+  - `RegimeSynthesizer`
+  - `UniverseFunnel`
+  - `EvidenceAssembler`
+  - `ThesisAgent`
+  - `SkepticAgent`
+  - `PortfolioRiskJudge`
+  - `FinalIntentJudge`
+  - `SessionPlanner`
+- make all outputs structured:
+  - `entry_intent`
+  - `portfolio_fit_report`
+  - optional `policy_proposal`
+- keep the pre-market desk portfolio-aware across all active universes
+
+Definition of done:
+
+- new entries are produced by the bounded multi-agent desk, not by a single-pass scorer alone
+- pre-market activation is portfolio-aware and universe-aware
+
+### Phase 13: Bounded Intraday Exception Reasoning And Learning
+
+Implementation:
+
+- keep the live hot path deterministic
+- add one optional `ExceptionAnalyst` only for bounded abnormal-event reasoning:
+  - broker inconsistency
+  - major gap or shock event
+  - corporate-action surprise
+  - unexpected regime break on existing positions
+- add post-trade reviewer and policy analyst flows that can propose bounded overlays or strategy lessons
+- require all intraday reasoning outputs to stay advisory unless explicitly mapped to a narrow deterministic policy hook
+
+Definition of done:
+
+- market-hours execution still works if the LLM layer is unavailable
+- intraday reasoning exists only for bounded anomalies, not routine order routing
+- the system can learn and adapt without becoming an unbounded linear-bot-with-prompts
+
 ## Exact Repo Changes
 
 ### Files To De-Emphasize Or Retire From The Hot Path
@@ -498,6 +616,10 @@ Enablement ladder:
 - do not trail stops from stale cached prices
 - do not let the dashboard or API mutate broker state directly
 - do not use the LLM layer for real-time execution decisions
+- do not let Google MCP Toolbox participate in hot-path writes
+- do not let any agent mutate `config.yaml` directly at runtime
+- do not run a multi-agent debate inside the market-hours execution path
+- do not split live execution across one worker per universe
 
 ## Delivery Order
 
@@ -507,8 +629,9 @@ If the goal is one clean push instead of another partial retrofit, implement in 
 2. Phase 2 and Phase 3
 3. Phase 4 and Phase 5
 4. Phase 6 and Phase 7
-5. Phase 8
-6. Phase 9
+5. Phase 8 and Phase 9
+6. Phase 10 and Phase 11
+7. Phase 12 and Phase 13
 
 Reason:
 
@@ -516,6 +639,8 @@ Reason:
 - broker integration must exist before entry and protection state machines
 - reconciliation and safety must be complete before unattended mode is enabled
 - UI comes after execution truth, not before
+- policy and memory views come after execution truth because they depend on stable Postgres state
+- the slow-brain desk and exception analyst come after the execution floor because agentic reasoning should sit on top of a safe, deterministic runtime
 
 ## Sources
 

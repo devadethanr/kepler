@@ -880,3 +880,23 @@
 {"id":"2dcffef00c6c","type":"phase_started","payload":{"phase":"overnight_monitoring"},"timestamp":"2026-04-16T22:48:38.421207","source":"scheduler"}
 {"id":"7a0bb388010b","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-16T22:51:26.098020","source":"scheduler"}
 {"id":"81d3bc1d4514","type":"phase_started","payload":{"phase":"overnight_monitoring"},"timestamp":"2026-04-16T22:51:26.099232","source":"scheduler"}
+{"id":"28dae44302b4","type":"phase_started","payload":{"phase":"pre_market_prep"},"timestamp":"2026-04-17T08:52:36.703829","source":"scheduler"}
+{"id":"c835a9e93783","type":"error","payload":{"job":"morning_regime_check","error":"'MarketRegimeDetector' object has no attribute 'detect'"},"timestamp":"2026-04-17T08:52:36.913726","source":"scheduler"}
+{"id":"3538b8f901bf","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-17T09:17:23.616676","source":"scheduler"}
+{"id":"f4ede62606db","type":"phase_started","payload":{"phase":"market_hours"},"timestamp":"2026-04-17T09:17:23.624592","source":"scheduler"}
+{"id":"a2061d994968","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-17T09:19:37.496976","source":"scheduler"}
+{"id":"488bd342a1e5","type":"phase_started","payload":{"phase":"market_hours"},"timestamp":"2026-04-17T09:19:37.503453","source":"scheduler"}
+{"id":"f2261655eb31","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-17T09:21:11.071215","source":"scheduler"}
+{"id":"66b0b4267494","type":"phase_started","payload":{"phase":"market_hours"},"timestamp":"2026-04-17T09:21:11.080201","source":"scheduler"}
+{"id":"aa2f0ed55c98","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-17T10:22:07.561639","source":"scheduler"}
+{"id":"18facda20b57","type":"phase_started","payload":{"phase":"market_hours"},"timestamp":"2026-04-17T10:22:07.568485","source":"scheduler"}
+{"id":"54f99789d817","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-17T10:46:58.429245","source":"scheduler"}
+{"id":"a201dcf3cbc8","type":"phase_started","payload":{"phase":"market_hours"},"timestamp":"2026-04-17T10:46:58.551972","source":"scheduler"}
+{"id":"7e77da0385e6","type":"phase_started","payload":{"phase":"post_market"},"timestamp":"2026-04-17T15:30:00.055249","source":"scheduler"}
+{"id":"2351433cfafa","type":"phase_completed","payload":{"phase":"eod_data_collection"},"timestamp":"2026-04-17T15:30:00.059416","source":"scheduler"}
+{"id":"fef80ca7eedd","type":"phase_started","payload":{"phase":"evening_research"},"timestamp":"2026-04-17T18:00:00.551300","source":"scheduler"}
+{"id":"c3a7690de7e4","type":"scan_started","payload":{},"timestamp":"2026-04-17T18:00:00.554050","source":"scheduler"}
+{"id":"14f48abff618","type":"scan_completed","payload":{},"timestamp":"2026-04-17T18:00:05.462716","source":"scheduler"}
+{"id":"5f8e28a1f775","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-17T21:00:00.101247","source":"scheduler"}
+{"id":"a1a497a28376","type":"phase_started","payload":{"phase":"scheduler_initialized"},"timestamp":"2026-04-17T21:11:25.278597","source":"scheduler"}
+{"id":"abfa3644d6c6","type":"phase_started","payload":{"phase":"wind_down"},"timestamp":"2026-04-17T21:11:25.404152","source":"scheduler"}

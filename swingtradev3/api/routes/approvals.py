@@ -1,16 +1,17 @@
 from __future__ import annotations
 
 from datetime import datetime
-from fastapi import APIRouter, HTTPException
 from typing import List
 from uuid import uuid4
 
+from fastapi import APIRouter, HTTPException
+
 from auth.kite.client import has_kite_session
 from config import cfg, runtime_flags
+from api.sse_broadcaster import broadcaster
+from models import ApprovalResponse, PendingApproval
 from paths import CONTEXT_DIR
 from storage import read_json, write_json
-from models import PendingApproval, ApprovalResponse
-from api.sse_broadcaster import broadcaster
 
 router = APIRouter()
 
@@ -55,36 +56,8 @@ async def approve_trade(ticker: str):
             p["execution_request_id"] = request_id if live_entry_block_reason is None else None
             write_json(CONTEXT_DIR / "pending_approvals.json", payload)
 
-            message = "Approved. Execution agent triggered."
             if live_entry_block_reason is None:
-                import asyncio
-                from google.adk import Runner
-                from google.adk.sessions import InMemorySessionService
-                from agents.execution.order_agent import OrderExecutionAgent
-                from google.genai import types
-
-                runner = Runner(
-                    app_name="swingtradev3",
-                    agent=OrderExecutionAgent(),
-                    session_service=InMemorySessionService(),
-                    auto_create_session=True,
-                )
-
-                async def run_order_bg():
-                    try:
-                        async for _ in runner.run_async(
-                            user_id="system",
-                            session_id=f"order_session_{ticker.lower()}_{request_id}",
-                            new_message=types.Content(
-                                role="user",
-                                parts=[types.Part(text=f"Execute approved trade for {ticker}")],
-                            ),
-                        ):
-                            pass
-                    except Exception as e:
-                        print(f"Order agent failed: {e}")
-
-                asyncio.create_task(run_order_bg())
+                message = "Approved. Queued for worker execution."
             else:
                 message = (
                     "Approved, but live execution is blocked by runtime guardrails "

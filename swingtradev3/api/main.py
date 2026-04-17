@@ -8,7 +8,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from .routes import health, ws, positions, trades, approvals, scan, regime, stats, dashboard, sse, portfolio
-from .tasks.scheduler import scheduler
 from .middleware.auth import get_api_key
 
 START_TIME = time.time()
@@ -37,16 +36,15 @@ async def lifespan(app: FastAPI):
     """Startup and shutdown events."""
     # Startup
     from paths import ensure_runtime_dirs
+    from memory.bootstrap import initialize_memory_layer
     import asyncio
     ensure_runtime_dirs()
-    await scheduler.start()
+    await asyncio.to_thread(initialize_memory_layer)
     
     # Warm up large models in the background so slow agent execution is purely inference
     asyncio.create_task(asyncio.to_thread(load_models))
     
     yield
-    # Shutdown
-    await scheduler.stop()
 
 
 app = FastAPI(

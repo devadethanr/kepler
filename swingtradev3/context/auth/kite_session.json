@@ -1,36 +1,14 @@
 {
-  "user_type": "individual/res_no_nn",
+  "access_token": "ghgSGlAFKBBRoEMDwVThdrbdMtFy3WO1",
+  "api_key": "m0q3d9nvg75ug0zg",
+  "broker": "ZERODHA",
+  "created_at": null,
   "email": "devadethan1122@gmail.com",
+  "login_time": "2026-04-16T22:33:15",
+  "public_token": "jGZ4oEifjMYZu55P6iS1t3wLtnx7lWpJ",
+  "raw_session": {},
+  "user_id": "RDK847",
   "user_name": "Devadethan R",
   "user_shortname": "Devadethan",
-  "broker": "ZERODHA",
-  "exchanges": [
-    "NSE",
-    "BSE",
-    "MF"
-  ],
-  "products": [
-    "CNC",
-    "NRML",
-    "MIS",
-    "BO",
-    "CO"
-  ],
-  "order_types": [
-    "MARKET",
-    "LIMIT",
-    "SL",
-    "SL-M"
-  ],
-  "avatar_url": null,
-  "user_id": "RDK847",
-  "api_key": "m0q3d9nvg75ug0zg",
-  "access_token": "ghgSGlAFKBBRoEMDwVThdrbdMtFy3WO1",
-  "public_token": "jGZ4oEifjMYZu55P6iS1t3wLtnx7lWpJ",
-  "refresh_token": "",
-  "enctoken": "y6LyVf1S4Du9WKe0AfZyiMzxB8wRBctzgMGpZP4v7Yghg4ovJNO1hcYMBYYslAJYNZJtV4AsCnVzttsUPS8hX156j+G4YC4Wf55aWZ6tgJwSqlbd13gzvjjiVtRR61A=",
-  "login_time": "2026-04-16T22:33:15",
-  "meta": {
-    "demat_consent": "consent"
-  }
+  "user_type": "individual/res_no_nn"
 }
