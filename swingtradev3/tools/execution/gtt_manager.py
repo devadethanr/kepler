@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from auth.kite.client import (
     delete_live_gtt,
+    fetch_gtt,
     fetch_gtts,
     fetch_ltp,
     has_kite_session,
@@ -83,6 +84,7 @@ class GTTManager:
             )
             return GTTOrder(
                 position_id=trigger_id,
+                oco_gtt_id=trigger_id,
                 ticker=ticker,
                 stop_price=stop_price,
                 target_price=target_price,
@@ -96,7 +98,13 @@ class GTTManager:
                 "last_price": target_price,
             },
         )
-        return GTTOrder(position_id=position_id, ticker=ticker, stop_price=stop_price, target_price=target_price)
+        return GTTOrder(
+            position_id=position_id,
+            oco_gtt_id=position_id,
+            ticker=ticker,
+            stop_price=stop_price,
+            target_price=target_price,
+        )
 
     def modify_gtt(
         self,
@@ -148,6 +156,7 @@ class GTTManager:
                 return current
             return GTTOrder(
                 position_id=position_id,
+                oco_gtt_id=position_id,
                 ticker=live_ticker,
                 stop_price=new_trigger,
                 target_price=live_target_price,
@@ -157,7 +166,13 @@ class GTTManager:
         if current is not None:
             current.stop_price = new_trigger
             return current
-        return GTTOrder(position_id=position_id, ticker="", stop_price=new_trigger, target_price=new_trigger)
+        return GTTOrder(
+            position_id=position_id,
+            oco_gtt_id=position_id,
+            ticker="",
+            stop_price=new_trigger,
+            target_price=new_trigger,
+        )
 
     def cancel_gtt(self, position_id: str) -> None:
         if cfg.trading.mode == "live":
@@ -180,7 +195,11 @@ class GTTManager:
         if cfg.trading.mode.value != "live":
             return self.get_gtt(position_id)
         if has_kite_session():
-            for item in fetch_gtts():
+            try:
+                items = [fetch_gtt(position_id)]
+            except Exception:
+                items = fetch_gtts()
+            for item in items:
                 trigger_id = str(item.get("id") or item.get("trigger_id") or "")
                 if trigger_id != position_id:
                     continue
@@ -190,13 +209,23 @@ class GTTManager:
                 stop_price = float(trigger_values[0]) if trigger_values else 0.0
                 target_price = float(trigger_values[1]) if len(trigger_values) > 1 else stop_price
                 ticker = str(item.get("tradingsymbol") or (orders[0].get("tradingsymbol") if orders else ""))
+                raw_status = str(item.get("status", "")).lower()
                 status = "active"
-                if str(item.get("status", "")).lower() == "triggered":
-                    status = "triggered_target"
-                if str(item.get("status", "")).lower() in {"cancelled", "deleted", "disabled", "expired"}:
+                if raw_status in {"cancelled", "deleted", "disabled", "expired", "rejected"}:
                     status = "cancelled"
+                elif raw_status == "triggered":
+                    triggered_leg = None
+                    if isinstance(orders, list):
+                        for index, order in enumerate(orders):
+                            if not isinstance(order, dict):
+                                continue
+                            if order.get("result") or order.get("order_result"):
+                                triggered_leg = index
+                                break
+                    status = "triggered_stop" if triggered_leg == 0 else "triggered_target"
                 return GTTOrder(
                     position_id=trigger_id,
+                    oco_gtt_id=trigger_id,
                     ticker=ticker,
                     stop_price=stop_price,
                     target_price=target_price,

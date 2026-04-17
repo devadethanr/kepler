@@ -4,7 +4,7 @@ from datetime import date, datetime
 from enum import Enum
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 class TradingMode(str, Enum):
@@ -50,6 +50,7 @@ class PositionState(BaseModel):
     target_price: float
     opened_at: datetime
     entry_order_id: str | None = None
+    oco_gtt_id: str | None = None
     stop_gtt_id: str | None = None
     target_gtt_id: str | None = None
     thesis_score: float | None = None
@@ -59,6 +60,20 @@ class PositionState(BaseModel):
     pending_corporate_action: PendingCorporateAction = Field(
         default_factory=PendingCorporateAction
     )
+
+    @model_validator(mode="before")
+    @classmethod
+    def _normalize_gtt_identity(cls, value: Any) -> Any:
+        if not isinstance(value, dict):
+            return value
+        payload = dict(value)
+        oco_gtt_id = payload.get("oco_gtt_id") or payload.get("stop_gtt_id") or payload.get("target_gtt_id")
+        if oco_gtt_id in (None, ""):
+            return payload
+        payload["oco_gtt_id"] = str(oco_gtt_id)
+        payload["stop_gtt_id"] = str(payload.get("stop_gtt_id") or oco_gtt_id)
+        payload["target_gtt_id"] = str(payload.get("target_gtt_id") or oco_gtt_id)
+        return payload
 
 
 class AccountState(BaseModel):
@@ -104,6 +119,8 @@ class PendingApproval(BaseModel):
     risk_flags: list[str] = Field(default_factory=list)
     sector: str | None = None
     approved: bool | None = None
+    order_intent_id: str | None = None
+    broker_tag: str | None = None
     created_at: datetime
     expires_at: datetime
     research_date: date | None = None
@@ -158,10 +175,21 @@ class CorporateAction(BaseModel):
 
 class GTTOrder(BaseModel):
     position_id: str
+    oco_gtt_id: str | None = None
     ticker: str
     stop_price: float
     target_price: float
     status: Literal["active", "triggered_stop", "triggered_target", "cancelled"] = "active"
+
+    @model_validator(mode="before")
+    @classmethod
+    def _normalize_trigger_identity(cls, value: Any) -> Any:
+        if not isinstance(value, dict):
+            return value
+        payload = dict(value)
+        if payload.get("oco_gtt_id") in (None, "") and payload.get("position_id") not in (None, ""):
+            payload["oco_gtt_id"] = str(payload["position_id"])
+        return payload
 
 
 class FundamentalsSnapshot(BaseModel):

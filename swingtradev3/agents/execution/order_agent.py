@@ -8,6 +8,8 @@ from google.adk.events import Event
 from google.genai import types
 
 from config import cfg, runtime_flags
+from memory.db import session_scope
+from memory.repositories import MemoryRepository
 from paths import CONTEXT_DIR
 from storage import read_json, write_json
 from models import AccountState
@@ -26,6 +28,34 @@ class OrderExecutionAgent(BaseAgent):
 
     def __init__(self, name: str = "OrderExecutionAgent") -> None:
         super().__init__(name=name)
+
+    def _upsert_order_intent(
+        self,
+        approval: dict[str, object],
+        *,
+        status: str,
+        broker_tag: str | None = None,
+        payload: dict[str, object] | None = None,
+    ) -> None:
+        order_intent_id = str(approval.get("order_intent_id") or "").strip()
+        ticker = str(approval.get("ticker") or "").strip().upper()
+        if not order_intent_id or not ticker:
+            return
+
+        next_payload = dict(payload or approval)
+        if broker_tag is not None:
+            next_payload["broker_tag"] = broker_tag
+
+        with session_scope() as session:
+            repo = MemoryRepository(session)
+            repo.upsert_order_intent(
+                order_intent_id=order_intent_id,
+                ticker=ticker,
+                status=status,
+                broker_tag=broker_tag,
+                payload=next_payload,
+                source="order_execution_agent",
+            )
 
     async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, None]:
         risk_tool = RiskCheckTool()
@@ -55,6 +85,10 @@ class OrderExecutionAgent(BaseAgent):
         live_entry_block_reason = runtime_flags.live_entry_block_reason(cfg.trading.mode)
 
         for approval in approvals:
+            if not approval.get("order_intent_id") and approval.get("execution_request_id"):
+                approval["order_intent_id"] = (
+                    f"order-intent:{str(approval['ticker']).upper()}:{approval['execution_request_id']}"
+                )
             if not approval.get("approved"):
                 new_approvals.append(approval)
                 continue
@@ -66,6 +100,7 @@ class OrderExecutionAgent(BaseAgent):
                 continue
 
             if live_entry_block_reason is not None:
+                self._upsert_order_intent(approval, status="approved_blocked")
                 await alerts_tool.send_alert(
                     f"⚠️ {approval['ticker']} approval retained. Live execution blocked "
                     f"({live_entry_block_reason})."
@@ -92,6 +127,7 @@ class OrderExecutionAgent(BaseAgent):
                 adjusted_qty = regime_config.position_size(base_quantity=base_qty)
 
                 if adjusted_qty == 0:
+                    self._upsert_order_intent(approval, status="regime_blocked")
                     yield Event(
                         author=self.name,
                         content=types.Content(
@@ -122,21 +158,48 @@ class OrderExecutionAgent(BaseAgent):
                     )
                     status = str(result.get("status", "unknown"))
                     if status in {"filled", "submitted", "live"}:
+                        broker_tag = (
+                            str(result.get("broker_tag"))
+                            if result.get("broker_tag") not in (None, "")
+                            else None
+                        )
+                        self._upsert_order_intent(
+                            approval,
+                            status=status,
+                            broker_tag=broker_tag,
+                            payload={**approval, **result},
+                        )
                         await alerts_tool.send_alert(f"🟢 Order placed for {ticker}: {result}")
                         executed_count += 1
                     else:
+                        self._upsert_order_intent(
+                            approval,
+                            status=status,
+                            payload={**approval, **result},
+                        )
                         await alerts_tool.send_alert(
                             f"⚠️ Order not placed for {ticker}: {result.get('reason', status)}"
                         )
                         approval["execution_requested"] = False
                         approval["execution_request_id"] = None
+                        approval["broker_tag"] = result.get("broker_tag")
                         new_approvals.append(approval)
                 except Exception as e:
+                    self._upsert_order_intent(
+                        approval,
+                        status="failed",
+                        payload={**approval, "error": str(e)},
+                    )
                     await alerts_tool.send_alert(f"🔴 Order failed for {ticker}: {e}")
                     approval["execution_requested"] = False
                     approval["execution_request_id"] = None
                     new_approvals.append(approval)
             else:
+                self._upsert_order_intent(
+                    approval,
+                    status="risk_rejected",
+                    payload={**approval, "risk_reason": risk_decision["reason"]},
+                )
                 await alerts_tool.send_alert(
                     f"⚠️ Risk check failed for {ticker} post-approval: {risk_decision['reason']}"
                 )

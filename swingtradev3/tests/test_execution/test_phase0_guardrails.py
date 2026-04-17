@@ -123,22 +123,35 @@ async def test_live_order_stays_submitted_until_fill_confirmation(monkeypatch):
     tool.gtt_manager.place_gtt_async = AsyncMock()
 
     with patch("tools.execution.order_execution.has_kite_session", return_value=True):
-        with patch("tools.execution.order_execution.place_live_order", return_value="kite-order-123"):
-            result = await tool.place_order_async(
-                state=_state(),
-                ticker="RELIANCE",
-                side="buy",
-                score=8.2,
-                price=1010.0,
-                stop_price=980.0,
-                target_price=1080.0,
-                quantity=5,
-            )
+        with patch(
+            "tools.execution.order_execution.calculate_live_order_margins",
+            return_value=[{"total": 5000.0}],
+        ):
+            with patch(
+                "tools.execution.order_execution.fetch_margins",
+                return_value={"equity": {"available": {"cash": 100000.0}}},
+            ):
+                with patch(
+                    "tools.execution.order_execution.place_live_order",
+                    return_value="kite-order-123",
+                ):
+                    result = await tool.place_order_async(
+                        state=_state(),
+                        ticker="RELIANCE",
+                        side="buy",
+                        score=8.2,
+                        price=1010.0,
+                        stop_price=980.0,
+                        target_price=1080.0,
+                        quantity=5,
+                    )
 
     assert result["status"] == "submitted"
     assert result["order_id"] == "kite-order-123"
     assert result["quantity"] == 5
     assert result["average_price"] is None
+    assert result["broker_tag"]
+    assert result["oco_gtt_id"] is None
     assert result["stop_gtt_id"] is None
     assert result["target_gtt_id"] is None
     assert result["protection_status"] == "pending_fill_confirmation"
@@ -210,7 +223,8 @@ def test_approval_route_is_idempotent_for_already_queued_execution(monkeypatch):
     body = response.json()
     assert body["decision"] == "approved"
     assert "already queued" in body["message"].lower()
-    mock_write.assert_not_called()
+    assert payload[0]["order_intent_id"] == "order-intent:RELIANCE:existing123"
+    mock_write.assert_called_once()
     mock_broadcast.assert_not_awaited()
 
 

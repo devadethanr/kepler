@@ -193,7 +193,7 @@ Import:
 - only `worker` can submit broker actions
 - multiple API instances do not duplicate scheduler mutations
 
-## Phase 3: Broker Integration Overhaul
+## Phase 3 [X]: Broker Integration Overhaul
 
 ### Objectives
 

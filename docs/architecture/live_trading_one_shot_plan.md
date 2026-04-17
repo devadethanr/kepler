@@ -269,7 +269,7 @@ Definition of done:
 - running multiple API instances does not duplicate live jobs
 - one worker process owns all broker mutations
 
-### Phase 3: Rebuild Broker Integration Around Truth
+### Phase 3 [X]: Rebuild Broker Integration Around Truth
 
 New modules:
 

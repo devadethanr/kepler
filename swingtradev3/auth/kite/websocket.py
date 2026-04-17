@@ -1,15 +1,13 @@
 from __future__ import annotations
 
 import logging
-import os
 import threading
 import time
 from dataclasses import dataclass
 
+from broker.kite_stream import build_kite_ticker
 from kiteconnect import KiteTicker
 from kiteconnect.ticker import log as ticker_log
-
-from auth.kite.session_store import load_kite_session
 
 
 @dataclass(slots=True)
@@ -19,25 +17,6 @@ class WebSocketProbeResult:
     error: str | None = None
     close_code: int | None = None
     close_reason: str | None = None
-
-
-def build_kite_ticker(access_token: str | None = None) -> KiteTicker:
-    api_key = os.getenv("KITE_API_KEY", "").strip()
-    if not api_key:
-        raise RuntimeError("KITE_API_KEY is missing")
-
-    token = (access_token or os.getenv("KITE_ACCESS_TOKEN", "")).strip()
-    if not token:
-        stored = load_kite_session()
-        if stored is not None:
-            token = stored.access_token
-            api_key = stored.api_key
-    if not token:
-        raise RuntimeError("Kite access token is unavailable")
-
-    return KiteTicker(api_key=api_key, access_token=token)
-
-
 def probe_order_update_websocket(timeout_seconds: float = 8.0) -> WebSocketProbeResult:
     ticker = build_kite_ticker()
     connected = threading.Event()

@@ -1,12 +1,47 @@
 {
-  "access_token": "ghgSGlAFKBBRoEMDwVThdrbdMtFy3WO1",
+  "access_token": "mBbsCCunCwk9MDDrZsJnHZF7tnisvXC1",
   "api_key": "m0q3d9nvg75ug0zg",
   "broker": "ZERODHA",
-  "created_at": null,
+  "created_at": "2026-04-18T01:37:00.078619+05:30",
   "email": "devadethan1122@gmail.com",
-  "login_time": "2026-04-16T22:33:15",
-  "public_token": "jGZ4oEifjMYZu55P6iS1t3wLtnx7lWpJ",
-  "raw_session": {},
+  "login_time": null,
+  "public_token": "fyLPY7PXM4wTA4bj5txPOJnwh6uZCF5U",
+  "raw_session": {
+    "access_token": "mBbsCCunCwk9MDDrZsJnHZF7tnisvXC1",
+    "api_key": "m0q3d9nvg75ug0zg",
+    "avatar_url": null,
+    "broker": "ZERODHA",
+    "email": "devadethan1122@gmail.com",
+    "enctoken": "OL6LT2RtdZ+5EP/lmoIkHP6D0jnI3gNIgP8/N6DrUTqnBdjB76ysTRJghEz7w7UdKEqYXnffnFc2c1SdowieGaJC//wRlk/DJVn2ig/hmoGwuo5uF/V4R6fUpiI64UM=",
+    "exchanges": [
+      "NSE",
+      "BSE",
+      "MF"
+    ],
+    "login_time": "2026-04-17T22:12:30",
+    "meta": {
+      "demat_consent": "consent"
+    },
+    "order_types": [
+      "MARKET",
+      "LIMIT",
+      "SL",
+      "SL-M"
+    ],
+    "products": [
+      "CNC",
+      "NRML",
+      "MIS",
+      "BO",
+      "CO"
+    ],
+    "public_token": "fyLPY7PXM4wTA4bj5txPOJnwh6uZCF5U",
+    "refresh_token": "",
+    "user_id": "RDK847",
+    "user_name": "Devadethan R",
+    "user_shortname": "Devadethan",
+    "user_type": "individual/res_no_nn"
+  },
   "user_id": "RDK847",
   "user_name": "Devadethan R",
   "user_shortname": "Devadethan",

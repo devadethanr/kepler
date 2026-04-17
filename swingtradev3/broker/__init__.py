@@ -1,9 +1,7 @@
-from __future__ import annotations
-
-from broker.kite_rest import (
+from .kite_rest import (
     build_kite_client,
-    calculate_order_margins as calculate_live_order_margins,
-    delete_gtt as delete_live_gtt,
+    calculate_order_margins,
+    delete_gtt,
     exchange_request_token,
     extract_request_token,
     fetch_gtt,
@@ -19,16 +17,16 @@ from broker.kite_rest import (
     fetch_profile,
     fetch_trades,
     has_kite_session,
-    modify_gtt as modify_live_gtt,
-    place_gtt as place_live_gtt,
-    place_order as place_live_order,
+    modify_gtt,
+    place_gtt,
+    place_order,
     resolve_instrument_token,
 )
 
 __all__ = [
     "build_kite_client",
-    "calculate_live_order_margins",
-    "delete_live_gtt",
+    "calculate_order_margins",
+    "delete_gtt",
     "exchange_request_token",
     "extract_request_token",
     "fetch_gtt",
@@ -44,8 +42,8 @@ __all__ = [
     "fetch_profile",
     "fetch_trades",
     "has_kite_session",
-    "modify_live_gtt",
-    "place_live_gtt",
-    "place_live_order",
+    "modify_gtt",
+    "place_gtt",
+    "place_order",
     "resolve_instrument_token",
 ]

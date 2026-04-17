@@ -2,7 +2,7 @@ COMPOSE_FILE := ../docker-compose.dev.yml
 ENV_FILE := .env
 DOCKER_COMPOSE := docker compose -f $(COMPOSE_FILE) --env-file $(ENV_FILE)
 
-.PHONY: dev dev-detach worker-up worker-smoke test test-file lint format logs logs-app logs-worker logs-mcp logs-dashboard stop clean shell health login phase0-check phase0-reconcile-state db-upgrade
+.PHONY: dev dev-detach worker-up worker-smoke test test-file lint format logs logs-app logs-worker logs-mcp logs-dashboard stop clean shell health login phase0-check phase0-reconcile-state phase3-check db-upgrade
 
 dev:
 	$(DOCKER_COMPOSE) up --build
@@ -64,6 +64,9 @@ phase0-check:
 
 phase0-reconcile-state:
 	$(DOCKER_COMPOSE) exec app python -m ops.reconcile_local_state
+
+phase3-check:
+	$(DOCKER_COMPOSE) exec app python -m ops.phase3_check
 
 db-upgrade:
 	$(DOCKER_COMPOSE) exec app alembic upgrade head

@@ -79,7 +79,7 @@
   },
   "CACHED_TEST_5": {
     "data": {
-      "as_of": "2026-04-15T21:57:49.835492",
+      "as_of": "2026-04-17T17:23:49.857998",
       "forecast_direction": "flat",
       "forecast_lower_10": [
         75.94,
@@ -108,7 +108,7 @@
       "source": "timesfm",
       "ticker": "CACHED_TEST"
     },
-    "fetched_at": "2026-04-15T21:57:49.835847"
+    "fetched_at": "2026-04-17T17:23:49.862509"
   },
   "OIL_20": {
     "data": {
@@ -346,7 +346,7 @@
   },
   "TEST_10": {
     "data": {
-      "as_of": "2026-04-15T21:57:49.494130",
+      "as_of": "2026-04-17T17:23:47.906116",
       "forecast_direction": "flat",
       "forecast_lower_10": [
         75.94,
@@ -390,6 +390,6 @@
       "source": "timesfm",
       "ticker": "TEST"
     },
-    "fetched_at": "2026-04-15T21:57:49.494716"
+    "fetched_at": "2026-04-17T17:23:47.910517"
   }
 }

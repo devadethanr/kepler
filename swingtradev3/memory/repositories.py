@@ -13,9 +13,15 @@ from .models import (
     AccountStateRow,
     ApprovalRow,
     AuthSessionRow,
+    BrokerFillRow,
+    BrokerOrderRow,
     ExecutionEventRow,
+    FailureIncidentRow,
+    OrderIntentRow,
     OperatorControlRow,
     PositionRow,
+    ProtectiveTriggerRow,
+    ReconciliationRunRow,
     TradeRow,
 )
 
@@ -61,6 +67,24 @@ class MemoryRepository:
                 payload=payload,
             )
         )
+
+    def execution_event_exists(
+        self,
+        *,
+        event_type: str,
+        entity_type: str,
+        entity_id: str,
+        source: str | None = None,
+    ) -> bool:
+        query = select(ExecutionEventRow.event_id).where(
+            ExecutionEventRow.event_type == event_type,
+            ExecutionEventRow.entity_type == entity_type,
+            ExecutionEventRow.entity_id == entity_id,
+        )
+        if source is not None:
+            query = query.where(ExecutionEventRow.source == source)
+        self.session.flush()
+        return self.session.scalar(query.limit(1)) is not None
 
     def account_state_exists(self) -> bool:
         return self.session.get(AccountStateRow, PRIMARY_ACCOUNT_KEY) is not None
@@ -300,6 +324,299 @@ class MemoryRepository:
         return {
             "control_key": row.control_key,
             "value": dict(row.value),
+            "payload": dict(row.payload),
+        }
+
+    def get_order_intent(self, order_intent_id: str) -> dict[str, Any] | None:
+        row = self.session.get(OrderIntentRow, order_intent_id)
+        if row is None:
+            return None
+        return {
+            "order_intent_id": row.order_intent_id,
+            "ticker": row.ticker,
+            "status": row.status,
+            "broker_tag": row.broker_tag,
+            "payload": dict(row.payload),
+        }
+
+    def get_order_intent_by_ticker(self, ticker: str) -> dict[str, Any] | None:
+        row = self.session.scalar(
+            select(OrderIntentRow)
+            .where(OrderIntentRow.ticker == ticker)
+            .order_by(OrderIntentRow.updated_at.desc())
+            .limit(1)
+        )
+        if row is None:
+            return None
+        return {
+            "order_intent_id": row.order_intent_id,
+            "ticker": row.ticker,
+            "status": row.status,
+            "broker_tag": row.broker_tag,
+            "payload": dict(row.payload),
+        }
+
+    def list_order_intents(self) -> list[dict[str, Any]]:
+        rows = self.session.scalars(
+            select(OrderIntentRow).order_by(OrderIntentRow.updated_at.desc())
+        ).all()
+        return [
+            {
+                "order_intent_id": row.order_intent_id,
+                "ticker": row.ticker,
+                "status": row.status,
+                "broker_tag": row.broker_tag,
+                "payload": dict(row.payload),
+            }
+            for row in rows
+        ]
+
+    def upsert_order_intent(
+        self,
+        *,
+        order_intent_id: str,
+        ticker: str,
+        status: str,
+        broker_tag: str | None,
+        payload: dict[str, Any],
+        source: str,
+    ) -> dict[str, Any]:
+        row = self.session.get(OrderIntentRow, order_intent_id)
+        if row is None:
+            row = OrderIntentRow(order_intent_id=order_intent_id)
+            self.session.add(row)
+
+        row.ticker = ticker
+        row.status = status
+        row.broker_tag = broker_tag
+        row.payload = dict(payload)
+
+        self.append_execution_event(
+            event_type="order_intent_upserted",
+            entity_type="order_intent",
+            entity_id=order_intent_id,
+            source=source,
+            payload={"status": status, "ticker": ticker, "broker_tag": broker_tag},
+        )
+        return {
+            "order_intent_id": row.order_intent_id,
+            "ticker": row.ticker,
+            "status": row.status,
+            "broker_tag": row.broker_tag,
+            "payload": dict(row.payload),
+        }
+
+    def get_broker_order(self, broker_order_id: str) -> dict[str, Any] | None:
+        row = self.session.get(BrokerOrderRow, broker_order_id)
+        if row is None:
+            return None
+        return {
+            "broker_order_id": row.broker_order_id,
+            "exchange_order_id": row.exchange_order_id,
+            "ticker": row.ticker,
+            "status": row.status,
+            "broker_tag": row.broker_tag,
+            "payload": dict(row.payload),
+        }
+
+    def list_broker_orders(self) -> list[dict[str, Any]]:
+        rows = self.session.scalars(select(BrokerOrderRow).order_by(BrokerOrderRow.updated_at.desc())).all()
+        return [
+            {
+                "broker_order_id": row.broker_order_id,
+                "exchange_order_id": row.exchange_order_id,
+                "ticker": row.ticker,
+                "status": row.status,
+                "broker_tag": row.broker_tag,
+                "payload": dict(row.payload),
+            }
+            for row in rows
+        ]
+
+    def upsert_broker_order(
+        self,
+        *,
+        broker_order_id: str,
+        exchange_order_id: str | None,
+        ticker: str,
+        status: str,
+        broker_tag: str | None,
+        payload: dict[str, Any],
+        source: str,
+    ) -> dict[str, Any]:
+        row = self.session.get(BrokerOrderRow, broker_order_id)
+        if row is None:
+            row = BrokerOrderRow(broker_order_id=broker_order_id)
+            self.session.add(row)
+
+        row.exchange_order_id = exchange_order_id
+        row.ticker = ticker
+        row.status = status
+        row.broker_tag = broker_tag
+        row.payload = dict(payload)
+
+        self.append_execution_event(
+            event_type="broker_order_upserted",
+            entity_type="broker_order",
+            entity_id=broker_order_id,
+            source=source,
+            payload={"status": status, "ticker": ticker, "broker_tag": broker_tag},
+        )
+        return {
+            "broker_order_id": row.broker_order_id,
+            "exchange_order_id": row.exchange_order_id,
+            "ticker": row.ticker,
+            "status": row.status,
+            "broker_tag": row.broker_tag,
+            "payload": dict(row.payload),
+        }
+
+    def upsert_broker_fill(
+        self,
+        *,
+        fill_id: str,
+        broker_order_id: str,
+        ticker: str,
+        quantity: int,
+        fill_price: float,
+        payload: dict[str, Any],
+        source: str,
+    ) -> dict[str, Any]:
+        row = self.session.get(BrokerFillRow, fill_id)
+        if row is None:
+            row = BrokerFillRow(fill_id=fill_id)
+            self.session.add(row)
+
+        row.broker_order_id = broker_order_id
+        row.ticker = ticker
+        row.quantity = quantity
+        row.fill_price = fill_price
+        row.payload = dict(payload)
+
+        self.append_execution_event(
+            event_type="broker_fill_upserted",
+            entity_type="broker_fill",
+            entity_id=fill_id,
+            source=source,
+            payload={"broker_order_id": broker_order_id, "quantity": quantity, "ticker": ticker},
+        )
+        return {
+            "fill_id": row.fill_id,
+            "broker_order_id": row.broker_order_id,
+            "ticker": row.ticker,
+            "quantity": row.quantity,
+            "fill_price": row.fill_price,
+            "payload": dict(row.payload),
+        }
+
+    def list_protective_triggers(self) -> list[dict[str, Any]]:
+        rows = self.session.scalars(
+            select(ProtectiveTriggerRow).order_by(ProtectiveTriggerRow.updated_at.desc())
+        ).all()
+        return [
+            {
+                "protective_trigger_id": row.protective_trigger_id,
+                "position_id": row.position_id,
+                "ticker": row.ticker,
+                "status": row.status,
+                "payload": dict(row.payload),
+            }
+            for row in rows
+        ]
+
+    def upsert_protective_trigger(
+        self,
+        *,
+        protective_trigger_id: str,
+        position_id: str,
+        ticker: str,
+        status: str,
+        payload: dict[str, Any],
+        source: str,
+    ) -> dict[str, Any]:
+        row = self.session.get(ProtectiveTriggerRow, protective_trigger_id)
+        if row is None:
+            row = ProtectiveTriggerRow(protective_trigger_id=protective_trigger_id)
+            self.session.add(row)
+
+        row.position_id = position_id
+        row.ticker = ticker
+        row.status = status
+        row.payload = dict(payload)
+
+        self.append_execution_event(
+            event_type="protective_trigger_upserted",
+            entity_type="protective_trigger",
+            entity_id=protective_trigger_id,
+            source=source,
+            payload={"ticker": ticker, "status": status},
+        )
+        return {
+            "protective_trigger_id": row.protective_trigger_id,
+            "position_id": row.position_id,
+            "ticker": row.ticker,
+            "status": row.status,
+            "payload": dict(row.payload),
+        }
+
+    def upsert_reconciliation_run(
+        self,
+        *,
+        reconciliation_run_id: str,
+        status: str,
+        payload: dict[str, Any],
+        source: str,
+    ) -> dict[str, Any]:
+        row = self.session.get(ReconciliationRunRow, reconciliation_run_id)
+        if row is None:
+            row = ReconciliationRunRow(reconciliation_run_id=reconciliation_run_id)
+            self.session.add(row)
+
+        row.status = status
+        row.payload = dict(payload)
+
+        self.append_execution_event(
+            event_type="reconciliation_run_upserted",
+            entity_type="reconciliation_run",
+            entity_id=reconciliation_run_id,
+            source=source,
+            payload={"status": status},
+        )
+        return {
+            "reconciliation_run_id": row.reconciliation_run_id,
+            "status": row.status,
+            "payload": dict(row.payload),
+        }
+
+    def upsert_failure_incident(
+        self,
+        *,
+        incident_id: str,
+        status: str,
+        severity: str,
+        payload: dict[str, Any],
+        source: str,
+    ) -> dict[str, Any]:
+        row = self.session.get(FailureIncidentRow, incident_id)
+        if row is None:
+            row = FailureIncidentRow(incident_id=incident_id)
+            self.session.add(row)
+
+        row.status = status
+        row.severity = severity
+        row.payload = dict(payload)
+
+        self.append_execution_event(
+            event_type="failure_incident_upserted",
+            entity_type="failure_incident",
+            entity_id=incident_id,
+            source=source,
+            payload={"status": status, "severity": severity},
+        )
+        return {
+            "incident_id": row.incident_id,
+            "status": row.status,
+            "severity": row.severity,
             "payload": dict(row.payload),
         }
 

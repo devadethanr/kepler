@@ -172,17 +172,17 @@
     },
     "scheduler": {
       "agent_name": "scheduler",
-      "completed_at": "2026-04-17T21:45:00.372240",
-      "current_task": "health_check",
+      "completed_at": "2026-04-18T01:41:36.022108",
+      "current_task": "position_monitor",
       "last_error": null,
       "metadata": {
-        "last_job": "health_check"
+        "last_job": "position_monitor"
       },
       "progress": null,
-      "started_at": "2026-04-17T21:45:00.365715",
+      "started_at": "2026-04-18T01:41:36.020694",
       "status": "completed"
     }
   },
-  "last_updated": "2026-04-17T21:45:00.372262",
-  "scheduler_phase": "wind_down"
+  "last_updated": "2026-04-18T01:41:36.022114",
+  "scheduler_phase": "overnight_monitoring"
 }

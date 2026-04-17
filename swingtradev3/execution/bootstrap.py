@@ -9,6 +9,10 @@ from sqlalchemy import text
 
 from api.tasks.event_bus import event_bus
 from api.tasks.scheduler import scheduler
+from auth.kite.client import has_kite_session
+from broker.kite_stream import KiteBrokerStream
+from broker.reducer import BrokerReducer
+from config import cfg, runtime_flags
 from memory.bootstrap import initialize_memory_layer
 from memory.db import get_engine
 
@@ -24,6 +28,7 @@ WORKER_ADVISORY_LOCK_ID = 4200217
 APPROVAL_POLL_SECONDS = 5
 OPERATOR_CONTROL_POLL_SECONDS = 5
 WORKER_HEARTBEAT_SECONDS = 5
+BROKER_SYNC_SECONDS = 60
 
 
 class WorkerLockUnavailable(RuntimeError):
@@ -64,11 +69,31 @@ class WorkerRuntime:
         self._tasks: list[asyncio.Task[Any]] = []
         self._execution_lock = asyncio.Lock()
         self._state_machine = WorkerExecutionStateMachine()
+        self._broker_reducer = BrokerReducer()
+        self._broker_stream = KiteBrokerStream(self._broker_reducer)
         self._started = False
 
     async def start(self) -> None:
         initialize_memory_layer()
         self._lease = WorkerLease.acquire()
+        if self._broker_live_enabled() and self._broker_sync_enabled():
+            tracked_tickers: list[str] = []
+            try:
+                sync_result = await asyncio.to_thread(
+                    self._broker_reducer.sync_from_broker,
+                    source="worker_startup_snapshot",
+                )
+                tracked_tickers = list(sync_result.get("tracked_tickers", []))
+            except Exception as exc:
+                if self._lease is not None:
+                    self._lease.release()
+                    self._lease = None
+                raise RuntimeError(f"worker broker startup sync failed: {exc}") from exc
+            self._broker_stream.set_tracked_tickers(
+                tracked_tickers,
+                exchange=cfg.trading.exchange,
+            )
+        await self._maintain_broker_stream()
         await scheduler.start()
         self._started = True
         await self._write_status()
@@ -76,6 +101,7 @@ class WorkerRuntime:
             asyncio.create_task(self._approval_loop(), name="worker-approval-loop"),
             asyncio.create_task(self._operator_control_loop(), name="worker-operator-control-loop"),
             asyncio.create_task(self._heartbeat_loop(), name="worker-heartbeat-loop"),
+            asyncio.create_task(self._broker_sync_loop(), name="worker-broker-sync-loop"),
         ]
 
     async def stop(self) -> None:
@@ -91,6 +117,7 @@ class WorkerRuntime:
 
         if self._started:
             await scheduler.stop()
+            self._broker_stream.stop()
             write_worker_status(
                 {
                     "is_running": False,
@@ -152,13 +179,49 @@ class WorkerRuntime:
     async def _heartbeat_loop(self) -> None:
         while not self._stop_event.is_set():
             try:
+                await self._maintain_broker_stream()
                 await self._write_status()
             except Exception as exc:
                 print(f"worker heartbeat failed: {exc}")
             await asyncio.sleep(WORKER_HEARTBEAT_SECONDS)
+
+    async def _broker_sync_loop(self) -> None:
+        while not self._stop_event.is_set():
+            try:
+                if self._broker_sync_enabled():
+                    sync_result = await asyncio.to_thread(
+                        self._broker_reducer.sync_from_broker,
+                        source="worker_periodic_snapshot",
+                    )
+                    self._broker_stream.set_tracked_tickers(
+                        list(sync_result.get("tracked_tickers", [])),
+                        exchange=cfg.trading.exchange,
+                    )
+                await self._maintain_broker_stream()
+            except Exception as exc:
+                print(f"worker broker sync failed: {exc}")
+            await asyncio.sleep(BROKER_SYNC_SECONDS)
 
     async def _write_status(self) -> None:
         info = scheduler.get_schedule_info()
         info["owner"] = "worker"
         info["heartbeat"] = "alive"
         write_worker_status(info)
+
+    async def _maintain_broker_stream(self) -> None:
+        if not self._broker_live_enabled():
+            self._broker_stream.stop()
+            return
+        if not has_kite_session():
+            self._broker_stream.stop()
+            return
+        await asyncio.to_thread(self._broker_stream.ensure_running)
+
+    def _broker_live_enabled(self) -> bool:
+        return cfg.trading.mode.value == "live" and runtime_flags.live_trading_enabled
+
+    def _broker_sync_enabled(self) -> bool:
+        return (
+            self._broker_live_enabled()
+            and has_kite_session()
+        )

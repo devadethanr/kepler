@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, AsyncGenerator
-import json
+from typing import AsyncGenerator
 from datetime import datetime, time as dt_time
 from zoneinfo import ZoneInfo
 
@@ -12,10 +11,9 @@ from google.genai import types
 from config import cfg
 from paths import CONTEXT_DIR
 from storage import read_json, write_json
-from models import AccountState, CorporateAction
+from models import AccountState
 from tools.execution.gtt_manager import GTTManager
 from tools.execution.alerts import AlertsTool
-from data.corporate_actions import CorporateActionsStore
 
 IST = ZoneInfo("Asia/Kolkata")
 
@@ -26,13 +24,17 @@ def _is_market_hours() -> bool:
     return dt_time(9, 15) <= now <= dt_time(15, 30)
 
 
+def _enforce_market_hours() -> bool:
+    return cfg.trading.mode.value == "live"
+
+
 class PositionChecker(BaseAgent):
     def __init__(self, name: str = "PositionChecker") -> None:
         super().__init__(name=name)
         
     async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, None]:
         # Market hours guard
-        if not _is_market_hours():
+        if _enforce_market_hours() and not _is_market_hours():
             yield Event(author=self.name, content=types.Content(role="assistant", parts=[types.Part(text="Outside market hours — skipping")]))
             return
 
@@ -56,35 +58,33 @@ class PositionChecker(BaseAgent):
         
         # 1. Check GTT health and detect triggers
         for pos in state.positions:
-            if pos.stop_gtt_id:
-                gtt = await gtt_manager.get_gtt_async(pos.stop_gtt_id)
-                if gtt is None or gtt.status == "cancelled":
-                    await alerts_tool.send_system_status(f"⚠️ GTT missing or cancelled for {pos.ticker}. Manual intervention required.", is_warning=True)
-                elif gtt.status == "triggered":
-                    # Stop was hit!
-                    pnl_pct = ((pos.stop_price / pos.entry_price) - 1) * 100
-                    triggered_events.append({
-                        "type": "stop_hit",
-                        "ticker": pos.ticker,
-                        "entry_price": pos.entry_price,
-                        "stop_price": pos.stop_price,
-                        "pnl_pct": round(pnl_pct, 2),
-                    })
-                    
-            if pos.target_gtt_id:
-                gtt = await gtt_manager.get_gtt_async(pos.target_gtt_id)
-                if gtt is None or gtt.status == "cancelled":
-                    await alerts_tool.send_system_status(f"⚠️ Target GTT missing or cancelled for {pos.ticker}.", is_warning=True)
-                elif gtt.status == "triggered":
-                    # Target was hit!
-                    pnl_pct = ((pos.target_price / pos.entry_price) - 1) * 100
-                    triggered_events.append({
-                        "type": "target_hit",
-                        "ticker": pos.ticker,
-                        "entry_price": pos.entry_price,
-                        "target_price": pos.target_price,
-                        "pnl_pct": round(pnl_pct, 2),
-                    })
+            oco_gtt_id = pos.oco_gtt_id or pos.stop_gtt_id or pos.target_gtt_id
+            if not oco_gtt_id:
+                continue
+            gtt = await gtt_manager.get_gtt_async(oco_gtt_id)
+            if gtt is None or gtt.status == "cancelled":
+                await alerts_tool.send_system_status(
+                    f"⚠️ Protection GTT missing or cancelled for {pos.ticker}. Manual intervention required.",
+                    is_warning=True,
+                )
+            elif gtt.status in {"triggered", "triggered_stop"}:
+                pnl_pct = ((pos.stop_price / pos.entry_price) - 1) * 100
+                triggered_events.append({
+                    "type": "stop_hit",
+                    "ticker": pos.ticker,
+                    "entry_price": pos.entry_price,
+                    "stop_price": pos.stop_price,
+                    "pnl_pct": round(pnl_pct, 2),
+                })
+            elif gtt.status in {"triggered_target"}:
+                pnl_pct = ((pos.target_price / pos.entry_price) - 1) * 100
+                triggered_events.append({
+                    "type": "target_hit",
+                    "ticker": pos.ticker,
+                    "entry_price": pos.entry_price,
+                    "target_price": pos.target_price,
+                    "pnl_pct": round(pnl_pct, 2),
+                })
 
         # 2. Emit events for any triggers
         if triggered_events:
@@ -118,7 +118,7 @@ class StopTrailAgent(BaseAgent):
 
     async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, None]:
         # Market hours guard
-        if not _is_market_hours():
+        if _enforce_market_hours() and not _is_market_hours():
             yield Event(author=self.name, content=types.Content(role="assistant", parts=[types.Part(text="Outside market hours — skipping")]))
             return
 
@@ -145,14 +145,15 @@ class StopTrailAgent(BaseAgent):
                 continue
                 
             pnl_pct = ((pos.current_price / pos.entry_price) - 1) * 100
+            oco_gtt_id = pos.oco_gtt_id or pos.stop_gtt_id or pos.target_gtt_id
             
             # Simple trailing logic based on config
             if pnl_pct >= cfg.execution.trail_to_pct:
                 new_stop = pos.entry_price * (1 + (cfg.execution.trail_stop_to_locked_profit_pct / 100))
-                if new_stop > pos.stop_price and pos.stop_gtt_id:
+                if new_stop > pos.stop_price and oco_gtt_id:
                     try:
                         await gtt_manager.modify_gtt_async(
-                            pos.stop_gtt_id,
+                            oco_gtt_id,
                             new_stop,
                             ticker=pos.ticker,
                             target_price=pos.target_price,
@@ -177,10 +178,10 @@ class StopTrailAgent(BaseAgent):
                         print(f"Failed to trail stop for {pos.ticker}: {e}")
             elif pnl_pct >= cfg.execution.trail_stop_at_pct:
                 new_stop = pos.entry_price # breakeven
-                if new_stop > pos.stop_price and pos.stop_gtt_id:
+                if new_stop > pos.stop_price and oco_gtt_id:
                     try:
                         await gtt_manager.modify_gtt_async(
-                            pos.stop_gtt_id,
+                            oco_gtt_id,
                             new_stop,
                             ticker=pos.ticker,
                             target_price=pos.target_price,

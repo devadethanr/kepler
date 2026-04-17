@@ -7,7 +7,20 @@ from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from .routes import health, ws, positions, trades, approvals, scan, regime, stats, dashboard, sse, portfolio
+from .routes import (
+    approvals,
+    dashboard,
+    health,
+    portfolio,
+    positions,
+    postbacks,
+    regime,
+    scan,
+    sse,
+    stats,
+    trades,
+    ws,
+)
 from .middleware.auth import get_api_key
 
 START_TIME = time.time()
@@ -87,5 +100,6 @@ app.include_router(regime.router, prefix="/regime", tags=["Regime"])
 app.include_router(stats.router, prefix="/stats", tags=["Stats"])
 app.include_router(dashboard.router, prefix="/dashboard", tags=["Dashboard"])
 app.include_router(portfolio.router, prefix="/portfolio", tags=["Portfolio"])
+app.include_router(postbacks.router, prefix="/broker/postbacks", tags=["Broker"])
 app.include_router(sse.router, prefix="/sse", tags=["SSE"])
 app.include_router(ws.router, tags=["WebSocket"])
