@@ -410,12 +410,12 @@ class GlobalState(rx.State):
             print(f"Error fetching approvals: {e}")
 
     @rx.event
-    async def approve_trade(self, ticker: str):
+    async def approve_trade(self, approval_id: str, ticker: str):
         """Approve a trade."""
         headers = {"X-API-Key": API_KEY}
         try:
             async with httpx.AsyncClient() as client:
-                res = await client.post(f"{FASTAPI_URL}/approvals/{ticker}/yes", headers=headers)
+                res = await client.post(f"{FASTAPI_URL}/approvals/{approval_id}/yes", headers=headers)
                 if res.status_code == 200:
                     await self.fetch_approvals()
                     return rx.toast(f"{ticker} approved!")
@@ -424,12 +424,12 @@ class GlobalState(rx.State):
             return rx.toast(f"Error approving: {str(e)}")
 
     @rx.event
-    async def reject_trade(self, ticker: str):
+    async def reject_trade(self, approval_id: str, ticker: str):
         """Reject a trade."""
         headers = {"X-API-Key": API_KEY}
         try:
             async with httpx.AsyncClient() as client:
-                res = await client.post(f"{FASTAPI_URL}/approvals/{ticker}/no", headers=headers)
+                res = await client.post(f"{FASTAPI_URL}/approvals/{approval_id}/no", headers=headers)
                 if res.status_code == 200:
                     await self.fetch_approvals()
                     return rx.toast(f"{ticker} rejected")

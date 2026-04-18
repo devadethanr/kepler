@@ -1,24 +1,24 @@
 {
-  "access_token": "mBbsCCunCwk9MDDrZsJnHZF7tnisvXC1",
+  "access_token": "tsTOyjEasB2iAth8l11COdwOrMydJfoj",
   "api_key": "m0q3d9nvg75ug0zg",
   "broker": "ZERODHA",
-  "created_at": "2026-04-18T01:37:00.078619+05:30",
+  "created_at": "2026-04-18T13:17:53.328720+05:30",
   "email": "devadethan1122@gmail.com",
   "login_time": null,
-  "public_token": "fyLPY7PXM4wTA4bj5txPOJnwh6uZCF5U",
+  "public_token": "vmmQLleOZ5iQIbnq9f3rdrfqkZ8IPIVM",
   "raw_session": {
-    "access_token": "mBbsCCunCwk9MDDrZsJnHZF7tnisvXC1",
+    "access_token": "tsTOyjEasB2iAth8l11COdwOrMydJfoj",
     "api_key": "m0q3d9nvg75ug0zg",
     "avatar_url": null,
     "broker": "ZERODHA",
     "email": "devadethan1122@gmail.com",
-    "enctoken": "OL6LT2RtdZ+5EP/lmoIkHP6D0jnI3gNIgP8/N6DrUTqnBdjB76ysTRJghEz7w7UdKEqYXnffnFc2c1SdowieGaJC//wRlk/DJVn2ig/hmoGwuo5uF/V4R6fUpiI64UM=",
+    "enctoken": "lXxaXaP91Nxzgmpe8J0tauaxpHYITR0r4t6RBVaoxfmdC5AnZ/3VMFtcHMUfAZb7Qago6dWTNsB8drhHW1E+E18usqF/0OMhs/oh5wF3TU7PCqMfxhmBewVzDZhUmuQ=",
     "exchanges": [
       "NSE",
       "BSE",
       "MF"
     ],
-    "login_time": "2026-04-17T22:12:30",
+    "login_time": "2026-04-18T13:17:38",
     "meta": {
       "demat_consent": "consent"
     },
@@ -35,7 +35,7 @@
       "BO",
       "CO"
     ],
-    "public_token": "fyLPY7PXM4wTA4bj5txPOJnwh6uZCF5U",
+    "public_token": "vmmQLleOZ5iQIbnq9f3rdrfqkZ8IPIVM",
     "refresh_token": "",
     "user_id": "RDK847",
     "user_name": "Devadethan R",

@@ -53,18 +53,17 @@ def check_broker_sync_roundtrip() -> CheckResult:
 def check_reconstructed_state_shape() -> CheckResult:
     state = read_json(STATE_PATH, {})
     positions = state.get("positions", []) if isinstance(state, dict) else []
-    missing_oco = [
+    legacy_dual_ids = [
         str(item.get("ticker") or "")
         for item in positions
         if isinstance(item, dict)
-        and (item.get("stop_gtt_id") or item.get("target_gtt_id"))
-        and not item.get("oco_gtt_id")
+        and (item.get("stop_gtt_id") is not None or item.get("target_gtt_id") is not None)
     ]
-    if missing_oco:
+    if legacy_dual_ids:
         return CheckResult(
             name="reconstructed_state_shape",
             status="FAIL",
-            detail=f"Missing oco_gtt_id for: {', '.join(sorted(missing_oco))}",
+            detail=f"Legacy stop/target GTT ids still present for: {', '.join(sorted(legacy_dual_ids))}",
         )
     return CheckResult(
         name="reconstructed_state_shape",

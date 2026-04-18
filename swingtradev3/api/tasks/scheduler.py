@@ -211,11 +211,10 @@ class TradingScheduler:
         asyncio.create_task(self._run_job(name, coro_fn))
 
     @staticmethod
-    def _exit_protection_enabled() -> bool:
+    def _live_protection_enabled() -> bool:
         return (
             cfg.trading.mode.value == "live"
             and runtime_flags.live_trading_enabled
-            and runtime_flags.exit_only_mode
         )
 
     async def _run_job(self, name: str, coro_fn) -> None:
@@ -323,7 +322,7 @@ class TradingScheduler:
 
                 tg = TelegramClient()
                 await tg.send_briefing(
-                    f"⏳ {len(pending)} trade(s) awaiting approval.", f"📊 Review in dashboard."
+                    f"⏳ {len(pending)} trade(s) awaiting approval.", "📊 Review in dashboard."
                 )
             except Exception as e:
                 print(f"Approval reminder failed: {e}")
@@ -343,51 +342,51 @@ class TradingScheduler:
     # ─────────────────────────────────────────────────────────────
 
     async def _position_monitor(self) -> None:
-        """Every N minutes during market hours: run execution monitor."""
+        """Every N minutes during market hours: trail stops from live quote truth."""
         now = _now_ist().time()
         if not (dt_time(9, 15) <= now <= dt_time(15, 30)):
             return  # Only during market hours
-        if not self._exit_protection_enabled():
+        if not self._live_protection_enabled():
             return
 
         from storage import read_json
+        from execution.runtime_context import get_broker_stream, get_mutation_lock
+        from execution.trailing_engine import TrailingEngine
 
         state_data = read_json(CONTEXT_DIR / "state.json", {})
         if not state_data or not state_data.get("positions"):
             return
 
         print(f"[{_now_ist().isoformat()}] Position monitor tick")
-        from agents.execution.monitor import execution_monitor
-        from google.adk import Runner
-        from google.adk.sessions import InMemorySessionService
-        from google.genai import types
-
-        session_id = f"position_monitor_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-        runner = Runner(
-            app_name="swingtradev3",
-            agent=execution_monitor,
-            session_service=InMemorySessionService(),
-            auto_create_session=True,
-        )
-        async for _ in runner.run_async(
-            user_id="system",
-            session_id=session_id,
-            new_message=types.Content(
-                role="user",
-                parts=[types.Part(text="Run exit-only position monitor")],
-            ),
-        ):
-            pass
+        broker_stream = get_broker_stream()
+        trailing_engine = TrailingEngine()
+        quote_provider = broker_stream.get_latest_quote if broker_stream is not None else None
+        lock = get_mutation_lock()
+        if lock is not None:
+            async with lock:
+                await trailing_engine.run_once(quote_provider=quote_provider)
+            return
+        await trailing_engine.run_once(quote_provider=quote_provider)
 
     async def _gtt_health_check(self) -> None:
-        """Every N minutes: verify GTT orders are alive."""
+        """Every N minutes: verify GTT orders are alive and restart-safe."""
         now = _now_ist().time()
         if not (dt_time(9, 15) <= now <= dt_time(15, 30)):
             return
-        if self._exit_protection_enabled():
+        if not self._live_protection_enabled():
             return
 
         print(f"[{_now_ist().isoformat()}] GTT health check tick")
+        from execution.protection_manager import ProtectionManager
+        from execution.runtime_context import get_mutation_lock
+
+        protection_manager = ProtectionManager()
+        lock = get_mutation_lock()
+        if lock is not None:
+            async with lock:
+                await protection_manager.run_watchdog()
+            return
+        await protection_manager.run_watchdog()
 
     async def _intraday_news_sweep(self) -> None:
         """Sweep news for held positions during market hours."""
@@ -581,7 +580,7 @@ class TradingScheduler:
                 f"Unrealized P&L: ₹{pnl:.2f}",
                 f"Scheduler phase: {self._current_phase}",
                 f"Failed events: {failed_count}",
-                f"🌙 Entering overnight mode.",
+                "🌙 Entering overnight mode.",
             )
         except Exception as e:
             print(f"Daily summary Telegram failed: {e}")
@@ -600,7 +599,7 @@ class TradingScheduler:
         """Get schedule info for the dashboard."""
         next_run_str = None
         if schedule.next_run():
-            from datetime import datetime, timezone
+            from datetime import datetime
             from zoneinfo import ZoneInfo
 
             tz = ZoneInfo("Asia/Kolkata")

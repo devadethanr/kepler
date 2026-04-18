@@ -121,6 +121,9 @@ class ExecutionConfig(BaseModel):
     trail_stop_at_pct: float
     trail_to_pct: float
     trail_stop_to_locked_profit_pct: float = 5.0
+    trail_min_step_pct: float = 0.25
+    trail_hysteresis_pct: float = 0.25
+    trail_modify_cooldown_seconds: int = 300
     enable_trailing: bool = True
     avoid_fno_expiry_days: int
     max_entry_deviation_pct: float

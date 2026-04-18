@@ -12,6 +12,7 @@ from dashboard.styles import (
 
 
 def simple_approval_card(approval: dict) -> rx.Component:
+    approval_id = approval.get("approval_id", "")
     ticker = approval.get("ticker", "—")
     score = approval.get("score", 0)
     stop_price = approval.get("stop_price", 0)
@@ -32,14 +33,14 @@ def simple_approval_card(approval: dict) -> rx.Component:
                 "✅ Approve",
                 color_scheme="green",
                 size="2",
-                on_click=GlobalState.approve_trade(ticker),
+                on_click=GlobalState.approve_trade(approval_id, ticker),
             ),
             rx.button(
                 "❌ Reject",
                 color_scheme="red",
                 size="2",
                 variant="outline",
-                on_click=GlobalState.reject_trade(ticker),
+                on_click=GlobalState.reject_trade(approval_id, ticker),
             ),
             width="100%",
             margin_top="0.5rem",

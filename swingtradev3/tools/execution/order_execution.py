@@ -175,8 +175,6 @@ class OrderExecutionTool:
             "quantity": fill.quantity,
             "position_id": position_id,
             "oco_gtt_id": gtt.oco_gtt_id,
-            "stop_gtt_id": gtt.position_id,
-            "target_gtt_id": gtt.position_id,
         }
 
     async def place_order_async(
@@ -268,7 +266,5 @@ class OrderExecutionTool:
             "margin": margin_payload,
             "position_id": None,
             "oco_gtt_id": None,
-            "stop_gtt_id": None,
-            "target_gtt_id": None,
             "protection_status": "pending_fill_confirmation",
         }

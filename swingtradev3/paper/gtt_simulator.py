@@ -7,7 +7,7 @@ from models import GTTOrder
 
 @dataclass
 class GTTTriggerResult:
-    position_id: str
+    oco_gtt_id: str
     ticker: str
     exit_reason: str
     trigger_price: float
@@ -18,7 +18,12 @@ class GTTSimulator:
         self._orders: dict[str, GTTOrder] = {}
 
     def place(self, position_id: str, ticker: str, stop_price: float, target_price: float) -> GTTOrder:
-        order = GTTOrder(position_id=position_id, ticker=ticker, stop_price=stop_price, target_price=target_price)
+        order = GTTOrder(
+            oco_gtt_id=position_id,
+            ticker=ticker,
+            stop_price=stop_price,
+            target_price=target_price,
+        )
         self._orders[position_id] = order
         return order
 
@@ -48,9 +53,11 @@ class GTTSimulator:
         if order is None or order.status != "active":
             return None
         if candle_low <= order.stop_price:
-            order.status = "triggered_stop"
+            order.status = "triggered"
+            order.triggered_leg = "stop"
             return GTTTriggerResult(position_id, order.ticker, "stop_loss", order.stop_price)
         if candle_high >= order.target_price:
-            order.status = "triggered_target"
+            order.status = "triggered"
+            order.triggered_leg = "target"
             return GTTTriggerResult(position_id, order.ticker, "target", order.target_price)
         return None

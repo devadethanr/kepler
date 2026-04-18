@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 import json
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from typing import Any, AsyncGenerator
 
 from google.adk.agents import SequentialAgent, BaseAgent
 from google.adk.events import Event
 from google.genai import types
 
+from config import cfg
 from agents.research.regime_agent import RegimeAgent
 from agents.research.filter_agent import FilterAgent
 from agents.research.scanner import BatchScannerAgent
@@ -25,6 +26,39 @@ class ResultsSaverAgent(BaseAgent):
     def __init__(self, name: str = "ResultsSaverAgent") -> None:
         super().__init__(name=name)
 
+    def _build_pending_approvals(
+        self,
+        *,
+        shortlist: list[dict[str, Any]],
+        scan_date: str,
+        analyzed_at: datetime,
+    ) -> list[dict[str, Any]]:
+        expires_at = analyzed_at + timedelta(hours=cfg.execution.approval_timeout_hours)
+        payload: list[dict[str, Any]] = []
+        for item in shortlist:
+            ticker = str(item.get("ticker") or "").strip().upper()
+            if not ticker:
+                continue
+            payload.append(
+                {
+                    "ticker": ticker,
+                    "score": item.get("score"),
+                    "setup_type": item.get("setup_type"),
+                    "entry_zone": item.get("entry_zone"),
+                    "stop_price": item.get("stop_price"),
+                    "target_price": item.get("target_price"),
+                    "holding_days_expected": item.get("holding_days_expected"),
+                    "confidence_reasoning": item.get("confidence_reasoning"),
+                    "risk_flags": item.get("risk_flags", []),
+                    "sector": item.get("sector"),
+                    "created_at": analyzed_at.isoformat(),
+                    "expires_at": expires_at.isoformat(),
+                    "research_date": item.get("research_date") or scan_date,
+                    "skill_version": item.get("skill_version"),
+                }
+            )
+        return payload
+
     async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, None]:
         scan_date = date.today().isoformat()
         regime = ctx.session.state.get("regime", {})
@@ -33,19 +67,28 @@ class ResultsSaverAgent(BaseAgent):
         stock_data = ctx.session.state.get("stock_data", {})
         scan_results = ctx.session.state.get("scan_results", [])
 
+        analyzed_at = datetime.now()
         result = {
             "scan_date": scan_date,
             "regime": regime,
             "total_screened": 200,
             "qualified_count": len(qualified_stocks),
             "shortlist": shortlist,
-            "analyzed_at": datetime.now().isoformat(),
+            "analyzed_at": analyzed_at.isoformat(),
         }
 
         # Save to context
         research_dir = CONTEXT_DIR / "research" / scan_date
         research_dir.mkdir(parents=True, exist_ok=True)
         write_json(research_dir / "scan_result.json", result)
+        write_json(
+            CONTEXT_DIR / "pending_approvals.json",
+            self._build_pending_approvals(
+                shortlist=shortlist,
+                scan_date=scan_date,
+                analyzed_at=analyzed_at,
+            ),
+        )
 
         # Save individual stock analyses
         for stock in scan_results:

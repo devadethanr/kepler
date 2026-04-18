@@ -9,7 +9,7 @@ from fastapi.testclient import TestClient
 from api.main import app
 from api.routes import approvals as approvals_route
 from config import cfg
-from models import AccountState, TradingMode
+from models import AccountState, PendingApproval, TradingMode
 from tools.execution.order_execution import OrderExecutionTool
 
 client = TestClient(app)
@@ -43,12 +43,6 @@ def _approval_payload() -> list[dict[str, object]]:
             "expires_at": (now + timedelta(hours=4)).isoformat(),
         }
     ]
-
-
-async def _empty_event_stream(*_args, **_kwargs):
-    if False:
-        yield None
-
 
 @pytest.mark.asyncio
 async def test_live_order_blocked_when_live_guard_disabled(monkeypatch):
@@ -152,8 +146,6 @@ async def test_live_order_stays_submitted_until_fill_confirmation(monkeypatch):
     assert result["average_price"] is None
     assert result["broker_tag"]
     assert result["oco_gtt_id"] is None
-    assert result["stop_gtt_id"] is None
-    assert result["target_gtt_id"] is None
     assert result["protection_status"] == "pending_fill_confirmation"
     tool.gtt_manager.place_gtt_async.assert_not_called()
 
@@ -172,7 +164,7 @@ def test_approval_route_respects_live_guardrails(monkeypatch):
     monkeypatch.setattr(approvals_route, "write_json", mock_write)
     monkeypatch.setattr(approvals_route.broadcaster, "broadcast", mock_broadcast)
 
-    response = client.post("/approvals/RELIANCE/yes")
+    response = client.post(f"/approvals/{PendingApproval.model_validate(payload[0]).approval_id}/yes")
 
     assert response.status_code == 200
     body = response.json()
@@ -195,7 +187,7 @@ def test_approval_route_rejects_expired_payload(monkeypatch):
     monkeypatch.setattr(approvals_route, "write_json", mock_write)
     monkeypatch.setattr(approvals_route.broadcaster, "broadcast", mock_broadcast)
 
-    response = client.post("/approvals/RELIANCE/yes")
+    response = client.post(f"/approvals/{PendingApproval.model_validate(expired[0]).approval_id}/yes")
 
     assert response.status_code == 200
     body = response.json()
@@ -217,19 +209,39 @@ def test_approval_route_is_idempotent_for_already_queued_execution(monkeypatch):
     monkeypatch.setattr(approvals_route, "write_json", mock_write)
     monkeypatch.setattr(approvals_route.broadcaster, "broadcast", mock_broadcast)
 
-    response = client.post("/approvals/RELIANCE/yes")
+    response = client.post(f"/approvals/{PendingApproval.model_validate(payload[0]).approval_id}/yes")
 
     assert response.status_code == 200
     body = response.json()
     assert body["decision"] == "approved"
     assert "already queued" in body["message"].lower()
-    assert payload[0]["order_intent_id"] == "order-intent:RELIANCE:existing123"
-    mock_write.assert_called_once()
+    assert payload[0]["order_intent_id"] == PendingApproval.model_validate(payload[0]).order_intent_id
+    mock_write.assert_not_called()
     mock_broadcast.assert_not_awaited()
 
 
 @pytest.mark.asyncio
-async def test_scheduler_position_monitor_requires_live_exit_only(monkeypatch):
+async def test_scheduler_position_monitor_requires_live_protection(monkeypatch):
+    from api.tasks.scheduler import TradingScheduler
+
+    scheduler = TradingScheduler()
+    monkeypatch.setattr(cfg.trading, "mode", TradingMode.LIVE)
+    monkeypatch.setenv("LIVE_TRADING_ENABLED", "false")
+    monkeypatch.setenv("NEW_ENTRIES_ENABLED", "false")
+    monkeypatch.setenv("EXIT_ONLY_MODE", "false")
+
+    fake_now = datetime(2026, 4, 16, 10, 0)
+
+    with patch("api.tasks.scheduler._now_ist", return_value=fake_now):
+        with patch("storage.read_json", return_value={"positions": [{"ticker": "RELIANCE"}]}):
+            with patch("execution.trailing_engine.TrailingEngine.run_once", new=AsyncMock()) as mock_run:
+                await scheduler._position_monitor()
+
+    mock_run.assert_not_awaited()
+
+
+@pytest.mark.asyncio
+async def test_scheduler_position_monitor_runs_in_live_mode(monkeypatch):
     from api.tasks.scheduler import TradingScheduler
 
     scheduler = TradingScheduler()
@@ -242,30 +254,7 @@ async def test_scheduler_position_monitor_requires_live_exit_only(monkeypatch):
 
     with patch("api.tasks.scheduler._now_ist", return_value=fake_now):
         with patch("storage.read_json", return_value={"positions": [{"ticker": "RELIANCE"}]}):
-            with patch("google.adk.Runner") as mock_runner:
+            with patch("execution.trailing_engine.TrailingEngine.run_once", new=AsyncMock()) as mock_run:
                 await scheduler._position_monitor()
 
-    mock_runner.assert_not_called()
-
-
-@pytest.mark.asyncio
-async def test_scheduler_position_monitor_runs_in_live_exit_only(monkeypatch):
-    from api.tasks.scheduler import TradingScheduler
-
-    scheduler = TradingScheduler()
-    monkeypatch.setattr(cfg.trading, "mode", TradingMode.LIVE)
-    monkeypatch.setenv("LIVE_TRADING_ENABLED", "true")
-    monkeypatch.setenv("NEW_ENTRIES_ENABLED", "false")
-    monkeypatch.setenv("EXIT_ONLY_MODE", "true")
-
-    fake_now = datetime(2026, 4, 16, 10, 0)
-
-    with patch("api.tasks.scheduler._now_ist", return_value=fake_now):
-        with patch("storage.read_json", return_value={"positions": [{"ticker": "RELIANCE"}]}):
-            with patch("google.adk.Runner") as mock_runner:
-                runner_instance = mock_runner.return_value
-                runner_instance.run_async = MagicMock(side_effect=_empty_event_stream)
-                await scheduler._position_monitor()
-
-    mock_runner.assert_called_once()
-    runner_instance.run_async.assert_called_once()
+    mock_run.assert_awaited_once()

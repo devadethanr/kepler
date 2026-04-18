@@ -133,6 +133,21 @@
     "sentiment_score": -0.614,
     "source_count": 2
   },
+  "2ac9952cd2857bf1fe7ab8df80ecdb77": {
+    "analyzed_at": "2026-04-18T12:40:53.260899",
+    "catalyst_type": [
+      "earnings",
+      "contract",
+      "corporate_action",
+      "downgrade"
+    ],
+    "finbert_score": -0.974,
+    "keyword_score": 0.2,
+    "novelty": "unknown",
+    "sentiment_label": "bearish",
+    "sentiment_score": -0.504,
+    "source_count": 2
+  },
   "33a35d3eec9c3cc38ed664b43c98c052": {
     "analyzed_at": "2026-04-05T00:22:22.842444",
     "catalyst_type": [
@@ -186,6 +201,18 @@
     "novelty": "unknown",
     "sentiment_label": "neutral",
     "sentiment_score": 0.08,
+    "source_count": 2
+  },
+  "55853d7a0b57e5f1de113b2fae622c04": {
+    "analyzed_at": "2026-04-18T12:40:53.161493",
+    "catalyst_type": [
+      "contract"
+    ],
+    "finbert_score": 0.9,
+    "keyword_score": 0.2,
+    "novelty": "unknown",
+    "sentiment_label": "bullish",
+    "sentiment_score": 0.62,
     "source_count": 2
   },
   "5d113ff0c788990c608d339b022993ee": {
@@ -277,6 +304,18 @@
     "sentiment_score": 0.453,
     "source_count": 2
   },
+  "8f7073fa084c3502203daa8c9e55e694": {
+    "analyzed_at": "2026-04-18T12:40:53.075459",
+    "catalyst_type": [
+      "contract"
+    ],
+    "finbert_score": 0.934,
+    "keyword_score": 0.2,
+    "novelty": "unknown",
+    "sentiment_label": "bullish",
+    "sentiment_score": 0.64,
+    "source_count": 2
+  },
   "9a4360417ee485828c08683e05ab666f": {
     "analyzed_at": "2026-04-05T00:25:07.902526",
     "catalyst_type": [
@@ -339,6 +378,33 @@
     "novelty": "unknown",
     "sentiment_label": "bearish",
     "sentiment_score": -0.662,
+    "source_count": 2
+  },
+  "ab6d52efdc42d64a653300f2a696c34e": {
+    "analyzed_at": "2026-04-18T12:40:53.360185",
+    "catalyst_type": [
+      "contract",
+      "upgrade"
+    ],
+    "finbert_score": 0.917,
+    "keyword_score": 0.4,
+    "novelty": "unknown",
+    "sentiment_label": "bullish",
+    "sentiment_score": 0.71,
+    "source_count": 2
+  },
+  "bc8464755575fa913211f7dccd5f085a": {
+    "analyzed_at": "2026-04-18T12:40:52.957137",
+    "catalyst_type": [
+      "earnings",
+      "downgrade",
+      "upgrade"
+    ],
+    "finbert_score": 0.0,
+    "keyword_score": 0.2,
+    "novelty": "unknown",
+    "sentiment_label": "neutral",
+    "sentiment_score": 0.08,
     "source_count": 2
   },
   "c9f06e74e2988c006c70046b95a0f2f9": {

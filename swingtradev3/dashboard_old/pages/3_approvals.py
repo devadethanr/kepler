@@ -26,9 +26,10 @@ try:
                     
                     col1, col2 = st.columns(2)
                     with col1:
-                        if st.button("✅ Approve", key=f"approve_{approval.get('ticker')}"):
+                        approval_id = approval.get("approval_id")
+                        if st.button("✅ Approve", key=f"approve_{approval_id or approval.get('ticker')}"):
                             try:
-                                resp = requests.post(f"http://localhost:8000/approvals/{approval.get('ticker')}/yes", headers={"X-API-Key": api_key})
+                                resp = requests.post(f"http://localhost:8000/approvals/{approval_id}/yes", headers={"X-API-Key": api_key})
                                 if resp.status_code == 200:
                                     st.success("Trade Approved!")
                                     st.rerun()
@@ -37,9 +38,9 @@ try:
                             except Exception as e:
                                 st.error(str(e))
                     with col2:
-                        if st.button("❌ Reject", key=f"reject_{approval.get('ticker')}"):
+                        if st.button("❌ Reject", key=f"reject_{approval_id or approval.get('ticker')}"):
                             try:
-                                resp = requests.post(f"http://localhost:8000/approvals/{approval.get('ticker')}/no", headers={"X-API-Key": api_key})
+                                resp = requests.post(f"http://localhost:8000/approvals/{approval_id}/no", headers={"X-API-Key": api_key})
                                 if resp.status_code == 200:
                                     st.success("Trade Rejected.")
                                     st.rerun()

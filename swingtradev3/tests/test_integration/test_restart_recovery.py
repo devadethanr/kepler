@@ -49,8 +49,7 @@ def test_restart_recovery_reconstructs_orders_positions_and_gtt_from_broker_trut
             "target_price": 540.0,
             "opened_at": "2026-04-10T09:15:00",
             "entry_order_id": "stale-order",
-            "stop_gtt_id": None,
-            "target_gtt_id": None,
+            "oco_gtt_id": None,
             "pending_corporate_action": {},
         }
     ]
@@ -114,8 +113,7 @@ def test_restart_recovery_reconstructs_orders_positions_and_gtt_from_broker_trut
         projected = read_json(STATE_PATH, {})
         assert [item["ticker"] for item in projected["positions"]] == [position_ticker]
         assert projected["positions"][0]["oco_gtt_id"] == str(gtt_id)
-        assert projected["positions"][0]["stop_gtt_id"] == str(gtt_id)
-        assert projected["positions"][0]["target_gtt_id"] == str(gtt_id)
+        assert projected["positions"][0]["lifecycle_state"] == "open"
 
         with session_scope() as session:
             order_row = session.get(BrokerOrderRow, f"open-order-{suffix}")

@@ -188,6 +188,14 @@ Support multiple research universes, but one unified book.
 - duplicate symbols across universes must merge into one canonical instrument before allocation
 - one global portfolio allocator and one execution worker own the final decision and execution path
 
+### Removal Rule
+
+When a phase replaces a module, route, or runtime path, remove the superseded code in that same phase.
+
+- do not keep deprecated classes, routes, or worker paths as compatibility shims unless an external dependency still requires them
+- remove or rewrite stale tests in the same change
+- the repo should have one authoritative execution path at a time
+
 ## Phase Plan
 
 ### Phase 0 [X]: Preconditions And Freeze
@@ -304,12 +312,12 @@ Definition of done:
 
 - the system can restart, reconnect, and reconstruct open orders and positions from broker data
 
-### Phase 4: Rebuild Entry Execution
+### Phase 4 [X]: Rebuild Entry Execution
 
 Refactor:
 
 - `api/routes/approvals.py`
-- `agents/execution/order_agent.py`
+- remove `agents/execution/order_agent.py`
 - `tools/execution/order_execution.py`
 - `api/tasks/morning_briefing.py`
 
@@ -318,21 +326,23 @@ Implementation:
 - stop executing by ticker; execute by `order_intent_id`
 - stop scanning the whole approval file on every execution cycle
 - persist one `order_intent` per candidate
+- approval actions are addressed by `approval_id`, not ticker
 - approval only changes state; it does not directly perform broker actions
 - the worker consumes approved intents, submits broker orders, and waits for broker-confirmed fills
 - only after `entry_filled` does the worker create the position and request protection
+- remove the legacy ADK order execution path; do not keep it as a fallback
 
 Optional operating mode:
 
 - keep manual approvals as a gate
-- later add `AUTO_APPROVE_ENTRIES=true` for unattended operation
+- add `AUTO_APPROVE_ENTRIES=true` for unattended operation
 
 Definition of done:
 
 - no route directly places orders
 - every entry has a durable audit trail from proposal to fill
 
-### Phase 5: Rebuild Protection And Exit Logic
+### Phase 5 [X]: Rebuild Protection And Exit Logic
 
 Refactor:
 
@@ -586,7 +596,7 @@ Definition of done:
 - `context/pending_approvals.json`
 - `storage.py`
 - `api/tasks/scheduler.py` running inside FastAPI lifespan
-- `agents/execution/order_agent.py` as the primary execution engine
+- the legacy ADK order execution path
 
 ### Existing Files To Refactor Heavily
 

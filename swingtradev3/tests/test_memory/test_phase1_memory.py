@@ -3,7 +3,16 @@ from __future__ import annotations
 from copy import deepcopy
 
 from memory.db import session_scope
-from memory.models import AccountStateRow, ApprovalRow, AuthSessionRow, ExecutionEventRow, TradeRow
+from memory.models import (
+    AccountStateRow,
+    ApprovalRow,
+    AuthSessionRow,
+    EntryIntentRow,
+    ExecutionEventRow,
+    OrderIntentRow,
+    TradeRow,
+)
+from models import PendingApproval
 from paths import CONTEXT_DIR
 from storage import read_json, write_json
 
@@ -30,8 +39,7 @@ def test_managed_state_round_trips_through_postgres():
                 "target_price": 1600.0,
                 "opened_at": "2026-04-17T09:20:00",
                 "entry_order_id": "order-infy-1",
-                "stop_gtt_id": None,
-                "target_gtt_id": None,
+                "oco_gtt_id": None,
                 "thesis_score": 7.9,
                 "research_date": "2026-04-16",
                 "skill_version": "phase1-test",
@@ -102,10 +110,17 @@ def test_managed_approvals_and_auth_session_project_from_postgres():
         assert auth_session["access_token"] == "phase1-access-token"
 
         with session_scope() as session:
-            approval_row = session.get(ApprovalRow, "approval:TCS")
+            approval = PendingApproval.model_validate(approval_payload[0])
+            approval_row = session.get(ApprovalRow, approval.approval_id)
+            entry_intent_row = session.get(EntryIntentRow, approval.entry_intent_id)
+            order_intent_row = session.get(OrderIntentRow, approval.order_intent_id)
             auth_row = session.get(AuthSessionRow, "kite")
             assert approval_row is not None
+            assert approval_row.entry_intent_id == approval.entry_intent_id
+            assert approval_row.order_intent_id == approval.order_intent_id
             assert approval_row.execution_requested is True
+            assert entry_intent_row is not None
+            assert order_intent_row is not None
             assert auth_row is not None
             assert auth_row.access_token == "phase1-access-token"
     finally:

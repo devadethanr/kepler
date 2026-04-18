@@ -83,7 +83,6 @@ class GTTManager:
                 last_price=last_price,
             )
             return GTTOrder(
-                position_id=trigger_id,
                 oco_gtt_id=trigger_id,
                 ticker=ticker,
                 stop_price=stop_price,
@@ -99,7 +98,6 @@ class GTTManager:
             },
         )
         return GTTOrder(
-            position_id=position_id,
             oco_gtt_id=position_id,
             ticker=ticker,
             stop_price=stop_price,
@@ -155,7 +153,6 @@ class GTTManager:
                 current.stop_price = new_trigger
                 return current
             return GTTOrder(
-                position_id=position_id,
                 oco_gtt_id=position_id,
                 ticker=live_ticker,
                 stop_price=new_trigger,
@@ -167,7 +164,6 @@ class GTTManager:
             current.stop_price = new_trigger
             return current
         return GTTOrder(
-            position_id=position_id,
             oco_gtt_id=position_id,
             ticker="",
             stop_price=new_trigger,
@@ -210,26 +206,44 @@ class GTTManager:
                 target_price = float(trigger_values[1]) if len(trigger_values) > 1 else stop_price
                 ticker = str(item.get("tradingsymbol") or (orders[0].get("tradingsymbol") if orders else ""))
                 raw_status = str(item.get("status", "")).lower()
-                status = "active"
-                if raw_status in {"cancelled", "deleted", "disabled", "expired", "rejected"}:
-                    status = "cancelled"
-                elif raw_status == "triggered":
-                    triggered_leg = None
-                    if isinstance(orders, list):
-                        for index, order in enumerate(orders):
-                            if not isinstance(order, dict):
-                                continue
-                            if order.get("result") or order.get("order_result"):
-                                triggered_leg = index
-                                break
-                    status = "triggered_stop" if triggered_leg == 0 else "triggered_target"
+                status = (
+                    raw_status
+                    if raw_status in {"active", "triggered", "disabled", "expired", "cancelled", "rejected", "deleted"}
+                    else "active"
+                )
+                triggered_leg = None
+                exit_order_id = None
+                exit_exchange_order_id = None
+                exit_order_status = None
+                exit_rejection_reason = None
+                if isinstance(orders, list):
+                    for index, order in enumerate(orders):
+                        if not isinstance(order, dict):
+                            continue
+                        result = order.get("result") or order.get("order_result")
+                        if not result or not isinstance(result, dict):
+                            continue
+                        triggered_leg = "stop" if index == 0 else "target"
+                        nested = result.get("order_result") if isinstance(result.get("order_result"), dict) else result
+                        if isinstance(nested, dict):
+                            exit_order_id = str(nested.get("order_id") or "") or None
+                            exit_exchange_order_id = str(nested.get("exchange_order_id") or "") or None
+                            if nested.get("status") not in (None, ""):
+                                exit_order_status = str(nested["status"]).strip().lower()
+                            if nested.get("rejection_reason") not in (None, ""):
+                                exit_rejection_reason = str(nested["rejection_reason"])
+                        break
                 return GTTOrder(
-                    position_id=trigger_id,
                     oco_gtt_id=trigger_id,
                     ticker=ticker,
                     stop_price=stop_price,
                     target_price=target_price,
                     status=status,
+                    triggered_leg=triggered_leg,
+                    exit_order_id=exit_order_id,
+                    exit_exchange_order_id=exit_exchange_order_id,
+                    exit_order_status=exit_order_status,
+                    exit_rejection_reason=exit_rejection_reason,
                 )
             return None
         return self.get_gtt(position_id)

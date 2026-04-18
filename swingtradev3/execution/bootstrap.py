@@ -21,6 +21,7 @@ from .operator_controls import (
     mark_failed_event_retry,
     write_worker_status,
 )
+from .runtime_context import bind_broker_stream, bind_mutation_lock
 from .state_machine import WorkerExecutionStateMachine
 
 
@@ -76,6 +77,8 @@ class WorkerRuntime:
     async def start(self) -> None:
         initialize_memory_layer()
         self._lease = WorkerLease.acquire()
+        bind_mutation_lock(self._execution_lock)
+        bind_broker_stream(self._broker_stream)
         if self._broker_live_enabled() and self._broker_sync_enabled():
             tracked_tickers: list[str] = []
             try:
@@ -131,6 +134,8 @@ class WorkerRuntime:
         if self._lease is not None:
             self._lease.release()
             self._lease = None
+        bind_broker_stream(None)
+        bind_mutation_lock(None)
         self._started = False
 
     async def run_forever(self) -> None:
@@ -145,10 +150,11 @@ class WorkerRuntime:
     async def _approval_loop(self) -> None:
         while not self._stop_event.is_set():
             try:
-                queued = self._state_machine.pending_execution_requests()
-                if queued:
-                    async with self._execution_lock:
+                async with self._execution_lock:
+                    queued = self._state_machine.pending_execution_requests()
+                    if queued:
                         await self._state_machine.execute_requested_approvals()
+                    await self._state_machine.advance_active_executions()
             except Exception as exc:
                 print(f"worker approval loop failed: {exc}")
             await asyncio.sleep(APPROVAL_POLL_SECONDS)

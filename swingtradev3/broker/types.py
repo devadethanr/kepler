@@ -44,24 +44,47 @@ def _best_timestamp(payload: dict[str, Any]) -> str | None:
     return None
 
 
+def _extract_gtt_result(
+    payload: dict[str, Any],
+) -> tuple[int | None, str | None, str | None, str | None, str | None]:
+    orders = payload.get("orders") or []
+    if not isinstance(orders, list):
+        return None, None, None, None, None
+    for index, item in enumerate(orders):
+        if not isinstance(item, dict):
+            continue
+        result = item.get("result") or item.get("order_result")
+        if not isinstance(result, dict):
+            continue
+        nested = result.get("order_result") if isinstance(result.get("order_result"), dict) else result
+        if not isinstance(nested, dict):
+            nested = {}
+        exit_order_id = str(nested.get("order_id") or "").strip() or None
+        exit_exchange_order_id = str(nested.get("exchange_order_id") or "").strip() or None
+        exit_order_status = (
+            normalize_status(nested.get("status"))
+            if nested.get("status") not in (None, "")
+            else None
+        )
+        exit_rejection_reason = (
+            str(nested.get("rejection_reason"))
+            if nested.get("rejection_reason") not in (None, "")
+            else None
+        )
+        return index, exit_order_id, exit_exchange_order_id, exit_order_status, exit_rejection_reason
+    return None, None, None, None, None
+
+
 def _normalize_gtt_status(payload: dict[str, Any]) -> tuple[str, int | None]:
     status = normalize_status(payload.get("status"))
     if status == "active":
         return "active", None
     if status in {"cancelled", "deleted", "disabled", "expired", "rejected"}:
-        return "cancelled", None
+        return status, None
     if status != "triggered":
         return status, None
-
-    orders = payload.get("orders") or []
-    if isinstance(orders, list):
-        for index, item in enumerate(orders):
-            if not isinstance(item, dict):
-                continue
-            result = item.get("result") or item.get("order_result")
-            if result:
-                return ("triggered_stop" if index == 0 else "triggered_target"), index
-    return "triggered", None
+    triggered_leg_index, *_ = _extract_gtt_result(payload)
+    return "triggered", triggered_leg_index
 
 
 @dataclass(slots=True)
@@ -108,6 +131,11 @@ class BrokerProtectiveTriggerEvent:
     stop_price: float
     target_price: float
     triggered_leg_index: int | None
+    triggered_leg: str | None
+    exit_order_id: str | None
+    exit_exchange_order_id: str | None
+    exit_order_status: str | None
+    exit_rejection_reason: str | None
     raw: dict[str, Any]
 
 
@@ -170,6 +198,7 @@ def normalize_kite_gtt_event(payload: dict[str, Any]) -> BrokerProtectiveTrigger
         or (orders[0].get("tradingsymbol") if isinstance(orders, list) and orders else "")
     )
     status, triggered_leg_index = _normalize_gtt_status(dict(payload))
+    _, exit_order_id, exit_exchange_order_id, exit_order_status, exit_rejection_reason = _extract_gtt_result(dict(payload))
     return BrokerProtectiveTriggerEvent(
         oco_gtt_id=trigger_id,
         ticker=ticker,
@@ -177,6 +206,17 @@ def normalize_kite_gtt_event(payload: dict[str, Any]) -> BrokerProtectiveTrigger
         stop_price=stop_price,
         target_price=target_price,
         triggered_leg_index=triggered_leg_index,
+        triggered_leg=(
+            "stop"
+            if triggered_leg_index == 0
+            else "target"
+            if triggered_leg_index == 1
+            else None
+        ),
+        exit_order_id=exit_order_id,
+        exit_exchange_order_id=exit_exchange_order_id,
+        exit_order_status=exit_order_status,
+        exit_rejection_reason=exit_rejection_reason,
         raw=dict(payload),
     )
 

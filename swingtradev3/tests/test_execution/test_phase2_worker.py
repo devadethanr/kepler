@@ -13,6 +13,7 @@ from execution.operator_controls import read_worker_status, write_worker_status
 from execution.state_machine import WorkerExecutionStateMachine
 from memory.db import session_scope
 from memory.repositories import MemoryRepository
+from models import PendingApproval
 
 
 client = TestClient(app)
@@ -44,11 +45,6 @@ def _approval_payload() -> list[dict[str, object]]:
     ]
 
 
-async def _empty_event_stream(*_args, **_kwargs):
-    if False:
-        yield None
-
-
 def test_approval_route_queues_worker_execution(monkeypatch):
     payload = _approval_payload()
     mock_write = MagicMock()
@@ -58,7 +54,7 @@ def test_approval_route_queues_worker_execution(monkeypatch):
     monkeypatch.setattr(approvals_route, "write_json", mock_write)
     monkeypatch.setattr(approvals_route.broadcaster, "broadcast", mock_broadcast)
 
-    response = client.post("/approvals/RELIANCE/yes")
+    response = client.post(f"/approvals/{PendingApproval.model_validate(payload[0]).approval_id}/yes")
 
     assert response.status_code == 200
     body = response.json()
@@ -72,24 +68,30 @@ def test_approval_route_queues_worker_execution(monkeypatch):
 
 
 @pytest.mark.asyncio
-async def test_worker_state_machine_runs_order_agent_for_queued_approvals(monkeypatch):
-    queued = _approval_payload()
-    queued[0]["approved"] = True
-    queued[0]["execution_requested"] = True
-    queued[0]["execution_request_id"] = "req-phase2"
+async def test_worker_state_machine_runs_coordinator_for_queued_order_intents(monkeypatch):
+    queued = [{"order_intent_id": "order-intent:RELIANCE:req-phase4"}]
 
     state_machine = WorkerExecutionStateMachine()
-    monkeypatch.setattr(state_machine, "pending_execution_requests", lambda: queued)
+    monkeypatch.setattr(state_machine.coordinator, "pending_execution_requests", lambda: queued)
+    submit_mock = AsyncMock(return_value=1)
+    monkeypatch.setattr(state_machine.coordinator, "submit_queued_order_intents", submit_mock)
 
-    with patch("execution.state_machine.Runner") as mock_runner:
-        runner_instance = mock_runner.return_value
-        runner_instance.run_async = MagicMock(side_effect=_empty_event_stream)
-
-        executed = await state_machine.execute_requested_approvals()
+    executed = await state_machine.execute_requested_approvals()
 
     assert executed == 1
-    mock_runner.assert_called_once()
-    runner_instance.run_async.assert_called_once()
+    submit_mock.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_worker_state_machine_advances_active_executions(monkeypatch):
+    state_machine = WorkerExecutionStateMachine()
+    advance_mock = AsyncMock(return_value=2)
+    monkeypatch.setattr(state_machine.coordinator, "reconcile_active_order_intents", advance_mock)
+
+    advanced = await state_machine.advance_active_executions()
+
+    assert advanced == 2
+    advance_mock.assert_awaited_once()
 
 
 def test_dashboard_scheduler_reads_worker_status():

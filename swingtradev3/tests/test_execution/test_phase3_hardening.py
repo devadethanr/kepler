@@ -8,7 +8,6 @@ from uuid import uuid4
 import pytest
 from fastapi.testclient import TestClient
 
-from agents.execution.order_agent import OrderExecutionAgent
 from api.main import app
 from api.routes import approvals as approvals_route
 from auth.kite.session_store import KiteSessionPayload
@@ -19,7 +18,7 @@ from config import cfg
 from execution.bootstrap import WorkerRuntime
 from memory.db import session_scope
 from memory.repositories import MemoryRepository
-from models import TradingMode
+from models import PendingApproval, TradingMode
 
 
 client = TestClient(app)
@@ -72,7 +71,7 @@ def test_approval_route_persists_order_intent_for_worker_queue(monkeypatch):
     monkeypatch.setattr(approvals_route, "write_json", mock_write)
     monkeypatch.setattr(approvals_route.broadcaster, "broadcast", mock_broadcast)
 
-    response = client.post(f"/approvals/{ticker}/yes")
+    response = client.post(f"/approvals/{PendingApproval.model_validate(payload[0]).approval_id}/yes")
 
     assert response.status_code == 200
     assert payload[0]["execution_requested"] is True
@@ -83,63 +82,6 @@ def test_approval_route_persists_order_intent_for_worker_queue(monkeypatch):
     assert order_intent is not None
     assert order_intent["ticker"] == ticker
     assert order_intent["status"] == "queued"
-
-
-@pytest.mark.asyncio
-async def test_order_execution_agent_persists_broker_tag_on_submitted_order_intent(monkeypatch):
-    ticker = f"INF{uuid4().hex[:6]}".upper()
-    order_intent_id = f"order-intent:{ticker}:req-phase3"
-    approvals = _approval_payload(ticker)
-    approvals[0]["approved"] = True
-    approvals[0]["execution_requested"] = True
-    approvals[0]["execution_request_id"] = "req-phase3"
-    approvals[0]["order_intent_id"] = order_intent_id
-    state_payload = {"cash_inr": 100000.0, "positions": []}
-
-    def fake_read_json(path, default):
-        if path.name == "pending_approvals.json":
-            return approvals
-        if path.name == "state.json":
-            return state_payload
-        return default
-
-    alerts_tool = MagicMock()
-    alerts_tool.send_alert = AsyncMock()
-    risk_tool = MagicMock()
-    risk_tool.check_risk = MagicMock(return_value={"approved": True, "quantity": 5, "reason": "ok"})
-    order_tool = MagicMock()
-    order_tool.place_order_async = AsyncMock(
-        return_value={
-            "status": "submitted",
-            "order_id": "kite-order-123",
-            "quantity": 5,
-            "broker_tag": "STV3INF12345678",
-            "protection_status": "pending_fill_confirmation",
-        }
-    )
-    regime_config = MagicMock()
-    regime_config.position_size = MagicMock(side_effect=lambda *, base_quantity: base_quantity)
-    detector = MagicMock()
-    detector.detect_regime = MagicMock(return_value={"regime": "bull"})
-
-    monkeypatch.setattr("agents.execution.order_agent.read_json", fake_read_json)
-    monkeypatch.setattr("agents.execution.order_agent.write_json", MagicMock())
-    monkeypatch.setattr("agents.execution.order_agent.AlertsTool", lambda: alerts_tool)
-    monkeypatch.setattr("agents.execution.order_agent.RiskCheckTool", lambda: risk_tool)
-    monkeypatch.setattr("agents.execution.order_agent.OrderExecutionTool", lambda: order_tool)
-    monkeypatch.setattr("agents.execution.order_agent.RegimeAdaptiveConfig", lambda *_args, **_kwargs: regime_config)
-    monkeypatch.setattr("agents.execution.order_agent.MarketRegimeDetector", lambda: detector)
-
-    agent = OrderExecutionAgent()
-    async for _ in agent._run_async_impl(None):
-        pass
-
-    with session_scope() as session:
-        repo = MemoryRepository(session)
-        order_intent = repo.get_order_intent(order_intent_id)
-    assert order_intent is not None
-    assert order_intent["status"] == "submitted"
-    assert order_intent["broker_tag"] == "STV3INF12345678"
 
 
 def test_build_kite_client_prefers_persisted_session_credentials(monkeypatch):

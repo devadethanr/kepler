@@ -46,6 +46,9 @@ execution:
   trail_stop_at_pct: 5.0
   trail_to_pct: 10.0
   trail_stop_to_locked_profit_pct: 5.0
+  trail_min_step_pct: 0.25
+  trail_hysteresis_pct: 0.25
+  trail_modify_cooldown_seconds: 300
   enable_trailing: true
   avoid_fno_expiry_days: 2
   max_entry_deviation_pct: 3.0
