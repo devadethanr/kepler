@@ -13,7 +13,6 @@ from __future__ import annotations
 from datetime import datetime
 
 from api.tasks.event_bus import BusEvent, EventType, event_bus
-from api.tasks.activity_manager import activity_manager
 
 
 # ─────────────────────────────────────────────────────────────
@@ -40,44 +39,6 @@ async def handle_gtt_triggered(event: BusEvent) -> None:
         )
     except Exception as e:
         print(f"handle_gtt_triggered: Telegram failed: {e}")
-
-
-async def handle_vix_spike(event: BusEvent) -> None:
-    """VIX spike detected. Tighten stops 20%, pause new entries if extreme."""
-    vix_level = event.payload.get("vix_level", 0)
-    action = event.payload.get("action", "")
-
-    print(f"[EVENT] VIX spike: {vix_level} — action: {action}")
-
-    # If VIX > threshold, tighten stops on all positions
-    if vix_level > 20:
-        from storage import read_json, write_json
-        from paths import CONTEXT_DIR
-        from models import AccountState
-
-        state_data = read_json(CONTEXT_DIR / "state.json", {})
-        if state_data and state_data.get("positions"):
-            state = AccountState.model_validate(state_data)
-            for pos in state.positions:
-                # Tighten by 20%
-                distance = pos.entry_price - pos.stop_price
-                new_stop = pos.entry_price - (distance * 0.80)
-                if new_stop > pos.stop_price:
-                    pos.stop_price = round(new_stop, 2)
-            write_json(CONTEXT_DIR / "state.json", state.model_dump(mode="json"))
-
-    # Send Telegram
-    try:
-        from notifications.telegram_client import TelegramClient
-
-        tg = TelegramClient()
-        await tg.send_briefing(
-            f"📈 VIX Spike Alert: {vix_level}",
-            f"Action: {action}",
-            f"Stops tightened by 20% on all positions.",
-        )
-    except Exception as e:
-        print(f"handle_vix_spike: Telegram failed: {e}")
 
 
 async def handle_position_news(event: BusEvent) -> None:
@@ -208,7 +169,7 @@ async def handle_auth_expiring(event: BusEvent) -> None:
         await tg.send_briefing(
             f"🔑 Auth Expiring: {service}",
             f"Hours remaining: {hours_remaining}",
-            f"Please re-authenticate to avoid disruption.",
+            "Please re-authenticate to avoid disruption.",
         )
     except Exception as e:
         print(f"handle_auth_expiring: Telegram failed: {e}")
@@ -240,7 +201,7 @@ async def handle_regime_change(event: BusEvent) -> None:
         tg = TelegramClient()
         await tg.send_briefing(
             f"🔄 Regime Change: {old_regime} → {new_regime}",
-            f"Position sizing and stops adjusted automatically.",
+            "Position sizing and stops adjusted automatically.",
         )
     except Exception as e:
         print(f"handle_regime_change: Telegram failed: {e}")
@@ -255,10 +216,9 @@ def register_all_handlers(bus=None) -> None:
     """Register all event handlers with the event bus."""
     target_bus = bus or event_bus
     target_bus.subscribe(EventType.GTT_ALERT, handle_gtt_triggered)
-    target_bus.subscribe(EventType.VIX_SPIKE, handle_vix_spike)
     target_bus.subscribe(EventType.NEWS_BREAK, handle_position_news)
     target_bus.subscribe(EventType.STOP_HIT, handle_stop_hit)
     target_bus.subscribe(EventType.TARGET_HIT, handle_target_hit)
     target_bus.subscribe(EventType.AUTH_EXPIRING, handle_auth_expiring)
     target_bus.subscribe(EventType.REGIME_CHANGE, handle_regime_change)
-    print(f"EventHandlers: registered 7 handlers")
+    print("EventHandlers: registered 6 handlers")

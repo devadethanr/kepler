@@ -279,9 +279,10 @@ class TestEventHandlers:
         bus = EventBus()
         register_all_handlers(bus)
         
-        # Check 7 handlers are registered for 7 event types
+        # VIX_SPIKE has no handler by design (Phase 5 cleanup: broker-bypassing mutator removed).
         registered_types = [et for et in EventType if et in bus._handlers and bus._handlers[et]]
-        assert len(registered_types) >= 7
+        assert len(registered_types) >= 6
+        assert EventType.VIX_SPIKE not in registered_types
 
     @pytest.mark.asyncio
     async def test_handle_gtt_triggered(self):

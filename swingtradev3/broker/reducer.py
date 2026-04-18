@@ -139,11 +139,19 @@ class BrokerReducer:
         with session_scope() as session:
             repo = MemoryRepository(session)
             current_state = AccountState.model_validate(repo.get_account_state_payload())
-            triggers = {
-                item["ticker"].upper(): item
-                for item in repo.list_protective_triggers()
-                if item.get("ticker")
-            }
+            triggers: dict[str, dict[str, Any]] = {}
+            for item in repo.list_protective_triggers():
+                ticker = str(item.get("ticker") or "").upper()
+                if not ticker:
+                    continue
+                existing = triggers.get(ticker)
+                if existing is None:
+                    triggers[ticker] = item
+                    continue
+                if str(existing.get("status") or "").strip().lower() == "active":
+                    continue
+                if str(item.get("status") or "").strip().lower() == "active":
+                    triggers[ticker] = item
             existing_positions = {item.ticker.upper(): item for item in current_state.positions}
             now = datetime.now()
             reconciled_intents = {

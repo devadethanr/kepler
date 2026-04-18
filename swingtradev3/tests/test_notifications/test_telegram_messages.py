@@ -179,25 +179,6 @@ class TestEventHandlerMessages:
             assert "GTT" in text
             assert "INFY" in text
 
-    @pytest.mark.asyncio
-    async def test_handle_vix_spike_message(self):
-        from api.tasks.event_handlers import handle_vix_spike
-        from api.tasks.event_bus import BusEvent, EventType
-
-        with patch("telegram.Bot") as mock_bot_class:
-            mock_bot = MagicMock()
-            mock_bot.send_message = AsyncMock()
-            mock_bot_class.return_value = mock_bot
-
-            event = BusEvent(
-                type=EventType.VIX_SPIKE,
-                payload={"vix_level": 25, "action": "tighten_stops"},
-            )
-            await handle_vix_spike(event)
-
-            mock_bot.send_message.assert_called_once()
-
-
 class TestSchedulerMessages:
     @pytest.mark.asyncio
     async def test_approval_reminder_message_format(self):
