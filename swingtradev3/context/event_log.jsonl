@@ -1038,3 +1038,16 @@
 {"id":"d23c9377b10a","type":"scan_completed","payload":{},"timestamp":"2026-04-18T18:20:21.430574","source":"scheduler"}
 {"id":"3aadfd4c8a79","type":"target_hit","payload":{"ticker":"TCS7049","entry_price":1000.0,"pnl_pct":7.5,"target_price":1075.0},"timestamp":"2026-04-18T18:55:41.685007","source":"protection_manager"}
 {"id":"2405582a2a07","type":"stop_trailed","payload":{"ticker":"WIPCB3ED","new_stop":1050.0,"last_price":1100.0},"timestamp":"2026-04-18T18:55:41.727394","source":"trailing_engine"}
+{"id":"dcdd2622d03b","type":"error","payload":{},"timestamp":"2026-04-18T18:56:27.191629","source":"test"}
+{"id":"ec3e4e89c410","type":"target_hit","payload":{"ticker":"TCS5DDC","entry_price":1000.0,"pnl_pct":7.5,"target_price":1075.0},"timestamp":"2026-04-18T18:56:57.655557","source":"protection_manager"}
+{"id":"708a93c1804d","type":"stop_trailed","payload":{"ticker":"WIPE981F","new_stop":1050.0,"last_price":1100.0},"timestamp":"2026-04-18T18:56:57.689931","source":"trailing_engine"}
+{"id":"df9a547e5b2c","type":"scan_completed","payload":{"count":5},"timestamp":"2026-04-18T18:57:08.667254","source":"test"}
+{"id":"42dc94f48262","type":"phase_started","payload":{},"timestamp":"2026-04-18T18:57:08.769165","source":"test"}
+{"id":"587732421c26","type":"error","payload":{},"timestamp":"2026-04-18T18:57:08.871082","source":"test"}
+{"id":"882411072cb0","type":"health_check","payload":{"i":0},"timestamp":"2026-04-18T18:57:08.973674","source":"test"}
+{"id":"697148a818a2","type":"health_check","payload":{"i":1},"timestamp":"2026-04-18T18:57:08.973792","source":"test"}
+{"id":"d8a92027c8d4","type":"health_check","payload":{"i":2},"timestamp":"2026-04-18T18:57:08.973867","source":"test"}
+{"id":"499b411ff3cf","type":"health_check","payload":{"i":3},"timestamp":"2026-04-18T18:57:08.973933","source":"test"}
+{"id":"6a6fb7cb7d9b","type":"health_check","payload":{"i":4},"timestamp":"2026-04-18T18:57:08.973997","source":"test"}
+{"id":"32344aeb9590","type":"scan_started","payload":{},"timestamp":"2026-04-18T18:57:08.975460","source":"test"}
+{"id":"4db0b4eb0a03","type":"error","payload":{},"timestamp":"2026-04-18T18:59:59.791810","source":"test"}

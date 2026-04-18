@@ -71,20 +71,6 @@ class PositionState(BaseModel):
         default_factory=PendingCorporateAction
     )
 
-    @model_validator(mode="before")
-    @classmethod
-    def _normalize_gtt_identity(cls, value: Any) -> Any:
-        if not isinstance(value, dict):
-            return value
-        payload = dict(value)
-        oco_gtt_id = payload.get("oco_gtt_id") or payload.get("stop_gtt_id") or payload.get("target_gtt_id")
-        if oco_gtt_id in (None, ""):
-            return payload
-        payload["oco_gtt_id"] = str(oco_gtt_id)
-        payload.pop("stop_gtt_id", None)
-        payload.pop("target_gtt_id", None)
-        return payload
-
 
 class AccountState(BaseModel):
     cash_inr: float = 0.0

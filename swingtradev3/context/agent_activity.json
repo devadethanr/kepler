@@ -3,21 +3,21 @@
     "BatchScannerAgent": {
       "agent_name": "BatchScannerAgent",
       "completed_at": null,
-      "current_task": "Deep analysis completed for 1 stocks.",
+      "current_task": "Deep analysis completed for 0 stocks.",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-18T18:20:09.093367",
+      "started_at": "2026-04-18T19:00:07.490544",
       "status": "running"
     },
     "FilterAgent": {
       "agent_name": "FilterAgent",
       "completed_at": null,
-      "current_task": "Funnel completed: 1 stocks qualified for deep analysis.",
+      "current_task": "Funnel completed: 0 stocks qualified for deep analysis.",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-18T18:00:03.831060",
+      "started_at": "2026-04-18T19:00:07.489350",
       "status": "running"
     },
     "FundamentalsAgent_ABB": {
@@ -53,11 +53,11 @@
     "KnowledgeGraphAgent": {
       "agent_name": "KnowledgeGraphAgent",
       "completed_at": null,
-      "current_task": "Knowledge graph updated: 1 stocks, 1 sectors.",
+      "current_task": "No scan results to update knowledge graph.",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-18T18:20:21.428446",
+      "started_at": "2026-04-18T19:00:07.511269",
       "status": "running"
     },
     "MarketDataAgent_ABB": {
@@ -127,7 +127,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-18T18:00:02.814671",
+      "started_at": "2026-04-18T19:00:00.222852",
       "status": "running"
     },
     "ResearchPipeline": {
@@ -147,17 +147,17 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-18T18:20:21.423852",
+      "started_at": "2026-04-18T19:00:07.510355",
       "status": "running"
     },
     "ScorerAgent": {
       "agent_name": "ScorerAgent",
       "completed_at": null,
-      "current_task": "Scoring completed. 0 shortlisted from 1 scored. (regime: bear, min_score: 8.0)",
+      "current_task": "No qualified stocks to score.",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-18T18:20:21.409803",
+      "started_at": "2026-04-18T19:00:07.491595",
       "status": "running"
     },
     "SentimentAgent_ABB": {
@@ -222,17 +222,17 @@
     },
     "scheduler": {
       "agent_name": "scheduler",
-      "completed_at": "2026-04-18T18:42:08.698011",
+      "completed_at": "2026-04-18T18:57:09.464240",
       "current_task": "position_monitor",
       "last_error": null,
       "metadata": {
         "last_job": "position_monitor"
       },
       "progress": null,
-      "started_at": "2026-04-18T18:42:08.697315",
+      "started_at": "2026-04-18T18:57:09.463264",
       "status": "completed"
     }
   },
-  "last_updated": "2026-04-18T18:42:08.698014",
+  "last_updated": "2026-04-18T19:00:07.511279",
   "scheduler_phase": "evening_research"
 }

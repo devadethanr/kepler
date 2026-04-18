@@ -1,5 +1,22 @@
 [
   {
+    "closed_at": "2026-04-18T18:56:57.642649",
+    "entry_price": 1000.0,
+    "exit_price": 1075.0,
+    "exit_reason": "gtt_target",
+    "opened_at": "2026-04-18T09:20:00",
+    "pnl_abs": 375.0,
+    "pnl_pct": 7.499999999999996,
+    "quantity": 5,
+    "research_date": null,
+    "risk_flags": [],
+    "setup_type": "breakout",
+    "skill_version": null,
+    "thesis_reasoning": "Phase 5 position",
+    "ticker": "TCS5DDC",
+    "trade_id": "trade:TCS5DDC:20260418185657"
+  },
+  {
     "closed_at": "2026-04-18T18:55:41.672546",
     "entry_price": 1000.0,
     "exit_price": 1075.0,

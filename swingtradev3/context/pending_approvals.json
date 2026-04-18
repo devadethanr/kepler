@@ -1,1 +1,83 @@
-[]
+[
+  {
+    "approval_id": "approval:TCS:acc58b3950dd",
+    "approved": true,
+    "broker_tag": null,
+    "confidence_reasoning": "Phase 1 bridge test",
+    "created_at": "2026-04-17T08:55:00",
+    "entry_intent_id": "entry-intent:TCS:acc58b3950dd",
+    "entry_zone": {
+      "high": 4010.0,
+      "low": 4000.0
+    },
+    "execution_request_id": null,
+    "execution_requested": false,
+    "expires_at": "2026-04-17T12:55:00",
+    "holding_days_expected": 8,
+    "order_intent_id": "order-intent:TCS:acc58b3950dd",
+    "research_date": "2026-04-16",
+    "risk_flags": [],
+    "score": 8.4,
+    "sector": "IT",
+    "setup_type": "breakout",
+    "skill_version": "phase1-test",
+    "status": "approved",
+    "stop_price": 3920.0,
+    "target_price": 4200.0,
+    "ticker": "TCS"
+  },
+  {
+    "approval_id": "approval:RELIANCE:e638287cb147",
+    "approved": null,
+    "broker_tag": null,
+    "confidence_reasoning": "Phase 4 proposal lineage",
+    "created_at": "2026-04-18T18:56:27.511102",
+    "entry_intent_id": "entry-intent:RELIANCE:e638287cb147",
+    "entry_zone": {
+      "high": 1010.0,
+      "low": 1000.0
+    },
+    "execution_request_id": null,
+    "execution_requested": false,
+    "expires_at": "2026-04-19T10:56:27.511102",
+    "holding_days_expected": 7,
+    "order_intent_id": "order-intent:RELIANCE:e638287cb147",
+    "research_date": "2026-04-18",
+    "risk_flags": [],
+    "score": 8.9,
+    "sector": "energy",
+    "setup_type": "breakout",
+    "skill_version": "phase4-test",
+    "status": "pending",
+    "stop_price": 980.0,
+    "target_price": 1080.0,
+    "ticker": "RELIANCE"
+  },
+  {
+    "approval_id": "approval:SBI6D1EE:1418c1bf8bfd",
+    "approved": true,
+    "broker_tag": null,
+    "confidence_reasoning": "Phase 4 setup",
+    "created_at": "2026-04-18T18:56:57.250091",
+    "entry_intent_id": "entry-intent:SBI6D1EE:1418c1bf8bfd",
+    "entry_zone": {
+      "high": 1010.0,
+      "low": 1000.0
+    },
+    "execution_request_id": null,
+    "execution_requested": false,
+    "expires_at": "2026-04-18T22:56:57.250091",
+    "holding_days_expected": 7,
+    "order_intent_id": "order-intent:SBI6D1EE:phase4-b",
+    "research_date": null,
+    "risk_flags": [],
+    "score": 8.6,
+    "sector": "energy",
+    "setup_type": "pullback",
+    "skill_version": null,
+    "status": "approved",
+    "stop_price": 975.0,
+    "target_price": 1090.0,
+    "ticker": "SBI6D1EE"
+  }
+]
