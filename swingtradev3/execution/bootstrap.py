@@ -19,9 +19,12 @@ from memory.db import get_engine
 from .operator_controls import (
     list_pending_failed_event_retries,
     mark_failed_event_retry,
+    set_block_new_entries,
     write_worker_status,
 )
-from .runtime_context import bind_broker_stream, bind_mutation_lock
+from .quote_cache import QuoteCache
+from .reconciler import Reconciler
+from .runtime_context import bind_broker_stream, bind_mutation_lock, bind_quote_cache
 from .state_machine import WorkerExecutionStateMachine
 
 
@@ -29,7 +32,6 @@ WORKER_ADVISORY_LOCK_ID = 4200217
 APPROVAL_POLL_SECONDS = 5
 OPERATOR_CONTROL_POLL_SECONDS = 5
 WORKER_HEARTBEAT_SECONDS = 5
-BROKER_SYNC_SECONDS = 60
 
 
 class WorkerLockUnavailable(RuntimeError):
@@ -72,6 +74,17 @@ class WorkerRuntime:
         self._state_machine = WorkerExecutionStateMachine()
         self._broker_reducer = BrokerReducer()
         self._broker_stream = KiteBrokerStream(self._broker_reducer)
+        self._quote_cache = QuoteCache(
+            broker_stream=self._broker_stream,
+            exchange=cfg.trading.exchange,
+        )
+        self._reconciler = Reconciler(
+            broker_reducer=self._broker_reducer,
+            broker_stream=self._broker_stream,
+            quote_cache=self._quote_cache,
+            exchange=cfg.trading.exchange,
+        )
+        self._reconciler.register_stop_event(self._stop_event)
         self._started = False
 
     async def start(self) -> None:
@@ -79,24 +92,39 @@ class WorkerRuntime:
         self._lease = WorkerLease.acquire()
         bind_mutation_lock(self._execution_lock)
         bind_broker_stream(self._broker_stream)
+        bind_quote_cache(self._quote_cache)
         if self._broker_live_enabled() and self._broker_sync_enabled():
-            tracked_tickers: list[str] = []
             try:
-                sync_result = await asyncio.to_thread(
-                    self._broker_reducer.sync_from_broker,
-                    source="worker_startup_snapshot",
+                startup_report = await self._reconciler.run_startup_reconciliation(
+                    wait_for_stream_seconds=0.0,
                 )
-                tracked_tickers = list(sync_result.get("tracked_tickers", []))
             except Exception as exc:
                 if self._lease is not None:
                     self._lease.release()
                     self._lease = None
-                raise RuntimeError(f"worker broker startup sync failed: {exc}") from exc
+                raise RuntimeError(f"worker startup reconciliation failed: {exc}") from exc
+            tracked_tickers = list(
+                startup_report.get("positions", {}).get("tracked_tickers", [])
+            )
             self._broker_stream.set_tracked_tickers(
                 tracked_tickers,
                 exchange=cfg.trading.exchange,
             )
+            if not startup_report.get("ready", False):
+                set_block_new_entries(
+                    reason=str(startup_report.get("reason") or "startup_not_ready"),
+                    source="worker_startup",
+                    detail={"drift": startup_report.get("drift", {})},
+                )
         await self._maintain_broker_stream()
+        if self._broker_live_enabled() and self._broker_sync_enabled():
+            # G6: second-phase readiness — confirm the WebSocket actually
+            # connected within the configured window; flip block_new_entries
+            # if it did not.
+            try:
+                await self._reconciler.run_post_stream_readiness_check()
+            except Exception as exc:
+                print(f"worker post-stream readiness check failed: {exc}")
         await scheduler.start()
         self._started = True
         await self._write_status()
@@ -104,7 +132,19 @@ class WorkerRuntime:
             asyncio.create_task(self._approval_loop(), name="worker-approval-loop"),
             asyncio.create_task(self._operator_control_loop(), name="worker-operator-control-loop"),
             asyncio.create_task(self._heartbeat_loop(), name="worker-heartbeat-loop"),
-            asyncio.create_task(self._broker_sync_loop(), name="worker-broker-sync-loop"),
+            asyncio.create_task(
+                self._reconciler.run_orders_loop(), name="worker-reconcile-orders-loop"
+            ),
+            asyncio.create_task(
+                self._reconciler.run_positions_loop(), name="worker-reconcile-positions-loop"
+            ),
+            asyncio.create_task(
+                self._reconciler.run_gtts_loop(), name="worker-reconcile-gtts-loop"
+            ),
+            asyncio.create_task(
+                self._reconciler.run_quote_freshness_loop(),
+                name="worker-reconcile-quote-loop",
+            ),
         ]
 
     async def stop(self) -> None:
@@ -136,6 +176,7 @@ class WorkerRuntime:
             self._lease = None
         bind_broker_stream(None)
         bind_mutation_lock(None)
+        bind_quote_cache(None)
         self._started = False
 
     async def run_forever(self) -> None:
@@ -190,23 +231,6 @@ class WorkerRuntime:
             except Exception as exc:
                 print(f"worker heartbeat failed: {exc}")
             await asyncio.sleep(WORKER_HEARTBEAT_SECONDS)
-
-    async def _broker_sync_loop(self) -> None:
-        while not self._stop_event.is_set():
-            try:
-                if self._broker_sync_enabled():
-                    sync_result = await asyncio.to_thread(
-                        self._broker_reducer.sync_from_broker,
-                        source="worker_periodic_snapshot",
-                    )
-                    self._broker_stream.set_tracked_tickers(
-                        list(sync_result.get("tracked_tickers", [])),
-                        exchange=cfg.trading.exchange,
-                    )
-                await self._maintain_broker_stream()
-            except Exception as exc:
-                print(f"worker broker sync failed: {exc}")
-            await asyncio.sleep(BROKER_SYNC_SECONDS)
 
     async def _write_status(self) -> None:
         info = scheduler.get_schedule_info()

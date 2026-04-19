@@ -103,9 +103,8 @@ class TradingScheduler:
         schedule.every(mh.position_monitoring_minutes).minutes.do(
             self._job, "position_monitor", self._position_monitor
         )
-        schedule.every(mh.gtt_health_check_minutes).minutes.do(
-            self._job, "gtt_health_check", self._gtt_health_check
-        )
+        # GTT health is owned by execution.reconciler.run_gtts_loop (Phase 6).
+        # The scheduler no longer registers a duplicate job.
         schedule.every(mh.intraday_news_minutes).minutes.do(
             self._job, "intraday_news_sweep", self._intraday_news_sweep
         )
@@ -367,26 +366,6 @@ class TradingScheduler:
                 await trailing_engine.run_once(quote_provider=quote_provider)
             return
         await trailing_engine.run_once(quote_provider=quote_provider)
-
-    async def _gtt_health_check(self) -> None:
-        """Every N minutes: verify GTT orders are alive and restart-safe."""
-        now = _now_ist().time()
-        if not (dt_time(9, 15) <= now <= dt_time(15, 30)):
-            return
-        if not self._live_protection_enabled():
-            return
-
-        print(f"[{_now_ist().isoformat()}] GTT health check tick")
-        from execution.protection_manager import ProtectionManager
-        from execution.runtime_context import get_mutation_lock
-
-        protection_manager = ProtectionManager()
-        lock = get_mutation_lock()
-        if lock is not None:
-            async with lock:
-                await protection_manager.run_watchdog()
-            return
-        await protection_manager.run_watchdog()
 
     async def _intraday_news_sweep(self) -> None:
         """Sweep news for held positions during market hours."""

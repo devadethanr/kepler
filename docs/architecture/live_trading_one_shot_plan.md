@@ -373,7 +373,7 @@ Definition of done:
 
 - stop/target handling is broker-correct and restart-safe
 
-### Phase 6: Reconciliation And Recovery
+### Phase 6 [X]: Reconciliation And Recovery
 
 New modules:
 

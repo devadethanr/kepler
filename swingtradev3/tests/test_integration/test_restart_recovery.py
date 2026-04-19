@@ -138,9 +138,20 @@ async def test_worker_startup_runs_broker_sync_and_sets_quote_tracking(monkeypat
     runtime._approval_loop = wait_for_stop  # type: ignore[method-assign]
     runtime._operator_control_loop = wait_for_stop  # type: ignore[method-assign]
     runtime._heartbeat_loop = wait_for_stop  # type: ignore[method-assign]
-    runtime._broker_sync_loop = wait_for_stop  # type: ignore[method-assign]
-    runtime._broker_reducer = MagicMock(
-        sync_from_broker=MagicMock(return_value={"tracked_tickers": ["INFY", "RELIANCE"]})
+    runtime._reconciler.run_orders_loop = wait_for_stop  # type: ignore[method-assign]
+    runtime._reconciler.run_positions_loop = wait_for_stop  # type: ignore[method-assign]
+    runtime._reconciler.run_gtts_loop = wait_for_stop  # type: ignore[method-assign]
+    runtime._reconciler.run_quote_freshness_loop = wait_for_stop  # type: ignore[method-assign]
+    runtime._reconciler.run_startup_reconciliation = AsyncMock(
+        return_value={
+            "ready": True,
+            "auth_valid": True,
+            "stream_connected": True,
+            "drift": {"orders": 0, "positions": 0, "gtts": 0},
+            "orders": {},
+            "positions": {"tracked_tickers": ["INFY", "RELIANCE"]},
+            "gtts": {},
+        }
     )
     runtime._broker_stream = MagicMock()
     runtime._write_status = AsyncMock()
@@ -156,8 +167,8 @@ async def test_worker_startup_runs_broker_sync_and_sets_quote_tracking(monkeypat
                         await runtime.stop()
 
     mock_init.assert_called_once()
-    runtime._broker_reducer.sync_from_broker.assert_called_once_with(
-        source="worker_startup_snapshot"
+    runtime._reconciler.run_startup_reconciliation.assert_awaited_once_with(
+        wait_for_stream_seconds=0.0
     )
     runtime._broker_stream.set_tracked_tickers.assert_called_once_with(
         ["INFY", "RELIANCE"],

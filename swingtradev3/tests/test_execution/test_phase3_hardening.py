@@ -155,13 +155,17 @@ async def test_worker_fails_closed_when_live_startup_sync_fails(monkeypatch):
     fake_lease = MagicMock()
     monkeypatch.setattr(cfg.trading, "mode", TradingMode.LIVE)
     monkeypatch.setenv("LIVE_TRADING_ENABLED", "true")
-    monkeypatch.setattr(runtime._broker_reducer, "sync_from_broker", MagicMock(side_effect=RuntimeError("boom")))
+    monkeypatch.setattr(
+        "execution.reconciler.fetch_orders",
+        MagicMock(side_effect=RuntimeError("boom")),
+    )
 
     with patch("execution.bootstrap.initialize_memory_layer"):
         with patch("execution.bootstrap.WorkerLease.acquire", return_value=fake_lease):
             with patch("execution.bootstrap.has_kite_session", return_value=True):
-                with pytest.raises(RuntimeError, match="startup sync failed"):
-                    await runtime.start()
+                with patch("execution.reconciler.has_kite_session", return_value=True):
+                    with pytest.raises(RuntimeError, match="startup sync failed"):
+                        await runtime.start()
 
     fake_lease.release.assert_called_once()
 

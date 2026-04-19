@@ -15,6 +15,7 @@ from tools.execution.gtt_manager import GTTManager
 from tools.execution.order_execution import OrderExecutionTool
 from tools.execution.risk_check import RiskCheckTool
 
+from .operator_controls import is_block_new_entries_active, read_block_new_entries
 from .protection_manager import ProtectionManager
 
 
@@ -81,6 +82,13 @@ class ExecutionCoordinator:
             return repo.list_order_intents_by_status(ACTIVE_ORDER_INTENT_STATUSES)
 
     async def submit_queued_order_intents(self) -> int:
+        if is_block_new_entries_active():
+            block = read_block_new_entries() or {}
+            await self.alerts_tool.send_alert(
+                f"⛔ New entries blocked by reconciler: reason={block.get('reason') or 'unknown'}",
+                level="warning",
+            )
+            return 0
         submitted = 0
         for intent in self.pending_execution_requests():
             result = await self.submit_order_intent(str(intent["order_intent_id"]))
@@ -97,6 +105,8 @@ class ExecutionCoordinator:
         return advanced
 
     async def submit_order_intent(self, order_intent_id: str) -> str:
+        if is_block_new_entries_active():
+            return "ignored"
         with session_scope() as session:
             repo = MemoryRepository(session)
             intent = repo.get_order_intent(order_intent_id)

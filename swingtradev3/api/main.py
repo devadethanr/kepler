@@ -11,6 +11,7 @@ from .routes import (
     approvals,
     dashboard,
     health,
+    ops,
     portfolio,
     positions,
     postbacks,
@@ -102,4 +103,5 @@ app.include_router(dashboard.router, prefix="/dashboard", tags=["Dashboard"])
 app.include_router(portfolio.router, prefix="/portfolio", tags=["Portfolio"])
 app.include_router(postbacks.router, prefix="/broker/postbacks", tags=["Broker"])
 app.include_router(sse.router, prefix="/sse", tags=["SSE"])
+app.include_router(ops.router, prefix="/ops", tags=["Ops"])
 app.include_router(ws.router, tags=["WebSocket"])

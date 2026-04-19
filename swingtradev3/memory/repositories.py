@@ -887,6 +887,150 @@ class MemoryRepository:
             for row in rows
         ]
 
+    def list_positions(self) -> list[dict[str, Any]]:
+        rows = self.session.scalars(
+            select(PositionRow).order_by(PositionRow.ticker.asc())
+        ).all()
+        return [
+            {
+                "position_id": row.position_id,
+                "ticker": row.ticker,
+                "state": row.state,
+                "quantity": row.quantity,
+                "entry_price": row.entry_price,
+                "stop_price": row.stop_price,
+                "target_price": row.target_price,
+                "opened_at": row.opened_at,
+                "payload": dict(row.payload),
+            }
+            for row in rows
+        ]
+
+    def get_position(self, position_id: str) -> dict[str, Any] | None:
+        row = self.session.get(PositionRow, position_id)
+        if row is None:
+            return None
+        return {
+            "position_id": row.position_id,
+            "ticker": row.ticker,
+            "state": row.state,
+            "quantity": row.quantity,
+            "entry_price": row.entry_price,
+            "stop_price": row.stop_price,
+            "target_price": row.target_price,
+            "opened_at": row.opened_at,
+            "payload": dict(row.payload),
+        }
+
+    def update_position_state(
+        self,
+        *,
+        position_id: str,
+        new_state: str,
+        source: str,
+        detail: str | None = None,
+    ) -> dict[str, Any] | None:
+        row = self.session.get(PositionRow, position_id)
+        if row is None:
+            return None
+
+        previous_state = row.state
+        if previous_state == new_state:
+            return {
+                "position_id": row.position_id,
+                "ticker": row.ticker,
+                "state": row.state,
+                "quantity": row.quantity,
+                "entry_price": row.entry_price,
+                "stop_price": row.stop_price,
+                "target_price": row.target_price,
+                "opened_at": row.opened_at,
+                "payload": dict(row.payload),
+            }
+
+        row.state = new_state
+        payload = dict(row.payload or {})
+        payload["lifecycle_state"] = new_state
+        if detail:
+            payload["reconcile_detail"] = detail
+        row.payload = payload
+
+        self.append_execution_event(
+            event_type="position_state_changed",
+            entity_type="position",
+            entity_id=position_id,
+            source=source,
+            payload={
+                "ticker": row.ticker,
+                "previous_state": previous_state,
+                "new_state": new_state,
+                "detail": detail,
+            },
+        )
+        return {
+            "position_id": row.position_id,
+            "ticker": row.ticker,
+            "state": row.state,
+            "quantity": row.quantity,
+            "entry_price": row.entry_price,
+            "stop_price": row.stop_price,
+            "target_price": row.target_price,
+            "opened_at": row.opened_at,
+            "payload": dict(row.payload),
+        }
+
+    def update_position_price(
+        self,
+        *,
+        position_id: str,
+        current_price: float,
+        source: str,
+    ) -> dict[str, Any] | None:
+        row = self.session.get(PositionRow, position_id)
+        if row is None:
+            return None
+        payload = dict(row.payload or {})
+        payload["current_price"] = current_price
+        row.payload = payload
+        return {
+            "position_id": row.position_id,
+            "ticker": row.ticker,
+            "current_price": current_price,
+        }
+
+    def get_failure_incident(self, incident_id: str) -> dict[str, Any] | None:
+        row = self.session.get(FailureIncidentRow, incident_id)
+        if row is None:
+            return None
+        return {
+            "incident_id": row.incident_id,
+            "status": row.status,
+            "severity": row.severity,
+            "payload": dict(row.payload),
+        }
+
+    def list_failure_incidents(
+        self,
+        *,
+        status: str | None = None,
+        severity: str | None = None,
+    ) -> list[dict[str, Any]]:
+        query = select(FailureIncidentRow).order_by(FailureIncidentRow.updated_at.desc())
+        if status is not None:
+            query = query.where(FailureIncidentRow.status == status)
+        if severity is not None:
+            query = query.where(FailureIncidentRow.severity == severity)
+        rows = self.session.scalars(query).all()
+        return [
+            {
+                "incident_id": row.incident_id,
+                "status": row.status,
+                "severity": row.severity,
+                "payload": dict(row.payload),
+            }
+            for row in rows
+        ]
+
     def list_protective_triggers(self) -> list[dict[str, Any]]:
         rows = self.session.scalars(
             select(ProtectiveTriggerRow).order_by(ProtectiveTriggerRow.updated_at.desc())

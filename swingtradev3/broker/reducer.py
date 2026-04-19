@@ -179,6 +179,48 @@ class BrokerReducer:
             repo.replace_account_state(next_state.model_dump(mode="json"), source=source)
         return {"status": "ok", "positions": len(snapshots)}
 
+    def apply_position_price_refresh(
+        self,
+        snapshots: list[BrokerPositionSnapshot],
+        *,
+        excluded_tickers: set[str],
+        source: str,
+    ) -> dict[str, Any]:
+        """Non-destructive price refresh.
+
+        Unlike ``apply_position_snapshot``, this never inserts, never deletes, and never
+        mutates ``quantity`` or ``lifecycle_state``. It only refreshes ``current_price`` on
+        existing rows for tickers NOT in ``excluded_tickers``. Used by the reconciler when
+        critical drift (missing_on_broker) is detected — we don't trust broker truth enough
+        to let ``replace_account_state`` delete disputed rows, but we still want live prices
+        on undisputed positions.
+        """
+        refreshed = 0
+        skipped = 0
+        with session_scope() as session:
+            repo = MemoryRepository(session)
+            existing = {str(row["ticker"]).upper() for row in repo.list_positions()}
+            for snap in snapshots:
+                ticker = snap.ticker.upper()
+                if ticker in excluded_tickers or ticker not in existing:
+                    skipped += 1
+                    continue
+                if snap.current_price is None or snap.current_price <= 0:
+                    skipped += 1
+                    continue
+                repo.update_position_price(
+                    position_id=ticker,
+                    current_price=float(snap.current_price),
+                    source=source,
+                )
+                refreshed += 1
+        return {
+            "status": "ok",
+            "refreshed": refreshed,
+            "skipped": skipped,
+            "excluded": sorted(excluded_tickers),
+        }
+
     def sync_from_broker(self, *, source: str = "rest_snapshot") -> dict[str, Any]:
         started_at = datetime.now().isoformat()
         run_id = f"reconcile:{started_at}"

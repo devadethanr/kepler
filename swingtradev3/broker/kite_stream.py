@@ -37,6 +37,7 @@ class KiteBrokerStream:
         self.logger = logger or logging.getLogger("broker.kite_stream")
         self._ticker: KiteTicker | None = None
         self._lock = threading.Lock()
+        self._quotes_lock = threading.Lock()
         self._connected = False
         self._reconnect_exhausted = False
         self._stop_requested = False
@@ -144,14 +145,15 @@ class KiteBrokerStream:
             self.logger.exception("Failed to apply broker order update: %s", exc)
 
     def _on_ticks(self, _ws: KiteTicker, ticks: list[dict[str, Any]]) -> None:
-        for tick in ticks:
-            token = int(tick.get("instrument_token") or 0)
-            if token <= 0:
-                continue
-            self.latest_ticks[token] = dict(tick)
-            ticker = self._token_to_ticker.get(token)
-            if ticker:
-                self.latest_quotes_by_ticker[ticker] = dict(tick)
+        with self._quotes_lock:
+            for tick in ticks:
+                token = int(tick.get("instrument_token") or 0)
+                if token <= 0:
+                    continue
+                self.latest_ticks[token] = dict(tick)
+                ticker = self._token_to_ticker.get(token)
+                if ticker:
+                    self.latest_quotes_by_ticker[ticker] = dict(tick)
 
     def set_tracked_tickers(self, tickers: list[str] | set[str], *, exchange: str) -> None:
         normalized = {str(item).strip().upper() for item in tickers if str(item).strip()}
@@ -170,7 +172,14 @@ class KiteBrokerStream:
             self._apply_subscriptions(current)
 
     def get_latest_quote(self, ticker: str) -> dict[str, Any] | None:
-        return self.latest_quotes_by_ticker.get(ticker.strip().upper())
+        with self._quotes_lock:
+            tick = self.latest_quotes_by_ticker.get(ticker.strip().upper())
+            return dict(tick) if tick else None
+
+    def snapshot_quotes(self) -> dict[str, dict[str, Any]]:
+        """Thread-safe deep copy of the latest quote map. Safe to iterate."""
+        with self._quotes_lock:
+            return {ticker: dict(tick) for ticker, tick in self.latest_quotes_by_ticker.items()}
 
     def _apply_subscriptions(self, ticker: KiteTicker) -> None:
         if not self._connected:

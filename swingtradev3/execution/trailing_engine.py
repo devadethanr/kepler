@@ -11,6 +11,8 @@ from models import AccountState, PositionState
 from tools.execution.alerts import AlertsTool
 from tools.execution.gtt_manager import GTTManager
 
+from .runtime_context import get_quote_cache
+
 
 def _now() -> datetime:
     return datetime.now()
@@ -188,6 +190,18 @@ class TrailingEngine:
         ticker: str,
         quote_provider: Callable[[str], dict[str, Any] | None] | None,
     ) -> float | None:
+        # Phase 6 G7: prefer QuoteCache (WebSocket-fed, freshness-tracked) over
+        # per-call REST LTP fetches. Spec §Phase 5: "drive trailing off live
+        # quote truth, not stale current_price".
+        cache = get_quote_cache()
+        if cache is not None:
+            snap = cache.get_quote(ticker)
+            if snap is not None and snap.last_price > 0:
+                max_age = float(cfg.execution.reconciliation.quote_max_age_seconds)
+                age = snap.age_seconds(now=datetime.now())
+                if age <= max_age:
+                    return snap.last_price
+
         if quote_provider is not None:
             tick = quote_provider(ticker)
             if isinstance(tick, dict) and tick.get("last_price") not in (None, ""):

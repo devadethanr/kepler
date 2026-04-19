@@ -2,6 +2,8 @@
 
 > Last Updated: April 17, 2026
 > This document is the repo-specific implementation plan for the cognitive and execution overhaul described in `agent_cognition_architecture.md`.
+>
+> **Phase numbering:** `live_trading_one_shot_plan.md` owns the canonical phase counter and `[X]` status tags. Phase numbers in *this* document are independent groupings of cognitive work (Postgres foundation, broker overhaul, slow brain, fast brain, learning, etc.) and do not map 1:1 to the delivery phases there.
 
 ## Scope
 

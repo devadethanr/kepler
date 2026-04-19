@@ -3,6 +3,8 @@
 > Last Updated: April 17, 2026
 > This document defines the target cognitive architecture for `swingtradev3`.
 > It complements `live_trading_one_shot_plan.md` by specifying the agent roles, memory model, decision rights, and phase-by-phase orchestration.
+>
+> **Phase numbering:** `live_trading_one_shot_plan.md` is the canonical phase counter for delivery tracking (status tags like `[X]` live there). Phase labels in *this* document describe cognitive orchestration windows (evening / pre-market / market-hours / post-market / monthly) and do not correspond 1:1 to the delivery phases.
 
 ## Purpose
 

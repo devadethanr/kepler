@@ -115,6 +115,20 @@ class CorporateActionHandlingConfig(BaseModel):
     bonus_split_pause_entries: bool = True
 
 
+class ReconciliationConfig(BaseModel):
+    """Phase 6: Reconciliation + recovery cadences and kill-switch thresholds."""
+    order_interval_seconds: int = 12
+    position_interval_seconds: int = 60
+    gtt_interval_seconds: int = 60
+    quote_freshness_seconds: int = 10
+    quote_max_age_seconds: float = 30.0
+    quote_stale_ratio_threshold: float = 0.5
+    position_quantity_tolerance: int = 0
+    consecutive_failure_threshold: int = 3
+    auth_max_age_hours: float = 18.0
+    startup_stream_wait_seconds: float = 15.0
+
+
 class ExecutionConfig(BaseModel):
     poll_interval_minutes: int
     approval_timeout_hours: int
@@ -128,6 +142,7 @@ class ExecutionConfig(BaseModel):
     avoid_fno_expiry_days: int
     max_entry_deviation_pct: float
     corporate_action_handling: CorporateActionHandlingConfig
+    reconciliation: ReconciliationConfig = Field(default_factory=ReconciliationConfig)
 
 
 # ═══════════════════════════════════════════════════════════
