@@ -262,8 +262,11 @@ def check_ddpi_poa() -> CheckResult:
     if _truthy_env("KITE_DDPI_POA_CONFIRMED", False):
         return CheckResult(
             name="ddpi_poa",
-            status="PASS",
-            detail="DDPI/POA manually confirmed by environment override",
+            status="WARN",
+            detail=(
+                "DDPI/POA manually asserted by environment override, but broker profile "
+                "truth was not verified; multi-day unattended exits must remain disabled"
+            ),
         )
     return CheckResult(
         name="ddpi_poa",

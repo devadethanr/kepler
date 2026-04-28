@@ -97,6 +97,15 @@ class TradingScheduler:
         schedule.every().day.at(_ist_time(m.premarket_setup_time)).do(
             self._job, "premarket_setup", self._premarket_setup
         )
+        # Phase 7 (P8): pre-market auth preflight (default 08:50). Re-auth is the
+        # operator's responsibility; we surface the alert loudly so they notice
+        # before market open. Also clears any stale daily-loss block from the
+        # previous session.
+        schedule.every().day.at(_ist_time(cfg.schedule.auth_refresh)).do(
+            self._job,
+            "auth_preflight",
+            lambda: self._auth_preflight(clear_prior_day_blocks=True),
+        )
 
         # ── Phase 3: Market Hours (09:15 → 15:30) ──
         mh = cfg.scheduler.market_hours
@@ -335,6 +344,70 @@ class TradingScheduler:
         approved = [a for a in approvals if a.get("approved") is True]
         if approved:
             print(f"  → {len(approved)} approved orders ready for placement")
+
+        # Belt-and-suspenders: 15 minutes before market open we re-verify the
+        # Kite session is fresh. The main 08:50 preflight is the primary gate;
+        # this covers operators who re-authed between 08:50 and 09:00.
+        await self._auth_preflight(clear_prior_day_blocks=True)
+
+    async def _auth_preflight(self, *, clear_prior_day_blocks: bool = False) -> None:
+        """Phase 7 (P8): pre-market broker-session freshness check.
+
+        Runs at ``cfg.schedule.auth_refresh`` (08:50 default) and is also
+        re-invoked from ``_premarket_setup`` immediately before market open.
+
+        When ``clear_prior_day_blocks=True`` the sticky prior-day
+        ``daily_loss_limit`` block (set by the reconciler's daily-loss loop) is
+        cleared so today's session starts clean if auth is healthy.
+        """
+        from execution.auth_preflight import is_session_fresh
+        from execution.operator_controls import (
+            clear_block_new_entries,
+            set_block_new_entries,
+            set_exit_only_mode,
+        )
+
+        fresh, reason, age_hours = is_session_fresh()
+        print(
+            f"[{_now_ist().isoformat()}] auth_preflight fresh={fresh} reason={reason} "
+            f"age_hours={age_hours!r}"
+        )
+        if cfg.trading.mode.value != "live":
+            clear_block_new_entries(source="premarket_scheduler", reason="stale_auth")
+            return
+        if fresh:
+            clear_block_new_entries(source="premarket_scheduler", reason="stale_auth")
+            if clear_prior_day_blocks:
+                # Start-of-day: clear the sticky overnight daily-loss block and
+                # the exit-only mode that the reconciler may have latched.
+                clear_block_new_entries(source="premarket_scheduler", reason="daily_loss_limit")
+                set_exit_only_mode(
+                    enabled=False,
+                    source="premarket_scheduler",
+                    reason="new_trading_day",
+                )
+            return
+
+        detail: dict = {"stale_reason": reason or "unknown"}
+        if age_hours is not None:
+            detail["session_age_hours"] = age_hours
+        set_block_new_entries(
+            reason="stale_auth",
+            source="premarket_scheduler",
+            detail=detail,
+        )
+        # Loud alert so operator re-authenticates before 09:15.
+        try:
+            from notifications.telegram_client import TelegramClient
+
+            tg = TelegramClient()
+            await tg.send_briefing(
+                f"🚨 Kite auth stale at {_now_ist().strftime('%H:%M')} IST — "
+                f"operator must re-authenticate before market open",
+                f"reason={reason} age_hours={age_hours!r}",
+            )
+        except Exception as exc:  # pragma: no cover
+            print(f"auth preflight alert failed: {exc}")
 
     # ─────────────────────────────────────────────────────────────
     # Phase 3: Market Hours

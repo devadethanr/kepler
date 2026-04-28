@@ -129,6 +129,15 @@ class ReconciliationConfig(BaseModel):
     startup_stream_wait_seconds: float = 15.0
 
 
+class SafetyConfig(BaseModel):
+    """Phase 7: Safety / kill-switch thresholds beyond the reconciler loops."""
+
+    order_failure_threshold: int = 3
+    disconnect_grace_seconds: float = 30.0
+    disconnect_check_interval_seconds: float = 15.0
+    daily_loss_check_interval_seconds: float = 300.0
+
+
 class ExecutionConfig(BaseModel):
     poll_interval_minutes: int
     approval_timeout_hours: int
@@ -143,6 +152,7 @@ class ExecutionConfig(BaseModel):
     max_entry_deviation_pct: float
     corporate_action_handling: CorporateActionHandlingConfig
     reconciliation: ReconciliationConfig = Field(default_factory=ReconciliationConfig)
+    safety: SafetyConfig = Field(default_factory=SafetyConfig)
 
 
 # ═══════════════════════════════════════════════════════════
@@ -163,6 +173,7 @@ class RiskConfig(BaseModel):
     max_risk_pct_per_trade: float
     max_weekly_loss_pct: float
     max_drawdown_pct: float
+    max_daily_loss_pct: float = 0.025
     min_rr_ratio: float
     confidence_sizing: ConfidenceSizingConfig
 

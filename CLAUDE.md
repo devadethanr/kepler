@@ -61,9 +61,17 @@ pytest tests/test_risk.py
 pytest tests/test_indicators.py
 pytest tests/test_mode_switching.py
 
-# Pause execution agent (faster than Telegram)
-touch PAUSE
-rm PAUSE  # Resume
+# Phase 7 operator controls (via API; see swingtradev3/api/routes/ops.py)
+# Disable new entries while honoring open exits / GTTs:
+#   POST /ops/mode {"exit_only_mode": true, "reason": "maintenance"}
+# Full stop (entries + new GTTs):
+#   POST /ops/mode {"trading_enabled": false, "reason": "emergency_stop"}
+# Flatten every open position at market:
+#   POST /ops/flatten {"reason": "operator_flatten"}
+# Clear an automatic kill switch after resolving root cause:
+#   POST /ops/block/clear {"reason": "stale_auth"}
+# Inspect current safety state:
+#   GET /ops/safety
 ```
 
 ## Key File Locations
@@ -229,7 +237,7 @@ This project has a `quant-systems-architect` agent configured in `.claude/agents
 
 - **Never** auto-close positions without human approval (except GTT triggers)
 - **Never** auto-replace GTTs that disappear (alert immediately, require acknowledgment)
-- **Always** check `PAUSE` file before any order operation
+- **Always** check `operator_controls` (`trading_enabled`, `new_entries_enabled`, `exit_only_mode`, `block_new_entries`) before any order operation. The `PAUSE` sentinel-file mechanism is retired — use `POST /ops/mode` / `POST /ops/block/clear`.
 - **Always** validate state.json vs live Kite on startup via reconciler.py
 - **Never** commit `.env` or `.backtest_cache/` (already in `.gitignore`)
 - **Always** run backtest with `use_llm: false` first (fast), then `use_llm: true` for final validation

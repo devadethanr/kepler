@@ -153,6 +153,7 @@ class OrderExecutionTool:
                 "average_price": None,
                 "quantity": resolved_quantity,
                 "mode": "live",
+                "product": "CNC",
                 "broker_tag": broker_tag,
                 "margin": margin_payload,
                 "protection_status": "pending_fill_confirmation",
@@ -173,6 +174,7 @@ class OrderExecutionTool:
             "status": fill.status,
             "average_price": fill.average_price,
             "quantity": fill.quantity,
+            "product": "CNC",
             "position_id": position_id,
             "oco_gtt_id": gtt.oco_gtt_id,
         }
@@ -262,9 +264,77 @@ class OrderExecutionTool:
             "average_price": None,
             "quantity": resolved_quantity,
             "mode": "live",
+            "product": "CNC",
             "broker_tag": broker_tag,
             "margin": margin_payload,
             "position_id": None,
             "oco_gtt_id": None,
             "protection_status": "pending_fill_confirmation",
+        }
+
+    async def place_exit_order_async(
+        self,
+        *,
+        ticker: str,
+        quantity: int,
+        reference_price: float,
+        product: str = "CNC",
+    ) -> dict[str, object]:
+        """Phase 7 (P2): place a SELL MARKET order to close an existing position.
+
+        Bypasses risk sizing (the position already exists; we are closing, not
+        opening). Routes to paper fill engine or live Kite according to
+        ``cfg.trading.mode``.
+        """
+        if quantity <= 0:
+            return {"status": "rejected", "reason": "invalid_quantity", "quantity": 0}
+
+        order_id = f"exit-{uuid.uuid4().hex[:10]}"
+
+        if cfg.trading.mode.value != "live":
+            fill = self.fill_engine.fill(ticker, "sell", quantity, reference_price, order_id)
+            return {
+                "order_id": fill.order_id,
+                "status": fill.status,
+                "average_price": fill.average_price,
+                "quantity": fill.quantity,
+                "mode": cfg.trading.mode.value,
+                "product": product,
+            }
+
+        if not has_kite_session():
+            return {
+                "status": "blocked",
+                "reason": "KITE_SESSION_REQUIRED",
+                "quantity": quantity,
+                "mode": "live",
+            }
+
+        broker_tag = self._build_broker_tag(ticker)
+        try:
+            live_order_id = place_live_order(
+                exchange=cfg.trading.exchange,
+                ticker=ticker,
+                side="sell",
+                quantity=quantity,
+                price=0.0,
+                order_type="MARKET",
+                product=product,
+                tag=broker_tag,
+            )
+        except Exception as exc:
+            return {
+                "status": "failed",
+                "reason": f"exit_order_submission_failed:{exc}",
+                "quantity": quantity,
+                "mode": "live",
+            }
+        return {
+            "order_id": live_order_id,
+            "status": "submitted",
+            "average_price": None,
+            "quantity": quantity,
+            "mode": "live",
+            "product": product,
+            "broker_tag": broker_tag,
         }

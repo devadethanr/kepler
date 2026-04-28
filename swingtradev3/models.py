@@ -54,6 +54,7 @@ class PositionState(BaseModel):
     target_price: float
     opened_at: datetime
     entry_order_id: str | None = None
+    product: str = "CNC"
     oco_gtt_id: str | None = None
     lifecycle_state: Literal[
         "pending_entry",

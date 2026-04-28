@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import threading
+from datetime import datetime
 from typing import Any, Callable
 
 from kiteconnect import KiteTicker
@@ -47,6 +48,8 @@ class KiteBrokerStream:
         self._token_to_ticker: dict[int, str] = {}
         self.latest_ticks: dict[int, dict[str, Any]] = {}
         self.latest_quotes_by_ticker: dict[str, dict[str, Any]] = {}
+        self._last_connect_at: datetime | None = None
+        self._last_disconnect_at: datetime | None = None
 
     def start(self) -> None:
         self._stop_requested = False
@@ -119,11 +122,13 @@ class KiteBrokerStream:
     def _on_connect(self, ws: KiteTicker, _response: object) -> None:
         self._connected = True
         self._reconnect_exhausted = False
+        self._last_connect_at = datetime.now()
         self._apply_subscriptions(ws)
         self.logger.info("Kite WebSocket connected")
 
     def _on_close(self, _ws: KiteTicker, code: int | None, reason: str | None) -> None:
         self._connected = False
+        self._last_disconnect_at = datetime.now()
         self.logger.info("Kite WebSocket closed code=%s reason=%s", code, reason)
 
     def _on_error(self, _ws: KiteTicker, code: int | None, reason: str | None) -> None:
@@ -131,12 +136,23 @@ class KiteBrokerStream:
 
     def _on_reconnect(self, _ws: KiteTicker, attempts_count: int) -> None:
         self._connected = False
+        self._last_disconnect_at = self._last_disconnect_at or datetime.now()
         self.logger.warning("Kite WebSocket reconnect attempt=%s", attempts_count)
 
     def _on_noreconnect(self, _ws: KiteTicker) -> None:
         self._connected = False
         self._reconnect_exhausted = True
+        self._last_disconnect_at = self._last_disconnect_at or datetime.now()
         self.logger.error("Kite WebSocket exhausted reconnect attempts")
+
+    def connection_status(self) -> dict[str, Any]:
+        """Phase 7: snapshot of broker-stream connectivity for kill-switch loops."""
+        return {
+            "connected": self._connected,
+            "reconnect_exhausted": self._reconnect_exhausted,
+            "last_connect_at": self._last_connect_at.isoformat() if self._last_connect_at else None,
+            "last_disconnect_at": self._last_disconnect_at.isoformat() if self._last_disconnect_at else None,
+        }
 
     def _on_order_update(self, _ws: KiteTicker, data: dict[str, Any]) -> None:
         try:

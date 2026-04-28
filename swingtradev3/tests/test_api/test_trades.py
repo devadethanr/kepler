@@ -23,6 +23,7 @@ def test_get_trade_not_found():
     response = client.get("/trades/NONEXISTENT")
     assert response.status_code == 404
 
-def test_close_trade_not_implemented():
+def test_close_trade_deprecated():
+    """Phase 7: trades/{id}/close is retired in favor of /ops/positions/{ticker}/close."""
     response = client.post("/trades/NONEXISTENT/close")
-    assert response.status_code == 501
+    assert response.status_code == 410

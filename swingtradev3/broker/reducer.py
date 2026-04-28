@@ -510,6 +510,11 @@ class BrokerReducer:
                 )
                 or None
             ),
+            "product": (
+                existing.product
+                if existing is not None
+                else str(intent_payload.get("product") or "CNC")
+            ),
             "oco_gtt_id": gtt_id or (existing.oco_gtt_id if existing is not None else None),
             "lifecycle_state": (
                 existing.lifecycle_state

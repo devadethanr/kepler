@@ -401,7 +401,7 @@ Definition of done:
 
 - restart during market hours does not duplicate orders or lose live positions
 
-### Phase 7: Safety, Auth, And Operator Controls
+### Phase 7 [X]: Safety, Auth, And Operator Controls
 
 Implementation:
 

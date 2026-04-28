@@ -22,6 +22,7 @@ from memory.repositories import MemoryRepository
 
 from .operator_controls import (
     clear_block_new_entries,
+    read_block_new_entries,
     set_block_new_entries,
     write_reconciliation_status,
 )
@@ -75,8 +76,47 @@ class Reconciler:
     LOOP_POSITIONS = "positions"
     LOOP_GTTS = "gtts"
     LOOP_QUOTES = "quote_freshness"
+    LOOP_CONNECTION = "broker_connection"
+    LOOP_DAILY_LOSS = "daily_loss"
     LOOP_STREAM = "stream"
     LOOP_AUTH = "auth"
+    NON_LIVE_BLOCK_REASONS = (
+        "stream_unavailable",
+        "broker_disconnected",
+        "stale_auth",
+        "stale_quotes",
+        "orders_drift",
+        "positions_drift",
+        "gtts_drift",
+        "orders_loop_failures",
+        "positions_loop_failures",
+        "gtts_loop_failures",
+        "quote_freshness_loop_failures",
+        "broker_connection_loop_failures",
+    )
+    NON_LIVE_INCIDENT_IDS = (
+        "stream_unavailable",
+        "broker_disconnected",
+        "stale_auth",
+        "stale_quotes",
+        "reconcile_orders",
+        "reconcile_positions",
+        "reconcile_gtts",
+        "orders_loop_failures",
+        "positions_loop_failures",
+        "gtts_loop_failures",
+        "quote_freshness_loop_failures",
+        "broker_connection_loop_failures",
+    )
+    NON_LIVE_NON_BLOCKING_LOOPS = {
+        LOOP_ORDERS,
+        LOOP_POSITIONS,
+        LOOP_GTTS,
+        LOOP_QUOTES,
+        LOOP_CONNECTION,
+        LOOP_STREAM,
+        LOOP_AUTH,
+    }
 
     def __init__(
         self,
@@ -94,6 +134,16 @@ class Reconciler:
         self._exchange = exchange
         self._stop_event: asyncio.Event | None = None
         self._consecutive_failures: dict[str, int] = {}
+        # Phase 7: track disconnect onset so the grace window is measured against
+        # the first observed disconnect rather than the loop-tick cadence.
+        self._disconnect_since: datetime | None = None
+        active_block_reasons = {
+            str(item).strip()
+            for item in (read_block_new_entries() or {}).get("active_reasons", [])
+            if str(item).strip()
+        }
+        self._broker_block_active = "broker_disconnected" in active_block_reasons
+        self._daily_loss_block_active = "daily_loss_limit" in active_block_reasons
 
     # ------------------------------------------------------------------
     # Config accessors (G10)
@@ -102,6 +152,10 @@ class Reconciler:
     @property
     def _conf(self):
         return cfg.execution.reconciliation
+
+    @property
+    def _live_broker_enforcement_enabled(self) -> bool:
+        return cfg.trading.mode.value == "live"
 
     # ------------------------------------------------------------------
     # Mutation lock helper (G2)
@@ -287,6 +341,18 @@ class Reconciler:
             )
         return report
 
+    async def relax_runtime_guards_for_non_live(self, *, source: str) -> None:
+        """Clear live-broker latches when the worker is running outside live mode."""
+        if self._live_broker_enforcement_enabled:
+            return
+        async with self._acquire_lock():
+            for reason in self.NON_LIVE_BLOCK_REASONS:
+                clear_block_new_entries(source=source, reason=reason)
+            for incident_id in self.NON_LIVE_INCIDENT_IDS:
+                self._resolve_incident(incident_id, source=source)
+        self._broker_block_active = False
+        self._disconnect_since = None
+
     # ------------------------------------------------------------------
     # Runtime loops
     # ------------------------------------------------------------------
@@ -341,6 +407,38 @@ class Reconciler:
                 self._record_failure(self.LOOP_QUOTES, exc)
             await self._sleep(self._conf.quote_freshness_seconds)
 
+    async def run_broker_connection_loop(self) -> None:
+        """Phase 7 (P7): runtime broker-disconnect kill switch.
+
+        Flips ``block_new_entries`` when the stream has been down for more than
+        ``cfg.execution.safety.disconnect_grace_seconds``. Clears on reconnect.
+        """
+        interval = float(cfg.execution.safety.disconnect_check_interval_seconds)
+        while self._should_continue():
+            try:
+                await self._check_broker_connection(source="reconciler_connection_loop")
+                self._record_success(self.LOOP_CONNECTION)
+            except Exception as exc:
+                logger.warning("reconciler connection loop failed: %s", exc)
+                self._record_failure(self.LOOP_CONNECTION, exc)
+            await self._sleep(interval)
+
+    async def run_daily_loss_loop(self) -> None:
+        """Phase 7 (P3): realized-daily-loss kill switch.
+
+        Runs every ``daily_loss_check_interval_seconds``; blocks new entries
+        and flips ``exit_only_mode`` on breach.
+        """
+        interval = float(cfg.execution.safety.daily_loss_check_interval_seconds)
+        while self._should_continue():
+            try:
+                await self._check_daily_loss(source="reconciler_daily_loss_loop")
+                self._record_success(self.LOOP_DAILY_LOSS)
+            except Exception as exc:
+                logger.warning("reconciler daily loss loop failed: %s", exc)
+                self._record_failure(self.LOOP_DAILY_LOSS, exc)
+            await self._sleep(interval)
+
     def _should_continue(self) -> bool:
         return self._stop_event is None or not self._stop_event.is_set()
 
@@ -353,6 +451,20 @@ class Reconciler:
         except asyncio.TimeoutError:
             return
 
+    def safety_counters(self) -> dict[str, Any]:
+        return {
+            "loop_failures": dict(self._consecutive_failures),
+            "broker_connection": {
+                "disconnect_since": (
+                    self._disconnect_since.isoformat() if self._disconnect_since is not None else None
+                ),
+                "kill_switch_active": self._broker_block_active,
+            },
+            "daily_loss": {
+                "kill_switch_active": self._daily_loss_block_active,
+            },
+        }
+
     # ------------------------------------------------------------------
     # Consecutive-failure tracking (G9)
     # ------------------------------------------------------------------
@@ -360,6 +472,11 @@ class Reconciler:
     def _record_success(self, loop_name: str) -> None:
         if self._consecutive_failures.get(loop_name):
             self._consecutive_failures[loop_name] = 0
+            if (
+                not self._live_broker_enforcement_enabled
+                and loop_name in self.NON_LIVE_NON_BLOCKING_LOOPS
+            ):
+                return
             clear_block_new_entries(
                 source="reconciler",
                 reason=f"{loop_name}_loop_failures",
@@ -369,6 +486,11 @@ class Reconciler:
     def _record_failure(self, loop_name: str, exc: Exception) -> None:
         count = self._consecutive_failures.get(loop_name, 0) + 1
         self._consecutive_failures[loop_name] = count
+        if (
+            not self._live_broker_enforcement_enabled
+            and loop_name in self.NON_LIVE_NON_BLOCKING_LOOPS
+        ):
+            return
         threshold = int(self._conf.consecutive_failure_threshold)
         if count >= threshold:
             self._open_incident(
@@ -876,6 +998,12 @@ class Reconciler:
             source=source,
         )
 
+        if not self._live_broker_enforcement_enabled:
+            async with self._acquire_lock():
+                clear_block_new_entries(source=source, reason="stale_quotes")
+                self._resolve_incident("stale_quotes", source=source)
+            return post_refresh
+
         if post_refresh["stale_ratio"] >= float(self._conf.quote_stale_ratio_threshold):
             self._open_incident(
                 incident_id="stale_quotes",
@@ -906,40 +1034,148 @@ class Reconciler:
     # ------------------------------------------------------------------
 
     async def _check_auth_freshness(self, *, source: str) -> None:
+        from .auth_preflight import is_session_fresh
+
+        if not self._live_broker_enforcement_enabled:
+            async with self._acquire_lock():
+                clear_block_new_entries(source=source, reason="stale_auth")
+                self._resolve_incident("stale_auth", source=source)
+            return
+
+        # Only act when we have a session; "no session" is a separate path that
+        # the broker-live gate already covers. The preflight helper would return
+        # ``(False, "missing")`` which is a different (noisier) signal.
         if not has_kite_session():
             return
-        with session_scope() as session:
-            repo = MemoryRepository(session)
-            payload = repo.get_auth_session_payload()
-        if not payload:
-            return
-        created_at_raw = payload.get("created_at") or payload.get("login_time")
-        if not created_at_raw:
-            return
-        try:
-            created_at = datetime.fromisoformat(str(created_at_raw))
-        except (TypeError, ValueError):
-            return
-        max_age = timedelta(hours=float(self._conf.auth_max_age_hours))
-        age = _now() - created_at
-        if age > max_age:
-            self._open_incident(
-                incident_id="stale_auth",
-                severity="critical",
-                payload={
-                    "at": _now().isoformat(),
-                    "session_age_hours": age.total_seconds() / 3600.0,
-                    "max_age_hours": float(self._conf.auth_max_age_hours),
-                },
-            )
-            set_block_new_entries(
-                reason="stale_auth",
-                source=source,
-                detail={"session_age_hours": age.total_seconds() / 3600.0},
-            )
-        else:
+
+        fresh, reason, age_hours = is_session_fresh(
+            max_age_hours=float(self._conf.auth_max_age_hours)
+        )
+        if fresh:
             clear_block_new_entries(source=source, reason="stale_auth")
             self._resolve_incident("stale_auth", source=source)
+            return
+
+        # missing_timestamp and stale both trip the kill switch.
+        detail: dict[str, Any] = {"stale_reason": reason}
+        if age_hours is not None:
+            detail["session_age_hours"] = age_hours
+        self._open_incident(
+            incident_id="stale_auth",
+            severity="critical",
+            payload={
+                "at": _now().isoformat(),
+                "max_age_hours": float(self._conf.auth_max_age_hours),
+                **detail,
+            },
+        )
+        set_block_new_entries(reason="stale_auth", source=source, detail=detail)
+
+    # ------------------------------------------------------------------
+    # Phase 7: broker-disconnect runtime kill switch (P7)
+    # ------------------------------------------------------------------
+
+    async def _check_broker_connection(self, *, source: str) -> dict[str, Any]:
+        stream = self._stream
+        if stream is None:
+            return {"status": "no_stream"}
+        status = stream.connection_status()
+        now = _now()
+        connected = bool(status.get("connected"))
+        exhausted = bool(status.get("reconnect_exhausted"))
+        grace = float(cfg.execution.safety.disconnect_grace_seconds)
+
+        if connected and not exhausted:
+            # Reset disconnect tracker and clear any prior kill-switch.
+            self._disconnect_since = None
+            if self._broker_block_active:
+                async with self._acquire_lock():
+                    clear_block_new_entries(source=source, reason="broker_disconnected")
+                    self._resolve_incident("broker_disconnected", source=source)
+                    self._broker_block_active = False
+            return {"status": "connected", **status}
+
+        if self._disconnect_since is None:
+            self._disconnect_since = now
+
+        downtime_seconds = (now - self._disconnect_since).total_seconds()
+
+        # reconnect_exhausted is an immediate trip regardless of grace window.
+        if exhausted or downtime_seconds >= grace:
+            if not self._broker_block_active:
+                async with self._acquire_lock():
+                    self._open_incident(
+                        incident_id="broker_disconnected",
+                        severity="critical",
+                        payload={
+                            "at": now.isoformat(),
+                            "downtime_seconds": downtime_seconds,
+                            "reconnect_exhausted": exhausted,
+                            "last_connect_at": status.get("last_connect_at"),
+                            "last_disconnect_at": status.get("last_disconnect_at"),
+                        },
+                    )
+                    set_block_new_entries(
+                        reason="broker_disconnected",
+                        source=source,
+                        detail={
+                            "downtime_seconds": downtime_seconds,
+                            "reconnect_exhausted": exhausted,
+                        },
+                    )
+                    self._broker_block_active = True
+            return {"status": "disconnected", "downtime_seconds": downtime_seconds, **status}
+
+        return {"status": "in_grace", "downtime_seconds": downtime_seconds, **status}
+
+    # ------------------------------------------------------------------
+    # Phase 7: daily-loss runtime kill switch (P3)
+    # ------------------------------------------------------------------
+
+    async def _check_daily_loss(self, *, source: str) -> dict[str, Any]:
+        # Deferred import: risk.daily_loss reads the trades table every tick but
+        # shouldn't be an import-time dep of the reconciler module.
+        from execution.operator_controls import set_exit_only_mode
+        from risk.daily_loss import daily_loss_snapshot
+
+        snapshot = await asyncio.to_thread(daily_loss_snapshot)
+        if snapshot is None:
+            return {"status": "no_data"}
+
+        threshold_pct = float(cfg.risk.max_daily_loss_pct)
+        breached = bool(snapshot.get("breached"))
+        if breached:
+            if not self._daily_loss_block_active:
+                async with self._acquire_lock():
+                    self._open_incident(
+                        incident_id="daily_loss_limit",
+                        severity="critical",
+                        payload={
+                            "at": _now().isoformat(),
+                            "realized_pnl": snapshot["realized_pnl"],
+                            "equity": snapshot["equity"],
+                            "loss_pct": snapshot["loss_pct"],
+                            "threshold_pct": threshold_pct,
+                        },
+                    )
+                    set_block_new_entries(
+                        reason="daily_loss_limit",
+                        source=source,
+                        detail={
+                            "realized_pnl": snapshot["realized_pnl"],
+                            "loss_pct": snapshot["loss_pct"],
+                            "threshold_pct": threshold_pct,
+                        },
+                    )
+                    set_exit_only_mode(
+                        enabled=True,
+                        source=source,
+                        reason="daily_loss_limit",
+                    )
+                    self._daily_loss_block_active = True
+        # No auto-clear: per spec, the daily-loss block is sticky for the rest
+        # of the trading day and is cleared by the next morning's premarket job.
+        return snapshot
 
     # ------------------------------------------------------------------
     # Drift response / helpers

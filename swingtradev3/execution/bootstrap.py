@@ -18,7 +18,9 @@ from memory.db import get_engine
 
 from .operator_controls import (
     list_pending_failed_event_retries,
+    list_pending_reconcile_acks,
     mark_failed_event_retry,
+    mark_reconcile_ack,
     set_block_new_entries,
     write_worker_status,
 )
@@ -125,6 +127,10 @@ class WorkerRuntime:
                 await self._reconciler.run_post_stream_readiness_check()
             except Exception as exc:
                 print(f"worker post-stream readiness check failed: {exc}")
+        else:
+            await self._reconciler.relax_runtime_guards_for_non_live(
+                source="worker_non_live_startup"
+            )
         await scheduler.start()
         self._started = True
         await self._write_status()
@@ -132,20 +138,41 @@ class WorkerRuntime:
             asyncio.create_task(self._approval_loop(), name="worker-approval-loop"),
             asyncio.create_task(self._operator_control_loop(), name="worker-operator-control-loop"),
             asyncio.create_task(self._heartbeat_loop(), name="worker-heartbeat-loop"),
-            asyncio.create_task(
-                self._reconciler.run_orders_loop(), name="worker-reconcile-orders-loop"
-            ),
-            asyncio.create_task(
-                self._reconciler.run_positions_loop(), name="worker-reconcile-positions-loop"
-            ),
-            asyncio.create_task(
-                self._reconciler.run_gtts_loop(), name="worker-reconcile-gtts-loop"
-            ),
-            asyncio.create_task(
-                self._reconciler.run_quote_freshness_loop(),
-                name="worker-reconcile-quote-loop",
-            ),
         ]
+        if self._broker_live_enabled():
+            self._tasks.extend(
+                [
+                    asyncio.create_task(
+                        self._reconciler.run_orders_loop(), name="worker-reconcile-orders-loop"
+                    ),
+                    asyncio.create_task(
+                        self._reconciler.run_positions_loop(),
+                        name="worker-reconcile-positions-loop",
+                    ),
+                    asyncio.create_task(
+                        self._reconciler.run_gtts_loop(), name="worker-reconcile-gtts-loop"
+                    ),
+                    asyncio.create_task(
+                        self._reconciler.run_quote_freshness_loop(),
+                        name="worker-reconcile-quote-loop",
+                    ),
+                    asyncio.create_task(
+                        self._reconciler.run_broker_connection_loop(),
+                        name="worker-reconcile-connection-loop",
+                    ),
+                    asyncio.create_task(
+                        self._reconciler.run_daily_loss_loop(),
+                        name="worker-reconcile-daily-loss-loop",
+                    ),
+                ]
+            )
+        elif self._broker_stream_enabled():
+            self._tasks.append(
+                asyncio.create_task(
+                    self._reconciler.run_quote_freshness_loop(),
+                    name="worker-reconcile-quote-loop",
+                )
+            )
 
     async def stop(self) -> None:
         if not self._started and self._lease is None:
@@ -196,6 +223,10 @@ class WorkerRuntime:
                     if queued:
                         await self._state_machine.execute_requested_approvals()
                     await self._state_machine.advance_active_executions()
+                    # Phase 7 (P2): drain any operator-requested flatten. Same
+                    # lock, so it serializes against approval submissions and
+                    # protection recovery.
+                    await self._state_machine.process_flatten_request()
             except Exception as exc:
                 print(f"worker approval loop failed: {exc}")
             await asyncio.sleep(APPROVAL_POLL_SECONDS)
@@ -203,25 +234,75 @@ class WorkerRuntime:
     async def _operator_control_loop(self) -> None:
         while not self._stop_event.is_set():
             try:
-                for control in list_pending_failed_event_retries():
-                    control_key = str(control["control_key"])
-                    event_id = str(control.get("value", {}).get("event_id", "")).strip()
-                    if not event_id:
-                        mark_failed_event_retry(
-                            control_key,
-                            status="failed",
-                            detail="missing_event_id",
-                        )
-                        continue
-                    success = await event_bus.retry_failed_event(event_id)
-                    mark_failed_event_retry(
-                        control_key,
-                        status="completed" if success else "failed",
-                        detail=None if success else "event_not_found",
-                    )
+                await self._process_operator_controls_once()
             except Exception as exc:
                 print(f"worker operator-control loop failed: {exc}")
             await asyncio.sleep(OPERATOR_CONTROL_POLL_SECONDS)
+
+    async def _process_operator_controls_once(self) -> None:
+        for control in list_pending_failed_event_retries():
+            control_key = str(control["control_key"])
+            event_id = str(control.get("value", {}).get("event_id", "")).strip()
+            if not event_id:
+                mark_failed_event_retry(
+                    control_key,
+                    status="failed",
+                    detail="missing_event_id",
+                )
+                continue
+            success = await event_bus.retry_failed_event(event_id)
+            mark_failed_event_retry(
+                control_key,
+                status="completed" if success else "failed",
+                detail=None if success else "event_not_found",
+            )
+
+        pending_reconcile_acks = list_pending_reconcile_acks()
+        if not pending_reconcile_acks:
+            return
+
+        async with self._execution_lock:
+            for control in pending_reconcile_acks:
+                control_key = str(control["control_key"])
+                value = dict(control.get("value") or {})
+                position_id = str(value.get("position_id") or "").strip().upper()
+                resolution = str(value.get("resolution") or "").strip().lower()
+                if not position_id or resolution not in {"broker_close", "retain"}:
+                    mark_reconcile_ack(
+                        control_key,
+                        status="failed",
+                        detail="invalid_reconcile_ack_request",
+                    )
+                    continue
+
+                try:
+                    result = await self._state_machine.resolve_reconcile_required(
+                        position_id=position_id,
+                        resolution=resolution,
+                        source="worker_operator_control",
+                    )
+                except Exception as exc:
+                    mark_reconcile_ack(
+                        control_key,
+                        status="failed",
+                        detail=str(exc),
+                    )
+                    continue
+
+                if result.get("status") == "rejected":
+                    mark_reconcile_ack(
+                        control_key,
+                        status="failed",
+                        result=result,
+                        detail=str(result.get("reason") or "rejected"),
+                    )
+                    continue
+
+                mark_reconcile_ack(
+                    control_key,
+                    status="completed",
+                    result=result,
+                )
 
     async def _heartbeat_loop(self) -> None:
         while not self._stop_event.is_set():
@@ -236,16 +317,23 @@ class WorkerRuntime:
         info = scheduler.get_schedule_info()
         info["owner"] = "worker"
         info["heartbeat"] = "alive"
+        info["safety_counters"] = {
+            "coordinator": self._state_machine.safety_counters(),
+            "reconciler": self._reconciler.safety_counters(),
+        }
         write_worker_status(info)
 
     async def _maintain_broker_stream(self) -> None:
-        if not self._broker_live_enabled():
+        if not self._broker_stream_enabled():
             self._broker_stream.stop()
             return
         if not has_kite_session():
             self._broker_stream.stop()
             return
         await asyncio.to_thread(self._broker_stream.ensure_running)
+
+    def _broker_stream_enabled(self) -> bool:
+        return self._broker_live_enabled() or cfg.trading.mode.value == "paper"
 
     def _broker_live_enabled(self) -> bool:
         return cfg.trading.mode.value == "live" and runtime_flags.live_trading_enabled

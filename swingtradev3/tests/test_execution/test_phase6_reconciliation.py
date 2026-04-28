@@ -8,6 +8,7 @@ from uuid import uuid4
 import pytest
 
 from broker.reducer import BrokerReducer
+from config import cfg
 from execution import reconciler as reconciler_module
 from execution.coordinator import ExecutionCoordinator
 from execution.operator_controls import (
@@ -21,12 +22,13 @@ from execution.quote_cache import QuoteCache
 from execution.reconciler import Reconciler
 from memory.db import session_scope
 from memory.models import (
+    AuthSessionRow,
     PositionRow,
     ProtectiveTriggerRow,
     ReconciliationRunRow,
 )
 from memory.repositories import MemoryRepository
-from models import AccountState
+from models import AccountState, TradingMode
 
 
 def _ticker() -> str:
@@ -341,6 +343,54 @@ async def test_coordinator_submit_order_intent_ignored_when_blocked():
     assert result == "ignored"
 
 
+@pytest.mark.asyncio
+async def test_block_clear_resume_allows_submission_after_manual_clear(monkeypatch):
+    ticker = _ticker()
+    order_intent_id = _seed_order_intent(
+        ticker=ticker,
+        status="queued",
+        broker_tag=f"STV3{uuid4().hex[:8].upper()}",
+    )
+
+    coordinator = ExecutionCoordinator()
+    coordinator.alerts_tool = MagicMock()
+    coordinator.alerts_tool.send_alert = AsyncMock()
+    coordinator.risk_tool = MagicMock()
+    coordinator.risk_tool.check_risk = MagicMock(return_value={"approved": True, "quantity": 5})
+    coordinator.order_tool = MagicMock()
+    coordinator.order_tool.place_order_async = AsyncMock(
+        return_value={
+            "order_id": "order-phase6-resume",
+            "status": "submitted",
+            "quantity": 5,
+            "mode": "paper",
+            "broker_tag": "STV3RESUME01",
+            "product": "CNC",
+        }
+    )
+    monkeypatch.setattr(
+        "execution.coordinator.MarketRegimeDetector",
+        lambda: SimpleNamespace(detect_regime=lambda: {"regime": "neutral"}),
+    )
+    monkeypatch.setattr(
+        coordinator,
+        "pending_execution_requests",
+        lambda: [{"order_intent_id": order_intent_id}],
+    )
+
+    set_block_new_entries(reason="manual_test_block", source="phase6_test", detail={})
+
+    blocked = await coordinator.submit_queued_order_intents()
+    assert blocked == 0
+    coordinator.order_tool.place_order_async.assert_not_awaited()
+
+    clear_block_new_entries(source="phase6_test", reason="manual_test_block")
+
+    resumed = await coordinator.submit_queued_order_intents()
+    assert resumed == 1
+    coordinator.order_tool.place_order_async.assert_awaited_once()
+
+
 def test_operator_controls_block_roundtrip():
     set_block_new_entries(reason="positions_drift", source="unit_test", detail={"count": 2})
     assert is_block_new_entries_active() is True
@@ -396,6 +446,7 @@ async def test_reconciler_quote_freshness_blocks_when_stale(monkeypatch):
         protection_manager=protection_manager,
     )
 
+    monkeypatch.setattr(cfg.trading, "mode", TradingMode.LIVE)
     result = await reconciler._check_quote_freshness(source="unit_test")
     assert result["stale_ratio"] >= 0.5
     assert is_block_new_entries_active() is True
@@ -587,6 +638,7 @@ async def test_reconciler_escalates_after_consecutive_failures(monkeypatch):
 
     monkeypatch.setattr(reconciler_module, "fetch_orders", _boom)
     monkeypatch.setattr(reconciler_module, "has_kite_session", lambda: True)
+    monkeypatch.setattr(cfg.trading, "mode", TradingMode.LIVE)
 
     reconciler, _, _, _ = _make_reconciler()
     threshold = 3  # matches cfg default
@@ -620,14 +672,29 @@ async def test_reconciler_flags_stale_auth(monkeypatch):
     )
     with session_scope() as session:
         repo = MemoryRepository(session)
+        original_auth_payload = repo.get_auth_session_payload()
         repo.replace_auth_session(payload.model_dump(mode="json"), source="phase6_stale_auth")
 
-    monkeypatch.setattr(reconciler_module, "has_kite_session", lambda: True)
-    reconciler, _, _, _ = _make_reconciler()
-    await reconciler._check_auth_freshness(source="unit_test")
+    try:
+        monkeypatch.setattr(reconciler_module, "has_kite_session", lambda: True)
+        reconciler, _, _, _ = _make_reconciler()
+        monkeypatch.setattr(cfg.trading, "mode", TradingMode.LIVE)
+        await reconciler._check_auth_freshness(source="unit_test")
 
-    assert is_block_new_entries_active() is True
-    assert "stale_auth" in (read_block_new_entries() or {}).get("active_reasons", [])
+        assert is_block_new_entries_active() is True
+        assert "stale_auth" in (read_block_new_entries() or {}).get("active_reasons", [])
+    finally:
+        with session_scope() as session:
+            repo = MemoryRepository(session)
+            if original_auth_payload:
+                repo.replace_auth_session(
+                    original_auth_payload,
+                    source="phase6_stale_auth_restore",
+                )
+            else:
+                row = session.get(AuthSessionRow, "kite")
+                if row is not None:
+                    session.delete(row)
 
 
 # ──────────────────────────────────────────────────────────────────

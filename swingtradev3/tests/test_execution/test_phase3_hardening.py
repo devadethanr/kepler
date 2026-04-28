@@ -139,7 +139,7 @@ async def test_token_manager_refresh_restores_env_from_persisted_session(monkeyp
 async def test_worker_maintains_broker_stream_when_session_appears(monkeypatch):
     runtime = WorkerRuntime()
     runtime._broker_stream = MagicMock()
-    monkeypatch.setattr(runtime, "_broker_live_enabled", lambda: True)
+    monkeypatch.setattr(runtime, "_broker_stream_enabled", lambda: True)
 
     with patch("execution.bootstrap.has_kite_session", side_effect=[False, True]):
         await runtime._maintain_broker_stream()

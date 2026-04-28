@@ -23,7 +23,14 @@ STATE_PATH = CONTEXT_DIR / "state.json"
 @pytest.fixture(autouse=True)
 def override_auth():
     with patch.object(cfg.api, "enabled", False):
-        yield
+        # Phase 7: the coordinator now runs a per-order auth preflight in live
+        # mode. Phase 4 tests pre-date that guard; the ``order_tool`` is already
+        # mocked so we bypass the freshness check at the boundary.
+        with patch(
+            "execution.coordinator.is_session_fresh",
+            return_value=(True, None, 1.0),
+        ):
+            yield
 
 
 def _intent_payload(ticker: str, order_intent_id: str) -> dict[str, object]:

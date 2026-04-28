@@ -95,6 +95,32 @@ class MemoryRepository:
     def __init__(self, session: Session):
         self.session = session
 
+    def _sync_account_state_position_payload(
+        self,
+        *,
+        position_id: str,
+        updater,
+    ) -> None:
+        row = self.session.get(AccountStateRow, PRIMARY_ACCOUNT_KEY)
+        if row is None:
+            return
+
+        payload = dict(row.payload or {})
+        positions = list(payload.get("positions") or [])
+        updated = False
+        next_positions: list[dict[str, Any]] = []
+        for item in positions:
+            position_payload = dict(item or {})
+            ticker = str(position_payload.get("ticker") or "").upper()
+            if ticker == position_id.upper():
+                position_payload = updater(position_payload)
+                updated = True
+            next_positions.append(position_payload)
+
+        if updated:
+            payload["positions"] = next_positions
+            row.payload = payload
+
     def append_execution_event(
         self,
         *,
@@ -954,6 +980,14 @@ class MemoryRepository:
         if detail:
             payload["reconcile_detail"] = detail
         row.payload = payload
+        self._sync_account_state_position_payload(
+            position_id=position_id,
+            updater=lambda item: {
+                **item,
+                "lifecycle_state": new_state,
+                **({"reconcile_detail": detail} if detail else {}),
+            },
+        )
 
         self.append_execution_event(
             event_type="position_state_changed",
@@ -992,6 +1026,10 @@ class MemoryRepository:
         payload = dict(row.payload or {})
         payload["current_price"] = current_price
         row.payload = payload
+        self._sync_account_state_position_payload(
+            position_id=position_id,
+            updater=lambda item: {**item, "current_price": current_price},
+        )
         return {
             "position_id": row.position_id,
             "ticker": row.ticker,
@@ -1015,6 +1053,7 @@ class MemoryRepository:
         status: str | None = None,
         severity: str | None = None,
     ) -> list[dict[str, Any]]:
+        self.session.flush()
         query = select(FailureIncidentRow).order_by(FailureIncidentRow.updated_at.desc())
         if status is not None:
             query = query.where(FailureIncidentRow.status == status)

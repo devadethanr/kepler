@@ -68,11 +68,17 @@ execution:
     consecutive_failure_threshold: 3
     auth_max_age_hours: 18.0
     startup_stream_wait_seconds: 15.0
+  safety:
+    order_failure_threshold: 3
+    disconnect_grace_seconds: 30.0
+    disconnect_check_interval_seconds: 15.0
+    daily_loss_check_interval_seconds: 300.0
 
 risk:
   max_risk_pct_per_trade: 0.015
   max_weekly_loss_pct: 0.04
   max_drawdown_pct: 0.10
+  max_daily_loss_pct: 0.025
   min_rr_ratio: 2.0
   confidence_sizing:
     high:

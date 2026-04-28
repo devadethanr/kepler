@@ -127,6 +127,8 @@ def test_managed_approvals_and_auth_session_project_from_postgres():
         write_json(APPROVALS_PATH, original_approvals)
         if original_session:
             write_json(KITE_SESSION_PATH, original_session)
+        else:
+            write_json(KITE_SESSION_PATH, {})
 
 
 def test_trades_are_imported_and_execution_events_are_recorded():

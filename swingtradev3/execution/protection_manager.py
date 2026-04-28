@@ -9,6 +9,8 @@ from models import AccountState, GTTOrder, PositionState
 from tools.execution.alerts import AlertsTool
 from tools.execution.gtt_manager import GTTManager
 
+from .operator_controls import clear_block_new_entries, set_block_new_entries
+
 
 ACTIVE_ORDER_INTENT_STATUSES = {
     "entry_filled",
@@ -464,6 +466,15 @@ class ProtectionManager:
             )
             if attempts >= RECOVERY_FAILURE_THRESHOLD:
                 await self._mark_operator_intervention(position, detail=str(exc))
+                set_block_new_entries(
+                    reason="gtt_recovery_failures",
+                    source="protection_manager",
+                    detail={
+                        "ticker": ticker,
+                        "attempts": attempts,
+                        "last_error": str(exc),
+                    },
+                )
             return False
 
         oco_gtt_id = str(gtt.oco_gtt_id)
@@ -503,6 +514,19 @@ class ProtectionManager:
                 payload={"ticker": ticker, "resolved_at": now_iso},
                 source="gtt_watchdog",
             )
+            # Clear the kill switch only if no other ticker still has an open
+            # protection incident — callers downstream remain fail-closed if
+            # another protection recovery is still outstanding.
+            open_protection_incidents = [
+                inc
+                for inc in repo.list_failure_incidents(status="open")
+                if str(inc.get("incident_id", "")).startswith("protection:")
+            ]
+            if not open_protection_incidents:
+                clear_block_new_entries(
+                    source="protection_manager",
+                    reason="gtt_recovery_failures",
+                )
 
         if intent is not None:
             self._store_order_intent(
