@@ -21,13 +21,13 @@ def test_scan_status():
     assert "status" in data
 
 def test_trigger_scan():
-    with patch("api.routes.scan.scan_status_store", {"status": "idle"}):
+    with patch("api.routes.scan._load_status", return_value={"status": "idle", "started_at": None, "completed_at": None}):
         response = client.post("/scan")
         assert response.status_code == 200
         assert response.json()["status"] == "accepted"
 
 def test_trigger_scan_already_running():
-    with patch("api.routes.scan.scan_status_store", {"status": "running"}):
+    with patch("api.routes.scan._load_status", return_value={"status": "running", "started_at": None, "completed_at": None}):
         response = client.post("/scan")
         assert response.status_code == 200
         assert response.json()["status"] == "rejected"

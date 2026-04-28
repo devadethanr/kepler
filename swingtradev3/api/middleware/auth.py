@@ -9,7 +9,7 @@ from config import cfg
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
 async def get_api_key(request: Request, api_key_header: str = Security(api_key_header)):
-    if request.url.path == "/health":
+    if request.url.path == "/health" or request.url.path.startswith("/broker/postbacks/"):
         return True
         
     if not cfg.api.enabled:

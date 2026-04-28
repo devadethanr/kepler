@@ -1,12 +1,31 @@
 services:
+  db:
+    image: postgres:16
+    container_name: swingtradev3-db
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-swingtradev3}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - TZ=Asia/Kolkata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-swingtradev3}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
   app:
+    image: kepler-app:latest
     build:
       context: .
       dockerfile: Dockerfile.dev
     container_name: swingtradev3-app
     ports:
       - "8001:8000"
-      - "8502:8501"
     volumes:
       - ./swingtradev3:/app
       - ./swingtradev3/context:/app/context
@@ -16,20 +35,66 @@ services:
       - swingtradev3/.env
     environment:
       - PYTHONUNBUFFERED=1
+      - TZ=Asia/Kolkata
+      - DATABASE_URL=${DATABASE_URL:-postgresql+psycopg://postgres:postgres@db:5432/swingtradev3}
     depends_on:
-      - kite-mcp
+      db:
+        condition: service_healthy
+      kite-mcp:
+        condition: service_started
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD-SHELL", "curl -fsS -H \"X-API-Key: $$FASTAPI_API_KEY\" http://localhost:8000/health >/dev/null"]
       interval: 30s
       timeout: 10s
       retries: 3
-    # Override CMD for dev: hot reload for FastAPI, auto-refresh for Streamlit
+    # Override CMD for dev: hot reload for FastAPI
     command: >
       sh -c "
-        uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload &
-        streamlit run dashboard/app.py --server.port 8501 --server.address 0.0.0.0 --server.enableCORS false
+        uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
       "
+
+  worker:
+    image: kepler-app:latest
+    volumes:
+      - ./swingtradev3:/app
+      - ./swingtradev3/context:/app/context
+      - ./swingtradev3/logs:/app/logs
+      - ./swingtradev3/strategy:/app/strategy
+    env_file:
+      - swingtradev3/.env
+    environment:
+      - PYTHONUNBUFFERED=1
+      - TZ=Asia/Kolkata
+      - DATABASE_URL=${DATABASE_URL:-postgresql+psycopg://postgres:postgres@db:5432/swingtradev3}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    command: >
+      sh -c "
+        python -m execution.worker
+      "
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dashboard
+    container_name: swingtradev3-dashboard
+    ports:
+      - "8502:3000"
+      - "8002:8000"
+    env_file:
+      - swingtradev3/.env
+    environment:
+      - FASTAPI_URL=http://app:8000
+      - TZ=Asia/Kolkata
+      - API_KEY=${FASTAPI_API_KEY}
+    volumes:
+      - ./swingtradev3/dashboard:/app
+    depends_on:
+      - app
+    restart: unless-stopped
 
   kite-mcp:
     build:
@@ -46,3 +111,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+
+volumes:
+  postgres_data:

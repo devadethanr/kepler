@@ -4,7 +4,11 @@ from datetime import date, datetime
 from enum import Enum
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
+
+from intent_ids import approval_id as build_approval_id
+from intent_ids import entry_intent_id as build_entry_intent_id
+from intent_ids import order_intent_id as build_order_intent_id
 
 
 class TradingMode(str, Enum):
@@ -50,8 +54,16 @@ class PositionState(BaseModel):
     target_price: float
     opened_at: datetime
     entry_order_id: str | None = None
-    stop_gtt_id: str | None = None
-    target_gtt_id: str | None = None
+    product: str = "CNC"
+    oco_gtt_id: str | None = None
+    lifecycle_state: Literal[
+        "pending_entry",
+        "open",
+        "closing",
+        "closed",
+        "reconcile_required",
+        "operator_intervention",
+    ] = "open"
     thesis_score: float | None = None
     research_date: date | None = None
     skill_version: str | None = None
@@ -104,10 +116,39 @@ class PendingApproval(BaseModel):
     risk_flags: list[str] = Field(default_factory=list)
     sector: str | None = None
     approved: bool | None = None
+    approval_id: str | None = None
+    entry_intent_id: str | None = None
+    order_intent_id: str | None = None
+    execution_requested: bool = False
+    execution_request_id: str | None = None
+    status: str | None = None
+    broker_tag: str | None = None
     created_at: datetime
     expires_at: datetime
     research_date: date | None = None
     skill_version: str | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def _normalize_identity(cls, value: Any) -> Any:
+        if not isinstance(value, dict):
+            return value
+        payload = dict(value)
+        ticker = str(payload.get("ticker") or "").strip().upper()
+        if ticker:
+            payload["ticker"] = ticker
+        payload["entry_intent_id"] = str(
+            payload.get("entry_intent_id") or build_entry_intent_id(payload)
+        )
+        payload["order_intent_id"] = str(
+            payload.get("order_intent_id") or build_order_intent_id(payload)
+        )
+        payload["approval_id"] = str(
+            payload.get("approval_id") or build_approval_id(payload)
+        )
+        if "execution_requested" not in payload:
+            payload["execution_requested"] = False
+        return payload
 
 
 class TradeRecord(BaseModel):
@@ -157,11 +198,24 @@ class CorporateAction(BaseModel):
 
 
 class GTTOrder(BaseModel):
-    position_id: str
+    oco_gtt_id: str
     ticker: str
     stop_price: float
     target_price: float
-    status: Literal["active", "triggered_stop", "triggered_target", "cancelled"] = "active"
+    status: Literal[
+        "active",
+        "triggered",
+        "disabled",
+        "expired",
+        "cancelled",
+        "rejected",
+        "deleted",
+    ] = "active"
+    triggered_leg: Literal["stop", "target"] | None = None
+    exit_order_id: str | None = None
+    exit_exchange_order_id: str | None = None
+    exit_order_status: str | None = None
+    exit_rejection_reason: str | None = None
 
 
 class FundamentalsSnapshot(BaseModel):

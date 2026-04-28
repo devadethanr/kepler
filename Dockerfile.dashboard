@@ -1,0 +1,24 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# Install system dependencies and Node.js 20
+RUN apt-get update && apt-get install -y \
+    curl \
+    unzip \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install python dependencies for dashboard
+COPY requirements_dashboard.txt ./
+RUN pip install --no-cache-dir -r requirements_dashboard.txt
+
+# Copy source code using the proper directory structure
+COPY swingtradev3/dashboard/ /app/
+
+# Port for Reflex frontend
+EXPOSE 3000
+
+# Command to run the dashboard
+CMD ["reflex", "run", "--env", "dev"]

@@ -5,6 +5,7 @@ from typing import Any, AsyncGenerator
 from google.adk.agents import BaseAgent
 from google.adk.events import Event
 from google.genai import types
+import asyncio
 
 from tools.market.market_data import MarketDataTool
 
@@ -24,7 +25,7 @@ class MarketDataAgent(BaseAgent):
             data = await tool.get_eod_data_async(ticker)
         except Exception as e:
             try:
-                data = tool.get_eod_data(ticker)
+                data = await asyncio.to_thread(tool.get_eod_data, ticker)
             except Exception as inner_e:
                 data = {"error": str(inner_e)}
 

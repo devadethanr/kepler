@@ -1,0 +1,238 @@
+{
+  "agents": {
+    "BatchScannerAgent": {
+      "agent_name": "BatchScannerAgent",
+      "completed_at": null,
+      "current_task": "Deep analysis completed for 0 stocks.",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-28T19:41:07.050249",
+      "status": "running"
+    },
+    "FilterAgent": {
+      "agent_name": "FilterAgent",
+      "completed_at": null,
+      "current_task": "Funnel completed: 0 stocks qualified for deep analysis.",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-28T19:41:07.048262",
+      "status": "running"
+    },
+    "FundamentalsAgent_ABB": {
+      "agent_name": "FundamentalsAgent_ABB",
+      "completed_at": null,
+      "current_task": "Fundamentals fetched for ABB",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-18T18:00:12.664742",
+      "status": "running"
+    },
+    "FundamentalsAgent_BSE": {
+      "agent_name": "FundamentalsAgent_BSE",
+      "completed_at": null,
+      "current_task": "Fundamentals fetched for BSE",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-14T18:00:10.890082",
+      "status": "running"
+    },
+    "FundamentalsAgent_OIL": {
+      "agent_name": "FundamentalsAgent_OIL",
+      "completed_at": null,
+      "current_task": "Fundamentals fetched for OIL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-16T02:19:33.200187",
+      "status": "running"
+    },
+    "KnowledgeGraphAgent": {
+      "agent_name": "KnowledgeGraphAgent",
+      "completed_at": null,
+      "current_task": "No scan results to update knowledge graph.",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-28T19:41:07.171644",
+      "status": "running"
+    },
+    "MarketDataAgent_ABB": {
+      "agent_name": "MarketDataAgent_ABB",
+      "completed_at": null,
+      "current_task": "Market data fetched for ABB",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-18T18:00:03.997952",
+      "status": "running"
+    },
+    "MarketDataAgent_BSE": {
+      "agent_name": "MarketDataAgent_BSE",
+      "completed_at": null,
+      "current_task": "Market data fetched for BSE",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-14T18:00:10.887159",
+      "status": "running"
+    },
+    "MarketDataAgent_OIL": {
+      "agent_name": "MarketDataAgent_OIL",
+      "completed_at": null,
+      "current_task": "Market data fetched for OIL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-16T02:19:33.188329",
+      "status": "running"
+    },
+    "OptionsAgent_ABB": {
+      "agent_name": "OptionsAgent_ABB",
+      "completed_at": null,
+      "current_task": "Options data analyzed for ABB",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-18T18:10:53.364777",
+      "status": "running"
+    },
+    "OptionsAgent_BSE": {
+      "agent_name": "OptionsAgent_BSE",
+      "completed_at": null,
+      "current_task": "Options data analyzed for BSE",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-14T18:00:12.103793",
+      "status": "running"
+    },
+    "OptionsAgent_OIL": {
+      "agent_name": "OptionsAgent_OIL",
+      "completed_at": null,
+      "current_task": "Options data analyzed for OIL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-16T02:19:39.395102",
+      "status": "running"
+    },
+    "RegimeAgent": {
+      "agent_name": "RegimeAgent",
+      "completed_at": null,
+      "current_task": "Market regime detected: bear",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-28T19:41:07.020469",
+      "status": "running"
+    },
+    "ResearchPipeline": {
+      "agent_name": "ResearchPipeline",
+      "completed_at": "2026-04-28T19:41:07.179697",
+      "current_task": "Full evening research scan",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-28T19:41:06.944798",
+      "status": "completed"
+    },
+    "ResultsSaverAgent": {
+      "agent_name": "ResultsSaverAgent",
+      "completed_at": null,
+      "current_task": "Research results saved to /app/context/research/2026-04-28",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-28T19:41:07.166378",
+      "status": "running"
+    },
+    "ScorerAgent": {
+      "agent_name": "ScorerAgent",
+      "completed_at": null,
+      "current_task": "No qualified stocks to score.",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-28T19:41:07.051997",
+      "status": "running"
+    },
+    "SentimentAgent_ABB": {
+      "agent_name": "SentimentAgent_ABB",
+      "completed_at": null,
+      "current_task": "Sentiment analyzed for ABB",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-18T18:10:53.362620",
+      "status": "running"
+    },
+    "SentimentAgent_BSE": {
+      "agent_name": "SentimentAgent_BSE",
+      "completed_at": null,
+      "current_task": "Sentiment analyzed for BSE",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-14T18:00:12.101295",
+      "status": "running"
+    },
+    "SentimentAgent_OIL": {
+      "agent_name": "SentimentAgent_OIL",
+      "completed_at": null,
+      "current_task": "Sentiment analyzed for OIL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-16T02:19:39.392250",
+      "status": "running"
+    },
+    "TimesfmAgent_ABB": {
+      "agent_name": "TimesfmAgent_ABB",
+      "completed_at": null,
+      "current_task": "TimesFM forecast generated for ABB",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-18T18:20:09.091777",
+      "status": "running"
+    },
+    "TimesfmAgent_BSE": {
+      "agent_name": "TimesfmAgent_BSE",
+      "completed_at": null,
+      "current_task": "TimesFM forecast generated for BSE",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-14T18:00:12.522405",
+      "status": "running"
+    },
+    "TimesfmAgent_OIL": {
+      "agent_name": "TimesfmAgent_OIL",
+      "completed_at": null,
+      "current_task": "TimesFM forecast generated for OIL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-04-16T02:19:44.669359",
+      "status": "running"
+    },
+    "scheduler": {
+      "agent_name": "scheduler",
+      "completed_at": "2026-04-28T21:00:02.380132",
+      "current_task": "daily_summary",
+      "last_error": null,
+      "metadata": {
+        "last_job": "daily_summary"
+      },
+      "progress": null,
+      "started_at": "2026-04-28T21:00:00.970624",
+      "status": "completed"
+    }
+  },
+  "last_updated": "2026-04-28T21:00:02.380151",
+  "scheduler_phase": "wind_down"
+}

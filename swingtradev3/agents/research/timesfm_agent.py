@@ -5,6 +5,7 @@ from typing import Any, AsyncGenerator
 from google.adk.agents import BaseAgent
 from google.adk.events import Event
 from google.genai import types
+import asyncio
 
 from data.timesfm_forecaster import TimesFMForecaster
 from data.kite_fetcher import KiteFetcher
@@ -26,14 +27,14 @@ class TimesfmAgent(BaseAgent):
         try:
             candles = await kite_fetcher.fetch_async(ticker, interval="day")
             if candles is not None and not candles.empty:
-                data = tool.forecast_price_range(ticker, candles["close"], horizon=20)
+                data = await asyncio.to_thread(tool.forecast_price_range, ticker, candles["close"], horizon=20)
             else:
                 data = {"error": "insufficient_data"}
         except Exception as e:
             try:
-                candles = kite_fetcher.fetch(ticker, interval="day")
+                candles = await asyncio.to_thread(kite_fetcher.fetch, ticker, interval="day")
                 if candles is not None and not candles.empty:
-                    data = tool.forecast_price_range(ticker, candles["close"], horizon=20)
+                    data = await asyncio.to_thread(tool.forecast_price_range, ticker, candles["close"], horizon=20)
                 else:
                     data = {"error": "insufficient_data"}
             except Exception as inner_e:

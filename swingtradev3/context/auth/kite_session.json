@@ -1,36 +1,49 @@
 {
-  "user_type": "individual/res_no_nn",
+  "access_token": "PeMdHByEoSIEL64DFx1dEXUwMpCz0NO9",
+  "api_key": "m0q3d9nvg75ug0zg",
+  "broker": "ZERODHA",
+  "created_at": "2026-04-28T20:55:25.257022+05:30",
   "email": "devadethan1122@gmail.com",
+  "login_time": null,
+  "public_token": "CHnM3kkLnhyq57nOGRMCCTsu42EfxwyH",
+  "raw_session": {
+    "access_token": "PeMdHByEoSIEL64DFx1dEXUwMpCz0NO9",
+    "api_key": "m0q3d9nvg75ug0zg",
+    "avatar_url": null,
+    "broker": "ZERODHA",
+    "email": "devadethan1122@gmail.com",
+    "enctoken": "JHFKpqieJGJ/mSQoHrjMKWS84NvdbnvN9bai8dSQonPwDlIldytORtAYMKxp14KUeV3y6tuOtYJQMFChhYpbvBxxDRAXGHQOx2zujLDmlhmyzWA9lnN3y1NPGhs8XHQ=",
+    "exchanges": [
+      "NSE",
+      "BSE",
+      "MF"
+    ],
+    "login_time": "2026-04-28T20:55:14",
+    "meta": {
+      "demat_consent": "consent"
+    },
+    "order_types": [
+      "MARKET",
+      "LIMIT",
+      "SL",
+      "SL-M"
+    ],
+    "products": [
+      "CNC",
+      "NRML",
+      "MIS",
+      "BO",
+      "CO"
+    ],
+    "public_token": "CHnM3kkLnhyq57nOGRMCCTsu42EfxwyH",
+    "refresh_token": "",
+    "user_id": "RDK847",
+    "user_name": "Devadethan R",
+    "user_shortname": "Devadethan",
+    "user_type": "individual/res_no_nn"
+  },
+  "user_id": "RDK847",
   "user_name": "Devadethan R",
   "user_shortname": "Devadethan",
-  "broker": "ZERODHA",
-  "exchanges": [
-    "NSE",
-    "BSE",
-    "MF"
-  ],
-  "products": [
-    "CNC",
-    "NRML",
-    "MIS",
-    "BO",
-    "CO"
-  ],
-  "order_types": [
-    "MARKET",
-    "LIMIT",
-    "SL",
-    "SL-M"
-  ],
-  "avatar_url": null,
-  "user_id": "RDK847",
-  "api_key": "m0q3d9nvg75ug0zg",
-  "access_token": "jOMmObOtPPdOs0w3glkM6eUukEqPDVrF",
-  "public_token": "2XnwJ46fQjTjC7afC4CJPC57pHlwziw2",
-  "refresh_token": "",
-  "enctoken": "o53g1HNiKZV3Pq0WYJvrvf0raoOWUtIB4SLGAmOPk0Q7pb6x9x6hPqRWaVESCLyvWND5/lXevw+MSHBvNXFDbk4Ifv4LwiYzGsrP2AI3hsPhFIfbvwSVy4RpAIvMqLM=",
-  "login_time": "2026-04-12T18:17:55",
-  "meta": {
-    "demat_consent": "consent"
-  }
+  "user_type": "individual/res_no_nn"
 }

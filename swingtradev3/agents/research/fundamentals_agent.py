@@ -5,6 +5,7 @@ from typing import Any, AsyncGenerator
 from google.adk.agents import BaseAgent
 from google.adk.events import Event
 from google.genai import types
+import asyncio
 
 from tools.market.fundamental_data import FundamentalDataTool
 
@@ -21,7 +22,7 @@ class FundamentalsAgent(BaseAgent):
         tool = FundamentalDataTool()
         
         try:
-            data = tool.get_fundamentals(ticker)
+            data = await asyncio.to_thread(tool.get_fundamentals, ticker)
         except Exception as e:
             data = {"error": str(e)}
 

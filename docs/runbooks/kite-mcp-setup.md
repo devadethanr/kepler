@@ -1,13 +1,14 @@
 # Kite MCP Setup
 
-This file records the working self-hosted Kite MCP setup and the auth tweaks used in this repo.
+This file records the working self-hosted Kite MCP setup and the auth flow currently used by this repo.
 
 ## Services
 
-- `app`: Python runtime for `swingtradev3`
+- `app`: FastAPI + ADK runtime for `swingtradev3`
 - `kite-mcp`: self-hosted Zerodha `kite-mcp-server`
 
-The Docker stack is defined in [docker-compose.yml](/home/devadethanr/projects/kepler/docker-compose.yml).
+Local development is normally started from `swingtradev3/` through the Makefile, which targets [docker-compose.dev.yml](/home/devadethanr/projects/kepler/docker-compose.dev.yml).
+The production-oriented compose file remains [docker-compose.yml](/home/devadethanr/projects/kepler/docker-compose.yml).
 
 ## Why Self-Hosted MCP
 
@@ -26,9 +27,10 @@ Important runtime settings:
 - `APP_MODE=http`
 - `APP_PORT=8080`
 - `APP_HOST=0.0.0.0`
-- host port publish: `8080:8080`
+- dev host port publish: `8081:8080`
+- prod host port publish: `8080:8080`
 
-Why `8080:8080` matters:
+Why host port publishing matters:
 - Zerodha redirects the browser back to a local URL after login
 - without publishing the port, the host browser cannot reach the self-hosted MCP container
 
@@ -58,10 +60,11 @@ So the final approach is:
 
 ## Final Working Auth Flow
 
-Use the official Kite login helper:
+Use the current repository workflow:
 
 ```bash
-docker compose exec app python -m swingtradev3.auth.kite.login
+cd swingtradev3
+make login
 ```
 
 Steps:
@@ -103,32 +106,37 @@ Key files:
 
 ## Commands
 
-Bring up the stack:
+Bring up the dev stack:
 
 ```bash
-docker compose up --build -d
+cd swingtradev3
+make dev-detach
 ```
 
 Run the auth helper:
 
 ```bash
-docker compose exec app python -m swingtradev3.auth.kite.login
+cd swingtradev3
+make login
 ```
 
-Run the auth tests inside Docker:
+Run tests through the repository workflow:
 
 ```bash
-docker compose exec app python -m pytest -q swingtradev3/tests/test_kite_auth.py
+cd swingtradev3
+make test
 ```
 
-Check MCP logs:
+Check service logs:
 
 ```bash
-docker compose logs --tail=160 kite-mcp
+cd swingtradev3
+make logs-mcp
 ```
 
 ## Practical Notes
 
-- The status page at `http://localhost:8080/` only proves the HTTP server responded. It does not prove Kite auth completed.
+- In the dev stack, the local MCP status page is `http://localhost:8081/`. In the production compose file it is `http://localhost:8080/`.
+- The status page only proves the HTTP server responded. It does not prove Kite auth completed.
 - The persisted session file is the app’s live auth source of truth right now.
 - If the session expires, rerun the auth helper and overwrite the saved session.

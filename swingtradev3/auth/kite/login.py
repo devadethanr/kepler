@@ -9,16 +9,16 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import json
 import os
 import sys
-from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 from kiteconnect import KiteConnect
+from auth.kite.session_store import KiteSessionPayload, save_kite_session
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-CONTEXT_AUTH = PROJECT_ROOT / "context" / "auth"
+from paths import PROJECT_ROOT
+
+
 ENV_FILE = PROJECT_ROOT / ".env"
 
 
@@ -60,17 +60,22 @@ def exchange_request_token(request_token: str) -> dict:
     return kite.generate_session(request_token, api_secret=api_secret)
 
 
-def save_session(session: dict) -> Path:
-    CONTEXT_AUTH.mkdir(parents=True, exist_ok=True)
-    session_file = CONTEXT_AUTH / "kite_session.json"
-
-    def default_serializer(obj):
-        if hasattr(obj, "isoformat"):
-            return obj.isoformat()
-        raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
-
-    session_file.write_text(json.dumps(session, indent=2, default=default_serializer))
-    return session_file
+def save_session(session: dict, profile: dict) -> str:
+    payload = KiteSessionPayload(
+        api_key=get_kite_api_key(),
+        access_token=str(session.get("access_token") or ""),
+        public_token=session.get("public_token"),
+        user_id=profile.get("user_id") or session.get("user_id"),
+        user_name=profile.get("user_name"),
+        user_shortname=profile.get("user_shortname"),
+        email=profile.get("email"),
+        broker=profile.get("broker"),
+        user_type=profile.get("user_type"),
+        login_time=profile.get("login_time"),
+        raw_session=dict(session),
+    )
+    save_kite_session(payload)
+    return str(PROJECT_ROOT / "context" / "auth" / "kite_session.json")
 
 
 def verify_session(access_token: str) -> dict:
@@ -134,7 +139,7 @@ def main():
         print(f"  Login Time:  {profile.get('login_time', 'N/A')}")
         print(f"  Access Token: {access_token[:20]}...")
 
-        session_path = save_session(session)
+        session_path = save_session(session, profile)
         print(f"\nSession saved to: {session_path}")
         print("=" * 60)
 

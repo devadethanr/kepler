@@ -26,6 +26,8 @@ async def get_trade(trade_id: str):
 
 @router.post("/{trade_id}/close")
 async def close_trade(trade_id: str):
-    """Manually close a trade (not implemented)."""
-    # This requires interaction with the ExecutionAgent or Kite directly
-    raise HTTPException(status_code=501, detail="Manual trade close via API not yet implemented")
+    """Deprecated: use POST /ops/positions/{ticker}/close (Phase 7)."""
+    raise HTTPException(
+        status_code=410,
+        detail="Deprecated. Use POST /ops/positions/{ticker}/close to flatten a live position.",
+    )

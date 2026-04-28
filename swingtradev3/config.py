@@ -115,16 +115,44 @@ class CorporateActionHandlingConfig(BaseModel):
     bonus_split_pause_entries: bool = True
 
 
+class ReconciliationConfig(BaseModel):
+    """Phase 6: Reconciliation + recovery cadences and kill-switch thresholds."""
+    order_interval_seconds: int = 12
+    position_interval_seconds: int = 60
+    gtt_interval_seconds: int = 60
+    quote_freshness_seconds: int = 10
+    quote_max_age_seconds: float = 30.0
+    quote_stale_ratio_threshold: float = 0.5
+    position_quantity_tolerance: int = 0
+    consecutive_failure_threshold: int = 3
+    auth_max_age_hours: float = 18.0
+    startup_stream_wait_seconds: float = 15.0
+
+
+class SafetyConfig(BaseModel):
+    """Phase 7: Safety / kill-switch thresholds beyond the reconciler loops."""
+
+    order_failure_threshold: int = 3
+    disconnect_grace_seconds: float = 30.0
+    disconnect_check_interval_seconds: float = 15.0
+    daily_loss_check_interval_seconds: float = 300.0
+
+
 class ExecutionConfig(BaseModel):
     poll_interval_minutes: int
     approval_timeout_hours: int
     trail_stop_at_pct: float
     trail_to_pct: float
     trail_stop_to_locked_profit_pct: float = 5.0
+    trail_min_step_pct: float = 0.25
+    trail_hysteresis_pct: float = 0.25
+    trail_modify_cooldown_seconds: int = 300
     enable_trailing: bool = True
     avoid_fno_expiry_days: int
     max_entry_deviation_pct: float
     corporate_action_handling: CorporateActionHandlingConfig
+    reconciliation: ReconciliationConfig = Field(default_factory=ReconciliationConfig)
+    safety: SafetyConfig = Field(default_factory=SafetyConfig)
 
 
 # ═══════════════════════════════════════════════════════════
@@ -145,6 +173,7 @@ class RiskConfig(BaseModel):
     max_risk_pct_per_trade: float
     max_weekly_loss_pct: float
     max_drawdown_pct: float
+    max_daily_loss_pct: float = 0.025
     min_rr_ratio: float
     confidence_sizing: ConfidenceSizingConfig
 
@@ -502,3 +531,49 @@ def load_config(config_path: Path | None = None) -> AppConfig:
 
 
 cfg = load_config()
+
+
+def _env_bool(name: str, default: bool = False) -> bool:
+    raw = os.getenv(name)
+    if raw is None:
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
+
+
+class RuntimeFlags:
+    """Environment-controlled safety gates for the live runtime."""
+
+    @property
+    def live_trading_enabled(self) -> bool:
+        return _env_bool("LIVE_TRADING_ENABLED", False)
+
+    @property
+    def new_entries_enabled(self) -> bool:
+        return _env_bool("NEW_ENTRIES_ENABLED", False)
+
+    @property
+    def exit_only_mode(self) -> bool:
+        return _env_bool("EXIT_ONLY_MODE", False)
+
+    @property
+    def use_slow_brain(self) -> bool:
+        return _env_bool("USE_SLOW_BRAIN", False)
+
+    @property
+    def use_exception_analyst(self) -> bool:
+        return _env_bool("USE_EXCEPTION_ANALYST", False)
+
+    def live_entry_block_reason(self, mode: TradingMode | str) -> str | None:
+        mode_value = mode.value if isinstance(mode, TradingMode) else str(mode)
+        if mode_value != TradingMode.LIVE.value:
+            return None
+        if not self.live_trading_enabled:
+            return "LIVE_TRADING_ENABLED=false"
+        if self.exit_only_mode:
+            return "EXIT_ONLY_MODE=true"
+        if not self.new_entries_enabled:
+            return "NEW_ENTRIES_ENABLED=false"
+        return None
+
+
+runtime_flags = RuntimeFlags()

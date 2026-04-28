@@ -6,6 +6,7 @@ from typing import Any, Type, TypeVar, AsyncGenerator
 from pydantic import BaseModel
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 
+import httpx
 from google.adk.models.registry import LLMRegistry
 from google.adk.models.llm_request import LlmRequest
 from google.genai import types
@@ -33,7 +34,7 @@ class SmartRouter:
             ]
 
     @retry(
-        retry=retry_if_exception_type(ServerError),
+        retry=retry_if_exception_type((ServerError, httpx.HTTPStatusError)),
         stop=stop_after_attempt(2),
         wait=wait_exponential(multiplier=1, min=2, max=10),
         reraise=True
@@ -50,8 +51,8 @@ class SmartRouter:
             
             if response_text:
                 # Update health manager on success
-                # Map provider names to health_manager keys
-                service_key = "nvidia_nim" if "meta" in model_str else "google_gemini"
+                # Map provider names to health_manager keys using provider param
+                service_key = "nvidia_nim" if provider in ("openai", "nim") else "google_gemini"
                 update_service_status(service_key, True)
                 return response_text
             

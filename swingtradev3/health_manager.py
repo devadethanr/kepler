@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, Literal
+from typing import Any, Dict, Literal
 from datetime import datetime
 
 # Global status registry (Lazy evaluation)
