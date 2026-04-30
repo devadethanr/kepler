@@ -430,29 +430,42 @@ Definition of done:
 
 - the system fails closed instead of failing dangerously
 
-### Phase 8: Dashboard, API, And Compatibility Projections
+ ## Phase 8 React Dashboard
 
-Refactor:
+  ## Summary
 
-- `dashboard/dashboard/state.py`
-- `api/routes/positions.py`
-- `api/routes/trades.py`
-- `api/routes/portfolio.py`
-- `api/routes/dashboard.py`
+  - Phase 8 will replace the old Reflex dashboard with the root-level React/Vite app at swingtradev3-dashboard.
+  - Remove swingtradev3/dashboard and swingtradev3/dashboard_old after the React dashboard boots through Compose.
+  - Phase 8 remains dashboard/API/SSE/projection work. The knowledge graph screen stays as an explicit mock.
+  - Phase 14 becomes the real Postgres + Memgraph context graph/memory phase.
 
-Implementation:
+  - Replace Dockerfile.dashboard with a Node/Vite runtime and update docker-compose.dev.yml to mount/build ./swingtradev3-dashboard, not ./swingtradev3/dashboard.
+  - Use Vite dev proxy /api -> http://app:8000 so the browser calls same-origin /api/...; inject X-API-Key from dashboard container env in the proxy instead of hardcoding API keys into React.
+  - Add frontend data layer packages: @tanstack/react-query for request/mutation cache, zod for response validation, and @microsoft/fetch-event-source for SSE because native EventSource does not support custom request headers.
+  - Remove unused AI Studio/server packages from the dashboard app: @google/genai, dotenv, express, @types/express; keep react-force-graph-3d, three, recharts, motion, and lucide-react.
+  - Add src/lib/api.ts, src/lib/sse.ts, src/lib/schemas.ts, and feature hooks so screens do not call fetch directly.
+  - Keep KnowledgeScreen as a deterministic local mock with a visible Phase 14 Mock badge; remove markdown/file language like “View Markdown Base” and do not read context/knowledge in Phase 8.
+  - Refactor existing FastAPI routes so dashboard reads Postgres-backed state, not state.json, trades.json, pending_approvals.json, _graph.json, or _index.json.
+  - Make /sse/live durable by tailing execution_events with a cursor/heartbeat model instead of depending only on the in-memory broadcaster.
+  - Fix API auth fail-closed behavior: if API auth is enabled and no key is configured, return 403, do not allow access.
 
-- switch UI to DB-backed projections:
-  - intent status
-  - broker order state
-  - GTT protection state
-  - last reconciliation time
-  - auth/session status
-  - kill-switch state
-  - unresolved incidents
-- keep `pending_approvals.json`, `state.json`, and `trades.json` only as migration-era compatibility views
-- remove the hardcoded dashboard API key fallback
-- make SSE read from execution projections or an `execution_events` tail instead of the in-process event bus only
+  ## Required API Surface
+
+  | UI Area | Routes |
+  |---|---|
+  | Top bar / shell | GET /health, GET /ops/safety, GET /dashboard/snapshot |
+  | Dashboard overview | GET /dashboard/snapshot, GET /dashboard/events?limit=..., GET /sse/live |
+  | Orders / approvals | GET /approvals, POST /approvals/{id}/yes, POST /approvals/{id}/no |
+  | Execution | GET /dashboard/execution, GET /ops/reconciliation, GET /dashboard/events |
+  | Positions | GET /positions, POST /ops/positions/{ticker}/close |
+  | Trades / portfolio | GET /trades, GET /portfolio/summary |
+  | Incidents | GET /ops/safety, GET /ops/reconciliation, POST /ops/block/clear |
+  | Control pane | GET /ops/safety, POST /ops/mode, POST /ops/flatten, DELETE /ops/flatten, POST /scan, GET /scan/status |
+  | Tickers / quotes | GET /dashboard/quotes |
+  | Brokers | GET /dashboard/broker, GET /ops/safety |
+  | Telemetry | GET /dashboard/telemetry, GET /dashboard/events, GET /sse/live |
+  | Knowledge graph | local mock only in Phase 8; real API deferred to Phase 14 |
+
 
 Definition of done:
 
@@ -586,6 +599,41 @@ Definition of done:
 - market-hours execution still works if the LLM layer is unavailable
 - intraday reasoning exists only for bounded anomalies, not routine order routing
 - the system can learn and adapt without becoming an unbounded linear-bot-with-prompts
+
+## Phase 14 Context Graph Plan
+@docs/features/postgress-memgraph.md
+  - Add a dedicated “Context Graph / Memory System” phase after Phase 13, or immediately after Phase 8 if we choose to prioritize memory next.
+  - Keep Postgres as execution truth: orders, fills, positions, trades, approvals, incidents, reconciliation, auth, operator controls, and policy overlays.
+  - Add Memgraph as context graph truth: stocks, sectors, indices, research runs, candidates, news, regimes, signal snapshots, trade memories, lessons, failure patterns, and skill versions.
+  - Connect Postgres and Memgraph only through controlled projectors: Postgres execution_events -> GraphProjector -> Memgraph.
+  - Do not let Memgraph submit orders, mutate positions, clear incidents, edit config, or participate in worker hot-path execution.
+  - Replace file-based knowledge/research memory with typed graph repositories; no migration of old dev data.
+  - Update the knowledge graph dashboard screen to read the real graph only in Phase 14.
+
+  ## Documentation Updates
+
+  - Update docs/architecture/live_trading_one_shot_plan.md Phase 8 to reference the React dashboard, DB-backed APIs, durable SSE, and old dashboard removal.
+  - Add Phase 14 to docs/architecture/live_trading_one_shot_plan.md for Postgres + Memgraph context graph.
+  - Update docs/architecture/agent_cognition_architecture.md memory section to replace markdown KG as long-term memory with Memgraph.
+  - Update docs/architecture/agent_cognition_implementation_plan.md dashboard phase to point at swingtradev3-dashboard, and add the Phase 14 graph-memory implementation section.
+  - Also update docs/features/future-feature.md because it currently says “no new database” and selects Active Graph KG; that must be superseded if Memgraph is the chosen architecture.
+
+  ## Test Plan
+
+  - Run npm ci, npm run lint, and npm run build in swingtradev3-dashboard.
+  - Add frontend API-client tests for request headers, Zod parsing, and SSE reconnect behavior.
+  - Add FastAPI tests proving positions, trades, portfolio, approvals, and dashboard routes no longer read JSON files.
+  - Add SSE tests for cursor resume, heartbeat, and event ordering from execution_events.
+  - Run make test and make phase7-check from swingtradev3.
+  - Verify make dev-detach starts the React dashboard at the existing dashboard port.
+
+  ## Assumptions
+
+  - swingtradev3-dashboard is the only dashboard going forward.
+  - Old dashboard folders can be deleted after the new Compose runtime works.
+  - Knowledge graph UI remains mock-only in Phase 8.
+  - No existing context/research/wiki data migration is required.
+  - Sources checked for package decisions: TanStack Query docs, Zod docs, MDN EventSource docs, and Microsoft fetch-event-source docs.
 
 ## Exact Repo Changes
 

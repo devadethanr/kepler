@@ -3,11 +3,11 @@ from __future__ import annotations
 from fastapi import APIRouter
 from typing import Any
 
-from paths import CONTEXT_DIR
-from storage import read_json
 from models import AccountState
 from api.tasks.event_bus import event_bus
 from execution.operator_controls import request_failed_event_retry
+from memory.db import session_scope
+from memory.repositories import MemoryRepository
 
 router = APIRouter()
 
@@ -15,7 +15,9 @@ router = APIRouter()
 @router.get("/summary")
 async def get_portfolio_summary() -> dict[str, Any]:
     """Get aggregated portfolio views."""
-    state_payload = read_json(CONTEXT_DIR / "state.json", {})
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        state_payload = repo.get_account_state_payload()
     if not state_payload:
         return {
             "cash_inr": 0.0,

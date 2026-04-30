@@ -17,8 +17,10 @@ async def get_api_key(request: Request, api_key_header: str = Security(api_key_h
         
     expected_api_key = cfg.api.api_key
     if not expected_api_key:
-        # If no API key configured, we allow access but this should ideally be disabled in prod
-        return True
+        raise HTTPException(
+            status_code=HTTP_403_FORBIDDEN,
+            detail="API auth is enabled but no API key is configured",
+        )
 
     if api_key_header == expected_api_key:
         return api_key_header

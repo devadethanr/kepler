@@ -3,8 +3,8 @@ from __future__ import annotations
 from fastapi import APIRouter, HTTPException
 from typing import List
 
-from paths import CONTEXT_DIR
-from storage import read_json
+from memory.db import session_scope
+from memory.repositories import MemoryRepository
 from models import TradeRecord
 
 router = APIRouter()
@@ -12,13 +12,17 @@ router = APIRouter()
 @router.get("", response_model=List[TradeRecord])
 async def get_trades():
     """List closed trades."""
-    payload = read_json(CONTEXT_DIR / "trades.json", [])
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        payload = repo.get_trades_payload()
     return [TradeRecord.model_validate(t) for t in payload]
 
 @router.get("/{trade_id}", response_model=TradeRecord)
 async def get_trade(trade_id: str):
     """Get details for a specific trade by ID."""
-    payload = read_json(CONTEXT_DIR / "trades.json", [])
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        payload = repo.get_trades_payload()
     for t in payload:
         if str(t.get("trade_id")) == trade_id:
             return TradeRecord.model_validate(t)

@@ -46,13 +46,11 @@ def _approval_payload() -> list[dict[str, object]]:
     ]
 
 
-def test_approval_route_queues_worker_execution(monkeypatch):
-    payload = _approval_payload()
-    mock_write = MagicMock()
+def test_approval_route_queues_worker_execution(monkeypatch, persist_approvals):
+    payload = persist_approvals(_approval_payload())
     mock_broadcast = AsyncMock()
 
-    monkeypatch.setattr(approvals_route, "read_json", lambda *_args, **_kwargs: payload)
-    monkeypatch.setattr(approvals_route, "write_json", mock_write)
+    monkeypatch.setattr(approvals_route, "project_all_managed_files", lambda: None)
     monkeypatch.setattr(approvals_route.broadcaster, "broadcast", mock_broadcast)
 
     response = client.post(f"/approvals/{PendingApproval.model_validate(payload[0]).approval_id}/yes")
@@ -61,10 +59,16 @@ def test_approval_route_queues_worker_execution(monkeypatch):
     body = response.json()
     assert body["decision"] == "approved"
     assert body["message"] == "Approved. Queued for worker execution."
-    assert payload[0]["approved"] is True
-    assert payload[0]["execution_requested"] is True
-    assert payload[0]["execution_request_id"]
-    mock_write.assert_called_once()
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        approval = repo.get_approval(str(payload[0]["approval_id"]))
+        order_intent = repo.get_order_intent(str(payload[0]["order_intent_id"]))
+    assert approval is not None
+    assert approval["approved"] is True
+    assert approval["execution_requested"] is True
+    assert approval["execution_request_id"]
+    assert order_intent is not None
+    assert order_intent["status"] == "queued"
     mock_broadcast.assert_awaited_once()
 
 

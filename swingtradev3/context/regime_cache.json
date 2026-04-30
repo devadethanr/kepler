@@ -1,8 +1,8 @@
 {
   "data": {
     "advance_decline_ratio": null,
-    "composite_score": 0.325,
-    "confidence": 0.68,
+    "composite_score": 0.285,
+    "confidence": 0.71,
     "dii_net_crore": null,
     "fii_net_crore": null,
     "regime": "bear",
@@ -10,11 +10,11 @@
       "breadth": 0.5,
       "flows": 0.5,
       "trend": 0.0,
-      "vix": 0.5
+      "vix": 0.3
     },
     "trend_details": {},
-    "vix": null,
+    "vix": 18.46,
     "volatility_state": "normal"
   },
-  "fetched_at": "2026-04-28T14:11:07.018643"
+  "fetched_at": "2026-04-30T12:30:07.008567"
 }

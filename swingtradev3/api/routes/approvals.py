@@ -9,10 +9,9 @@ from auth.kite.client import has_kite_session
 from config import cfg, runtime_flags
 from api.sse_broadcaster import broadcaster
 from memory.db import session_scope
+from memory.projections import project_all_managed_files
 from memory.repositories import MemoryRepository
 from models import ApprovalResponse, PendingApproval
-from paths import CONTEXT_DIR
-from storage import read_json, write_json
 
 router = APIRouter()
 
@@ -64,20 +63,38 @@ def _resolve_pending_approval(
 @router.get("", response_model=List[PendingApproval])
 async def get_approvals():
     """List pending approvals."""
-    payload = read_json(CONTEXT_DIR / "pending_approvals.json", [])
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        payload = repo.get_pending_approvals_payload()
     return [PendingApproval.model_validate(p) for p in payload]
 
 
 @router.post("/{approval_id}/yes", response_model=ApprovalResponse)
 async def approve_trade(approval_id: str):
     """Approve a trade setup."""
-    payload = read_json(CONTEXT_DIR / "pending_approvals.json", [])
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        payload = repo.get_pending_approvals_payload()
     live_entry_block_reason = runtime_flags.live_entry_block_reason(cfg.trading.mode)
     if live_entry_block_reason is None and cfg.trading.mode.value == "live" and not has_kite_session():
         live_entry_block_reason = "KITE_SESSION_REQUIRED"
     _, approval, approval_payload = _resolve_pending_approval(payload, approval_id)
 
     if approval.expires_at <= datetime.now():
+        with session_scope() as session:
+            repo = MemoryRepository(session)
+            repo.update_approval_payload(
+                approval.approval_id,
+                {
+                    **approval_payload,
+                    "approved": False,
+                    "execution_requested": False,
+                    "execution_request_id": None,
+                    "status": "expired",
+                },
+                source="approval_route",
+            )
+        project_all_managed_files()
         return ApprovalResponse(
             approval_id=str(approval.approval_id),
             decision="expired",
@@ -101,13 +118,20 @@ async def approve_trade(approval_id: str):
         if live_entry_block_reason is None
         else None
     )
-    write_json(CONTEXT_DIR / "pending_approvals.json", payload)
+    approval_payload["status"] = "queued" if live_entry_block_reason is None else "approved"
+
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        repo.update_approval_payload(
+            approval.approval_id,
+            approval_payload,
+            source="approval_route",
+        )
+    project_all_managed_files()
 
     if live_entry_block_reason is None:
-        _persist_order_intent(approval_payload, status="queued")
         message = "Approved. Queued for worker execution."
     else:
-        _persist_order_intent(approval_payload, status="approved")
         message = (
             "Approved, but live execution is blocked by runtime guardrails "
             f"({live_entry_block_reason})."
@@ -127,17 +151,22 @@ async def approve_trade(approval_id: str):
 @router.post("/{approval_id}/no", response_model=ApprovalResponse)
 async def reject_trade(approval_id: str):
     """Reject a trade setup."""
-    payload = read_json(CONTEXT_DIR / "pending_approvals.json", [])
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        payload = repo.get_pending_approvals_payload()
     _, approval, approval_payload = _resolve_pending_approval(payload, approval_id)
-    new_payload = []
-    for item in payload:
-        normalized = PendingApproval.model_validate(item).model_dump(mode="json")
-        if normalized["approval_id"] == approval.approval_id:
-            _persist_order_intent(normalized, status="cancelled")
-            continue
-        new_payload.append(item)
-
-    write_json(CONTEXT_DIR / "pending_approvals.json", new_payload)
+    approval_payload["approved"] = False
+    approval_payload["execution_requested"] = False
+    approval_payload["execution_request_id"] = None
+    approval_payload["status"] = "rejected"
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        repo.update_approval_payload(
+            approval.approval_id,
+            approval_payload,
+            source="approval_route",
+        )
+    project_all_managed_files()
     await broadcaster.broadcast(
         "approvals_update",
         {"ticker": approval.ticker, "approval_id": approval.approval_id, "action": "rejected"},
@@ -147,5 +176,5 @@ async def reject_trade(approval_id: str):
         approval_id=str(approval.approval_id),
         decision="rejected",
         ticker=approval.ticker,
-        message="Rejected and removed from pending approvals.",
+        message="Rejected and persisted for worker/audit visibility.",
     )

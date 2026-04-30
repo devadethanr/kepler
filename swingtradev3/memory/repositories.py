@@ -158,6 +158,49 @@ class MemoryRepository:
         self.session.flush()
         return self.session.scalar(query.limit(1)) is not None
 
+    def list_execution_events(
+        self,
+        *,
+        limit: int = 100,
+        after_id: int | None = None,
+        event_type: str | None = None,
+    ) -> list[dict[str, Any]]:
+        bounded_limit = max(1, min(limit, 500))
+        query = select(ExecutionEventRow)
+        if after_id is not None:
+            query = query.where(ExecutionEventRow.event_id > after_id)
+        if event_type:
+            query = query.where(ExecutionEventRow.event_type == event_type)
+        if after_id is None:
+            rows = list(
+                reversed(
+                    self.session.scalars(
+                        query.order_by(ExecutionEventRow.event_id.desc()).limit(bounded_limit)
+                    ).all()
+                )
+            )
+        else:
+            rows = self.session.scalars(
+                query.order_by(ExecutionEventRow.event_id.asc()).limit(bounded_limit)
+            ).all()
+        return [
+            {
+                "event_id": row.event_id,
+                "event_type": row.event_type,
+                "entity_type": row.entity_type,
+                "entity_id": row.entity_id,
+                "source": row.source,
+                "payload": dict(row.payload or {}),
+                "created_at": row.created_at.isoformat() if row.created_at else None,
+            }
+            for row in rows
+        ]
+
+    def get_latest_execution_event_id(self) -> int | None:
+        return self.session.scalar(
+            select(ExecutionEventRow.event_id).order_by(ExecutionEventRow.event_id.desc()).limit(1)
+        )
+
     def account_state_exists(self) -> bool:
         return self.session.get(AccountStateRow, PRIMARY_ACCOUNT_KEY) is not None
 
@@ -264,6 +307,96 @@ class MemoryRepository:
         if row is None:
             return None
         return dict(row.payload)
+
+    def update_approval_payload(
+        self,
+        approval_id: str,
+        payload: dict[str, Any],
+        *,
+        source: str,
+    ) -> dict[str, Any] | None:
+        row = self.session.get(ApprovalRow, approval_id)
+        if row is None:
+            return None
+
+        current = dict(row.payload or {})
+        merged = {**current, **dict(payload)}
+        approval = PendingApproval.model_validate(merged)
+        normalized = approval.model_dump(mode="json")
+        approved = normalized.get("approved")
+        execution_requested = bool(normalized.get("execution_requested", False))
+        order_intent = (
+            self.get_order_intent(str(normalized["order_intent_id"]))
+            if normalized.get("order_intent_id")
+            else None
+        )
+        order_intent_status = (
+            str(order_intent["status"]) if order_intent is not None else "awaiting_approval"
+        )
+        if approved is True and execution_requested:
+            order_intent_status = "queued"
+        elif approved is True:
+            order_intent_status = "approved"
+        elif approved is False:
+            order_intent_status = "cancelled"
+
+        row.ticker = approval.ticker
+        row.entry_intent_id = str(normalized["entry_intent_id"])
+        row.order_intent_id = str(normalized["order_intent_id"])
+        row.status = _approval_status(
+            approved=approved,
+            execution_requested=execution_requested,
+            order_intent_status=order_intent_status,
+            explicit_status=normalized.get("status"),
+        )
+        row.approved = approved
+        row.execution_requested = execution_requested
+        row.execution_request_id = normalized.get("execution_request_id")
+        row.created_at_effective = approval.created_at
+        row.expires_at = approval.expires_at
+        normalized["status"] = row.status
+        row.payload = normalized
+
+        self.upsert_entry_intent(
+            entry_intent_id=str(normalized["entry_intent_id"]),
+            ticker=approval.ticker,
+            status=_entry_intent_status(
+                approved=approved,
+                execution_requested=execution_requested,
+                order_intent_status=order_intent_status,
+            ),
+            approval_id=approval_id,
+            order_intent_id=str(normalized["order_intent_id"]),
+            payload=normalized,
+            source=source,
+        )
+        self.upsert_order_intent(
+            order_intent_id=str(normalized["order_intent_id"]),
+            ticker=approval.ticker,
+            status=order_intent_status,
+            approval_id=approval_id,
+            entry_intent_id=str(normalized["entry_intent_id"]),
+            broker_order_id=(
+                str(normalized.get("broker_order_id"))
+                if normalized.get("broker_order_id") not in (None, "")
+                else None
+            ),
+            broker_tag=(
+                str(normalized.get("broker_tag"))
+                if normalized.get("broker_tag") not in (None, "")
+                else None
+            ),
+            payload=normalized,
+            source=source,
+        )
+        self.append_execution_event(
+            event_type="approval_updated",
+            entity_type="approval",
+            entity_id=approval_id,
+            source=source,
+            payload={"ticker": approval.ticker, "status": row.status},
+        )
+        return normalized
 
     def replace_pending_approvals(
         self,
@@ -1239,6 +1372,24 @@ class MemoryRepository:
             "status": row.status,
             "payload": dict(row.payload),
         }
+
+    def list_reconciliation_runs(self, *, limit: int = 20) -> list[dict[str, Any]]:
+        bounded_limit = max(1, min(limit, 200))
+        rows = self.session.scalars(
+            select(ReconciliationRunRow)
+            .order_by(ReconciliationRunRow.updated_at.desc(), ReconciliationRunRow.created_at.desc())
+            .limit(bounded_limit)
+        ).all()
+        return [
+            {
+                "reconciliation_run_id": row.reconciliation_run_id,
+                "status": row.status,
+                "payload": dict(row.payload or {}),
+                "updated_at": row.updated_at.isoformat() if row.updated_at else None,
+                "created_at": row.created_at.isoformat() if row.created_at else None,
+            }
+            for row in rows
+        ]
 
     def upsert_failure_incident(
         self,

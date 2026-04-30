@@ -2,34 +2,8 @@
   "cash_inr": 100000.0,
   "consecutive_losses": 0,
   "drawdown_pct": 0.0,
-  "positions": [
-    {
-      "current_price": 1020.0,
-      "entry_order_id": "entry-RECE271E",
-      "entry_price": 1000.0,
-      "lifecycle_state": "open",
-      "oco_gtt_id": null,
-      "opened_at": "2026-04-22T09:44:05.862054",
-      "pending_corporate_action": {
-        "adjustment_alert_sent_at": null,
-        "amount": null,
-        "ex_date": null,
-        "gtt_adjustment_sent": false,
-        "requires_manual_action": false,
-        "type": null
-      },
-      "product": "CNC",
-      "quantity": 5,
-      "research_date": null,
-      "sector": "IT",
-      "skill_version": null,
-      "stop_price": 980.0,
-      "target_price": 1080.0,
-      "thesis_score": null,
-      "ticker": "RECE271E"
-    }
-  ],
+  "positions": [],
   "realized_pnl": 0.0,
-  "unrealized_pnl": 100.0,
+  "unrealized_pnl": 0.0,
   "weekly_loss_pct": 0.0
 }
