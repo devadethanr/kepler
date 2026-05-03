@@ -4,6 +4,22 @@ DOCKER_COMPOSE := docker compose -f $(COMPOSE_FILE) --env-file $(ENV_FILE)
 
 .PHONY: dev dev-detach worker-up worker-smoke test test-file lint format logs logs-app logs-worker logs-mcp logs-dashboard stop clean shell health login phase0-check phase0-reconcile-state phase3-check phase6-check phase7-check db-upgrade
 
+define RUN_PYTEST_ISOLATED
+	@was_running=$$($(DOCKER_COMPOSE) ps --status running --services worker 2>/dev/null | grep -c '^worker$$' || true); \
+	restore_worker() { \
+		if [ "$$was_running" -gt 0 ]; then \
+			$(DOCKER_COMPOSE) up -d worker >/dev/null; \
+		fi; \
+	}; \
+	trap restore_worker EXIT; \
+	if [ "$$was_running" -gt 0 ]; then \
+		$(DOCKER_COMPOSE) stop worker; \
+	fi; \
+	status=0; \
+	$(DOCKER_COMPOSE) exec -T app pytest $(1) -v || status=$$?; \
+	exit $$status
+endef
+
 dev:
 	$(DOCKER_COMPOSE) up --build
 
@@ -20,10 +36,10 @@ login:
 	$(DOCKER_COMPOSE) exec -it app python -m auth.kite.login
 
 test:
-	$(DOCKER_COMPOSE) exec app pytest tests/ -v
+	$(call RUN_PYTEST_ISOLATED,tests/)
 
 test-file:
-	$(DOCKER_COMPOSE) exec app pytest $(file) -v
+	$(call RUN_PYTEST_ISOLATED,$(file))
 
 lint:
 	$(DOCKER_COMPOSE) exec app ruff check .

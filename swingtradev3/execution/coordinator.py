@@ -337,6 +337,29 @@ class ExecutionCoordinator:
             )
             return "submitted"
 
+        if status == "submission_uncertain":
+            self._store_order_intent(
+                order_intent_id=order_intent_id,
+                ticker=ticker,
+                status="submitting",
+                payload=_merge_payload(
+                    merged_payload,
+                    {
+                        "submission_uncertain_at": _now().isoformat(),
+                        "reconciliation_required": True,
+                    },
+                ),
+                broker_tag=broker_tag,
+                source="execution_coordinator",
+            )
+            self._remove_pending_approval(order_intent_id)
+            await self.alerts_tool.send_alert(
+                f"⚠️ {ticker} entry submission timed out; waiting for broker reconciliation "
+                f"tag={broker_tag}",
+                level="warning",
+            )
+            return "submitting"
+
         if status == "filled":
             self._record_submission_success()
             self._store_order_intent(
@@ -826,7 +849,13 @@ class ExecutionCoordinator:
         if status == "protection_pending":
             await self._arm_protection(order_intent_id)
             return "advanced"
-        if status not in {"submitted", "entry_open", "entry_partially_filled", "entry_filled"}:
+        if status not in {
+            "submitting",
+            "submitted",
+            "entry_open",
+            "entry_partially_filled",
+            "entry_filled",
+        }:
             return "noop"
 
         payload = dict(intent["payload"])

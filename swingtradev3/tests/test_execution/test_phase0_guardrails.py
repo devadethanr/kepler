@@ -152,6 +152,49 @@ async def test_live_order_stays_submitted_until_fill_confirmation(monkeypatch):
     tool.gtt_manager.place_gtt_async.assert_not_called()
 
 
+@pytest.mark.asyncio
+async def test_live_order_timeout_is_submission_uncertain_with_broker_tag(monkeypatch):
+    monkeypatch.setattr(cfg.trading, "mode", TradingMode.LIVE)
+    monkeypatch.setenv("LIVE_TRADING_ENABLED", "true")
+    monkeypatch.setenv("NEW_ENTRIES_ENABLED", "true")
+    monkeypatch.setenv("EXIT_ONLY_MODE", "false")
+
+    tool = OrderExecutionTool()
+    tool.risk_tool.check_risk = MagicMock(
+        return_value={"approved": True, "quantity": 10, "reason": "ok"}
+    )
+
+    with patch("tools.execution.order_execution.has_kite_session", return_value=True):
+        with patch(
+            "tools.execution.order_execution.calculate_live_order_margins",
+            return_value=[{"total": 5000.0}],
+        ):
+            with patch(
+                "tools.execution.order_execution.fetch_margins",
+                return_value={"equity": {"available": {"cash": 100000.0}}},
+            ):
+                with patch(
+                    "tools.execution.order_execution.place_live_order",
+                    side_effect=TimeoutError("Timed out waiting for broker response"),
+                ):
+                    result = await tool.place_order_async(
+                        state=_state(),
+                        ticker="RELIANCE",
+                        side="buy",
+                        score=8.2,
+                        price=1010.0,
+                        stop_price=980.0,
+                        target_price=1080.0,
+                        quantity=5,
+                    )
+
+    assert result["status"] == "submission_uncertain"
+    assert result["reason"] == "live_order_submission_timeout"
+    assert result["quantity"] == 5
+    assert result["broker_tag"]
+    assert result["protection_status"] == "pending_broker_reconciliation"
+
+
 def test_approval_route_respects_live_guardrails(monkeypatch, persist_approvals):
     monkeypatch.setattr(cfg.trading, "mode", TradingMode.LIVE)
     monkeypatch.setenv("LIVE_TRADING_ENABLED", "false")

@@ -11,6 +11,11 @@ from tools.execution.gtt_manager import GTTManager
 from tools.execution.risk_check import RiskCheckTool
 
 
+def _is_submission_timeout(exc: Exception) -> bool:
+    marker = f"{type(exc).__module__}.{type(exc).__name__}:{exc}".lower()
+    return "timeout" in marker or "timed out" in marker
+
+
 class OrderExecutionTool:
     def __init__(
         self,
@@ -139,14 +144,37 @@ class OrderExecutionTool:
 
             broker_tag = self._build_broker_tag(ticker)
 
-            order_id = place_live_order(
-                exchange=cfg.trading.exchange,
-                ticker=ticker,
-                side=side,
-                quantity=resolved_quantity,
-                price=price,
-                tag=broker_tag,
-            )
+            try:
+                order_id = place_live_order(
+                    exchange=cfg.trading.exchange,
+                    ticker=ticker,
+                    side=side,
+                    quantity=resolved_quantity,
+                    price=price,
+                    tag=broker_tag,
+                )
+            except Exception as exc:
+                if _is_submission_timeout(exc):
+                    return {
+                        "order_id": None,
+                        "status": "submission_uncertain",
+                        "reason": "live_order_submission_timeout",
+                        "average_price": None,
+                        "quantity": resolved_quantity,
+                        "mode": "live",
+                        "product": "CNC",
+                        "broker_tag": broker_tag,
+                        "margin": margin_payload,
+                        "protection_status": "pending_broker_reconciliation",
+                    }
+                return {
+                    "status": "failed",
+                    "reason": f"live_order_submission_failed:{exc}",
+                    "quantity": resolved_quantity,
+                    "mode": "live",
+                    "broker_tag": broker_tag,
+                    "margin": margin_payload,
+                }
             return {
                 "order_id": order_id,
                 "status": "submitted",
@@ -251,12 +279,29 @@ class OrderExecutionTool:
                     price=price,
                     tag=broker_tag,
                 )
-            except Exception:
+            except Exception as exc:
+                if _is_submission_timeout(exc):
+                    return {
+                        "order_id": None,
+                        "status": "submission_uncertain",
+                        "reason": "live_order_submission_timeout",
+                        "average_price": None,
+                        "quantity": resolved_quantity,
+                        "mode": "live",
+                        "product": "CNC",
+                        "broker_tag": broker_tag,
+                        "margin": margin_payload,
+                        "position_id": None,
+                        "oco_gtt_id": None,
+                        "protection_status": "pending_broker_reconciliation",
+                    }
                 return {
                     "status": "failed",
-                    "reason": "live_order_submission_failed",
+                    "reason": f"live_order_submission_failed:{exc}",
                     "quantity": resolved_quantity,
                     "mode": "live",
+                    "broker_tag": broker_tag,
+                    "margin": margin_payload,
                 }
         return {
             "order_id": order_id,

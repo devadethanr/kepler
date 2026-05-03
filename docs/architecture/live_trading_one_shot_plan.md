@@ -1,6 +1,6 @@
 # Live Trading One-Shot Plan
 
-> Last Updated: April 17, 2026
+> Last Updated: May 4, 2026
 > This is the active end-to-end implementation plan for turning `swingtradev3` into a broker-truth-driven, bounded-autonomy live trading system.
 > It merges the execution hardening work from `findings.md` with the Slow Brain / Fast Brain architecture in `agent_cognition_architecture.md` and `agent_cognition_implementation_plan.md`.
 > Phases 0-9 build the execution-safe floor. Phases 10-13 add the cognition, policy, and memory layers required for the final non-linear autonomous system.
@@ -471,7 +471,7 @@ Definition of done:
 
 - the dashboard reflects broker-confirmed state, not stale local assumptions
 
-### Phase 9: Tests And Staged Enablement
+### Phase 9 [X]: Tests And Staged Enablement
 
 New test areas:
 
@@ -508,6 +508,14 @@ Enablement ladder:
 4. live-mode with automated entries and supervised exits
 5. same-day unattended live mode
 6. multi-day unattended mode only after DDPI/POA confirmation and stable daily login operations
+
+Completion evidence as of May 4, 2026:
+
+- `make test` runs in Docker with worker isolation and restores the worker after pytest.
+- Backend deterministic gate: 281 passed, 3 skipped, 41 warnings.
+- Dashboard API/SSE client gate: 8 passed through the dashboard Docker service.
+- Live market/news/LLM evaluation is opt-in via `RUN_LIVE_EVAL=true` and is not part of the deterministic Docker gate.
+- The 10-trading-day paper soak and staged live modes remain operational rollout controls that require operator evidence before advancing runtime flags.
 
 ### Phase 10: Policy Layer And Effective Policy
 

@@ -3,22 +3,22 @@
     "BatchScannerAgent": {
       "agent_name": "BatchScannerAgent",
       "completed_at": null,
-      "current_task": "Deep analysis completed for 2 stocks.",
+      "current_task": "Deep analysis completed for 0 stocks.",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-03T18:08:03.472322",
+      "started_at": "2026-05-04T05:16:20.418650",
       "status": "running"
     },
     "FilterAgent": {
       "agent_name": "FilterAgent",
-      "completed_at": null,
-      "current_task": "Funnel completed: 2 stocks qualified for deep analysis.",
-      "last_error": null,
+      "completed_at": "2026-05-04T05:17:19.110999",
+      "current_task": "Filtering stocks",
+      "last_error": "Connection timeout",
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-03T18:00:13.892024",
-      "status": "running"
+      "started_at": "2026-05-04T05:17:19.103563",
+      "status": "error"
     },
     "FundamentalsAgent_ABB": {
       "agent_name": "FundamentalsAgent_ABB",
@@ -37,7 +37,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-03T18:00:15.625370",
+      "started_at": "2026-05-04T01:01:22.715065",
       "status": "running"
     },
     "FundamentalsAgent_BSE": {
@@ -67,17 +67,17 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-03T18:00:15.617781",
+      "started_at": "2026-05-04T01:01:22.705299",
       "status": "running"
     },
     "KnowledgeGraphAgent": {
       "agent_name": "KnowledgeGraphAgent",
       "completed_at": null,
-      "current_task": "Knowledge graph updated: 2 stocks, 2 sectors.",
+      "current_task": "No scan results to update knowledge graph.",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-03T18:09:00.010426",
+      "started_at": "2026-05-04T05:16:20.750834",
       "status": "running"
     },
     "MarketDataAgent_ABB": {
@@ -97,7 +97,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-03T18:00:15.605725",
+      "started_at": "2026-05-04T01:01:22.696015",
       "status": "running"
     },
     "MarketDataAgent_BSE": {
@@ -127,7 +127,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-03T18:00:15.609516",
+      "started_at": "2026-05-04T01:01:22.564117",
       "status": "running"
     },
     "OptionsAgent_ABB": {
@@ -147,7 +147,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-03T18:00:24.199842",
+      "started_at": "2026-05-04T01:01:22.776783",
       "status": "running"
     },
     "OptionsAgent_BSE": {
@@ -177,7 +177,17 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-03T18:07:09.656901",
+      "started_at": "2026-05-04T01:01:22.766766",
+      "status": "running"
+    },
+    "Pipeline": {
+      "agent_name": "Pipeline",
+      "completed_at": null,
+      "current_task": "Research scan",
+      "last_error": null,
+      "metadata": {},
+      "progress": "3/10 stocks scored",
+      "started_at": "2026-05-04T05:17:19.128599",
       "status": "running"
     },
     "RegimeAgent": {
@@ -187,7 +197,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-03T18:00:12.076288",
+      "started_at": "2026-05-04T05:16:19.229980",
       "status": "running"
     },
     "ResearchPipeline": {
@@ -203,22 +213,22 @@
     "ResultsSaverAgent": {
       "agent_name": "ResultsSaverAgent",
       "completed_at": null,
-      "current_task": "Research results saved to /app/context/research/2026-05-03",
+      "current_task": "Research results saved to /app/context/research/2026-05-04",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-03T18:08:59.984693",
+      "started_at": "2026-05-04T05:16:20.742340",
       "status": "running"
     },
     "ScorerAgent": {
       "agent_name": "ScorerAgent",
-      "completed_at": null,
-      "current_task": "Scoring completed. 0 shortlisted from 2 scored. (regime: bear, min_score: 8.0)",
+      "completed_at": "2026-05-04T05:17:19.084705",
+      "current_task": "Scoring RELIANCE",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-03T18:08:59.792207",
-      "status": "running"
+      "started_at": "2026-05-04T05:17:19.079560",
+      "status": "completed"
     },
     "SentimentAgent_ABB": {
       "agent_name": "SentimentAgent_ABB",
@@ -237,7 +247,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-03T18:00:24.184860",
+      "started_at": "2026-05-04T01:01:22.759261",
       "status": "running"
     },
     "SentimentAgent_BSE": {
@@ -267,7 +277,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-03T18:07:09.635684",
+      "started_at": "2026-05-04T01:01:22.747183",
       "status": "running"
     },
     "TimesfmAgent_ABB": {
@@ -287,7 +297,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-03T18:08:01.799503",
+      "started_at": "2026-05-04T01:01:23.182760",
       "status": "running"
     },
     "TimesfmAgent_BSE": {
@@ -317,22 +327,22 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-03T18:08:03.465079",
+      "started_at": "2026-05-04T01:01:23.190747",
       "status": "running"
     },
     "scheduler": {
       "agent_name": "scheduler",
-      "completed_at": "2026-05-04T00:20:00.276642",
+      "completed_at": "2026-05-04T05:03:57.358063",
       "current_task": "position_monitor",
       "last_error": null,
       "metadata": {
         "last_job": "position_monitor"
       },
       "progress": null,
-      "started_at": "2026-05-04T00:20:00.272344",
+      "started_at": "2026-05-04T05:03:57.352447",
       "status": "completed"
     }
   },
-  "last_updated": "2026-05-04T00:20:00.276672",
+  "last_updated": "2026-05-04T05:17:35.870240",
   "scheduler_phase": "overnight_monitoring"
 }

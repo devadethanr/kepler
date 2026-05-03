@@ -132,6 +132,68 @@ async def test_watchdog_recovers_cancelled_protection():
 
 
 @pytest.mark.asyncio
+async def test_watchdog_recovers_disabled_protection_after_corporate_action():
+    ticker = f"DIV{uuid4().hex[:5]}".upper()
+    original_state = deepcopy(read_json(STATE_PATH, {}))
+    _store_protected_order_intent(ticker)
+    state = _state_with_position(ticker, oco_gtt_id="disabled-old")
+    state["positions"][0]["pending_corporate_action"] = {
+        "type": "split",
+        "ratio": "1:2",
+        "requires_manual_action": True,
+    }
+
+    try:
+        write_json(STATE_PATH, state)
+        with session_scope() as session:
+            repo = MemoryRepository(session)
+            repo.upsert_protective_trigger(
+                protective_trigger_id="disabled-old",
+                position_id=ticker,
+                ticker=ticker,
+                status="disabled",
+                payload={"ticker": ticker, "recovery_attempts": 0},
+                source="test_phase5",
+            )
+
+        manager = ProtectionManager(
+            gtt_manager=MagicMock(),
+            alerts_tool=MagicMock(send_alert=AsyncMock()),
+        )
+        manager.gtt_manager.get_gtt_async = AsyncMock(
+            return_value=GTTOrder(
+                oco_gtt_id="disabled-old",
+                ticker=ticker,
+                stop_price=980.0,
+                target_price=1080.0,
+                status="disabled",
+            )
+        )
+        manager.gtt_manager.place_gtt_async = AsyncMock(
+            return_value=GTTOrder(
+                oco_gtt_id="disabled-new",
+                ticker=ticker,
+                stop_price=980.0,
+                target_price=1080.0,
+                status="active",
+            )
+        )
+
+        result = await manager.run_watchdog()
+
+        assert result["recovered"] == 1
+        state = read_json(STATE_PATH, {})
+        assert state["positions"][0]["oco_gtt_id"] == "disabled-new"
+        with session_scope() as session:
+            trigger_row = session.get(ProtectiveTriggerRow, "disabled-new")
+        assert trigger_row is not None
+        assert trigger_row.status == "active"
+        assert trigger_row.payload["recovery_reason"] == "disabled"
+    finally:
+        write_json(STATE_PATH, original_state)
+
+
+@pytest.mark.asyncio
 async def test_watchdog_treats_trigger_as_advisory_until_exit_fill():
     ticker = f"REL{uuid4().hex[:5]}".upper()
     original_state = deepcopy(read_json(STATE_PATH, {}))
@@ -180,6 +242,57 @@ async def test_watchdog_treats_trigger_as_advisory_until_exit_fill():
         assert trigger_row is not None
         assert trigger_row.status == "exit_order_open"
         assert trigger_row.payload["exit_order_id"] == "exit-order-open"
+    finally:
+        write_json(STATE_PATH, original_state)
+
+
+@pytest.mark.asyncio
+async def test_watchdog_routes_target_exit_rejection_to_operator_intervention():
+    ticker = f"REJ{uuid4().hex[:5]}".upper()
+    original_state = deepcopy(read_json(STATE_PATH, {}))
+    _store_protected_order_intent(ticker)
+
+    try:
+        write_json(STATE_PATH, _state_with_position(ticker, oco_gtt_id="rejected-exit"))
+        manager = ProtectionManager(
+            gtt_manager=MagicMock(),
+            alerts_tool=MagicMock(send_alert=AsyncMock()),
+        )
+        manager.gtt_manager.get_gtt_async = AsyncMock(
+            return_value=GTTOrder(
+                oco_gtt_id="rejected-exit",
+                ticker=ticker,
+                stop_price=980.0,
+                target_price=1080.0,
+                status="triggered",
+                triggered_leg="target",
+                exit_order_id="exit-order-rejected",
+                exit_order_status="rejected",
+                exit_rejection_reason="limit outside circuit",
+            )
+        )
+
+        result = await manager.run_watchdog()
+
+        assert result["triggered"] == 1
+        state = read_json(STATE_PATH, {})
+        assert state["positions"][0]["lifecycle_state"] == "operator_intervention"
+        with session_scope() as session:
+            repo = MemoryRepository(session)
+            trigger_row = session.get(ProtectiveTriggerRow, "rejected-exit")
+            incident = next(
+                (
+                    item
+                    for item in repo.list_failure_incidents(status="open")
+                    if item["incident_id"] == f"protection:{ticker}"
+                ),
+                None,
+            )
+        assert trigger_row is not None
+        assert trigger_row.status == "recreate_required"
+        assert trigger_row.payload["operator_detail"] == "limit outside circuit"
+        assert incident is not None
+        assert incident["severity"] == "critical"
     finally:
         write_json(STATE_PATH, original_state)
 

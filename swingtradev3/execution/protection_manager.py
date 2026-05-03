@@ -108,7 +108,74 @@ class ProtectionManager:
             return "failed"
 
         oco_gtt_id = str(gtt.oco_gtt_id)
+        gtt_status = str(gtt.status or "active").strip().lower()
         now_iso = _now().isoformat()
+        if gtt_status != "active":
+            self._replace_position(
+                ticker=ticker,
+                updater=lambda item: item.model_copy(
+                    update={
+                        "oco_gtt_id": oco_gtt_id,
+                        "lifecycle_state": "operator_intervention",
+                    }
+                ),
+                source="protection_manager",
+            )
+            with session_scope() as session:
+                repo = MemoryRepository(session)
+                repo.upsert_protective_trigger(
+                    protective_trigger_id=oco_gtt_id,
+                    position_id=ticker,
+                    ticker=ticker,
+                    status=gtt_status,
+                    payload={
+                        "ticker": ticker,
+                        "order_intent_id": order_intent_id,
+                        "stop_price": position.stop_price,
+                        "target_price": position.target_price,
+                        "quantity": position.quantity,
+                        "broker_status": gtt_status,
+                        "arm_failed_at": now_iso,
+                    },
+                    source="protection_manager",
+                )
+            self._store_order_intent(
+                order_intent_id=order_intent_id,
+                ticker=ticker,
+                status="protection_pending",
+                payload=_merge_payload(
+                    payload,
+                    {
+                        "oco_gtt_id": oco_gtt_id,
+                        "protection_status": gtt_status,
+                        "protection_arm_failed_at": now_iso,
+                    },
+                ),
+                intent=intent,
+            )
+            reason = "gtt_rejected" if gtt_status == "rejected" else "gtt_arm_failed"
+            set_block_new_entries(
+                reason=reason,
+                source="protection_manager",
+                detail={"ticker": ticker, "gtt_id": oco_gtt_id, "gtt_status": gtt_status},
+            )
+            self._open_incident(
+                ticker=ticker,
+                incident_id=f"protection:{ticker}",
+                severity="critical",
+                payload={
+                    "detail": f"gtt_status={gtt_status}",
+                    "at": now_iso,
+                    "kind": "arm_rejected",
+                },
+            )
+            await self.alerts_tool.send_alert(
+                f"🔴 Protection for {ticker} is not active after arm: "
+                f"gtt={oco_gtt_id} status={gtt_status}",
+                level="critical",
+            )
+            return "failed"
+
         self._replace_position(
             ticker=ticker,
             updater=lambda item: item.model_copy(

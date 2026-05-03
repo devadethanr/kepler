@@ -1,19 +1,26 @@
 from __future__ import annotations
 
-import pytest
 import json
-import time
+import os
 from unittest.mock import patch
+
+import pytest
+from config import cfg
+from google.adk.agents import LlmAgent
 from google.adk import Runner
 from google.adk.sessions import InMemorySessionService
-from google.adk.agents import LlmAgent
 from google.genai import types
-from config import cfg
 
-from tools.market.market_data import MarketDataTool
-from tools.market.fundamental_data import FundamentalDataTool
-from tools.market.news_search import NewsSearchTool
 from agents.research.scorer_agent import ScorerAgent
+from tools.market.fundamental_data import FundamentalDataTool
+from tools.market.market_data import MarketDataTool
+from tools.market.news_search import NewsSearchTool
+
+
+pytestmark = pytest.mark.skipif(
+    os.getenv("RUN_LIVE_EVAL") != "true",
+    reason="Live market/news/LLM evaluation is opt-in; set RUN_LIVE_EVAL=true.",
+)
 
 @pytest.mark.asyncio
 async def test_live_hallucination_check():
@@ -25,7 +32,7 @@ async def test_live_hallucination_check():
     print(f"\n🚀 [LIVE EVAL] Starting the audit for {ticker}... buckle up!")
     
     # 1. Fetch REAL data
-    print(f"🕵️ [LIVE EVAL] Step 1: Going on a data-hunting expedition...")
+    print("🕵️ [LIVE EVAL] Step 1: Going on a data-hunting expedition...")
     with patch("config.cfg.trading.mode", type('MockMode', (), {'value': 'live'})()):
         market_tool = MarketDataTool()
         fund_tool = FundamentalDataTool()
@@ -38,7 +45,7 @@ async def test_live_hallucination_check():
             pytest.skip(f"Live market data unavailable: {exc}")
         print(f"📈 [LIVE EVAL] Technical data captured! Price is currently {tech_data.get('close')}")
         
-        print(f"🏢 [LIVE EVAL] Digging into the fundamentals... (checking if they have more debt than a college student)")
+        print("🏢 [LIVE EVAL] Digging into the fundamentals... (checking if they have more debt than a college student)")
         try:
             fund_data = fund_tool.get_fundamentals(ticker)
         except BaseException as exc:
@@ -53,7 +60,7 @@ async def test_live_hallucination_check():
         print(f"🗞️ [LIVE EVAL] News sweep complete! Found {len(news_data.get('results', []))} headlines to analyze.")
     
     # 2. Run ScorerAgent with live context via Runner
-    print(f"🧠 [LIVE EVAL] Step 2: Waking up the ScorerAgent's brain cells...")
+    print("🧠 [LIVE EVAL] Step 2: Waking up the ScorerAgent's brain cells...")
     session_service = InMemorySessionService()
     scorer_agent = ScorerAgent()
     runner = Runner(
@@ -98,7 +105,7 @@ async def test_live_hallucination_check():
     print(f"🎯 [LIVE EVAL] Scorer assigned a score of {scorer_output.get('score')}!")
     
     # 3. LLM-as-a-Judge (Hallucination Eval)
-    print(f"👨‍⚖️ [LIVE EVAL] Step 3: Summoning the Hallucination Judge to audit the facts...")
+    print("👨‍⚖️ [LIVE EVAL] Step 3: Summoning the Hallucination Judge to audit the facts...")
     judge_llm = LlmAgent(
         name="HallucinationJudge",
         model=cfg.llm.adk.judge_model,
@@ -138,7 +145,7 @@ async def test_live_hallucination_check():
     {json.dumps(scorer_output, default=str)}
     """
     
-    print(f"🔦 [LIVE EVAL] Judge is shining a light on the Scorer's reasoning...")
+    print("🔦 [LIVE EVAL] Judge is shining a light on the Scorer's reasoning...")
     response_text = ""
     async for event in judge_runner.run_async(
         user_id="judge_user",

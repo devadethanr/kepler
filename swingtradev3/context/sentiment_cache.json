@@ -202,6 +202,16 @@
     "sentiment_score": -0.569,
     "source_count": 2
   },
+  "36daecad6e0afde57bad96ae7ec381b6": {
+    "analyzed_at": "2026-05-03T19:08:34.289742",
+    "catalyst_type": [],
+    "finbert_score": 0.0,
+    "keyword_score": 0.0,
+    "novelty": "unknown",
+    "sentiment_label": "neutral",
+    "sentiment_score": 0.0,
+    "source_count": 2
+  },
   "372f7121fdd57a6c7156d1f7f2d4bb2e": {
     "analyzed_at": "2026-04-14T03:34:11.790978",
     "catalyst_type": [
@@ -325,6 +335,19 @@
     "novelty": "unknown",
     "sentiment_label": "neutral",
     "sentiment_score": 0.0,
+    "source_count": 2
+  },
+  "69321979fe19eefaf833f0e4d395d245": {
+    "analyzed_at": "2026-05-03T19:08:35.364882",
+    "catalyst_type": [
+      "corporate_action",
+      "earnings"
+    ],
+    "finbert_score": 0.0,
+    "keyword_score": 0.2,
+    "novelty": "unknown",
+    "sentiment_label": "neutral",
+    "sentiment_score": 0.08,
     "source_count": 2
   },
   "6cb95d79218f54907b919ca8d7bbc945": {
@@ -496,6 +519,18 @@
     "novelty": "unknown",
     "sentiment_label": "bullish",
     "sentiment_score": 0.571,
+    "source_count": 2
+  },
+  "a81c0a4ff4194e8db8aa6912d15407d6": {
+    "analyzed_at": "2026-05-03T19:08:34.793887",
+    "catalyst_type": [
+      "upgrade"
+    ],
+    "finbert_score": 0.0,
+    "keyword_score": 0.2,
+    "novelty": "unknown",
+    "sentiment_label": "neutral",
+    "sentiment_score": 0.08,
     "source_count": 2
   },
   "aa814ea62fb65dec7eb90f667267dc8d": {
