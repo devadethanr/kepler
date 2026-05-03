@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { useDashboardSnapshot, useHealth, useLiveEvents, useSafety } from '@/hooks/useDashboardData';
+import {
+  type LiveEventsState,
+  useDashboardSnapshot,
+  useHealth,
+  useSafety,
+} from '@/hooks/useDashboardData';
 
 interface TopBarProps {
   onToggleSidebar?: () => void;
+  live: LiveEventsState;
 }
 
-export function TopBar({ onToggleSidebar }: TopBarProps) {
+export function TopBar({ onToggleSidebar, live }: TopBarProps) {
   const [time, setTime] = useState(new Date());
   const health = useHealth();
   const safety = useSafety();
   const snapshot = useDashboardSnapshot();
-  const live = useLiveEvents();
   
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);

@@ -50,6 +50,7 @@ export function ControlPaneScreen() {
   const entriesEnabled = controls?.new_entries_enabled?.enabled ?? false;
   const exitOnly = controls?.exit_only_mode?.enabled ?? false;
   const block = safety?.block_new_entries as { active?: boolean; reasons?: string[] } | undefined;
+  const controlsReady = safetyQuery.isSuccess && Boolean(controls) && reason.trim().length > 0;
 
   return (
     <div className="flex-1 p-4 md:p-6 bg-surface overflow-y-auto w-full text-on-surface">
@@ -78,19 +79,19 @@ export function ControlPaneScreen() {
               <ToggleRow
                 label="Trading Enabled"
                 enabled={tradingEnabled}
-                disabled={actions.updateMode.isPending}
+                disabled={!controlsReady || actions.updateMode.isPending}
                 onClick={() => actions.updateMode.mutate({ reason, trading_enabled: !tradingEnabled })}
               />
               <ToggleRow
                 label="New Entries Enabled"
                 enabled={entriesEnabled}
-                disabled={actions.updateMode.isPending}
+                disabled={!controlsReady || actions.updateMode.isPending}
                 onClick={() => actions.updateMode.mutate({ reason, new_entries_enabled: !entriesEnabled })}
               />
               <ToggleRow
                 label="Exit-Only Mode"
                 enabled={exitOnly}
-                disabled={actions.updateMode.isPending}
+                disabled={!controlsReady || actions.updateMode.isPending}
                 onClick={() => actions.updateMode.mutate({ reason, exit_only_mode: !exitOnly })}
               />
             </div>
@@ -103,7 +104,7 @@ export function ControlPaneScreen() {
                 placeholder="Type FLATTEN to queue flatten-all"
               />
               <button
-                disabled={flattenConfirm !== 'FLATTEN' || actions.flatten.isPending}
+                disabled={flattenConfirm !== 'FLATTEN' || !controlsReady || actions.flatten.isPending}
                 onClick={() => actions.flatten.mutate({ reason })}
                 className="w-full bg-[#121317] border border-error text-error py-3 rounded font-bold text-[13px] tracking-widest hover:bg-error-container hover:text-on-error-container transition-colors disabled:opacity-40"
               >
@@ -121,7 +122,13 @@ export function ControlPaneScreen() {
                   <span className="material-symbols-outlined">security</span> Safety State
                 </h2>
                 <span className="text-[11px] font-mono text-on-surface-variant mt-1">
-                  {block?.active ? block.reasons?.join(', ') : 'No block-new-entries flag active'}
+                  {safetyQuery.isLoading
+                    ? 'Loading safety state'
+                    : safetyQuery.isError
+                      ? 'Safety state unavailable'
+                      : block?.active
+                        ? block.reasons?.join(', ')
+                        : 'No block-new-entries flag active'}
                 </span>
               </div>
               <button

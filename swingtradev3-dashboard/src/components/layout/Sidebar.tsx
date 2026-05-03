@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'motion/react';
+import { useControlActions, useHealth } from '@/hooks/useDashboardData';
 
 interface SidebarProps {
   currentTab: string;
@@ -13,6 +14,9 @@ export function Sidebar({ currentTab, setTab, isOpen = false, onClose }: Sidebar
   const [showHealth, setShowHealth] = useState(false);
   const [showKillSwitch, setShowKillSwitch] = useState(false);
   const [killConfirm, setKillConfirm] = useState('');
+  const health = useHealth();
+  const actions = useControlActions();
+  const serviceRows = Object.entries(health.data?.services ?? {});
 
   const mainNav = [
     { id: 'dashboard', label: 'Dashboard', icon: 'dashboard' },
@@ -110,27 +114,20 @@ export function Sidebar({ currentTab, setTab, isOpen = false, onClose }: Sidebar
                 <button onClick={() => setShowHealth(false)} className="text-on-surface-variant hover:text-white"><span className="material-symbols-outlined text-[18px]">close</span></button>
               </div>
               <div className="p-5 flex flex-col gap-4 font-mono text-[12px]">
-                <div className="flex justify-between items-center bg-surface p-3 rounded border border-outline-variant/10">
-                   <div className="flex gap-3 items-center">
-                     <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-                     <div className="flex flex-col"><span className="text-white font-bold">Postgres DB</span><span className="text-[10px] text-on-surface-variant">Read/Write OK (2ms)</span></div>
-                   </div>
-                   <button className="border border-outline-variant/30 bg-surface-highest hover:bg-surface-high px-2 py-1 rounded text-on-surface transition-colors uppercase text-[10px] font-bold">Restart</button>
-                </div>
-                <div className="flex justify-between items-center bg-surface p-3 rounded border border-outline-variant/10">
-                   <div className="flex gap-3 items-center">
-                     <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-                     <div className="flex flex-col"><span className="text-white font-bold">Execution Worker</span><span className="text-[10px] text-on-surface-variant">Loop active (pid: 9244)</span></div>
-                   </div>
-                   <button className="border border-outline-variant/30 bg-surface-highest hover:bg-surface-high px-2 py-1 rounded text-on-surface transition-colors uppercase text-[10px] font-bold">Restart</button>
-                </div>
-                <div className="flex justify-between items-center bg-surface p-3 rounded border border-outline-variant/10">
-                   <div className="flex gap-3 items-center">
-                     <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-                     <div className="flex flex-col"><span className="text-white font-bold">Broker WebSocket</span><span className="text-[10px] text-on-surface-variant">Connected (12ms)</span></div>
-                   </div>
-                   <button className="border border-outline-variant/30 bg-surface-highest hover:bg-surface-high px-2 py-1 rounded text-on-surface transition-colors uppercase text-[10px] font-bold">Reconnect</button>
-                </div>
+                {(serviceRows.length ? serviceRows : [['api', health.data?.status ?? 'unknown']]).map(([name, status]) => {
+                  const healthy = String(status).toLowerCase().includes('healthy') || String(status).toLowerCase().includes('running') || String(status).toLowerCase() === 'ok';
+                  return (
+                    <div key={name} className="flex justify-between items-center bg-surface p-3 rounded border border-outline-variant/10">
+                      <div className="flex gap-3 items-center">
+                        <span className={cn("w-2 h-2 rounded-full", healthy ? "bg-secondary animate-pulse" : "bg-error")}></span>
+                        <div className="flex flex-col">
+                          <span className="text-white font-bold">{name}</span>
+                          <span className="text-[10px] text-on-surface-variant">{String(status)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </motion.div>
           </div>
@@ -156,10 +153,10 @@ export function Sidebar({ currentTab, setTab, isOpen = false, onClose }: Sidebar
                   Triggering the Kill Switch will immediately execute the following actions via the execution worker:
                 </p>
                 <ul className="text-[12px] font-mono text-white space-y-2 list-disc pl-5 opacity-90">
-                  <li>Sends hardware interrupt to the algorithmic submission cycle.</li>
-                  <li>Hard-cancels all un-filled entry REST orders.</li>
-                  <li>Disables all future pre-market and market-hour entries.</li>
-                  <li><span className="text-error font-bold">DOES NOT</span> close existing positions (to close and exit, use FLATTEN ALL).</li>
+	                  <li>Disables trading and new entries through operator control flags.</li>
+	                  <li>Enables exit-only mode for the execution worker.</li>
+	                  <li>Persists the intervention through the FastAPI ops route.</li>
+	                  <li><span className="text-error font-bold">DOES NOT</span> close existing positions (to close and exit, use FLATTEN ALL).</li>
                 </ul>
                 
                 <div className="mt-4 pt-4 border-t border-error/20">
@@ -174,8 +171,23 @@ export function Sidebar({ currentTab, setTab, isOpen = false, onClose }: Sidebar
                    />
                 </div>
                 <button 
-                  disabled={killConfirm !== 'HALT'}
-                  onClick={() => { setShowKillSwitch(false); setKillConfirm(''); }}
+	                  disabled={killConfirm !== 'HALT' || actions.updateMode.isPending}
+	                  onClick={() => {
+	                    actions.updateMode.mutate(
+	                      {
+	                        reason: 'dashboard kill switch',
+	                        trading_enabled: false,
+	                        new_entries_enabled: false,
+	                        exit_only_mode: true,
+	                      },
+	                      {
+	                        onSuccess: () => {
+	                          setShowKillSwitch(false);
+	                          setKillConfirm('');
+	                        },
+	                      },
+	                    );
+	                  }}
                   className="w-full bg-error disabled:bg-surface disabled:text-on-surface-variant disabled:border-outline-variant/30 disabled:cursor-not-allowed border border-error text-error-container font-black py-4 rounded tracking-widest uppercase transition-all duration-300 shadow-[0_0_20px_rgba(255,0,0,0.3)] disabled:shadow-none"
                 >
                   EXECUTE KILL SWITCH

@@ -1,19 +1,33 @@
 from __future__ import annotations
 
 from collections import Counter
+from datetime import datetime
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from fastapi import APIRouter
 
+from auth.kite.client import has_kite_session
+from config import cfg
 from execution.operator_controls import read_worker_status
+from api.routes.scan import _load_status as load_scan_status
+from api.tasks.activity_manager import activity_manager
+from api.tasks.session_phase import session_snapshot
 from memory.db import session_scope
 from memory.repositories import MemoryRepository
 
 router = APIRouter()
+IST = ZoneInfo("Asia/Kolkata")
+ACTIVE_POSITION_STATES = {"open", "closing"}
+ACTIONABLE_APPROVAL_STATUSES = {"pending", "approved", "queued"}
 
 
 def _portfolio_summary(state_payload: dict[str, Any]) -> dict[str, Any]:
-    positions = list(state_payload.get("positions") or [])
+    positions = [
+        position
+        for position in list(state_payload.get("positions") or [])
+        if str(position.get("lifecycle_state") or "open").lower() in ACTIVE_POSITION_STATES
+    ]
     total_invested = 0.0
     sector_exposure: dict[str, float] = {}
     for position in positions:
@@ -45,6 +59,26 @@ def _status_counts(items: list[dict[str, Any]]) -> dict[str, int]:
     return dict(sorted(counts.items()))
 
 
+def _parse_datetime(value: Any) -> datetime | None:
+    if not value:
+        return None
+    try:
+        parsed = datetime.fromisoformat(str(value))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=IST)
+    return parsed.astimezone(IST)
+
+
+def _quote_is_stale(updated_at: Any) -> bool:
+    parsed = _parse_datetime(updated_at)
+    if parsed is None:
+        return True
+    max_age = float(cfg.execution.reconciliation.quote_max_age_seconds)
+    return (datetime.now(IST) - parsed).total_seconds() > max_age
+
+
 def _source_activity(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
     grouped: dict[str, dict[str, Any]] = {}
     for event in events:
@@ -63,6 +97,10 @@ def _source_activity(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
         current["last_event"] = event.get("event_type")
         current["updated_at"] = event.get("created_at")
     return list(grouped.values())
+
+
+def _scan_status() -> dict[str, Any]:
+    return load_scan_status()
 
 
 @router.get("/knowledge/index")
@@ -110,8 +148,13 @@ async def get_dashboard_snapshot() -> dict[str, Any]:
     with session_scope() as session:
         repo = MemoryRepository(session)
         state = repo.get_account_state_payload()
-        positions = repo.list_positions()
+        positions = repo.list_positions(states=ACTIVE_POSITION_STATES)
         approvals = repo.get_pending_approvals_payload()
+        actionable_approvals = [
+            approval
+            for approval in approvals
+            if str(approval.get("status") or "pending").lower() in ACTIONABLE_APPROVAL_STATUSES
+        ]
         trades = repo.get_trades_payload()
         incidents = repo.list_failure_incidents(status="open")
         order_intents = repo.list_order_intents()
@@ -124,7 +167,7 @@ async def get_dashboard_snapshot() -> dict[str, Any]:
         "account": state,
         "counts": {
             "positions": len(positions),
-            "approvals": len(approvals),
+            "approvals": len(actionable_approvals),
             "trades": len(trades),
             "open_incidents": len(incidents),
             "order_intents": len(order_intents),
@@ -133,35 +176,46 @@ async def get_dashboard_snapshot() -> dict[str, Any]:
         },
         "status_counts": {
             "positions": _status_counts(positions),
-            "approvals": _status_counts(approvals),
+            "approvals": _status_counts(actionable_approvals),
             "order_intents": _status_counts(order_intents),
             "broker_orders": _status_counts(broker_orders),
             "protective_triggers": _status_counts(protective_triggers),
         },
         "positions": [position["payload"] for position in positions],
-        "approvals": approvals,
+        "approvals": actionable_approvals,
         "recent_trades": trades[:10],
         "open_incidents": incidents,
         "worker_status": read_worker_status() or {},
         "latest_event_id": latest_event_id,
+        "session": session_snapshot(),
     }
 
 
 @router.get("/activity")
 async def get_agent_activity():
-    """Derived source activity from durable execution events."""
+    """Current agent activity plus durable event-source audit context."""
+    activity_snapshot = activity_manager.get_snapshot().model_dump(mode="json")
     with session_scope() as session:
         repo = MemoryRepository(session)
         events = repo.list_execution_events(limit=200)
+    current_agents = list(dict(activity_snapshot.get("agents") or {}).values())
     return {
-        "agents": _source_activity(events),
+        "agents": current_agents,
+        "observed_sources": _source_activity(events),
+        "scheduler_phase": activity_snapshot.get("scheduler_phase", "unknown"),
+        "last_updated": activity_snapshot.get("last_updated"),
+        "worker_status": read_worker_status() or {},
+        "scan_status": _scan_status(),
+        "session": session_snapshot(),
+        "recent_events": events,
         "event_count": len(events),
     }
 
 
 @router.get("/activity/{agent_name}")
 async def get_agent_status(agent_name: str):
-    """Derived status for one source from durable execution events."""
+    """Current status for one agent/source with recent durable events."""
+    current = activity_manager.get_agent_status(agent_name)
     with session_scope() as session:
         repo = MemoryRepository(session)
         events = [
@@ -169,9 +223,13 @@ async def get_agent_status(agent_name: str):
             for event in repo.list_execution_events(limit=200)
             if str(event.get("source") or "").lower() == agent_name.lower()
         ]
-    if not events:
-        return {"agent_name": agent_name, "status": "unknown", "event_count": 0}
-    return _source_activity(events)[0]
+    observed = _source_activity(events)
+    return {
+        "agent": current.model_dump(mode="json") if current is not None else None,
+        "observed": observed[0] if observed else None,
+        "events": events,
+        "event_count": len(events),
+    }
 
 
 @router.get("/events")
@@ -191,7 +249,7 @@ async def get_execution_dashboard() -> dict[str, Any]:
     """Full execution state machine surface for the React dashboard."""
     with session_scope() as session:
         repo = MemoryRepository(session)
-        positions = repo.list_positions()
+        positions = repo.list_positions(states=ACTIVE_POSITION_STATES)
         order_intents = repo.list_order_intents()
         broker_orders = repo.list_broker_orders()
         broker_fills = repo.list_broker_fills()
@@ -225,20 +283,21 @@ async def get_dashboard_quotes() -> dict[str, Any]:
     """Quote-facing dashboard model derived from broker-confirmed positions."""
     with session_scope() as session:
         repo = MemoryRepository(session)
-        positions = repo.list_positions()
+        positions = repo.list_positions(states=ACTIVE_POSITION_STATES)
 
     quotes = []
     for position in positions:
         payload = dict(position.get("payload") or {})
         current_price = payload.get("current_price")
+        updated_at = payload.get("price_updated_at")
         quotes.append(
             {
                 "ticker": position.get("ticker"),
                 "price": current_price or payload.get("entry_price"),
                 "source": "position",
-                "stale": current_price is None,
+                "stale": current_price is None or _quote_is_stale(updated_at),
                 "position_state": position.get("state"),
-                "updated_at": None,
+                "updated_at": updated_at,
             }
         )
     return {"quotes": quotes, "count": len(quotes)}
@@ -260,6 +319,7 @@ async def get_dashboard_broker() -> dict[str, Any]:
             "user_name": auth_session.get("user_name"),
             "has_api_key": bool(auth_session.get("api_key")),
             "has_access_token": bool(auth_session.get("access_token")),
+            "runtime_session_present": has_kite_session(),
             "created_at": auth_session.get("created_at"),
             "login_time": auth_session.get("login_time"),
         },
@@ -293,7 +353,7 @@ async def get_scheduler_info():
     """Get scheduler status and current phase."""
     status = read_worker_status()
     if status is not None:
-        return status
+        return {**status, "session": session_snapshot()}
     return {
         "is_running": False,
         "current_phase": "stopped",
@@ -301,4 +361,11 @@ async def get_scheduler_info():
         "next_run": None,
         "next_task": None,
         "failed_events": 0,
+        "session": session_snapshot(),
     }
+
+
+@router.get("/session")
+async def get_session_info():
+    """Current IST trading-session phase for the React dashboard."""
+    return session_snapshot()

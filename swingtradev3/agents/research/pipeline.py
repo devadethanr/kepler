@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 from datetime import date, datetime, timedelta
 from typing import Any, AsyncGenerator
 
@@ -51,6 +50,10 @@ class ResultsSaverAgent(BaseAgent):
                     "confidence_reasoning": item.get("confidence_reasoning"),
                     "risk_flags": item.get("risk_flags", []),
                     "sector": item.get("sector"),
+                    "approved": None,
+                    "execution_requested": False,
+                    "execution_request_id": None,
+                    "status": "pending",
                     "created_at": analyzed_at.isoformat(),
                     "expires_at": expires_at.isoformat(),
                     "research_date": item.get("research_date") or scan_date,

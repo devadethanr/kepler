@@ -1,7 +1,7 @@
 {
   "RELIANCE": {
     "data": {
-      "as_of": "2026-04-29T04:02:48.546456",
+      "as_of": "2026-05-03T08:05:30.350630",
       "india_vix": null,
       "iv": null,
       "iv_signal": null,
@@ -19,11 +19,11 @@
       "unusual_interpretation": "Call writers covering \u2014 bullish signal",
       "vix_regime": null
     },
-    "fetched_at": "2026-04-29T04:02:48.547076"
+    "fetched_at": "2026-05-03T08:05:30.351704"
   },
   "TCS": {
     "data": {
-      "as_of": "2026-04-29T04:02:48.539416",
+      "as_of": "2026-05-03T08:05:30.340479",
       "india_vix": 28.0,
       "iv": 30.0,
       "iv_signal": "normal",
@@ -36,6 +36,6 @@
       "unusual_activity": "none",
       "vix_regime": "high"
     },
-    "fetched_at": "2026-04-29T04:02:48.540102"
+    "fetched_at": "2026-05-03T08:05:30.341574"
   }
 }

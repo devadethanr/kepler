@@ -16,10 +16,12 @@ import { RiskScreen } from './screens/RiskScreen';
 import { KnowledgeScreen } from './screens/KnowledgeScreen';
 import { ControlPaneScreen } from './screens/ControlPaneScreen';
 import { TelemetryScreen } from './screens/TelemetryScreen';
+import { useLiveEvents } from './hooks/useDashboardData';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState('dashboard');
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const live = useLiveEvents();
 
   return (
     <div className="flex h-screen w-full bg-surface text-on-surface overflow-hidden">
@@ -30,9 +32,9 @@ export default function App() {
         onClose={() => setSidebarOpen(false)}
       />
       <div className="flex flex-col flex-1 h-full overflow-hidden">
-        <TopBar onToggleSidebar={() => setSidebarOpen(!isSidebarOpen)} />
+        <TopBar onToggleSidebar={() => setSidebarOpen(!isSidebarOpen)} live={live} />
         {currentTab === 'dashboard' && <DashboardScreen />}
-        {currentTab === 'telemetry' && <TelemetryScreen />}
+        {currentTab === 'telemetry' && <TelemetryScreen live={live} />}
         {currentTab === 'knowledge' && <KnowledgeScreen />}
         {currentTab === 'control_pane' && <ControlPaneScreen />}
         {currentTab === 'execution' && <ExecutionScreen />}

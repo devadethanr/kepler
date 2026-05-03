@@ -27,6 +27,7 @@ from .operator_controls import (
 from .quote_cache import QuoteCache
 from .reconciler import Reconciler
 from .runtime_context import bind_broker_stream, bind_mutation_lock, bind_quote_cache
+from .session_guards import entry_stream_required_for_new_entries
 from .state_machine import WorkerExecutionStateMachine
 
 
@@ -124,7 +125,9 @@ class WorkerRuntime:
             # connected within the configured window; flip block_new_entries
             # if it did not.
             try:
-                await self._reconciler.run_post_stream_readiness_check()
+                await self._reconciler.run_post_stream_readiness_check(
+                    require_stream=entry_stream_required_for_new_entries()
+                )
             except Exception as exc:
                 print(f"worker post-stream readiness check failed: {exc}")
         else:

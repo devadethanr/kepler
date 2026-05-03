@@ -4,16 +4,14 @@ Tests for Phase 5C: Event Bus, Activity Manager, and Scheduler.
 from __future__ import annotations
 
 import asyncio
-from datetime import datetime, time as dt_time
+from datetime import time as dt_time
 
 import pytest
 
-from api.tasks.event_bus import EventBus, BusEvent, EventType, EVENTS_LOG_PATH
+from api.tasks.event_bus import EventBus, BusEvent, EventType
 from api.tasks.activity_manager import (
     AgentActivityManager,
-    AgentActivity,
     ActivitySnapshot,
-    ACTIVITY_PATH,
 )
 
 
@@ -194,6 +192,16 @@ class TestSchedulerPhases:
         assert sched._get_current_phase(dt_time(19, 0)) == "evening_research"
         assert sched._get_current_phase(dt_time(21, 30)) == "wind_down"
         assert sched._get_current_phase(dt_time(23, 0)) == "overnight_monitoring"
+
+    def test_phase_detection_on_non_trading_days(self):
+        from api.tasks.scheduler import TradingScheduler
+
+        sched = TradingScheduler()
+
+        assert sched._get_current_phase(dt_time(7, 0), trading_day=False) == "market_closed"
+        assert sched._get_current_phase(dt_time(10, 0), trading_day=False) == "market_closed"
+        assert sched._get_current_phase(dt_time(16, 0), trading_day=False) == "post_market"
+        assert sched._get_current_phase(dt_time(21, 30), trading_day=False) == "wind_down"
 
     def test_scheduler_init(self):
         from api.tasks.scheduler import TradingScheduler

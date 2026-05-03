@@ -8,13 +8,14 @@ from memory.repositories import MemoryRepository
 from models import PositionState
 
 router = APIRouter()
+ACTIVE_POSITION_STATES = {"open", "closing"}
 
 @router.get("", response_model=List[PositionState])
 async def get_positions():
     """List all open positions."""
     with session_scope() as session:
         repo = MemoryRepository(session)
-        positions = repo.list_positions()
+        positions = repo.list_positions(states=ACTIVE_POSITION_STATES)
     return [PositionState.model_validate(position["payload"]) for position in positions]
 
 @router.get("/{ticker}", response_model=PositionState)
@@ -23,7 +24,7 @@ async def get_position(ticker: str):
     normalized = ticker.strip().lower()
     with session_scope() as session:
         repo = MemoryRepository(session)
-        positions = repo.list_positions()
+        positions = repo.list_positions(states=ACTIVE_POSITION_STATES)
 
     for position in positions:
         payload = PositionState.model_validate(position["payload"])

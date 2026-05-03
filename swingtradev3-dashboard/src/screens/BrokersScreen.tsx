@@ -8,7 +8,7 @@ export function BrokersScreen() {
   const broker = brokerQuery.data;
   const auth = broker?.auth_session ?? {};
   const safetyAuth = safetyQuery.data?.auth_session as { fresh?: boolean; reason?: string; age_hours?: number } | undefined;
-  const connected = Boolean(auth.has_access_token) && safetyAuth?.fresh !== false;
+  const connected = Boolean(auth.runtime_session_present) && safetyAuth?.fresh === true;
   const brokerOrders = broker?.broker_orders ?? [];
   const fills = broker?.broker_fills ?? [];
 
@@ -42,10 +42,14 @@ export function BrokersScreen() {
               <span className="text-[10px] font-mono text-on-surface-variant uppercase mb-1">User</span>
               <span className="text-[14px] font-mono font-bold text-primary">{String(auth.user_id || '-')}</span>
             </div>
-            <div className="flex flex-col">
-              <span className="text-[10px] font-mono text-on-surface-variant uppercase mb-1">Access Token</span>
-              <span className="text-[14px] font-mono font-bold text-white">{auth.has_access_token ? 'PRESENT' : 'MISSING'}</span>
-            </div>
+	            <div className="flex flex-col">
+	              <span className="text-[10px] font-mono text-on-surface-variant uppercase mb-1">Access Token</span>
+	              <span className="text-[14px] font-mono font-bold text-white">{auth.has_access_token ? 'PRESENT' : 'MISSING'}</span>
+	            </div>
+	            <div className="flex flex-col">
+	              <span className="text-[10px] font-mono text-on-surface-variant uppercase mb-1">Runtime Session</span>
+	              <span className="text-[14px] font-mono font-bold text-white">{auth.runtime_session_present ? 'PRESENT' : 'MISSING'}</span>
+	            </div>
             <div className="flex flex-col">
               <span className="text-[10px] font-mono text-on-surface-variant uppercase mb-1">Auth Fresh</span>
               <span className={cn("text-[11px] font-mono font-bold uppercase", safetyAuth?.fresh === false ? "text-error" : "text-secondary")}>

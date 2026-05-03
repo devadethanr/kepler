@@ -10,7 +10,9 @@ function confidence(score: number) {
 export function OrdersScreen() {
   const approvalsQuery = useApprovals();
   const { approve, reject } = useApprovalActions();
-  const approvals = approvalsQuery.data ?? [];
+  const approvals = (approvalsQuery.data ?? []).filter((approval) =>
+    ['pending', 'approved', 'queued'].includes(String(approval.status || 'pending').toLowerCase()),
+  );
 
   return (
     <div className="flex-1 overflow-y-auto p-4 lg:p-6 bg-surface relative">
@@ -41,7 +43,8 @@ export function OrdersScreen() {
           <div className="flex flex-col">
             {approvals.map((approval) => {
               const conf = confidence(approval.score);
-              const disabled = approve.isPending || reject.isPending || approval.status === 'rejected';
+              const status = String(approval.status || 'pending').toLowerCase();
+              const disabled = approve.isPending || reject.isPending || status !== 'pending';
               return (
                 <div key={approval.approval_id} className="grid grid-cols-12 gap-2 px-4 py-3 border-b border-outline-variant/5 text-[12px] hover:bg-surface-highest/50 transition-colors">
                   <div className="col-span-2 flex items-center gap-2">

@@ -13,6 +13,8 @@ export const queryKeys = {
   quotes: ['dashboard', 'quotes'] as const,
   broker: ['dashboard', 'broker'] as const,
   telemetry: ['dashboard', 'telemetry'] as const,
+  activity: ['dashboard', 'activity'] as const,
+  session: ['dashboard', 'session'] as const,
   approvals: ['approvals'] as const,
   positions: ['positions'] as const,
   trades: ['trades'] as const,
@@ -81,6 +83,22 @@ export function useTelemetry() {
     queryKey: queryKeys.telemetry,
     queryFn: ({ signal }) => api.telemetry(signal),
     refetchInterval: 15_000,
+  });
+}
+
+export function useAgentActivity() {
+  return useQuery({
+    queryKey: queryKeys.activity,
+    queryFn: ({ signal }) => api.activity(signal),
+    refetchInterval: 5_000,
+  });
+}
+
+export function useSession() {
+  return useQuery({
+    queryKey: queryKeys.session,
+    queryFn: ({ signal }) => api.session(signal),
+    refetchInterval: 30_000,
   });
 }
 
@@ -160,11 +178,47 @@ export function useLiveEvents() {
           setStatus('live');
           return;
         }
+        const dashboardEvent = event.event;
+        const eventType = dashboardEvent.event_type.toLowerCase();
+        const entityType = dashboardEvent.entity_type.toLowerCase();
         setStatus('live');
-        setCursor(event.event.event_id);
-        setEvents((current) => [event.event, ...current].slice(0, 100));
+        setCursor(dashboardEvent.event_id);
+        setEvents((current) => [...current, dashboardEvent].slice(-100));
+        queryClient.setQueriesData<DashboardEvent[]>(
+          { queryKey: queryKeys.events },
+          (current) => {
+            if (!current) return current;
+            if (current.some((item) => item.event_id === dashboardEvent.event_id)) {
+              return current;
+            }
+            return [...current, dashboardEvent].slice(-100);
+          },
+        );
         void queryClient.invalidateQueries({ queryKey: queryKeys.snapshot });
         void queryClient.invalidateQueries({ queryKey: queryKeys.execution });
+        void queryClient.invalidateQueries({ queryKey: queryKeys.events });
+        void queryClient.invalidateQueries({ queryKey: queryKeys.telemetry });
+        void queryClient.invalidateQueries({ queryKey: queryKeys.activity });
+        if (eventType.includes('approval') || entityType === 'approval') {
+          void queryClient.invalidateQueries({ queryKey: queryKeys.approvals });
+        }
+        if (entityType.includes('position') || eventType.includes('position')) {
+          void queryClient.invalidateQueries({ queryKey: queryKeys.positions });
+          void queryClient.invalidateQueries({ queryKey: queryKeys.quotes });
+          void queryClient.invalidateQueries({ queryKey: queryKeys.portfolio });
+        }
+        if (
+          entityType.includes('broker') ||
+          eventType.includes('broker') ||
+          eventType.includes('fill') ||
+          eventType.includes('order')
+        ) {
+          void queryClient.invalidateQueries({ queryKey: queryKeys.broker });
+          void queryClient.invalidateQueries({ queryKey: queryKeys.quotes });
+        }
+        if (entityType === 'operator_control' || eventType.includes('operator_control')) {
+          void queryClient.invalidateQueries({ queryKey: queryKeys.safety });
+        }
       },
       onError() {
         setStatus('error');
@@ -175,3 +229,9 @@ export function useLiveEvents() {
 
   return { events, cursor, status };
 }
+
+export type LiveEventsState = {
+  events: DashboardEvent[];
+  cursor: number | null;
+  status: 'connecting' | 'live' | 'error';
+};

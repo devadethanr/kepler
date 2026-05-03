@@ -1,0 +1,57 @@
+{
+  "edges": [
+    {
+      "relationship": "belongs_to",
+      "source": "stock:BEL",
+      "target": "sector:Aerospace & Defense",
+      "weight": 1.0
+    },
+    {
+      "relationship": "belongs_to",
+      "source": "stock:RELIANCE",
+      "target": "sector:Energy",
+      "weight": 1.0
+    }
+  ],
+  "last_updated": "2026-05-03T18:09:00.003423",
+  "nodes": [
+    {
+      "color": "#ef4444",
+      "id": "stock:BEL",
+      "label": "BEL",
+      "metadata": {
+        "avg_score": 4.2,
+        "scan_count": 2
+      },
+      "size": 1.0,
+      "type": "stock"
+    },
+    {
+      "color": "#3b82f6",
+      "id": "sector:Aerospace & Defense",
+      "label": "Aerospace & Defense",
+      "metadata": {},
+      "size": 2.0,
+      "type": "sector"
+    },
+    {
+      "color": "#ef4444",
+      "id": "stock:RELIANCE",
+      "label": "RELIANCE",
+      "metadata": {
+        "avg_score": 6.2,
+        "scan_count": 2
+      },
+      "size": 1.0,
+      "type": "stock"
+    },
+    {
+      "color": "#3b82f6",
+      "id": "sector:Energy",
+      "label": "Energy",
+      "metadata": {},
+      "size": 2.0,
+      "type": "sector"
+    }
+  ]
+}

@@ -31,6 +31,7 @@ from .operator_controls import (
     set_block_new_entries,
 )
 from .protection_manager import ProtectionManager
+from .session_guards import entry_stream_required_for_new_entries
 
 
 QUEUED_ORDER_INTENT_STATUSES = {"queued"}
@@ -54,6 +55,12 @@ OPEN_BROKER_ORDER_STATUSES = {
     "validation_pending",
 }
 APPROVALS_PATH = CONTEXT_DIR / "pending_approvals.json"
+ENTRY_BLOCK_ALERT_COOLDOWN_SECONDS = 15 * 60
+SESSION_SCOPED_ENTRY_BLOCK_REASONS = {
+    "broker_disconnected",
+    "stale_quotes",
+    "stream_unavailable",
+}
 
 
 def _now() -> datetime:
@@ -87,6 +94,7 @@ class ExecutionCoordinator:
         self._order_failures = FailureCounter(
             threshold=int(cfg.execution.safety.order_failure_threshold)
         )
+        self._last_block_alert_at_by_reason: dict[str, datetime] = {}
         self._hydrate_order_failure_counter()
 
     def _hydrate_order_failure_counter(self) -> None:
@@ -143,10 +151,12 @@ class ExecutionCoordinator:
             return 0
         if is_block_new_entries_active():
             block = read_block_new_entries() or {}
-            await self.alerts_tool.send_alert(
-                f"⛔ New entries blocked by reconciler: reason={block.get('latest_reason') or block.get('reason') or 'unknown'}",
-                level="warning",
-            )
+            reason = self._block_reason(block)
+            if self._should_send_block_alert(reason):
+                await self.alerts_tool.send_alert(
+                    f"⛔ New entries blocked by reconciler: reason={reason}",
+                    level="warning",
+                )
             return 0
         submitted = 0
         for intent in self.pending_execution_requests():
@@ -154,6 +164,28 @@ class ExecutionCoordinator:
             if result != "ignored":
                 submitted += 1
         return submitted
+
+    @staticmethod
+    def _block_reason(block: dict[str, Any]) -> str:
+        reason = str(block.get("latest_reason") or block.get("reason") or "unknown").strip()
+        return reason or "unknown"
+
+    def _should_send_block_alert(self, reason: str) -> bool:
+        if (
+            reason in SESSION_SCOPED_ENTRY_BLOCK_REASONS
+            and not entry_stream_required_for_new_entries()
+        ):
+            return False
+
+        now = _now()
+        last_alert_at = self._last_block_alert_at_by_reason.get(reason)
+        if (
+            last_alert_at is not None
+            and (now - last_alert_at).total_seconds() < ENTRY_BLOCK_ALERT_COOLDOWN_SECONDS
+        ):
+            return False
+        self._last_block_alert_at_by_reason[reason] = now
+        return True
 
     async def reconcile_active_order_intents(self) -> int:
         advanced = 0

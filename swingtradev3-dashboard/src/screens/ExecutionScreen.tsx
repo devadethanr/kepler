@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react';
 import { useExecutionDashboard, useQuotes } from '@/hooks/useDashboardData';
+import { formatIstTime } from '@/lib/time';
 import { cn } from '@/lib/utils';
 
 function payloadValue(row: Record<string, unknown>, key: string) {
@@ -17,18 +19,24 @@ function statusClass(status: unknown) {
 export function ExecutionScreen() {
   const executionQuery = useExecutionDashboard();
   const quotesQuery = useQuotes();
+  const [now, setNow] = useState(new Date());
   const execution = executionQuery.data;
   const triggers = execution?.protective_triggers ?? [];
   const orders = execution?.broker_orders ?? [];
   const runs = execution?.reconciliation_runs ?? [];
   const quotes = quotesQuery.data?.quotes ?? [];
 
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden bg-surface relative">
       <div className="hidden md:flex h-12 bg-surface-container-low border-b border-surface-container/20 items-center justify-between px-6 shrink-0">
         <div className="flex items-center gap-4 text-[11px] font-mono tabular-nums text-slate-400">
           <span className="px-2 py-1 bg-surface rounded border border-outline-variant/20">
-            IST {new Date().toLocaleTimeString('en-IN', { hour12: false })}
+            IST {formatIstTime(now)}
           </span>
           <span className="px-2 py-1 bg-surface rounded border border-outline-variant/20 text-secondary">
             {executionQuery.isFetching ? 'SYNCING' : 'DB READY'}
@@ -76,7 +84,7 @@ export function ExecutionScreen() {
                     </tr>
                   ))}
                   {!triggers.length && (
-                    <tr><td colSpan={4} className="py-8 text-center text-on-surface-variant">No protective triggers recorded.</td></tr>
+	                    <tr><td colSpan={4} className="py-8 text-center text-on-surface-variant">{executionQuery.isLoading ? 'Loading protective triggers...' : executionQuery.isError ? 'Protective triggers unavailable.' : 'No protective triggers recorded.'}</td></tr>
                   )}
                 </tbody>
               </table>
@@ -101,7 +109,7 @@ export function ExecutionScreen() {
                   </div>
                 ))}
                 {!orders.length && (
-                  <div className="p-8 text-center text-[12px] font-mono text-on-surface-variant">No broker orders recorded.</div>
+	                  <div className="p-8 text-center text-[12px] font-mono text-on-surface-variant">{executionQuery.isLoading ? 'Loading broker orders...' : executionQuery.isError ? 'Broker orders unavailable.' : 'No broker orders recorded.'}</div>
                 )}
               </div>
             </div>
@@ -123,7 +131,7 @@ export function ExecutionScreen() {
                   </div>
                 );
               })}
-              {!quotes.length && <span className="text-[12px] font-mono text-on-surface-variant">No quote-derived positions.</span>}
+	              {!quotes.length && <span className="text-[12px] font-mono text-on-surface-variant">{quotesQuery.isLoading ? 'Loading quotes...' : quotesQuery.isError ? 'Quotes unavailable.' : 'No quote-derived positions.'}</span>}
             </div>
           </section>
 
@@ -141,7 +149,7 @@ export function ExecutionScreen() {
                     <span className={cn("font-bold tracking-wider", statusClass(run.status))}>{String(run.status || '-').toUpperCase()}</span>
                   </div>
                 ))}
-                {!runs.length && <div className="text-[12px] font-mono text-on-surface-variant">No reconciliation runs recorded.</div>}
+	                {!runs.length && <div className="text-[12px] font-mono text-on-surface-variant">{executionQuery.isLoading ? 'Loading reconciliation runs...' : executionQuery.isError ? 'Reconciliation runs unavailable.' : 'No reconciliation runs recorded.'}</div>}
               </div>
             </div>
           </section>

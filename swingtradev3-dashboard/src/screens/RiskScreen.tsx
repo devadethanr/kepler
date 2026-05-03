@@ -1,4 +1,5 @@
 import { useDashboardSnapshot, useSafety } from '@/hooks/useDashboardData';
+import { pctFromRiskValue } from '@/lib/time';
 import { cn } from '@/lib/utils';
 
 const inr = new Intl.NumberFormat('en-IN', {
@@ -18,8 +19,8 @@ export function RiskScreen() {
   const exposure = portfolio?.total_invested ?? 0;
   const cash = portfolio?.cash_inr ?? 0;
   const grossPct = cash + exposure > 0 ? (exposure / (cash + exposure)) * 100 : 0;
-  const drawdownPct = Math.abs(portfolio?.drawdown_pct ?? 0) * 100;
-  const weeklyLossPct = Math.abs(portfolio?.weekly_loss_pct ?? 0) * 100;
+  const drawdownPct = pctFromRiskValue(portfolio?.drawdown_pct);
+  const weeklyLossPct = pctFromRiskValue(portfolio?.weekly_loss_pct);
   const killSwitches = safetyQuery.data?.kill_switches as Record<string, { active?: boolean }> | undefined;
   const activeSwitches = Object.values(killSwitches ?? {}).filter((value) => value?.active).length;
   const sectors = Object.entries(portfolio?.sector_exposure ?? {}).sort((a, b) => b[1] - a[1]);
@@ -74,7 +75,7 @@ export function RiskScreen() {
               </div>
             );
           })}
-          {!sectors.length && <div className="text-[12px] font-mono text-on-surface-variant">No sector exposure recorded.</div>}
+          {!sectors.length && <div className="text-[12px] font-mono text-on-surface-variant">{snapshotQuery.isLoading ? 'Loading sector exposure...' : snapshotQuery.isError ? 'Sector exposure unavailable.' : 'No sector exposure recorded.'}</div>}
         </div>
       </div>
     </div>

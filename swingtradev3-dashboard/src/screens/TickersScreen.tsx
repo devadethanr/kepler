@@ -44,7 +44,7 @@ export function TickersScreen() {
                 );
               })}
               {!quotes.length && (
-                <div className="p-8 text-center text-[12px] font-mono text-on-surface-variant">No active position quotes are available.</div>
+                <div className="p-8 text-center text-[12px] font-mono text-on-surface-variant">{quotesQuery.isLoading ? 'Loading active position quotes...' : quotesQuery.isError ? 'Active position quotes unavailable.' : 'No active position quotes are available.'}</div>
               )}
             </motion.div>
           </div>
@@ -74,7 +74,7 @@ export function TickersScreen() {
                   </div>
                 );
               })}
-              {!positions.length && <span className="text-on-surface-variant">No open positions.</span>}
+              {!positions.length && <span className="text-on-surface-variant">{positionsQuery.isLoading ? 'Loading open positions...' : positionsQuery.isError ? 'Open positions unavailable.' : 'No open positions.'}</span>}
             </div>
           </div>
         </div>

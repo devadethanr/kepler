@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+from datetime import date, datetime
 from typing import AsyncGenerator
 
 from fastapi import APIRouter, Request
@@ -11,6 +12,14 @@ from memory.db import session_scope
 from memory.repositories import MemoryRepository
 
 router = APIRouter()
+
+
+def _json_default(value):
+    if isinstance(value, datetime):
+        return value.isoformat()
+    if isinstance(value, date):
+        return value.isoformat()
+    return str(value)
 
 
 def _sse_frame(
@@ -23,7 +32,7 @@ def _sse_frame(
     if event_id is not None:
         lines.append(f"id: {event_id}")
     lines.append(f"event: {event}")
-    lines.append(f"data: {json.dumps(data, default=str)}")
+    lines.append(f"data: {json.dumps(data, default=_json_default)}")
     return "\n".join(lines) + "\n\n"
 
 

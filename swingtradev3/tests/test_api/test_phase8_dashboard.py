@@ -3,6 +3,7 @@ from __future__ import annotations
 import inspect
 import json
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from unittest.mock import patch
 
 import pytest
@@ -14,6 +15,7 @@ from api.routes import approvals, dashboard, portfolio, positions, sse, trades
 from config import cfg
 from memory.db import session_scope
 from memory.repositories import MemoryRepository
+from api.tasks.session_phase import IST, session_snapshot
 
 
 client = TestClient(app)
@@ -124,11 +126,28 @@ def test_phase8_dashboard_reads_repository_backed_runtime_state(restore_portfoli
             "ticker": "PHASE8DASH",
             "price": 112.5,
             "source": "position",
-            "stale": False,
+            "stale": True,
             "position_state": "open",
             "updated_at": None,
         }
     ]
+
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        repo.update_position_price(
+            position_id="PHASE8DASH",
+            current_price=113.25,
+            source="test_phase8_dashboard",
+        )
+
+    fresh_quotes_response = client.get("/dashboard/quotes")
+    assert fresh_quotes_response.status_code == 200
+    fresh_quote = fresh_quotes_response.json()["quotes"][0]
+    assert fresh_quote["ticker"] == "PHASE8DASH"
+    assert fresh_quote["price"] == 113.25
+    assert fresh_quote["stale"] is False
+    assert fresh_quote["position_state"] == "open"
+    assert fresh_quote["updated_at"] is not None
 
 
 def test_phase8_dashboard_events_are_durable_and_cursor_filtered():
@@ -169,16 +188,53 @@ def test_phase8_dashboard_events_are_durable_and_cursor_filtered():
     assert latest[0]["payload"] == {"sequence": 2}
 
 
+def test_phase8_activity_endpoint_exposes_agents_sources_and_audit_trail():
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        baseline = repo.get_latest_execution_event_id() or 0
+        repo.append_execution_event(
+            event_type="overnight_agent_step",
+            entity_type="agent",
+            entity_id="evidence_assembler",
+            source="overnight_test_agent",
+            payload={"task": "assemble candidate evidence"},
+        )
+
+    response = client.get("/dashboard/activity")
+    assert response.status_code == 200
+    payload = response.json()
+    assert "agents" in payload
+    assert "observed_sources" in payload
+    assert "scan_status" in payload
+    assert "worker_status" in payload
+    assert "session" in payload
+    assert payload["event_count"] >= 1
+    assert any(
+        source["agent_name"] == "overnight_test_agent"
+        and source["last_event"] == "overnight_agent_step"
+        for source in payload["observed_sources"]
+    )
+    assert any(
+        event["event_id"] > baseline
+        and event["source"] == "overnight_test_agent"
+        and event["payload"] == {"task": "assemble candidate evidence"}
+        for event in payload["recent_events"]
+    )
+
+
 def test_phase8_sse_frames_and_resume_cursor_are_stable():
     frame = sse._sse_frame(
         event="execution_event",
         event_id=42,
-        data={"type": "phase8_test", "created_at": datetime(2026, 4, 29, 9, 30)},
+        data={
+            "type": "phase8_test",
+            "created_at": datetime(2026, 4, 29, 9, 30, tzinfo=IST),
+        },
     )
     assert frame.startswith("id: 42\nevent: execution_event\ndata: ")
     payload = json.loads(frame.split("data: ", 1)[1])
     assert payload["type"] == "phase8_test"
-    assert payload["created_at"] == "2026-04-29 09:30:00"
+    assert payload["created_at"] == "2026-04-29T09:30:00+05:30"
 
     request = Request(
         {
@@ -191,6 +247,29 @@ def test_phase8_sse_frames_and_resume_cursor_are_stable():
     )
     assert sse._cursor_from_request(request, None) == 41
     assert sse._cursor_from_request(request, 43) == 43
+
+
+def test_phase8_session_phase_uses_ist_holidays_and_segments():
+    holiday_market_time = datetime(2026, 5, 1, 10, 0, tzinfo=ZoneInfo("Asia/Kolkata"))
+    holiday_snapshot = session_snapshot(holiday_market_time)
+    assert holiday_snapshot["current_phase"] == "market_closed"
+    assert holiday_snapshot["market_status"] == "closed"
+    assert holiday_snapshot["day_label"] == "CLOSED"
+    assert holiday_snapshot["holiday"] == "Maharashtra Day"
+    assert {segment["key"] for segment in holiday_snapshot["segments"]} >= {
+        "overnight_monitoring",
+        "pre_market_prep",
+        "market_hours",
+        "post_market",
+        "evening_research",
+        "wind_down",
+    }
+
+    trading_time = datetime(2026, 5, 4, 10, 0, tzinfo=ZoneInfo("Asia/Kolkata"))
+    trading_snapshot = session_snapshot(trading_time)
+    assert trading_snapshot["current_phase"] == "market_hours"
+    assert trading_snapshot["market_status"] == "open"
+    assert trading_snapshot["day_label"] == "T-0"
 
 
 def test_phase8_knowledge_routes_are_explicitly_deferred_mocks():

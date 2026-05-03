@@ -3,21 +3,21 @@
     "BatchScannerAgent": {
       "agent_name": "BatchScannerAgent",
       "completed_at": null,
-      "current_task": "Deep analysis completed for 0 stocks.",
+      "current_task": "Deep analysis completed for 2 stocks.",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-30T18:00:09.041873",
+      "started_at": "2026-05-03T18:08:03.472322",
       "status": "running"
     },
     "FilterAgent": {
       "agent_name": "FilterAgent",
       "completed_at": null,
-      "current_task": "Funnel completed: 0 stocks qualified for deep analysis.",
+      "current_task": "Funnel completed: 2 stocks qualified for deep analysis.",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-30T18:00:09.040079",
+      "started_at": "2026-05-03T18:00:13.892024",
       "status": "running"
     },
     "FundamentalsAgent_ABB": {
@@ -28,6 +28,16 @@
       "metadata": {},
       "progress": null,
       "started_at": "2026-04-18T18:00:12.664742",
+      "status": "running"
+    },
+    "FundamentalsAgent_BEL": {
+      "agent_name": "FundamentalsAgent_BEL",
+      "completed_at": null,
+      "current_task": "Fundamentals fetched for BEL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-03T18:00:15.625370",
       "status": "running"
     },
     "FundamentalsAgent_BSE": {
@@ -50,14 +60,24 @@
       "started_at": "2026-04-16T02:19:33.200187",
       "status": "running"
     },
-    "KnowledgeGraphAgent": {
-      "agent_name": "KnowledgeGraphAgent",
+    "FundamentalsAgent_RELIANCE": {
+      "agent_name": "FundamentalsAgent_RELIANCE",
       "completed_at": null,
-      "current_task": "No scan results to update knowledge graph.",
+      "current_task": "Fundamentals fetched for RELIANCE",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-30T18:00:09.073043",
+      "started_at": "2026-05-03T18:00:15.617781",
+      "status": "running"
+    },
+    "KnowledgeGraphAgent": {
+      "agent_name": "KnowledgeGraphAgent",
+      "completed_at": null,
+      "current_task": "Knowledge graph updated: 2 stocks, 2 sectors.",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-03T18:09:00.010426",
       "status": "running"
     },
     "MarketDataAgent_ABB": {
@@ -68,6 +88,16 @@
       "metadata": {},
       "progress": null,
       "started_at": "2026-04-18T18:00:03.997952",
+      "status": "running"
+    },
+    "MarketDataAgent_BEL": {
+      "agent_name": "MarketDataAgent_BEL",
+      "completed_at": null,
+      "current_task": "Market data fetched for BEL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-03T18:00:15.605725",
       "status": "running"
     },
     "MarketDataAgent_BSE": {
@@ -90,6 +120,16 @@
       "started_at": "2026-04-16T02:19:33.188329",
       "status": "running"
     },
+    "MarketDataAgent_RELIANCE": {
+      "agent_name": "MarketDataAgent_RELIANCE",
+      "completed_at": null,
+      "current_task": "Market data fetched for RELIANCE",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-03T18:00:15.609516",
+      "status": "running"
+    },
     "OptionsAgent_ABB": {
       "agent_name": "OptionsAgent_ABB",
       "completed_at": null,
@@ -98,6 +138,16 @@
       "metadata": {},
       "progress": null,
       "started_at": "2026-04-18T18:10:53.364777",
+      "status": "running"
+    },
+    "OptionsAgent_BEL": {
+      "agent_name": "OptionsAgent_BEL",
+      "completed_at": null,
+      "current_task": "Options data analyzed for BEL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-03T18:00:24.199842",
       "status": "running"
     },
     "OptionsAgent_BSE": {
@@ -120,6 +170,16 @@
       "started_at": "2026-04-16T02:19:39.395102",
       "status": "running"
     },
+    "OptionsAgent_RELIANCE": {
+      "agent_name": "OptionsAgent_RELIANCE",
+      "completed_at": null,
+      "current_task": "Options data analyzed for RELIANCE",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-03T18:07:09.656901",
+      "status": "running"
+    },
     "RegimeAgent": {
       "agent_name": "RegimeAgent",
       "completed_at": null,
@@ -127,37 +187,37 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-30T18:00:07.009111",
+      "started_at": "2026-05-03T18:00:12.076288",
       "status": "running"
     },
     "ResearchPipeline": {
       "agent_name": "ResearchPipeline",
-      "completed_at": "2026-04-30T18:00:09.080524",
+      "completed_at": "2026-05-03T18:09:00.016874",
       "current_task": "Full evening research scan",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-30T18:00:00.119135",
+      "started_at": "2026-05-03T18:00:00.492946",
       "status": "completed"
     },
     "ResultsSaverAgent": {
       "agent_name": "ResultsSaverAgent",
       "completed_at": null,
-      "current_task": "Research results saved to /app/context/research/2026-04-30",
+      "current_task": "Research results saved to /app/context/research/2026-05-03",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-30T18:00:09.072148",
+      "started_at": "2026-05-03T18:08:59.984693",
       "status": "running"
     },
     "ScorerAgent": {
       "agent_name": "ScorerAgent",
       "completed_at": null,
-      "current_task": "No qualified stocks to score.",
+      "current_task": "Scoring completed. 0 shortlisted from 2 scored. (regime: bear, min_score: 8.0)",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-04-30T18:00:09.042714",
+      "started_at": "2026-05-03T18:08:59.792207",
       "status": "running"
     },
     "SentimentAgent_ABB": {
@@ -168,6 +228,16 @@
       "metadata": {},
       "progress": null,
       "started_at": "2026-04-18T18:10:53.362620",
+      "status": "running"
+    },
+    "SentimentAgent_BEL": {
+      "agent_name": "SentimentAgent_BEL",
+      "completed_at": null,
+      "current_task": "Sentiment analyzed for BEL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-03T18:00:24.184860",
       "status": "running"
     },
     "SentimentAgent_BSE": {
@@ -190,6 +260,16 @@
       "started_at": "2026-04-16T02:19:39.392250",
       "status": "running"
     },
+    "SentimentAgent_RELIANCE": {
+      "agent_name": "SentimentAgent_RELIANCE",
+      "completed_at": null,
+      "current_task": "Sentiment analyzed for RELIANCE",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-03T18:07:09.635684",
+      "status": "running"
+    },
     "TimesfmAgent_ABB": {
       "agent_name": "TimesfmAgent_ABB",
       "completed_at": null,
@@ -198,6 +278,16 @@
       "metadata": {},
       "progress": null,
       "started_at": "2026-04-18T18:20:09.091777",
+      "status": "running"
+    },
+    "TimesfmAgent_BEL": {
+      "agent_name": "TimesfmAgent_BEL",
+      "completed_at": null,
+      "current_task": "TimesFM forecast generated for BEL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-03T18:08:01.799503",
       "status": "running"
     },
     "TimesfmAgent_BSE": {
@@ -220,19 +310,29 @@
       "started_at": "2026-04-16T02:19:44.669359",
       "status": "running"
     },
+    "TimesfmAgent_RELIANCE": {
+      "agent_name": "TimesfmAgent_RELIANCE",
+      "completed_at": null,
+      "current_task": "TimesFM forecast generated for RELIANCE",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-03T18:08:03.465079",
+      "status": "running"
+    },
     "scheduler": {
       "agent_name": "scheduler",
-      "completed_at": "2026-05-01T00:52:34.006596",
+      "completed_at": "2026-05-04T00:20:00.276642",
       "current_task": "position_monitor",
       "last_error": null,
       "metadata": {
         "last_job": "position_monitor"
       },
       "progress": null,
-      "started_at": "2026-05-01T00:52:34.002917",
+      "started_at": "2026-05-04T00:20:00.272344",
       "status": "completed"
     }
   },
-  "last_updated": "2026-05-01T00:52:34.006615",
+  "last_updated": "2026-05-04T00:20:00.276672",
   "scheduler_phase": "overnight_monitoring"
 }

@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
+from datetime import datetime
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from pydantic import BaseModel, Field
 from sqlalchemy import select
@@ -31,6 +33,7 @@ PRIMARY_ACCOUNT_KEY = "primary"
 KITE_SESSION_KEY = "kite"
 VISIBLE_APPROVAL_STATUSES = {"pending", "approved", "queued", "rejected", "expired"}
 ACTIVE_APPROVAL_ORDER_STATUSES = {"awaiting_approval", "approved", "queued"}
+IST = ZoneInfo("Asia/Kolkata")
 
 
 class StoredKiteSessionPayload(BaseModel):
@@ -1046,10 +1049,12 @@ class MemoryRepository:
             for row in rows
         ]
 
-    def list_positions(self) -> list[dict[str, Any]]:
-        rows = self.session.scalars(
-            select(PositionRow).order_by(PositionRow.ticker.asc())
-        ).all()
+    def list_positions(self, *, states: Iterable[str] | None = None) -> list[dict[str, Any]]:
+        query = select(PositionRow).order_by(PositionRow.ticker.asc())
+        if states is not None:
+            normalized_states = [str(state).lower() for state in states]
+            query = query.where(PositionRow.state.in_(normalized_states))
+        rows = self.session.scalars(query).all()
         return [
             {
                 "position_id": row.position_id,
@@ -1157,16 +1162,23 @@ class MemoryRepository:
         if row is None:
             return None
         payload = dict(row.payload or {})
+        updated_at = datetime.now(IST).isoformat()
         payload["current_price"] = current_price
+        payload["price_updated_at"] = updated_at
         row.payload = payload
         self._sync_account_state_position_payload(
             position_id=position_id,
-            updater=lambda item: {**item, "current_price": current_price},
+            updater=lambda item: {
+                **item,
+                "current_price": current_price,
+                "price_updated_at": updated_at,
+            },
         )
         return {
             "position_id": row.position_id,
             "ticker": row.ticker,
             "current_price": current_price,
+            "updated_at": updated_at,
         }
 
     def get_failure_incident(self, incident_id: str) -> dict[str, Any] | None:

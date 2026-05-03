@@ -1,7 +1,8 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import { useDashboardEvents, useDashboardSnapshot } from '@/hooks/useDashboardData';
+import { formatIstTime } from '@/lib/time';
 
 const inr = new Intl.NumberFormat('en-IN', {
   style: 'currency',
@@ -18,8 +19,12 @@ export function DashboardScreen() {
   const events = eventsQuery.data ?? [];
   const pnl = portfolio?.total_pnl ?? 0;
   const pnlPct = portfolio?.total_invested ? (pnl / portfolio.total_invested) * 100 : 0;
+  const session = snapshot?.session;
+  const queuedApprovals = snapshot?.status_counts.approvals?.queued ?? 0;
+  const approvalCount = counts.approvals ?? 0;
+  const queuedPct = approvalCount > 0 ? (queuedApprovals / approvalCount) * 100 : 0;
   const eventRows = events.slice(-12).reverse().map((event) => ({
-    time: event.created_at ? new Date(event.created_at).toLocaleTimeString('en-IN', { hour12: false }) : '--:--:--',
+    time: formatIstTime(event.created_at),
     type: event.event_type.split('_')[0]?.toUpperCase() || 'EVT',
     color:
       event.event_type.includes('incident') || event.event_type.includes('fail')
@@ -96,9 +101,9 @@ export function DashboardScreen() {
           <div className="flex items-end justify-between">
             <span className="text-2xl font-mono text-white">{counts.approvals ?? 0}</span>
             <div className="flex flex-col items-end">
-              <span className="text-[11px] font-mono text-error">Queued: {snapshot?.status_counts.approvals?.queued ?? 0}</span>
+              <span className="text-[11px] font-mono text-error">Queued: {queuedApprovals}</span>
               <div className="w-16 h-1 flex bg-surface-highest mt-1 rounded-full overflow-hidden">
-                <div className="w-[75%] h-full bg-error"></div>
+                <div className="h-full bg-error" style={{ width: `${queuedPct}%` }}></div>
               </div>
             </div>
           </div>
@@ -133,27 +138,64 @@ export function DashboardScreen() {
           <section className="bg-surface-container-low rounded-md border border-outline-variant/15 p-4 flex flex-col">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-[12px] font-headline font-bold text-on-surface tracking-wide uppercase">Session Phase</h2>
-              <span className="text-[11px] font-mono text-primary">T-0</span>
+              <div className="flex items-center gap-2 text-[11px] font-mono">
+                <span className={session?.trading_day === false ? 'text-error' : 'text-primary'}>
+                  {session?.day_label ?? '...'}
+                </span>
+                <span className="text-on-surface-variant">{session?.phase_label ?? 'Loading'}</span>
+              </div>
             </div>
             <div className="relative w-full h-8 bg-surface-lowest rounded overflow-hidden flex border border-outline-variant/10">
-              <div className="w-[15%] h-full bg-surface-highest flex items-center justify-center border-r border-surface">
-                <span className="text-[10px] font-mono text-on-surface-variant">Overnight</span>
-              </div>
-              <div className="w-[15%] h-full bg-surface-high flex items-center justify-center border-r border-surface">
-                <span className="text-[10px] font-mono text-on-surface-variant">Pre-Market</span>
-              </div>
-              <div className="w-[50%] h-full bg-primary/10 flex items-center justify-center border-r border-surface relative">
-                <span className="text-[10px] font-mono text-primary font-bold">Market (Active)</span>
-                <div className="absolute left-[45%] top-0 w-0.5 h-full bg-secondary shadow-[0_0_8px_#42e09a]"></div>
-                <div className="absolute left-[45%] -top-1 transform -translate-x-1/2 w-2 h-2 rounded-full bg-secondary"></div>
-              </div>
-              <div className="w-[10%] h-full bg-surface-high flex items-center justify-center border-r border-surface">
-                <span className="text-[10px] font-mono text-on-surface-variant">Post</span>
-              </div>
-              <div className="w-[10%] h-full bg-surface-highest flex items-center justify-center">
-                <span className="text-[10px] font-mono text-on-surface-variant">Wind</span>
-              </div>
+              {(session?.segments ?? []).map((segment) => {
+                const marketClosed =
+                  segment.key === 'market_hours' && session?.market_status === 'closed';
+                const label =
+                  segment.active && segment.key === 'market_hours'
+                    ? marketClosed
+                      ? 'Market (Closed)'
+                      : 'Market (Active)'
+                    : segment.label;
+                return (
+                  <div
+                    key={segment.key}
+                    className={cn(
+                      "h-full flex items-center justify-center border-r border-surface relative min-w-[34px]",
+                      segment.active ? "bg-primary/10" : "bg-surface-high",
+                      !session?.trading_day && segment.active ? "bg-error/10" : "",
+                    )}
+                    style={{ width: `${segment.width_pct}%` }}
+                  >
+                    <span
+                      className={cn(
+                        "text-[9px] md:text-[10px] font-mono truncate px-1",
+                        segment.active
+                          ? session?.trading_day === false
+                            ? "text-error font-bold"
+                            : "text-primary font-bold"
+                          : "text-on-surface-variant",
+                      )}
+                    >
+                      {label}
+                    </span>
+                    {segment.active && (
+                      <>
+                        <div
+                          className="absolute top-0 w-0.5 h-full bg-secondary shadow-[0_0_8px_#42e09a]"
+                          style={{ left: `${segment.elapsed_pct}%` }}
+                        ></div>
+                        <div
+                          className="absolute -top-1 transform -translate-x-1/2 w-2 h-2 rounded-full bg-secondary"
+                          style={{ left: `${segment.elapsed_pct}%` }}
+                        ></div>
+                      </>
+                    )}
+                  </div>
+                );
+              })}
             </div>
+            {session?.holiday && (
+              <div className="mt-2 text-[10px] font-mono text-error">{session.holiday}</div>
+            )}
           </section>
 
           {/* Live Event Ticker */}
@@ -171,7 +213,7 @@ export function DashboardScreen() {
             
             <div className="p-2 space-y-0.5 overflow-y-auto flex-1 font-mono text-[11px]">
               {(eventRows.length ? eventRows : [
-                { time: '--:--:--', type: 'SYS', color: 'text-on-surface-variant', msg: snapshotQuery.isLoading ? 'Loading execution events' : 'No execution events recorded', meta: 'DB', bg: '' },
+	                { time: '--:--:--', type: 'SYS', color: 'text-on-surface-variant', msg: eventsQuery.isLoading ? 'Loading execution events' : eventsQuery.isError ? 'Execution events unavailable' : 'No execution events recorded', meta: 'DB', bg: '' },
               ]).map((log, i) => (
                 <div key={i} className={cn("flex items-center gap-3 p-1.5 hover:bg-surface-container transition-colors rounded", log.bg)}>
                   <span className="text-on-surface-variant w-16 opacity-70">{log.time}</span>
