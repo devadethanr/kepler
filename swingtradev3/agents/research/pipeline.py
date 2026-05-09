@@ -69,6 +69,7 @@ class ResultsSaverAgent(BaseAgent):
         shortlist = ctx.session.state.get("shortlist", [])
         stock_data = ctx.session.state.get("stock_data", {})
         scan_results = ctx.session.state.get("scan_results", [])
+        diagnostics = ctx.session.state.get("scan_diagnostics", {})
 
         analyzed_at = datetime.now()
         result = {
@@ -77,12 +78,16 @@ class ResultsSaverAgent(BaseAgent):
             "total_screened": 200,
             "qualified_count": len(qualified_stocks),
             "shortlist": shortlist,
+            "diagnostics": diagnostics,
             "analyzed_at": analyzed_at.isoformat(),
         }
 
         # Save to context
         research_dir = CONTEXT_DIR / "research" / scan_date
         research_dir.mkdir(parents=True, exist_ok=True)
+        for stale_path in research_dir.glob("*.json"):
+            if stale_path.name != "scan_result.json":
+                stale_path.unlink()
         write_json(research_dir / "scan_result.json", result)
         write_json(
             CONTEXT_DIR / "pending_approvals.json",

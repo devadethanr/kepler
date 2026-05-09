@@ -81,6 +81,17 @@ class ResearchFilterConfig(BaseModel):
     min_priority_signals: int = 1
     batch_size: int = 10
     news_sweep_query: str = "Indian stock market today Nifty 200 news"
+    trusted_news_domains: list[str] = Field(default_factory=list)
+    excluded_news_domains: list[str] = Field(default_factory=list)
+    news_max_age_hours: int = 72
+    news_alert_cooldown_hours: int = 24
+    news_sweep_max_results: int = 10
+    stock_news_max_results: int = 10
+    news_position_alert_max_items: int = 3
+    market_news_digest_max_items: int = 10
+    market_news_digest_max_ticker_groups: int = 5
+    market_news_digest_max_items_per_ticker: int = 2
+    market_news_digest_max_general_items: int = 4
     options_pcr_threshold: float = 1.2
     options_oi_spike_pct: float = 20
     trend_filter_ema: int = 200

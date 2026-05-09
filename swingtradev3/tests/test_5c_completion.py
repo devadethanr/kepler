@@ -5,10 +5,17 @@ from __future__ import annotations
 
 import asyncio
 import json
-import os
 import pytest
-from unittest.mock import AsyncMock, patch, MagicMock
-from datetime import datetime
+from unittest.mock import AsyncMock, patch
+
+from api.tasks import event_bus as event_bus_module
+
+
+@pytest.fixture(autouse=True)
+def _isolate_event_bus_runtime_files(tmp_path, monkeypatch):
+    monkeypatch.setattr(event_bus_module, "EVENTS_LOG_PATH", tmp_path / "event_log.jsonl")
+    monkeypatch.setattr(event_bus_module, "FAILED_EVENTS_PATH", tmp_path / "failed_events.json")
+
 
 # ═══════════════════════════════════════════════════════════
 # Failed Event Recovery Tests

@@ -13,6 +13,7 @@ export const queryKeys = {
   quotes: ['dashboard', 'quotes'] as const,
   broker: ['dashboard', 'broker'] as const,
   telemetry: ['dashboard', 'telemetry'] as const,
+  news: ['dashboard', 'news'] as const,
   activity: ['dashboard', 'activity'] as const,
   session: ['dashboard', 'session'] as const,
   approvals: ['approvals'] as const,
@@ -83,6 +84,14 @@ export function useTelemetry() {
     queryKey: queryKeys.telemetry,
     queryFn: ({ signal }) => api.telemetry(signal),
     refetchInterval: 15_000,
+  });
+}
+
+export function useNewsDashboard(limit = 100) {
+  return useQuery({
+    queryKey: [...queryKeys.news, limit],
+    queryFn: ({ signal }) => api.newsDashboard(limit, signal),
+    refetchInterval: 30_000,
   });
 }
 
@@ -198,6 +207,7 @@ export function useLiveEvents() {
         void queryClient.invalidateQueries({ queryKey: queryKeys.execution });
         void queryClient.invalidateQueries({ queryKey: queryKeys.events });
         void queryClient.invalidateQueries({ queryKey: queryKeys.telemetry });
+        void queryClient.invalidateQueries({ queryKey: queryKeys.news });
         void queryClient.invalidateQueries({ queryKey: queryKeys.activity });
         if (eventType.includes('approval') || entityType === 'approval') {
           void queryClient.invalidateQueries({ queryKey: queryKeys.approvals });

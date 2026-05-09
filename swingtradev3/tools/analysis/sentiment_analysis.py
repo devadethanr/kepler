@@ -10,7 +10,6 @@ Pure computation — no decisions, no agent logic.
 """
 from __future__ import annotations
 
-import os
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -138,8 +137,18 @@ class SentimentAnalyzer:
         if cached is not None:
             return cached
 
-        # Layer 1: FinBERT
-        finbert_result = self._finbert_sentiment(text)
+        # Layer 1: FinBERT. If the local model stack is unavailable, keep the
+        # research path alive with keyword sentiment instead of returning an
+        # agent-level error payload.
+        try:
+            finbert_result = self._finbert_sentiment(text)
+        except Exception as exc:
+            finbert_result = {
+                "score": 0.0,
+                "label": "neutral",
+                "source": "finbert_unavailable",
+                "error": str(exc),
+            }
 
         # Layer 2: Keyword
         keyword_result = self._keyword_sentiment(text)
@@ -197,14 +206,23 @@ class SentimentAnalyzer:
         all_catalysts = set()
         bullish_count = 0
         bearish_count = 0
+        official_count = 0
+        source_counts: dict[str, int] = {}
 
         for item in news_items:
-            text = f"{item.get('title', '')} {item.get('content', '')}"
+            text = " ".join(
+                str(item.get(field) or "")
+                for field in ("title", "summary", "content_text", "content_markdown", "content")
+            )
             if not text.strip():
                 continue
             result = self.analyze_sentiment(text)
             scores.append(result["sentiment_score"])
             all_catalysts.update(result.get("catalyst_type", []))
+            source_type = str(item.get("source_type") or "unknown")
+            source_counts[source_type] = source_counts.get(source_type, 0) + 1
+            if source_type in {"official_filing", "regulator", "broker_api", "publisher_rss"}:
+                official_count += 1
             if result["sentiment_label"] == "bullish":
                 bullish_count += 1
             elif result["sentiment_label"] == "bearish":
@@ -227,6 +245,8 @@ class SentimentAnalyzer:
             "bullish_count": bullish_count,
             "bearish_count": bearish_count,
             "neutral_count": len(scores) - bullish_count - bearish_count,
+            "official_source_count": official_count,
+            "source_counts": source_counts,
             "source": "aggregated",
             "analyzed_at": datetime.utcnow().isoformat(),
         }

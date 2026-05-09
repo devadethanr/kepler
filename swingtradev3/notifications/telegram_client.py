@@ -7,6 +7,9 @@ from logging_config import get_logger
 from models import AlertLevel
 from notifications.formatter import NotificationFormatter
 
+TELEGRAM_TEXT_LIMIT = 4096
+TELEGRAM_SAFE_TEXT_LIMIT = 3800
+
 
 class TelegramClient:
     def __init__(self) -> None:
@@ -19,6 +22,8 @@ class TelegramClient:
         return bool(self.bot_token and self.chat_id)
 
     async def send_text(self, text: str, level: AlertLevel = AlertLevel.INFO) -> None:
+        if len(text) > TELEGRAM_SAFE_TEXT_LIMIT:
+            text = f"{text[:TELEGRAM_SAFE_TEXT_LIMIT - 32]}\n...[truncated]"
         self.log.info(f"Telegram outbound: {len(text)} chars")
         if not self._is_configured():
             self.log.warning("Telegram is not configured; skipping outbound message")

@@ -8,7 +8,7 @@ from google.adk.agents.invocation_context import InvocationContext
 from google.adk.events import Event
 from google.adk.events.event_actions import EventActions
 from google.genai import types
-from pydantic import BaseModel, PrivateAttr
+from pydantic import PrivateAttr
 
 from config import cfg
 from models import StockScore
@@ -16,7 +16,6 @@ from paths import STRATEGY_DIR
 from llm_bridge import SmartRouter
 from knowledge.wiki_renderer import get_stock_context, format_context_for_llm
 from regime_adapter import RegimeAdaptiveConfig
-from data.market_regime import MarketRegimeDetector
 
 
 class ScorerAgent(LlmAgent):
@@ -45,8 +44,9 @@ class ScorerAgent(LlmAgent):
             )
             return
 
-        # Get current regime for adaptive config (runs once per batch)
-        regime_str = MarketRegimeDetector().detect_regime().get("regime", "neutral")
+        # Reuse the pipeline's regime snapshot so scorer thresholds match the scan context.
+        regime_snapshot = ctx.session.state.get("regime") or {}
+        regime_str = str(regime_snapshot.get("regime") or "neutral")
         regime_config = RegimeAdaptiveConfig(regime_str)
         min_score = regime_config.min_entry_score()
 

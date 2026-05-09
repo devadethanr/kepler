@@ -79,6 +79,44 @@ test('api client builds durable event cursor query parameters', async () => {
   assert.equal(calls[0]?.input, '/api/dashboard/events?limit=25&after_id=1234');
 });
 
+test('api client fetches news dashboard payloads', async () => {
+  const calls = installFetch(() =>
+    jsonResponse({
+      items: [
+        {
+          provider: 'nse_corporate_announcements_rss',
+          source_type: 'official_filing',
+          title: 'Reliance board meeting',
+          url: 'https://nseindia.com/a',
+          tickers: ['RELIANCE'],
+          category: 'corporate_action',
+          confidence: 0.95,
+        },
+      ],
+      provider_health: {
+        nse_corporate_announcements_rss: {
+          provider: 'nse_corporate_announcements_rss',
+          enabled: true,
+          status: 'healthy',
+          items_seen: 1,
+          items_emitted: 1,
+        },
+      },
+      source_counts: { nse_corporate_announcements_rss: 1 },
+      source_type_counts: { official_filing: 1 },
+      category_counts: { corporate_action: 1 },
+      item_count: 1,
+    }),
+  );
+
+  const news = await api.newsDashboard(25);
+
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0]?.input, '/api/dashboard/news?limit=25');
+  assert.equal(news.items[0]?.tickers[0], 'RELIANCE');
+  assert.equal(news.provider_health.nse_corporate_announcements_rss.items_emitted, 1);
+});
+
 test('api client rejects payloads that fail Zod validation', async () => {
   installFetch(() => jsonResponse({ status: 200, services: {} }));
 

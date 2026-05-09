@@ -2,7 +2,7 @@
   "data": {
     "block_deals": [],
     "bulk_deals": [],
-    "date": "2026-05-04",
+    "date": "2026-05-08",
     "fii_dii": {
       "date": "2026-04-05",
       "dii_net_crore": null,
@@ -13,5 +13,5 @@
     },
     "source": "cache"
   },
-  "fetched_at": "2026-05-03T23:46:59.151339"
+  "fetched_at": "2026-05-07T20:13:30.322506"
 }

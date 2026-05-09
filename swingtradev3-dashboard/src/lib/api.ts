@@ -7,6 +7,7 @@ import {
   DashboardSnapshotSchema,
   ExecutionSchema,
   HealthSchema,
+  NewsDashboardSchema,
   PortfolioSummarySchema,
   PositionSchema,
   QuotesSchema,
@@ -79,6 +80,8 @@ export const api = {
     request('/dashboard/broker', BrokerSchema, 'GET', { signal }),
   telemetry: (signal?: AbortSignal) =>
     request('/dashboard/telemetry', TelemetrySchema, 'GET', { signal }),
+  newsDashboard: (limit = 100, signal?: AbortSignal) =>
+    request(`/dashboard/news?limit=${limit}`, NewsDashboardSchema, 'GET', { signal }),
   activity: (signal?: AbortSignal) =>
     request('/dashboard/activity', AgentActivityDashboardSchema, 'GET', { signal }),
   session: (signal?: AbortSignal) =>

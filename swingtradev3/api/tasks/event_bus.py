@@ -49,6 +49,7 @@ class EventType(str, Enum):
     # Market events (reactive)
     REGIME_CHANGE = "regime_change"
     NEWS_BREAK = "news_break"
+    MARKET_NEWS_DIGEST = "market_news_digest"
     PRICE_ALERT = "price_alert"
     VIX_SPIKE = "vix_spike"
     STOP_HIT = "stop_hit"

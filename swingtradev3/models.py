@@ -283,6 +283,7 @@ class ScanResult(BaseModel):
     total_screened: int = 0
     qualified_count: int = 0
     shortlist: list[StockScore] = Field(default_factory=list)
+    diagnostics: dict[str, Any] = Field(default_factory=dict)
 
 
 class ApprovalRequest(BaseModel):

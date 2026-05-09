@@ -16,6 +16,7 @@ import { RiskScreen } from './screens/RiskScreen';
 import { KnowledgeScreen } from './screens/KnowledgeScreen';
 import { ControlPaneScreen } from './screens/ControlPaneScreen';
 import { TelemetryScreen } from './screens/TelemetryScreen';
+import { NewsScreen } from './screens/NewsScreen';
 import { useLiveEvents } from './hooks/useDashboardData';
 
 export default function App() {
@@ -35,6 +36,7 @@ export default function App() {
         <TopBar onToggleSidebar={() => setSidebarOpen(!isSidebarOpen)} live={live} />
         {currentTab === 'dashboard' && <DashboardScreen />}
         {currentTab === 'telemetry' && <TelemetryScreen live={live} />}
+        {currentTab === 'news' && <NewsScreen />}
         {currentTab === 'knowledge' && <KnowledgeScreen />}
         {currentTab === 'control_pane' && <ControlPaneScreen />}
         {currentTab === 'execution' && <ExecutionScreen />}

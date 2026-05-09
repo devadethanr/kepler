@@ -534,38 +534,164 @@ Implementation:
   - `max_same_sector_positions`
   - `trail_stop_at_pct`
   - `trail_to_pct`
-  - `debate_top_n`
+- `debate_top_n`
 
 Definition of done:
 
 - no runtime path mutates `config.yaml`
 - adaptive behavior is bounded, auditable, and reversible
 
-### Phase 11: Memory Views And Google MCP Toolbox
+### Phase 11: Context Graph Memory
+
+> Full design specification: [docs/features/postgress-memgraph.md](../features/postgress-memgraph.md)
+
+#### Core Principle
+
+```
+Postgres = execution truth     (protects money)
+Memgraph = context graph truth (improves memory and reasoning)
+Files    = temporary caches + compatibility exports only
+```
+
+If Memgraph is down, trading safety must still work. The only acceptable degradation is:
+`"less historical/research context available"` — never `"cannot reconcile"` or `"cannot place/flatten"`.
+
+#### What Postgres Continues To Own
+
+All execution-critical state stays in Postgres:
+
+- `entry_intents`, `approvals`, `order_intents`, `broker_orders`, `broker_fills`
+- `positions`, `protective_triggers`, `trades`
+- `operator_controls`, `failure_incidents`, `reconciliation_runs`
+- `auth_sessions`, `policy_overlays`
+
+#### What Memgraph Owns
+
+Context and cognition state, with no write path back to execution:
+
+- `Stock`, `Sector`, `Index`
+- `ResearchRun`, `ResearchCandidate`
+- `NewsArticle`, `SignalSnapshot`, `TechnicalSnapshot`, `FundamentalSnapshot`, `SentimentSnapshot`
+- `RegimeSnapshot`
+- `TradeMemory`
+- `Observation`, `Lesson`, `FailurePattern`
+- `SkillVersion`
+- Edges: `MEMBER_OF`, `BELONGS_TO_SECTOR`, `ANALYZED_IN`, `HAS_SIGNAL`, `MENTIONS`, `AFFECTS_STOCK`, `UNDER_REGIME`, `GENERATED_INTENT`, `EXECUTED_AS`, `CLOSED_AS`, `PRODUCED_OBSERVATION`, `SUPPORTS_LESSON`, `SIMILAR_TO`, `FAILED_DURING`
+- Every node/edge carries: `source`, `source_id`, `postgres_table/postgres_pk`, `observed_at`, `ingested_at`, `payload_hash`, `confidence`, `projection_version`
+
+#### New Modules
+
+- `swingtradev3/context_graph/repository.py` — `ContextGraphRepository`: typed Memgraph access layer; no raw Cypher scattered across agents
+- `swingtradev3/context_graph/projector.py` — `GraphProjector`: reads Postgres `execution_events` and writes derived memory nodes/edges to Memgraph
+- `swingtradev3/context_graph/context_builder.py` — `ContextBuilder`: reads Memgraph for agent prompts and research context
+- `swingtradev3/context_graph/intent_writer.py` — `IntentWriter`: converts approved research output from Memgraph into Postgres `entry_intents`
+- `swingtradev3/context_graph/policy_proposal_writer.py` — `PolicyProposalWriter`: converts graph/learning insights into Postgres `policy_overlay` candidates; never mutates config directly
+
+#### Infrastructure
+
+- Add `memgraph` and `memgraph-mage` services behind an optional Docker Compose profile (`--profile memory`)
+- Add `memgraph-lab` service for graph debugging (dev only)
+- Use Python `neo4j` driver over Bolt protocol for all Memgraph access
+- Add durability config: snapshots and WAL enabled
+- Add backup/restore runbook
+
+#### Connection Flow
+
+```
+Research / agents / market data
+        |
+        v
+Postgres execution truth          Memgraph context truth
+        |                                 ^
+        |                                 |
+        +-------- GraphProjector ---------+
+                  (one-way, async)
+```
+
+Allowed directionality:
+
+- `Postgres → Memgraph` (via GraphProjector)
+- `Memgraph → research context` (via ContextBuilder)
+- `Memgraph → entry intent proposal → Postgres` (via IntentWriter)
+- `Memgraph → policy proposal → Postgres` (via PolicyProposalWriter)
+
+Not allowed:
+
+- `Memgraph → live order decision`
+- `Memgraph → direct position mutation`
+- `Memgraph → direct kill-switch mutation`
+- `Memgraph → direct config mutation`
+
+Plain English: **Memgraph can suggest. Postgres decides. Worker executes.**
+
+#### What To Stop Writing To Files
+
+Replace these file-based stores with Memgraph:
+
+- `context/knowledge/wiki/` — stock/sector notes, scan history, wikilinks
+- `context/research/` — dated scan outputs and per-stock research evidence
+- `news_cache.json`, `sentiment_cache.json` — durable news/articles/entities/sentiment
+- `trade_observations.json`, `observations.json` — lessons and event observations
+- meaningful operational incidents from Postgres, projected as `FailurePattern` memory
+- `SKILL.md` / strategy versions as `SkillVersion` nodes
+
+Keep as file cache for now (not yet promoted to graph):
+
+- `macro_cache.json`, `options_cache.json`, `timesfm_cache.json`, `fundamentals_cache.json`, `institutional_flows_cache.json`
+- When any of these values influence a research decision, persist a graph fact linked to the `ResearchRun` node.
+
+#### Dashboard
+
+- Update the knowledge graph screen to read the real Memgraph graph instead of the Phase 8 local mock
+- Remove the `Phase 14 Mock` badge from the knowledge graph panel
+- Back the `/api/knowledge-graph` route with `ContextGraphRepository` queries
+
+#### Documentation Updates Required In This Phase
+
+- Update `docs/architecture/agent_cognition_architecture.md` memory section: replace markdown KG as long-term memory with Memgraph
+- Update `docs/architecture/agent_cognition_implementation_plan.md`: add the Phase 11 graph-memory implementation section
+- Update `docs/features/future-feature.md`: supersede the old "no new database" and "Active Graph KG" entries with the Memgraph architecture decision
+
+#### Definition Of Done
+
+- Memgraph runs as an optional Docker Compose service; `make dev-detach` starts it alongside the app and worker
+- `GraphProjector` is live and projects `execution_events` into Memgraph asynchronously
+- `ContextGraphRepository` is the only way agents access Memgraph — no raw Cypher in agent code
+- Research pipeline writes `ResearchRun` and candidate summaries to Memgraph, not to JSON files
+- Knowledge graph dashboard screen reads real graph data from Memgraph
+- Memgraph downtime does not affect order placement, reconciliation, or kill switch operation
+- File-based memory stores (`context/knowledge/`, `context/research/`, observation caches) are no longer written by new code paths
+
+### Phase 12: Memory Views And Google MCP Toolbox
 
 Implementation:
 
-- add compact Postgres-backed views for:
-  - regime snapshots
+- add compact **Postgres-backed** views for execution state:
   - portfolio risk
   - open positions
-  - similar past trades
   - execution incidents
   - effective policy
   - session readiness
+- add compact **Memgraph-backed** views for context/cognition state (Memgraph is live from Phase 11):
+  - regime snapshots (reads `RegimeSnapshot` nodes from Memgraph)
+  - similar past trades (reads `TradeMemory` nodes and `SIMILAR_TO` edges from Memgraph)
 - add read-only Google MCP Toolbox toolsets for:
-  - research
-  - allocator
-  - post-trade review
-  - ops diagnostics
-- do not allow unrestricted SQL and do not allow writes through Toolbox
+  - research (context from Memgraph: `ResearchRun`, `ResearchCandidate`, `SignalSnapshot`)
+  - allocator (execution state from Postgres: positions, risk budget, effective policy)
+  - post-trade review (hybrid: `TradeMemory` from Memgraph, trade rows from Postgres)
+  - ops diagnostics (Postgres: incidents, reconciliation runs, operator controls)
+- do not allow unrestricted SQL or unrestricted Cypher — all access goes through typed views
+- do not allow writes through Toolbox
+- if Memgraph is down, Toolbox falls back gracefully on Postgres-only context; execution is never blocked
 
 Definition of done:
 
-- LLM agents read compact, curated Postgres views instead of raw JSON or unrestricted tables
+- LLM agents read compact, curated views (Postgres or Memgraph as appropriate) instead of raw JSON or unrestricted tables
+- Toolbox is Memgraph-aware and Postgres-aware, with clean typed access for each data domain
 - Toolbox remains fully out of the execution hot path
+- Memgraph downtime degrades context quality only — it never blocks execution, reconciliation, or kill switches
 
-### Phase 12: Slow Brain Desk And Session Planning
+### Phase 13: Slow Brain Desk And Session Planning
 
 Implementation:
 
@@ -583,13 +709,14 @@ Implementation:
   - `portfolio_fit_report`
   - optional `policy_proposal`
 - keep the pre-market desk portfolio-aware across all active universes
+- agents read regime and trade context from Memgraph (Phase 11) via the Toolbox (Phase 12)
 
 Definition of done:
 
 - new entries are produced by the bounded multi-agent desk, not by a single-pass scorer alone
 - pre-market activation is portfolio-aware and universe-aware
 
-### Phase 13: Bounded Intraday Exception Reasoning And Learning
+### Phase 14: Bounded Intraday Exception Reasoning And Learning
 
 Implementation:
 
@@ -601,47 +728,13 @@ Implementation:
   - unexpected regime break on existing positions
 - add post-trade reviewer and policy analyst flows that can propose bounded overlays or strategy lessons
 - require all intraday reasoning outputs to stay advisory unless explicitly mapped to a narrow deterministic policy hook
+- post-trade lessons and failure patterns are written to Memgraph (Phase 11) for future reasoning cycles
 
 Definition of done:
 
 - market-hours execution still works if the LLM layer is unavailable
 - intraday reasoning exists only for bounded anomalies, not routine order routing
 - the system can learn and adapt without becoming an unbounded linear-bot-with-prompts
-
-## Phase 14 Context Graph Plan
-@docs/features/postgress-memgraph.md
-  - Add a dedicated “Context Graph / Memory System” phase after Phase 13, or immediately after Phase 8 if we choose to prioritize memory next.
-  - Keep Postgres as execution truth: orders, fills, positions, trades, approvals, incidents, reconciliation, auth, operator controls, and policy overlays.
-  - Add Memgraph as context graph truth: stocks, sectors, indices, research runs, candidates, news, regimes, signal snapshots, trade memories, lessons, failure patterns, and skill versions.
-  - Connect Postgres and Memgraph only through controlled projectors: Postgres execution_events -> GraphProjector -> Memgraph.
-  - Do not let Memgraph submit orders, mutate positions, clear incidents, edit config, or participate in worker hot-path execution.
-  - Replace file-based knowledge/research memory with typed graph repositories; no migration of old dev data.
-  - Update the knowledge graph dashboard screen to read the real graph only in Phase 14.
-
-  ## Documentation Updates
-
-  - Update docs/architecture/live_trading_one_shot_plan.md Phase 8 to reference the React dashboard, DB-backed APIs, durable SSE, and old dashboard removal.
-  - Add Phase 14 to docs/architecture/live_trading_one_shot_plan.md for Postgres + Memgraph context graph.
-  - Update docs/architecture/agent_cognition_architecture.md memory section to replace markdown KG as long-term memory with Memgraph.
-  - Update docs/architecture/agent_cognition_implementation_plan.md dashboard phase to point at swingtradev3-dashboard, and add the Phase 14 graph-memory implementation section.
-  - Also update docs/features/future-feature.md because it currently says “no new database” and selects Active Graph KG; that must be superseded if Memgraph is the chosen architecture.
-
-  ## Test Plan
-
-  - Run npm ci, npm run lint, and npm run build in swingtradev3-dashboard.
-  - Add frontend API-client tests for request headers, Zod parsing, and SSE reconnect behavior.
-  - Add FastAPI tests proving positions, trades, portfolio, approvals, and dashboard routes no longer read JSON files.
-  - Add SSE tests for cursor resume, heartbeat, and event ordering from execution_events.
-  - Run make test and make phase7-check from swingtradev3.
-  - Verify make dev-detach starts the React dashboard at the existing dashboard port.
-
-  ## Assumptions
-
-  - swingtradev3-dashboard is the only dashboard going forward.
-  - Old dashboard folders can be deleted after the new Compose runtime works.
-  - Knowledge graph UI remains mock-only in Phase 8.
-  - No existing context/research/wiki data migration is required.
-  - Sources checked for package decisions: TanStack Query docs, Zod docs, MDN EventSource docs, and Microsoft fetch-event-source docs.
 
 ## Exact Repo Changes
 
@@ -698,6 +791,7 @@ If the goal is one clean push instead of another partial retrofit, implement in 
 5. Phase 8 and Phase 9
 6. Phase 10 and Phase 11
 7. Phase 12 and Phase 13
+8. Phase 14
 
 Reason:
 
@@ -705,8 +799,13 @@ Reason:
 - broker integration must exist before entry and protection state machines
 - reconciliation and safety must be complete before unattended mode is enabled
 - UI comes after execution truth, not before
-- policy and memory views come after execution truth because they depend on stable Postgres state
-- the slow-brain desk and exception analyst come after the execution floor because agentic reasoning should sit on top of a safe, deterministic runtime
+- policy (Phase 10) comes after execution truth because `policy_overlays` depend on stable Postgres state
+- **Phase 11 (Context Graph) precedes Phase 12 (Toolbox)** so the Toolbox is built correctly the first time — regime snapshots and trade memories go straight into Memgraph, never as throwaway Postgres views
+- **Phase 12 (Toolbox) precedes Phase 13 (Slow Brain)** because Slow Brain agents need structured, curated access to both Postgres and Memgraph via the Toolbox
+- **Phase 14 (Exception Reasoning)** comes last because it sits on top of the full stack: execution floor, graph memory, Toolbox, and Slow Brain desk
+- post-trade lessons written in Phase 14 feed back into Memgraph (Phase 11), closing the learning loop
+
+> See [docs/features/postgress-memgraph.md](../features/postgress-memgraph.md) for the full design rationale behind the Postgres + Memgraph split.
 
 ## Sources
 

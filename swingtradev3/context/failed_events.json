@@ -1,18 +1,1 @@
-[
-  {
-    "event": {
-      "id": "1353131935e5",
-      "type": "error",
-      "payload": {},
-      "timestamp": "2026-05-04T05:17:18.833795",
-      "source": "test"
-    },
-    "handler_name": "bad_handler",
-    "error": "boom",
-    "retry_count": 0,
-    "max_retries": 3,
-    "created_at": "2026-05-04T05:17:18.834633",
-    "last_retry_at": null,
-    "permanently_failed": false
-  }
-]
+[]

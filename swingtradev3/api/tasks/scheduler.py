@@ -249,9 +249,14 @@ class TradingScheduler:
 
     async def _overnight_news_sweep(self) -> None:
         """Sweep global news for holdings-relevant events."""
-        from data.news_aggregator import NewsAggregator
+        from data.news import NewsAggregator
+        from data.nifty200_loader import Nifty200Loader
         from storage import read_json
         from models import AccountState
+
+        now = _now_ist().time()
+        if dt_time(6, 0) <= now < dt_time(22, 0):
+            return
 
         state_data = read_json(CONTEXT_DIR / "state.json", {})
         if not state_data or not state_data.get("positions"):
@@ -259,15 +264,26 @@ class TradingScheduler:
 
         state = AccountState.model_validate(state_data)
         news = NewsAggregator()
+        universe = Nifty200Loader()
+        alert_limit = int(cfg.research.filter.news_position_alert_max_items)
 
         for pos in state.positions:
-            news_data = await asyncio.to_thread(news.search_news, pos.ticker)
-            headlines = news_data.get("results", [])[:3]
+            company_name = universe.name_for(pos.ticker)
+            news_data = await asyncio.to_thread(
+                news.search_stock_news,
+                pos.ticker,
+                company_name,
+            )
+            headlines = news.filter_new_alerts(
+                pos.ticker,
+                news_data.get("results", [])[:alert_limit],
+                company_name=company_name,
+            )
             if headlines:
                 await event_bus.publish(
                     BusEvent(
                         type=EventType.NEWS_BREAK,
-                        payload={"ticker": pos.ticker, "headlines": headlines[:3]},
+                        payload={"ticker": pos.ticker, "headlines": headlines[:alert_limit]},
                         source="overnight_monitor",
                     )
                 )
@@ -286,10 +302,19 @@ class TradingScheduler:
 
     async def _morning_news_digest(self) -> None:
         """06:00 — Sweep market news for overnight developments."""
-        from data.news_aggregator import NewsAggregator
+        from data.news import NewsAggregator
 
         news = NewsAggregator()
-        await asyncio.to_thread(news.sweep_market_news)
+        payload = await asyncio.to_thread(news.sweep_market_news)
+        digest = news.build_market_digest(payload)
+        if digest.get("item_count"):
+            await event_bus.publish(
+                BusEvent(
+                    type=EventType.MARKET_NEWS_DIGEST,
+                    payload=digest,
+                    source="morning_news_digest",
+                )
+            )
         print(f"[{_now_ist().isoformat()}] Morning news digest completed")
 
     async def _morning_regime_check(self) -> None:
@@ -447,7 +472,8 @@ class TradingScheduler:
         if not is_trading_day(_now_ist()) or not (dt_time(9, 15) <= now <= dt_time(15, 30)):
             return
 
-        from data.news_aggregator import NewsAggregator
+        from data.news import NewsAggregator
+        from data.nifty200_loader import Nifty200Loader
         from storage import read_json
         from models import AccountState
 
@@ -457,15 +483,26 @@ class TradingScheduler:
 
         state = AccountState.model_validate(state_data)
         news = NewsAggregator()
+        universe = Nifty200Loader()
+        alert_limit = int(cfg.research.filter.news_position_alert_max_items)
 
         for pos in state.positions:
-            news_data = await asyncio.to_thread(news.search_news, pos.ticker)
-            headlines = news_data.get("results", [])[:3]
+            company_name = universe.name_for(pos.ticker)
+            news_data = await asyncio.to_thread(
+                news.search_stock_news,
+                pos.ticker,
+                company_name,
+            )
+            headlines = news.filter_new_alerts(
+                pos.ticker,
+                news_data.get("results", [])[:alert_limit],
+                company_name=company_name,
+            )
             if headlines:
                 await event_bus.publish(
                     BusEvent(
                         type=EventType.NEWS_BREAK,
-                        payload={"ticker": pos.ticker, "headlines": headlines[:3]},
+                        payload={"ticker": pos.ticker, "headlines": headlines[:alert_limit]},
                         source="intraday_news",
                     )
                 )

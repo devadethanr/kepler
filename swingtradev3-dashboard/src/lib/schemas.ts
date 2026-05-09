@@ -221,6 +221,50 @@ export const AgentActivityDashboardSchema = z
   })
   .passthrough();
 
+export const NewsItemSchema = z
+  .object({
+    provider: z.string().default('unknown'),
+    source_type: z.string().default('unknown'),
+    title: z.string(),
+    url: z.string().nullable().optional(),
+    canonical_url: z.string().nullable().optional(),
+    summary: z.string().nullable().optional(),
+    published_at_ist: z.string().nullable().optional(),
+    fetched_at_ist: z.string().nullable().optional(),
+    tickers: z.array(z.string()).default([]),
+    category: z.string().default('unknown'),
+    confidence: z.number().default(0),
+  })
+  .passthrough();
+
+export const NewsProviderHealthSchema = z
+  .object({
+    provider: z.string(),
+    enabled: z.boolean().default(true),
+    status: z.string().optional(),
+    last_success_at_ist: z.string().nullable().optional(),
+    last_failure_at_ist: z.string().nullable().optional(),
+    last_error: z.string().nullable().optional(),
+    items_seen: z.number().default(0),
+    items_emitted: z.number().default(0),
+    dedupe_drops: z.number().default(0),
+    empty_extractions: z.number().default(0),
+    latency_ms: z.number().default(0),
+  })
+  .passthrough();
+
+export const NewsDashboardSchema = z
+  .object({
+    items: z.array(NewsItemSchema).default([]),
+    provider_health: z.record(z.string(), NewsProviderHealthSchema).default({}),
+    source_counts: CountMapSchema,
+    source_type_counts: CountMapSchema,
+    category_counts: CountMapSchema,
+    item_count: z.number().default(0),
+    last_updated_at_ist: z.string().nullable().optional(),
+  })
+  .passthrough();
+
 export type DashboardSnapshot = z.infer<typeof DashboardSnapshotSchema>;
 export type DashboardEvent = z.infer<typeof DashboardEventSchema>;
 export type ExecutionDashboard = z.infer<typeof ExecutionSchema>;
@@ -232,3 +276,6 @@ export type Trade = z.infer<typeof TradeSchema>;
 export type Session = z.infer<typeof SessionSchema>;
 export type AgentActivity = z.infer<typeof AgentActivitySchema>;
 export type AgentActivityDashboard = z.infer<typeof AgentActivityDashboardSchema>;
+export type NewsDashboard = z.infer<typeof NewsDashboardSchema>;
+export type NewsItem = z.infer<typeof NewsItemSchema>;
+export type NewsProviderHealth = z.infer<typeof NewsProviderHealthSchema>;

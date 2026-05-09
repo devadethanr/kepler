@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 from collections.abc import Iterable
 from datetime import datetime
 from typing import Any
@@ -20,6 +21,8 @@ from .models import (
     EntryIntentRow,
     ExecutionEventRow,
     FailureIncidentRow,
+    NewsArticleRow,
+    NewsProviderHealthRow,
     OrderIntentRow,
     OperatorControlRow,
     PositionRow,
@@ -31,7 +34,7 @@ from .models import (
 
 PRIMARY_ACCOUNT_KEY = "primary"
 KITE_SESSION_KEY = "kite"
-VISIBLE_APPROVAL_STATUSES = {"pending", "approved", "queued", "rejected", "expired"}
+VISIBLE_APPROVAL_STATUSES = {"pending", "approved", "queued"}
 ACTIVE_APPROVAL_ORDER_STATUSES = {"awaiting_approval", "approved", "queued"}
 IST = ZoneInfo("Asia/Kolkata")
 
@@ -92,6 +95,24 @@ def _entry_intent_status(
     if approved is True:
         return "approved"
     return "awaiting_approval"
+
+
+def _as_ist(value: datetime) -> datetime:
+    if value.tzinfo is None:
+        return value.replace(tzinfo=IST)
+    return value.astimezone(IST)
+
+
+def _parse_datetime(value: Any) -> datetime | None:
+    if not value:
+        return None
+    if isinstance(value, datetime):
+        return _as_ist(value)
+    try:
+        parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return _as_ist(parsed)
 
 
 class MemoryRepository:
@@ -204,6 +225,130 @@ class MemoryRepository:
             select(ExecutionEventRow.event_id).order_by(ExecutionEventRow.event_id.desc()).limit(1)
         )
 
+    def upsert_news_items(self, items: Iterable[dict[str, Any]], *, source: str) -> None:
+        for item in items:
+            payload = dict(item or {})
+            identity = str(
+                payload.get("source_id")
+                or payload.get("canonical_url")
+                or payload.get("url")
+                or payload.get("title")
+                or payload.get("raw_hash")
+                or ""
+            )
+            news_id = (
+                identity
+                if len(identity) <= 128
+                else hashlib.sha256(identity.encode("utf-8")).hexdigest()
+            )
+            if not news_id:
+                continue
+            row = self.session.get(NewsArticleRow, news_id)
+            if row is None:
+                row = NewsArticleRow(news_id=news_id)
+                self.session.add(row)
+            row.provider = str(payload.get("provider") or payload.get("source") or "unknown")[:64]
+            row.source_type = str(payload.get("source_type") or "unknown")[:64]
+            row.title = str(payload.get("title") or payload.get("canonical_url") or "")
+            row.canonical_url = str(payload.get("canonical_url") or payload.get("url") or "")
+            row.published_at = _parse_datetime(
+                payload.get("published_at_utc")
+                or payload.get("published_at")
+                or payload.get("published_at_ist")
+            )
+            row.category = str(payload.get("category") or "unknown")[:64]
+            try:
+                row.confidence = float(payload.get("confidence") or 0.0)
+            except (TypeError, ValueError):
+                row.confidence = 0.0
+            row.tickers = [str(ticker).upper() for ticker in payload.get("tickers", [])]
+            row.payload = payload
+            if not self.execution_event_exists(
+                event_type="news_item_ingested",
+                entity_type="news_article",
+                entity_id=news_id,
+                source=source,
+            ):
+                self.append_execution_event(
+                    event_type="news_item_ingested",
+                    entity_type="news_article",
+                    entity_id=news_id,
+                    source=source,
+                    payload={
+                        "provider": row.provider,
+                        "source_type": row.source_type,
+                        "title": row.title,
+                        "tickers": row.tickers,
+                        "category": row.category,
+                        "confidence": row.confidence,
+                    },
+                )
+
+    def upsert_news_provider_health(self, health: dict[str, dict[str, Any]]) -> None:
+        for provider, payload in health.items():
+            row = self.session.get(NewsProviderHealthRow, provider)
+            if row is None:
+                row = NewsProviderHealthRow(provider=provider)
+                self.session.add(row)
+            status = "healthy" if payload.get("last_error") in (None, "") else "degraded"
+            row.enabled = bool(payload.get("enabled", True))
+            row.status = status
+            row.items_seen = int(payload.get("items_seen") or 0)
+            row.items_emitted = int(payload.get("items_emitted") or 0)
+            row.last_success_at = _parse_datetime(payload.get("last_success_at_ist"))
+            row.last_failure_at = _parse_datetime(payload.get("last_failure_at_ist"))
+            row.payload = dict(payload or {})
+
+    def list_news_items(
+        self,
+        *,
+        limit: int = 100,
+        ticker: str | None = None,
+    ) -> list[dict[str, Any]]:
+        bounded_limit = max(1, min(limit, 500))
+        query = select(NewsArticleRow)
+        if ticker:
+            ticker_upper = ticker.upper()
+            query = query.where(NewsArticleRow.tickers.contains([ticker_upper]))
+        rows = self.session.scalars(
+            query.order_by(NewsArticleRow.updated_at.desc()).limit(bounded_limit)
+        ).all()
+        return [
+            {
+                **dict(row.payload or {}),
+                "news_id": row.news_id,
+                "provider": row.provider,
+                "source_type": row.source_type,
+                "title": row.title,
+                "canonical_url": row.canonical_url,
+                "category": row.category,
+                "confidence": row.confidence,
+                "tickers": list(row.tickers or []),
+                "updated_at": row.updated_at.isoformat() if row.updated_at else None,
+            }
+            for row in rows
+        ]
+
+    def list_news_provider_health(self) -> dict[str, dict[str, Any]]:
+        rows = self.session.scalars(select(NewsProviderHealthRow)).all()
+        return {
+            row.provider: {
+                **dict(row.payload or {}),
+                "provider": row.provider,
+                "enabled": row.enabled,
+                "status": row.status,
+                "items_seen": row.items_seen,
+                "items_emitted": row.items_emitted,
+                "last_success_at_ist": (
+                    _as_ist(row.last_success_at).isoformat() if row.last_success_at else None
+                ),
+                "last_failure_at_ist": (
+                    _as_ist(row.last_failure_at).isoformat() if row.last_failure_at else None
+                ),
+            }
+            for row in rows
+        }
+
     def account_state_exists(self) -> bool:
         return self.session.get(AccountStateRow, PRIMARY_ACCOUNT_KEY) is not None
 
@@ -292,7 +437,18 @@ class MemoryRepository:
             .where(ApprovalRow.status.in_(sorted(VISIBLE_APPROVAL_STATUSES)))
             .order_by(ApprovalRow.created_at_effective.asc(), ApprovalRow.approval_id.asc())
         ).all()
-        return [dict(row.payload) for row in rows]
+        now = datetime.now(IST)
+        active: list[dict[str, Any]] = []
+        for row in rows:
+            payload = dict(row.payload)
+            try:
+                approval = PendingApproval.model_validate(payload)
+            except Exception:
+                continue
+            if _as_ist(approval.expires_at) <= now:
+                continue
+            active.append(payload)
+        return active
 
     def get_execution_requested_approvals(self) -> list[dict[str, Any]]:
         rows = self.session.scalars(
@@ -526,6 +682,16 @@ class MemoryRepository:
 
         for approval_id, row in existing.items():
             if approval_id in seen_approval_ids:
+                continue
+            if row.status in {"pending", "approved"} and not row.execution_requested:
+                row.status = "superseded"
+                row.execution_requested = False
+                row.execution_request_id = None
+                next_payload = dict(row.payload)
+                next_payload["status"] = "superseded"
+                next_payload["execution_requested"] = False
+                next_payload["execution_request_id"] = None
+                row.payload = next_payload
                 continue
             order_intent = (
                 self.get_order_intent(str(row.order_intent_id))

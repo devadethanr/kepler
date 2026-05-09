@@ -222,6 +222,52 @@ def test_phase8_activity_endpoint_exposes_agents_sources_and_audit_trail():
     )
 
 
+def test_dashboard_news_endpoint_exposes_provider_health_and_audit_items():
+    item = {
+        "provider": "nse_corporate_announcements_rss",
+        "source_type": "official_filing",
+        "source_id": "phase8-news-1",
+        "canonical_url": "https://nseindia.com/news/phase8-news-1",
+        "url": "https://nseindia.com/news/phase8-news-1",
+        "title": "Phase8Dash announces dividend",
+        "summary": "Board approved dividend.",
+        "published_at_ist": "2026-05-06T09:15:00+05:30",
+        "fetched_at_ist": "2026-05-06T09:16:00+05:30",
+        "tickers": ["PHASE8DASH"],
+        "category": "corporate_action",
+        "confidence": 0.95,
+        "raw_hash": "phase8-news-1",
+    }
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        repo.upsert_news_items([item], source="test_phase8_news")
+        repo.upsert_news_provider_health(
+            {
+                "nse_corporate_announcements_rss": {
+                    "provider": "nse_corporate_announcements_rss",
+                    "enabled": True,
+                    "last_success_at_ist": "2026-05-06T09:16:00+05:30",
+                    "last_failure_at_ist": None,
+                    "last_error": None,
+                    "items_seen": 1,
+                    "items_emitted": 1,
+                    "dedupe_drops": 0,
+                    "empty_extractions": 0,
+                    "latency_ms": 12,
+                }
+            }
+        )
+
+    response = client.get("/dashboard/news?limit=10")
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["item_count"] >= 1
+    assert any(item["title"] == "Phase8Dash announces dividend" for item in payload["items"])
+    health = payload["provider_health"]["nse_corporate_announcements_rss"]
+    assert health["items_emitted"] == 1
+    assert health["status"] == "healthy"
+
+
 def test_phase8_sse_frames_and_resume_cursor_are_stable():
     frame = sse._sse_frame(
         event="execution_event",

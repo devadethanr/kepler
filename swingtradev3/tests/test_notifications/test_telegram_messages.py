@@ -1,7 +1,6 @@
 from __future__ import annotations
 import pytest
 from unittest.mock import AsyncMock, patch, MagicMock
-from telegram import Bot
 
 
 class TestTelegramMessages:
@@ -153,6 +152,22 @@ class TestTelegramMessages:
 
             mock_bot.send_message.assert_called_once()
 
+    @pytest.mark.asyncio
+    async def test_send_text_truncates_overlong_messages(self):
+        from notifications.telegram_client import TelegramClient, TELEGRAM_SAFE_TEXT_LIMIT
+
+        with patch("telegram.Bot") as mock_bot_class:
+            mock_bot = MagicMock()
+            mock_bot.send_message = AsyncMock()
+            mock_bot_class.return_value = mock_bot
+
+            tg = TelegramClient()
+            await tg.send_text("x" * (TELEGRAM_SAFE_TEXT_LIMIT + 500))
+
+            call_kwargs = mock_bot.send_message.call_args[1]
+            assert len(call_kwargs["text"]) <= TELEGRAM_SAFE_TEXT_LIMIT
+            assert "[truncated]" in call_kwargs["text"]
+
 
 class TestEventHandlerMessages:
     @pytest.mark.asyncio
@@ -179,6 +194,83 @@ class TestEventHandlerMessages:
             assert "GTT" in text
             assert "INFY" in text
 
+    @pytest.mark.asyncio
+    async def test_handle_position_news_formats_headline_dicts(self):
+        from api.tasks.event_bus import BusEvent, EventType
+        from api.tasks.event_handlers import handle_position_news
+
+        with patch("telegram.Bot") as mock_bot_class:
+            mock_bot = MagicMock()
+            mock_bot.send_message = AsyncMock()
+            mock_bot_class.return_value = mock_bot
+
+            await handle_position_news(
+                BusEvent(
+                    type=EventType.NEWS_BREAK,
+                    payload={
+                        "ticker": "RELIANCE",
+                        "headlines": [
+                            {
+                                "title": "Reliance Industries Q4 profit beats estimates",
+                                "content": "x" * 1200,
+                                "url": "https://www.reuters.com/markets/reliance",
+                                "published_at": "2026-05-05T10:00:00+00:00",
+                            }
+                        ],
+                    },
+                )
+            )
+
+            text = mock_bot.send_message.call_args[1]["text"]
+            assert "Reliance Industries Q4 profit" in text
+            assert "https://www.reuters.com/markets/reliance" in text
+            assert "'content':" not in text
+            assert len(text) < 1000
+
+    @pytest.mark.asyncio
+    async def test_handle_market_news_digest_groups_tickers_and_general_items(self):
+        from api.tasks.event_bus import BusEvent, EventType
+        from api.tasks.event_handlers import handle_market_news_digest
+
+        with patch("telegram.Bot") as mock_bot_class:
+            mock_bot = MagicMock()
+            mock_bot.send_message = AsyncMock()
+            mock_bot_class.return_value = mock_bot
+
+            await handle_market_news_digest(
+                BusEvent(
+                    type=EventType.MARKET_NEWS_DIGEST,
+                    payload={
+                        "ticker_groups": [
+                            {
+                                "ticker": "RELIANCE",
+                                "company_name": "Reliance Industries",
+                                "items": [
+                                    {
+                                        "title": "Reliance Industries Q4 profit beats estimates",
+                                        "url": "https://www.reuters.com/markets/reliance",
+                                    }
+                                ],
+                            }
+                        ],
+                        "general": [
+                            {
+                                "title": "RBI policy keeps market cautious",
+                                "url": "https://example.com/rbi-policy",
+                            }
+                        ],
+                        "item_count": 2,
+                    },
+                )
+            )
+
+            text = mock_bot.send_message.call_args[1]["text"]
+            assert "Market News Digest" in text
+            assert "RELIANCE" in text
+            assert "Reliance Industries Q4 profit" in text
+            assert "General / Macro" in text
+            assert "RBI policy" in text
+
 class TestSchedulerMessages:
     @pytest.mark.asyncio
     async def test_approval_reminder_message_format(self):
@@ -191,8 +283,8 @@ class TestSchedulerMessages:
 
             tg = TelegramClient()
             await tg.send_briefing(
-                f"⏳ 2 trade(s) awaiting approval.",
-                f"📊 Review in dashboard.",
+                "⏳ 2 trade(s) awaiting approval.",
+                "📊 Review in dashboard.",
             )
 
             mock_bot.send_message.assert_called_once()

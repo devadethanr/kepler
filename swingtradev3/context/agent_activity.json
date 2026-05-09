@@ -7,18 +7,18 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-04T05:16:20.418650",
+      "started_at": "2026-05-09T18:00:06.633179",
       "status": "running"
     },
     "FilterAgent": {
       "agent_name": "FilterAgent",
-      "completed_at": "2026-05-04T05:17:19.110999",
-      "current_task": "Filtering stocks",
-      "last_error": "Connection timeout",
+      "completed_at": null,
+      "current_task": "Funnel completed: 0 stocks qualified for deep analysis.",
+      "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-04T05:17:19.103563",
-      "status": "error"
+      "started_at": "2026-05-09T18:00:06.630411",
+      "status": "running"
     },
     "FundamentalsAgent_ABB": {
       "agent_name": "FundamentalsAgent_ABB",
@@ -28,6 +28,26 @@
       "metadata": {},
       "progress": null,
       "started_at": "2026-04-18T18:00:12.664742",
+      "status": "running"
+    },
+    "FundamentalsAgent_ADANIENSOL": {
+      "agent_name": "FundamentalsAgent_ADANIENSOL",
+      "completed_at": null,
+      "current_task": "Fundamentals fetched for ADANIENSOL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-06T04:05:45.201474",
+      "status": "running"
+    },
+    "FundamentalsAgent_ADANIPORTS": {
+      "agent_name": "FundamentalsAgent_ADANIPORTS",
+      "completed_at": null,
+      "current_task": "Fundamentals fetched for ADANIPORTS",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-06T04:05:45.412866",
       "status": "running"
     },
     "FundamentalsAgent_BEL": {
@@ -48,6 +68,26 @@
       "metadata": {},
       "progress": null,
       "started_at": "2026-04-14T18:00:10.890082",
+      "status": "running"
+    },
+    "FundamentalsAgent_HAL": {
+      "agent_name": "FundamentalsAgent_HAL",
+      "completed_at": null,
+      "current_task": "Fundamentals fetched for HAL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-06T04:05:45.210141",
+      "status": "running"
+    },
+    "FundamentalsAgent_INDIANB": {
+      "agent_name": "FundamentalsAgent_INDIANB",
+      "completed_at": null,
+      "current_task": "Fundamentals fetched for INDIANB",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-06T04:05:38.773581",
       "status": "running"
     },
     "FundamentalsAgent_OIL": {
@@ -77,7 +117,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-04T05:16:20.750834",
+      "started_at": "2026-05-09T18:00:06.750246",
       "status": "running"
     },
     "MarketDataAgent_ABB": {
@@ -88,6 +128,26 @@
       "metadata": {},
       "progress": null,
       "started_at": "2026-04-18T18:00:03.997952",
+      "status": "running"
+    },
+    "MarketDataAgent_ADANIENSOL": {
+      "agent_name": "MarketDataAgent_ADANIENSOL",
+      "completed_at": null,
+      "current_task": "Market data fetched for ADANIENSOL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-06T04:05:38.769970",
+      "status": "running"
+    },
+    "MarketDataAgent_ADANIPORTS": {
+      "agent_name": "MarketDataAgent_ADANIPORTS",
+      "completed_at": null,
+      "current_task": "Market data fetched for ADANIPORTS",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-06T04:05:38.559521",
       "status": "running"
     },
     "MarketDataAgent_BEL": {
@@ -108,6 +168,26 @@
       "metadata": {},
       "progress": null,
       "started_at": "2026-04-14T18:00:10.887159",
+      "status": "running"
+    },
+    "MarketDataAgent_HAL": {
+      "agent_name": "MarketDataAgent_HAL",
+      "completed_at": null,
+      "current_task": "Market data fetched for HAL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-06T04:05:38.681095",
+      "status": "running"
+    },
+    "MarketDataAgent_INDIANB": {
+      "agent_name": "MarketDataAgent_INDIANB",
+      "completed_at": null,
+      "current_task": "Market data fetched for INDIANB",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-06T04:05:38.750724",
       "status": "running"
     },
     "MarketDataAgent_OIL": {
@@ -140,6 +220,26 @@
       "started_at": "2026-04-18T18:10:53.364777",
       "status": "running"
     },
+    "OptionsAgent_ADANIENSOL": {
+      "agent_name": "OptionsAgent_ADANIENSOL",
+      "completed_at": null,
+      "current_task": "Options data analyzed for ADANIENSOL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-06T04:05:46.446083",
+      "status": "running"
+    },
+    "OptionsAgent_ADANIPORTS": {
+      "agent_name": "OptionsAgent_ADANIPORTS",
+      "completed_at": null,
+      "current_task": "Options data analyzed for ADANIPORTS",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-06T04:05:47.126071",
+      "status": "running"
+    },
     "OptionsAgent_BEL": {
       "agent_name": "OptionsAgent_BEL",
       "completed_at": null,
@@ -158,6 +258,26 @@
       "metadata": {},
       "progress": null,
       "started_at": "2026-04-14T18:00:12.103793",
+      "status": "running"
+    },
+    "OptionsAgent_HAL": {
+      "agent_name": "OptionsAgent_HAL",
+      "completed_at": null,
+      "current_task": "Options data analyzed for HAL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-06T04:05:46.508473",
+      "status": "running"
+    },
+    "OptionsAgent_INDIANB": {
+      "agent_name": "OptionsAgent_INDIANB",
+      "completed_at": null,
+      "current_task": "Options data analyzed for INDIANB",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-06T04:05:49.866287",
       "status": "running"
     },
     "OptionsAgent_OIL": {
@@ -187,48 +307,48 @@
       "last_error": null,
       "metadata": {},
       "progress": "3/10 stocks scored",
-      "started_at": "2026-05-04T05:17:19.128599",
+      "started_at": "2026-05-08T01:43:47.878658",
       "status": "running"
     },
     "RegimeAgent": {
       "agent_name": "RegimeAgent",
       "completed_at": null,
-      "current_task": "Market regime detected: bear",
+      "current_task": "Market regime detected: transition",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-04T05:16:19.229980",
+      "started_at": "2026-05-09T18:00:05.131429",
       "status": "running"
     },
     "ResearchPipeline": {
       "agent_name": "ResearchPipeline",
-      "completed_at": "2026-05-03T18:09:00.016874",
+      "completed_at": "2026-05-09T18:00:06.752367",
       "current_task": "Full evening research scan",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-03T18:00:00.492946",
+      "started_at": "2026-05-09T18:00:00.858963",
       "status": "completed"
     },
     "ResultsSaverAgent": {
       "agent_name": "ResultsSaverAgent",
       "completed_at": null,
-      "current_task": "Research results saved to /app/context/research/2026-05-04",
+      "current_task": "Research results saved to /app/context/research/2026-05-09",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-04T05:16:20.742340",
+      "started_at": "2026-05-09T18:00:06.748572",
       "status": "running"
     },
     "ScorerAgent": {
       "agent_name": "ScorerAgent",
-      "completed_at": "2026-05-04T05:17:19.084705",
-      "current_task": "Scoring RELIANCE",
+      "completed_at": null,
+      "current_task": "No qualified stocks to score.",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-04T05:17:19.079560",
-      "status": "completed"
+      "started_at": "2026-05-09T18:00:06.634750",
+      "status": "running"
     },
     "SentimentAgent_ABB": {
       "agent_name": "SentimentAgent_ABB",
@@ -238,6 +358,26 @@
       "metadata": {},
       "progress": null,
       "started_at": "2026-04-18T18:10:53.362620",
+      "status": "running"
+    },
+    "SentimentAgent_ADANIENSOL": {
+      "agent_name": "SentimentAgent_ADANIENSOL",
+      "completed_at": null,
+      "current_task": "Sentiment analyzed for ADANIENSOL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-06T04:05:46.439710",
+      "status": "running"
+    },
+    "SentimentAgent_ADANIPORTS": {
+      "agent_name": "SentimentAgent_ADANIPORTS",
+      "completed_at": null,
+      "current_task": "Sentiment analyzed for ADANIPORTS",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-06T04:05:47.120775",
       "status": "running"
     },
     "SentimentAgent_BEL": {
@@ -258,6 +398,26 @@
       "metadata": {},
       "progress": null,
       "started_at": "2026-04-14T18:00:12.101295",
+      "status": "running"
+    },
+    "SentimentAgent_HAL": {
+      "agent_name": "SentimentAgent_HAL",
+      "completed_at": null,
+      "current_task": "Sentiment analyzed for HAL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-06T04:05:46.501500",
+      "status": "running"
+    },
+    "SentimentAgent_INDIANB": {
+      "agent_name": "SentimentAgent_INDIANB",
+      "completed_at": null,
+      "current_task": "Sentiment analyzed for INDIANB",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-06T04:05:49.862548",
       "status": "running"
     },
     "SentimentAgent_OIL": {
@@ -290,6 +450,26 @@
       "started_at": "2026-04-18T18:20:09.091777",
       "status": "running"
     },
+    "TimesfmAgent_ADANIENSOL": {
+      "agent_name": "TimesfmAgent_ADANIENSOL",
+      "completed_at": null,
+      "current_task": "TimesFM forecast generated for ADANIENSOL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-06T04:05:46.587386",
+      "status": "running"
+    },
+    "TimesfmAgent_ADANIPORTS": {
+      "agent_name": "TimesfmAgent_ADANIPORTS",
+      "completed_at": null,
+      "current_task": "TimesFM forecast generated for ADANIPORTS",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-06T04:05:47.269582",
+      "status": "running"
+    },
     "TimesfmAgent_BEL": {
       "agent_name": "TimesfmAgent_BEL",
       "completed_at": null,
@@ -308,6 +488,26 @@
       "metadata": {},
       "progress": null,
       "started_at": "2026-04-14T18:00:12.522405",
+      "status": "running"
+    },
+    "TimesfmAgent_HAL": {
+      "agent_name": "TimesfmAgent_HAL",
+      "completed_at": null,
+      "current_task": "TimesFM forecast generated for HAL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-06T04:05:46.661976",
+      "status": "running"
+    },
+    "TimesfmAgent_INDIANB": {
+      "agent_name": "TimesfmAgent_INDIANB",
+      "completed_at": null,
+      "current_task": "TimesFM forecast generated for INDIANB",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-06T04:05:49.998853",
       "status": "running"
     },
     "TimesfmAgent_OIL": {
@@ -332,17 +532,17 @@
     },
     "scheduler": {
       "agent_name": "scheduler",
-      "completed_at": "2026-05-04T05:03:57.358063",
+      "completed_at": "2026-05-09T19:22:43.245242",
       "current_task": "position_monitor",
       "last_error": null,
       "metadata": {
         "last_job": "position_monitor"
       },
       "progress": null,
-      "started_at": "2026-05-04T05:03:57.352447",
+      "started_at": "2026-05-09T19:22:43.244307",
       "status": "completed"
     }
   },
-  "last_updated": "2026-05-04T05:17:35.870240",
-  "scheduler_phase": "overnight_monitoring"
+  "last_updated": "2026-05-09T19:22:43.245245",
+  "scheduler_phase": "evening_research"
 }

@@ -21,6 +21,7 @@ export function Sidebar({ currentTab, setTab, isOpen = false, onClose }: Sidebar
   const mainNav = [
     { id: 'dashboard', label: 'Dashboard', icon: 'dashboard' },
     { id: 'telemetry', label: 'Telemetry', icon: 'account_tree' },
+    { id: 'news', label: 'News', icon: 'rss_feed' },
     { id: 'knowledge', label: 'Knowledge Graph', icon: 'hub' },
     { id: 'control_pane', label: 'Control Pane', icon: 'tune' },
     { id: 'tickers', label: 'Tickers', icon: 'analytics' },

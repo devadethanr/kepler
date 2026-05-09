@@ -23,6 +23,7 @@ from execution.reconciler import Reconciler
 from memory.db import session_scope
 from memory.models import (
     AuthSessionRow,
+    OrderIntentRow,
     PositionRow,
     ReconciliationRunRow,
 )
@@ -32,6 +33,9 @@ from models import AccountState, TradingMode
 
 def _ticker() -> str:
     return f"REC{uuid4().hex[:5]}".upper()
+
+
+_SEEDED_ORDER_INTENT_IDS: set[str] = set()
 
 
 def _seed_position(
@@ -67,6 +71,7 @@ def _seed_position(
 
 def _seed_order_intent(*, ticker: str, status: str, broker_tag: str) -> str:
     order_intent_id = f"oi-{uuid4().hex[:10]}"
+    _SEEDED_ORDER_INTENT_IDS.add(order_intent_id)
     with session_scope() as session:
         repo = MemoryRepository(session)
         repo.upsert_order_intent(
@@ -115,6 +120,12 @@ def _clear_block_flag(monkeypatch):
     clear_block_new_entries(source="phase6_test_fixture")
     yield
     clear_block_new_entries(source="phase6_test_fixture")
+    with session_scope() as session:
+        for order_intent_id in list(_SEEDED_ORDER_INTENT_IDS):
+            row = session.get(OrderIntentRow, order_intent_id)
+            if row is not None:
+                session.delete(row)
+        _SEEDED_ORDER_INTENT_IDS.clear()
 
 
 @pytest.mark.asyncio

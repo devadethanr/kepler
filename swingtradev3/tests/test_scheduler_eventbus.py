@@ -4,10 +4,12 @@ Tests for Phase 5C: Event Bus, Activity Manager, and Scheduler.
 from __future__ import annotations
 
 import asyncio
-from datetime import time as dt_time
+from datetime import datetime, time as dt_time
+from zoneinfo import ZoneInfo
 
 import pytest
 
+from api.tasks import event_bus as event_bus_module
 from api.tasks.event_bus import EventBus, BusEvent, EventType
 from api.tasks.activity_manager import (
     AgentActivityManager,
@@ -18,6 +20,13 @@ from api.tasks.activity_manager import (
 # ─────────────────────────────────────────────────────────────
 # Event Bus Tests
 # ─────────────────────────────────────────────────────────────
+
+
+@pytest.fixture(autouse=True)
+def _isolate_event_bus_runtime_files(tmp_path, monkeypatch):
+    monkeypatch.setattr(event_bus_module, "EVENTS_LOG_PATH", tmp_path / "event_log.jsonl")
+    monkeypatch.setattr(event_bus_module, "FAILED_EVENTS_PATH", tmp_path / "failed_events.json")
+
 
 class TestEventBus:
     def setup_method(self):
@@ -114,6 +123,7 @@ class TestEventBus:
         """Ensure critical event types exist."""
         assert EventType.SCAN_STARTED.value == "scan_started"
         assert EventType.REGIME_CHANGE.value == "regime_change"
+        assert EventType.MARKET_NEWS_DIGEST.value == "market_news_digest"
         assert EventType.ORDER_PLACED.value == "order_placed"
         assert EventType.APPROVAL_REQUESTED.value == "approval_requested"
 
@@ -215,3 +225,83 @@ class TestSchedulerPhases:
         info = sched.get_schedule_info()
         assert info["is_running"] is False
         assert "current_phase" in info
+
+    @pytest.mark.asyncio
+    async def test_overnight_news_sweep_skips_daytime(self, monkeypatch):
+        from api.tasks import scheduler as scheduler_module
+        from api.tasks.scheduler import TradingScheduler
+
+        sched = TradingScheduler()
+        monkeypatch.setattr(
+            scheduler_module,
+            "_now_ist",
+            lambda: datetime(2026, 5, 5, 10, 0, tzinfo=ZoneInfo("Asia/Kolkata")),
+        )
+
+        await sched._overnight_news_sweep()
+
+    @pytest.mark.asyncio
+    async def test_morning_news_digest_publishes_grouped_digest(self, monkeypatch):
+        from api.tasks import scheduler as scheduler_module
+        from api.tasks.scheduler import TradingScheduler
+
+        published = []
+
+        class FakeNews:
+            def sweep_market_news(self):
+                return {"query": "market", "results": [{"title": "RBI policy"}]}
+
+            def build_market_digest(self, payload):
+                return {
+                    "query": payload["query"],
+                    "ticker_groups": [],
+                    "general": [{"title": "RBI policy", "url": "https://example.com/rbi"}],
+                    "item_count": 1,
+                    "generated_at_ist": "2026-05-08T06:00:00+05:30",
+                }
+
+        async def fake_publish(event):
+            published.append(event)
+
+        monkeypatch.setattr("data.news.NewsAggregator", FakeNews)
+        monkeypatch.setattr(scheduler_module.event_bus, "publish", fake_publish)
+
+        await TradingScheduler()._morning_news_digest()
+
+        assert len(published) == 1
+        assert published[0].type == EventType.MARKET_NEWS_DIGEST
+        assert published[0].payload["item_count"] == 1
+
+    def test_morning_briefing_filters_to_pending_latest_approvals(self):
+        from api.tasks.morning_briefing import _is_actionable_latest_approval
+        from models import PendingApproval
+
+        base = {
+            "ticker": "RELIANCE",
+            "score": 8.1,
+            "setup_type": "breakout",
+            "entry_zone": {"low": 1000.0, "high": 1010.0},
+            "stop_price": 980.0,
+            "target_price": 1080.0,
+            "holding_days_expected": 7,
+            "confidence_reasoning": "Current setup",
+            "risk_flags": [],
+            "approved": None,
+            "status": "pending",
+            "created_at": "2026-05-05T18:00:00",
+            "expires_at": "2030-05-06T10:00:00",
+            "research_date": "2026-05-05",
+        }
+
+        assert _is_actionable_latest_approval(
+            PendingApproval.model_validate(base),
+            datetime(2026, 5, 5).date(),
+        )
+        assert not _is_actionable_latest_approval(
+            PendingApproval.model_validate({**base, "approved": True, "status": "approved"}),
+            datetime(2026, 5, 5).date(),
+        )
+        assert not _is_actionable_latest_approval(
+            PendingApproval.model_validate({**base, "research_date": "2026-05-04"}),
+            datetime(2026, 5, 5).date(),
+        )

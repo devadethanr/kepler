@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from typing import List
+from zoneinfo import ZoneInfo
 
 from fastapi import APIRouter, HTTPException
 
@@ -14,6 +15,7 @@ from memory.repositories import MemoryRepository
 from models import ApprovalResponse, PendingApproval
 
 router = APIRouter()
+IST = ZoneInfo("Asia/Kolkata")
 
 
 def _persist_order_intent(approval_payload: dict[str, object], *, status: str) -> None:
@@ -60,6 +62,35 @@ def _resolve_pending_approval(
     raise HTTPException(status_code=404, detail="Pending approval not found")
 
 
+def _is_expired(approval: PendingApproval) -> bool:
+    expires_at = approval.expires_at
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=IST)
+    else:
+        expires_at = expires_at.astimezone(IST)
+    return expires_at <= datetime.now(IST)
+
+
+def _load_approval_for_action(approval_id: str) -> tuple[PendingApproval, dict[str, object]]:
+    stored: dict[str, object] | None = None
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        payload = repo.get_pending_approvals_payload()
+        try:
+            _, approval, approval_payload = _resolve_pending_approval(payload, approval_id)
+            return approval, approval_payload
+        except HTTPException:
+            stored = repo.get_approval(approval_id.strip())
+
+    if stored is None:
+        raise HTTPException(status_code=404, detail="Pending approval not found")
+    approval = PendingApproval.model_validate(stored)
+    approval_payload = approval.model_dump(mode="json")
+    if not _is_expired(approval):
+        raise HTTPException(status_code=404, detail="Pending approval not found")
+    return approval, approval_payload
+
+
 @router.get("", response_model=List[PendingApproval])
 async def get_approvals():
     """List pending approvals."""
@@ -72,15 +103,12 @@ async def get_approvals():
 @router.post("/{approval_id}/yes", response_model=ApprovalResponse)
 async def approve_trade(approval_id: str):
     """Approve a trade setup."""
-    with session_scope() as session:
-        repo = MemoryRepository(session)
-        payload = repo.get_pending_approvals_payload()
     live_entry_block_reason = runtime_flags.live_entry_block_reason(cfg.trading.mode)
     if live_entry_block_reason is None and cfg.trading.mode.value == "live" and not has_kite_session():
         live_entry_block_reason = "KITE_SESSION_REQUIRED"
-    _, approval, approval_payload = _resolve_pending_approval(payload, approval_id)
+    approval, approval_payload = _load_approval_for_action(approval_id)
 
-    if approval.expires_at <= datetime.now():
+    if _is_expired(approval):
         with session_scope() as session:
             repo = MemoryRepository(session)
             repo.update_approval_payload(

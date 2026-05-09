@@ -104,6 +104,34 @@ class ExecutionEventRow(Base):
     )
 
 
+class NewsArticleRow(TimestampMixin, Base):
+    __tablename__ = "news_articles"
+
+    news_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    provider: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    source_type: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    title: Mapped[str] = mapped_column(Text, nullable=False)
+    canonical_url: Mapped[str] = mapped_column(Text, nullable=False)
+    published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    category: Mapped[str] = mapped_column(String(64), default="unknown", index=True, nullable=False)
+    confidence: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
+    tickers: Mapped[list[str]] = mapped_column(JSON, default=list, nullable=False)
+    payload: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict, nullable=False)
+
+
+class NewsProviderHealthRow(TimestampMixin, Base):
+    __tablename__ = "news_provider_health"
+
+    provider: Mapped[str] = mapped_column(String(64), primary_key=True)
+    enabled: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    status: Mapped[str] = mapped_column(String(32), default="unknown", nullable=False)
+    items_seen: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    items_emitted: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    last_success_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    last_failure_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    payload: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict, nullable=False)
+
+
 class EntryIntentRow(TimestampMixin, Base):
     __tablename__ = "entry_intents"
 

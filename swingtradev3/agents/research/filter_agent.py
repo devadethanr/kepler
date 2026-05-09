@@ -10,7 +10,9 @@ Pure computation — no LLM, no decisions.
 """
 from __future__ import annotations
 
-from typing import Any, AsyncGenerator
+import re
+from collections import Counter
+from typing import AsyncGenerator
 
 from google.adk.agents import BaseAgent
 from google.adk.events import Event
@@ -18,10 +20,16 @@ from google.genai import types
 
 from config import cfg
 from data.nifty200_loader import Nifty200Loader
-from data.news_aggregator import NewsAggregator
+from data.news import NewsAggregator
 from data.institutional_flows import InstitutionalFlowsTool
 from data.options_analyzer import OptionsAnalyzer
 from data.kite_fetcher import KiteFetcher
+
+FALSE_POSITIVE_TICKER_CONTEXT = {
+    "BSE": {"bse stock", "bse ltd", "bse limited"},
+    "LT": {"larsen", "toubro", "l&t"},
+    "OIL": {"oil india", "oil stock", "oil ltd", "oil limited"},
+}
 
 
 class FilterAgent(BaseAgent):
@@ -44,10 +52,11 @@ class FilterAgent(BaseAgent):
         kite_fetcher = KiteFetcher()
         filter_cfg = cfg.research.filter
 
-        universe = universe_loader.load()
+        universe_entries = universe_loader.load_entries()
+        universe = [item["ticker"] for item in universe_entries]
 
         # Layer 0A: News sweep (1 Tavily call for all 200)
-        news_tickers = self._sweep_news(news_aggregator, filter_cfg, universe)
+        news_tickers = self._sweep_news(news_aggregator, filter_cfg, universe_entries)
 
         # Layer 0B: FII/DII flow check
         fii_data = flows_tool.get_fii_dii()
@@ -82,6 +91,7 @@ class FilterAgent(BaseAgent):
 
         # Layer 2: Python fast filters
         qualified = []
+        rejection_counts: Counter[str] = Counter()
         for ticker in priority_stocks:
             passed, reason = await self._fast_filter_async(kite_fetcher, filter_cfg, ticker)
             if passed:
@@ -90,8 +100,21 @@ class FilterAgent(BaseAgent):
                     "priority": signal_map[ticker],
                     "signals": signal_details.get(ticker, {}),
                 })
+            else:
+                rejection_counts[reason.split(" ", 1)[0]] += 1
 
         ctx.session.state["qualified_stocks"] = qualified
+        ctx.session.state["scan_diagnostics"] = {
+            "source_counts": {
+                "news": len(news_tickers),
+                "fii": len(fii_tickers),
+                "options": len(options_tickers),
+                "block_deal": len(block_tickers),
+            },
+            "priority_count": len(priority_stocks),
+            "qualified_count": len(qualified),
+            "filter_rejections": dict(sorted(rejection_counts.items())),
+        }
         yield Event(
             author=self.name,
             content=types.Content(
@@ -100,23 +123,96 @@ class FilterAgent(BaseAgent):
             ),
         )
 
-    def _sweep_news(self, news_aggregator, filter_cfg, universe: list[str]) -> list[str]:
+    def _sweep_news(
+        self,
+        news_aggregator,
+        filter_cfg,
+        universe: list[str] | list[dict[str, str]],
+    ) -> list[str]:
         """Extract tickers mentioned in broad market news."""
         news = news_aggregator.sweep_market_news(filter_cfg.news_sweep_query)
+        entries = self._normalize_universe_entries(universe)
+        universe_set = {entry["ticker"] for entry in entries}
         mentioned = set()
-        for item in news.get("results", []):
-            text = f"{item.get('title', '')} {item.get('content', '')}".upper()
-            for ticker in universe:
-                if ticker.upper() in text:
+        for item in news_aggregator.normalize_headlines(
+            news.get("results", []),
+            max_age_hours=filter_cfg.news_max_age_hours,
+        ):
+            item_tickers = {
+                str(ticker).strip().upper()
+                for ticker in item.get("tickers", [])
+                if str(ticker).strip().upper() in universe_set
+            }
+            if item_tickers:
+                mentioned.update(item_tickers)
+                continue
+            text = f"{item.get('title', '')} {item.get('content', '')}"
+            for entry in entries:
+                ticker = entry["ticker"]
+                if self._mentions_stock(text, ticker, entry.get("name") or ticker):
                     mentioned.add(ticker)
         return list(mentioned)
 
+    @staticmethod
+    def _normalize_universe_entries(
+        universe: list[str] | list[dict[str, str]],
+    ) -> list[dict[str, str]]:
+        entries: list[dict[str, str]] = []
+        for item in universe:
+            if isinstance(item, str):
+                entries.append({"ticker": item.upper(), "name": item})
+                continue
+            ticker = str(item.get("ticker") or item.get("symbol") or "").strip().upper()
+            if not ticker:
+                continue
+            name = str(item.get("name") or item.get("company_name") or ticker).strip()
+            entries.append({"ticker": ticker, "name": name})
+        return entries
+
+    @staticmethod
+    def _company_aliases(ticker: str, company_name: str) -> set[str]:
+        cleaned = re.sub(
+            r"\b(LTD|LIMITED|INDIA|CO|COMPANY|CORP|CORPORATION|PVT|PRIVATE)\b",
+            " ",
+            company_name.upper(),
+        )
+        words = [word for word in re.split(r"[^A-Z0-9&]+", cleaned) if len(word) >= 3]
+        aliases = {ticker.upper()}
+        if words:
+            aliases.add(words[0])
+        if len(words) >= 2:
+            aliases.add(" ".join(words[:2]))
+        if "&" in cleaned:
+            aliases.add(cleaned.replace("&", "AND"))
+        return {alias.strip() for alias in aliases if alias.strip()}
+
+    def _mentions_stock(self, text: str, ticker: str, company_name: str) -> bool:
+        normalized = re.sub(r"\s+", " ", text.upper())
+        ticker = ticker.upper()
+        lowered = normalized.lower()
+        if ticker == "RELIANCE" and ("self-reliance" in lowered or "reliance on" in lowered):
+            return False
+        required_context = FALSE_POSITIVE_TICKER_CONTEXT.get(ticker)
+        if required_context and not any(phrase in lowered for phrase in required_context):
+            return False
+
+        aliases = self._company_aliases(ticker, company_name)
+        for alias in aliases:
+            if re.search(rf"(?<![A-Z0-9]){re.escape(alias)}(?![A-Z0-9])", normalized):
+                return True
+        return False
+
     def _get_fii_affected_stocks(self, fii_data: dict, universe: list[str]) -> list[str]:
         """Get stocks in sectors with net FII buying."""
-        fii_net = fii_data.get("fii_net_crore")
-        if fii_net is not None and fii_net > 0:
-            return universe[:20]  # Return top 20 as candidates
-        return []
+        explicit = fii_data.get("tickers") or fii_data.get("symbols") or []
+        if not isinstance(explicit, list):
+            return []
+        universe_set = {ticker.upper() for ticker in universe}
+        return [
+            str(ticker).strip().upper()
+            for ticker in explicit
+            if str(ticker).strip().upper() in universe_set
+        ]
 
     def _detect_unusual_options(self, options_analyzer, filter_cfg, universe: list[str]) -> list[str]:
         """Detect stocks with unusual options activity."""
@@ -124,7 +220,11 @@ class FilterAgent(BaseAgent):
         threshold = filter_cfg.options_pcr_threshold
         for ticker in universe[:50]:  # Check top 50 for performance
             cached = options_analyzer.get_cached(ticker)
-            if cached and cached.get("pcr") is not None:
+            if (
+                cached
+                and cached.get("source") != "unavailable"
+                and cached.get("pcr") is not None
+            ):
                 if cached["pcr"] >= threshold:
                     unusual.append(ticker)
         return unusual
@@ -140,7 +240,7 @@ class FilterAgent(BaseAgent):
         """
         try:
             candles = await kite_fetcher.fetch_async(ticker, interval="day")
-        except Exception as e:
+        except Exception:
             # Fallback to sync fetch if async not supported
             try:
                 candles = kite_fetcher.fetch(ticker, interval="day")

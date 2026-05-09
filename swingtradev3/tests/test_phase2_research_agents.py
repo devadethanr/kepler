@@ -1,12 +1,88 @@
 """Tests for Phase 2.3: ADK Research Agents"""
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 from agents.research.filter_agent import FilterAgent
 from agents.research.pipeline import research_pipeline
 
 
 class TestFilterAgent:
+    def test_news_sweep_avoids_common_false_positive_tickers(self):
+        agent = FilterAgent()
+
+        class FakeNews:
+            def sweep_market_news(self, query):
+                return {
+                    "results": [
+                        {
+                            "title": "Oil prices rise as BSE Sensex opens higher",
+                            "content": "A generic market report mentions Ltd and oil but no stock setup.",
+                            "url": "https://reuters.com/markets",
+                        },
+                        {
+                            "title": "Oil India stock gains after new order",
+                            "content": "Oil India shares were active on NSE.",
+                            "url": "https://moneycontrol.com/oil-india",
+                        },
+                    ]
+                }
+
+            def normalize_headlines(self, headlines, max_age_hours=None):
+                return headlines
+
+        universe = [
+            {"ticker": "OIL", "name": "Oil India Ltd."},
+            {"ticker": "BSE", "name": "BSE Ltd."},
+            {"ticker": "LT", "name": "Larsen & Toubro Ltd."},
+        ]
+
+        cfg_obj = type("Cfg", (), {"news_sweep_query": "q", "news_max_age_hours": 72})()
+        assert agent._sweep_news(FakeNews(), cfg_obj, universe) == ["OIL"]
+
+    def test_fii_filter_requires_explicit_tickers(self):
+        agent = FilterAgent()
+        assert agent._get_fii_affected_stocks({"fii_net_crore": 5000}, ["RELIANCE", "TCS"]) == []
+        assert agent._get_fii_affected_stocks(
+            {"tickers": ["reliance", "NOTREAL"]},
+            ["RELIANCE", "TCS"],
+        ) == ["RELIANCE"]
+
+    def test_news_sweep_prefers_normalized_tickers(self):
+        agent = FilterAgent()
+
+        class FakeNews:
+            def sweep_market_news(self, query):
+                return {
+                    "results": [
+                        {
+                            "title": "Generic market wrap",
+                            "content": "No explicit company alias here",
+                            "tickers": ["TCS", "NOTREAL"],
+                        }
+                    ]
+                }
+
+            def normalize_headlines(self, headlines, max_age_hours=None):
+                return headlines
+
+        universe = [
+            {"ticker": "RELIANCE", "name": "Reliance Industries Ltd."},
+            {"ticker": "TCS", "name": "Tata Consultancy Services Ltd."},
+        ]
+        cfg_obj = type("Cfg", (), {"news_sweep_query": "q", "news_max_age_hours": 72})()
+
+        assert agent._sweep_news(FakeNews(), cfg_obj, universe) == ["TCS"]
+
+    def test_options_filter_ignores_unavailable_cache(self):
+        agent = FilterAgent()
+
+        class FakeOptions:
+            def get_cached(self, ticker):
+                return {"ticker": ticker, "pcr": 2.0, "source": "unavailable"}
+
+        cfg_obj = type("Cfg", (), {"options_pcr_threshold": 1.2})()
+        assert agent._detect_unusual_options(FakeOptions(), cfg_obj, ["RELIANCE"]) == []
+
     @pytest.mark.asyncio
     async def test_fast_filter_below_ema(self):
         """Stock below 200 EMA should be filtered out."""

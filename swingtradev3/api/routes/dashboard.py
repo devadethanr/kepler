@@ -348,6 +348,14 @@ async def get_dashboard_telemetry(limit: int = 100) -> dict[str, Any]:
     }
 
 
+@router.get("/news")
+async def get_dashboard_news(limit: int = 100) -> dict[str, Any]:
+    """News provider health, normalized headlines, and ingestion audit metadata."""
+    from data.news import NewsAggregator
+
+    return NewsAggregator().dashboard_payload(limit=limit)
+
+
 @router.get("/scheduler")
 async def get_scheduler_info():
     """Get scheduler status and current phase."""

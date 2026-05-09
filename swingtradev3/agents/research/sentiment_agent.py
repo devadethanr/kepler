@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, AsyncGenerator
+from typing import AsyncGenerator
 
 from google.adk.agents import BaseAgent
 from google.adk.events import Event
@@ -24,8 +24,13 @@ class SentimentAgent(BaseAgent):
         sentiment_analyzer = SentimentAnalyzer()
         
         try:
-            news = await asyncio.to_thread(news_tool.search_news, f"{ticker} stock news today")
-            data = await asyncio.to_thread(sentiment_analyzer.analyze_news_list, news.get("results", []))
+            news = await asyncio.to_thread(news_tool.aggregator.search_stock_news, ticker)
+            data = await asyncio.to_thread(
+                sentiment_analyzer.analyze_news_list,
+                news.get("results", []),
+            )
+            data["news_sources"] = news.get("sources", [])
+            data["provider_health"] = news.get("provider_health", {})
         except Exception as e:
             data = {"error": str(e)}
 
