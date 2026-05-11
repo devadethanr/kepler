@@ -13,6 +13,7 @@ from memory.db import session_scope
 from memory.projections import project_all_managed_files
 from memory.repositories import MemoryRepository
 from models import ApprovalResponse, PendingApproval
+from policy.effective_policy import new_entries_block_reason
 
 router = APIRouter()
 IST = ZoneInfo("Asia/Kolkata")
@@ -106,6 +107,8 @@ async def approve_trade(approval_id: str):
     live_entry_block_reason = runtime_flags.live_entry_block_reason(cfg.trading.mode)
     if live_entry_block_reason is None and cfg.trading.mode.value == "live" and not has_kite_session():
         live_entry_block_reason = "KITE_SESSION_REQUIRED"
+    if live_entry_block_reason is None:
+        live_entry_block_reason = new_entries_block_reason()
     approval, approval_payload = _load_approval_for_action(approval_id)
 
     if _is_expired(approval):

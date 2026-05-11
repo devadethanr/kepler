@@ -9,6 +9,7 @@ from memory.db import session_scope
 from memory.repositories import MemoryRepository
 from models import AccountState, PositionState
 from paths import CONTEXT_DIR
+from policy.effective_policy import new_entries_block_reason
 from regime_adapter import RegimeAdaptiveConfig
 from storage import read_json, write_json
 from tools.execution.alerts import AlertsTool
@@ -24,7 +25,6 @@ from .operator_controls import (
     clear_flatten_request,
     is_block_new_entries_active,
     is_exit_only_mode,
-    is_new_entries_enabled,
     is_trading_enabled,
     read_block_new_entries,
     read_flatten_request,
@@ -147,7 +147,7 @@ class ExecutionCoordinator:
     async def submit_queued_order_intents(self) -> int:
         if not is_trading_enabled():
             return 0
-        if not is_new_entries_enabled() or is_exit_only_mode():
+        if new_entries_block_reason() is not None or is_exit_only_mode():
             return 0
         if is_block_new_entries_active():
             block = read_block_new_entries() or {}
@@ -196,7 +196,7 @@ class ExecutionCoordinator:
         return advanced
 
     async def submit_order_intent(self, order_intent_id: str) -> str:
-        if not is_trading_enabled() or not is_new_entries_enabled() or is_exit_only_mode():
+        if not is_trading_enabled() or new_entries_block_reason() is not None or is_exit_only_mode():
             return "ignored"
         if is_block_new_entries_active():
             return "ignored"
@@ -256,7 +256,14 @@ class ExecutionCoordinator:
 
         regime = str(MarketRegimeDetector().detect_regime().get("regime", "neutral"))
         regime_config = RegimeAdaptiveConfig(regime)
-        risk = self.risk_tool.check_risk(state, score, entry_price, stop_price, target_price)
+        risk = self.risk_tool.check_risk(
+            state,
+            score,
+            entry_price,
+            stop_price,
+            target_price,
+            sector=payload.get("sector") if isinstance(payload.get("sector"), str) else None,
+        )
         if not risk["approved"]:
             self._store_order_intent(
                 order_intent_id=order_intent_id,

@@ -14,6 +14,10 @@ export const queryKeys = {
   broker: ['dashboard', 'broker'] as const,
   telemetry: ['dashboard', 'telemetry'] as const,
   news: ['dashboard', 'news'] as const,
+  policy: ['dashboard', 'policy'] as const,
+  knowledgeGraph: ['dashboard', 'knowledge', 'graph'] as const,
+  knowledgeIndex: ['dashboard', 'knowledge', 'index'] as const,
+  stockKnowledge: (ticker: string) => ['dashboard', 'knowledge', 'stock', ticker] as const,
   activity: ['dashboard', 'activity'] as const,
   session: ['dashboard', 'session'] as const,
   approvals: ['approvals'] as const,
@@ -92,6 +96,40 @@ export function useNewsDashboard(limit = 100) {
     queryKey: [...queryKeys.news, limit],
     queryFn: ({ signal }) => api.newsDashboard(limit, signal),
     refetchInterval: 30_000,
+  });
+}
+
+export function usePolicyDashboard() {
+  return useQuery({
+    queryKey: queryKeys.policy,
+    queryFn: ({ signal }) => api.policyDashboard(signal),
+    refetchInterval: 15_000,
+  });
+}
+
+export function useKnowledgeGraph() {
+  return useQuery({
+    queryKey: queryKeys.knowledgeGraph,
+    queryFn: ({ signal }) => api.knowledgeGraph(signal),
+    refetchInterval: 30_000,
+  });
+}
+
+export function useKnowledgeIndex() {
+  return useQuery({
+    queryKey: queryKeys.knowledgeIndex,
+    queryFn: ({ signal }) => api.knowledgeIndex(signal),
+    refetchInterval: 60_000,
+  });
+}
+
+export function useStockKnowledge(ticker?: string | null) {
+  const normalizedTicker = ticker?.trim().toUpperCase() ?? '';
+  return useQuery({
+    queryKey: queryKeys.stockKnowledge(normalizedTicker),
+    queryFn: ({ signal }) => api.stockKnowledge(normalizedTicker, signal),
+    enabled: normalizedTicker.length > 0,
+    refetchInterval: 60_000,
   });
 }
 

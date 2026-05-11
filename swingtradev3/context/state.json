@@ -5,11 +5,11 @@
   "positions": [
     {
       "current_price": 4014.01,
-      "entry_order_id": "order-4a857ad21b",
+      "entry_order_id": "order-0b78fda720",
       "entry_price": 4014.01,
       "lifecycle_state": "open",
-      "oco_gtt_id": "pos-7be7fd0eb7",
-      "opened_at": "2026-05-08T01:30:14.067360",
+      "oco_gtt_id": "pos-48d79ae0b0",
+      "opened_at": "2026-05-09T21:16:00.886665",
       "pending_corporate_action": {
         "adjustment_alert_sent_at": null,
         "amount": null,

@@ -8,6 +8,7 @@ from config import cfg
 from memory.db import session_scope
 from memory.repositories import MemoryRepository
 from models import AccountState, PositionState
+from policy.effective_policy import resolve_effective_policy
 from tools.execution.alerts import AlertsTool
 from tools.execution.gtt_manager import GTTManager
 
@@ -175,13 +176,14 @@ class TrailingEngine:
 
     def _desired_stop(self, position: PositionState, last_price: float) -> float | None:
         pnl_pct = ((last_price / position.entry_price) - 1) * 100 if position.entry_price else 0.0
-        if pnl_pct >= cfg.execution.trail_to_pct:
+        policy = resolve_effective_policy()
+        if pnl_pct >= policy.trail_to_pct:
             return round(
                 position.entry_price
                 * (1 + (cfg.execution.trail_stop_to_locked_profit_pct / 100.0)),
                 2,
             )
-        if pnl_pct >= cfg.execution.trail_stop_at_pct:
+        if pnl_pct >= policy.trail_stop_at_pct:
             return round(position.entry_price, 2)
         return None
 

@@ -348,6 +348,24 @@ async def get_dashboard_telemetry(limit: int = 100) -> dict[str, Any]:
     }
 
 
+@router.get("/policy")
+async def get_dashboard_policy() -> dict[str, Any]:
+    """Effective runtime policy and auditable overlays for the risk panel."""
+    from policy.effective_policy import resolve_effective_policy
+    from policy.governor import PolicyGovernor
+
+    governor = PolicyGovernor()
+    overlays = governor.list_overlays()
+    effective = resolve_effective_policy()
+    active_overlay_ids = {overlay.overlay_id for overlay in effective.applied_overlays}
+    active = [overlay for overlay in overlays if overlay.overlay_id in active_overlay_ids]
+    return {
+        "effective": effective.model_dump(mode="json"),
+        "overlays": [overlay.model_dump(mode="json") for overlay in overlays],
+        "active_overlays": [overlay.model_dump(mode="json") for overlay in active],
+    }
+
+
 @router.get("/news")
 async def get_dashboard_news(limit: int = 100) -> dict[str, Any]:
     """News provider health, normalized headlines, and ingestion audit metadata."""

@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from config import cfg
 from models import AccountState
+from policy.effective_policy import resolve_effective_policy
 from risk import circuit_breakers
 from risk.position_sizer import calculate_position_size
 
@@ -23,6 +24,7 @@ class SelfHealingRiskEngine:
         entry_price: float,
         stop_price: float,
         target_price: float,
+        sector: str | None = None,
     ) -> RiskDecision:
         if circuit_breakers.max_positions_reached(state):
             return RiskDecision(False, 0, "max_positions_reached")
@@ -35,6 +37,17 @@ class SelfHealingRiskEngine:
         rr_ratio = (target_price - entry_price) / (entry_price - stop_price)
         if rr_ratio < cfg.risk.min_rr_ratio:
             return RiskDecision(False, 0, "risk_reward_too_low")
+        policy = resolve_effective_policy()
+        normalized_sector = str(sector or "").strip().lower()
+        if normalized_sector and normalized_sector != "unknown":
+            existing = sum(
+                1
+                for position in state.positions
+                if str(position.lifecycle_state or "open").lower() in {"open", "closing"}
+                and str(position.sector or "").strip().lower() == normalized_sector
+            )
+            if existing >= policy.max_same_sector_positions:
+                return RiskDecision(False, 0, "max_same_sector_positions")
         available_capital = state.cash_inr * (1 - cfg.trading.min_cash_reserve_pct)
         quantity = calculate_position_size(available_capital, score, entry_price)
         if quantity <= 0:

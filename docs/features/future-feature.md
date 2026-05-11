@@ -138,85 +138,90 @@ Existing loaders:
 
 ### Feature Summary
 
-Implement a proper real-time updatable Knowledge Graph integrated with PostgreSQL with temporal query support.
+Implement the Phase 11 Memgraph context graph for real-time queryable research,
+relationship, and learning memory. Postgres remains execution truth.
 
 ### Current State
 
-**Current "KG" in Kepler is NOT a real-time queryable knowledge graph.**
+**Current "KG" in Kepler is not a real-time queryable graph.**
 
-- Located at `context/knowledge/wiki/` — only LLM context files
-- No graph structure, no temporal queries, no real-time updates
+- Located at `context/knowledge/wiki/`, primarily as LLM context files
+- Related JSON files are caches or compatibility exports, not graph storage
+- No durable graph traversal layer, temporal graph query layer, or GraphRAG retrieval surface
+
+### Decision
+
+Use Memgraph for context graph memory:
+
+- official open-source Docker image: `memgraph/memgraph-mage:latest`
+- dev graph UI: `memgraph/lab:latest`
+- Compose profile: `memory`
+- started by `make dev` and `make dev-detach`
+- backup/restore runbook: `docs/runbooks/memgraph-backup-restore.md`
+
+The older Postgres-only graph preference is superseded. The safety requirement is now a
+clear split:
+
+```text
+Postgres = execution truth
+Memgraph = context graph truth
+Files    = temporary caches and compatibility exports only
+```
 
 ### Requirements
 
-- Integrated with existing PostgreSQL (no new database)
-- Real-time updatable embeddings
-- Timestamps for temporal queries ("today", "last week", etc. for LLMs)
-- Store: stocks, sectors, indices, news, trades, regimes, trade patterns, failures, lessons learned, SKILL.md content
 - Open-source/free solution only
-- No performance degradation on existing trading system
+- No performance degradation on the trading hot path
+- No worker dependency on Memgraph
+- Timestamps for temporal graph queries ("today", "last week", etc. for LLMs)
+- Store stocks, sectors, indices, news, regimes, signals, research runs, trade memories,
+  failures, lessons learned, and strategy/skill versions
+- Persist source, source id, observed time, ingestion time, payload hash, confidence, and
+  projection version on graph facts
 
-### Solution Options Reviewed
-
-| Solution | Type | PostgreSQL Native | Auto-Refresh | Production Ready | Verdict |
-|----------|------|-------------------|--------------|------------------|---------|
-| **Kuzu** | Embedded | No | Manual | Yes | Separate DB |
-| **pgraf** | Extension | Yes | Manual | Alpha (v1.0.0a2) | Too early |
-| **Active Graph KG** | Extension | Yes | Yes | Yes | **Selected** |
-| **Apache AGE + pgvector + Piggie** | Extension | Yes | Manual | Yes | Alternative |
-
-### Recommendation
-
-**Active Graph KG** (selected) for:
-
-- Uses existing PostgreSQL infrastructure (no new DB)
-- Auto-refresh embeddings (matches real-time requirement)
-- Drift detection for stale knowledge
-- Production-ready
-- Supports timestamps for temporal queries
-
-**Alternative**: Apache AGE + pgvector + Piggie for more control and benchmark-proven performance (12/12 vs Neo4j).
-
-### KG Nodes to Implement
+### Graph Nodes To Implement
 
 | Node Type | Description | Temporal |
 |-----------|-------------|----------|
-| `Stock` | Symbol, name, sector, market cap | Yes (last_updated) |
-| `Sector` | Industry/sector classification | Yes (last_updated) |
-| `Index` | Nifty 50/100/200, etc. | Yes (last_updated) |
-| `News` | Article, source, timestamp | Yes (published_at) |
-| `Trade` | Entry, exit, pnl, rationale | Yes (executed_at) |
-| `Regime` | Market regime (bull/bear/sideways) | Yes (start_date) |
-| `Pattern` | Chart/indicator pattern | Yes (identified_at) |
-| `Failure` | Trade failure, cause, lesson | Yes (occurred_at) |
-| `Lesson` | Learned insight, context | Yes (learned_at) |
-| `Skill` | SKILL.md content | Yes (last_updated) |
+| `Stock` | Symbol, name, sector, market cap | Yes (`observed_at`) |
+| `Sector` | Industry/sector classification | Yes (`observed_at`) |
+| `Index` | Nifty 50/100/200, etc. | Yes (`observed_at`) |
+| `ResearchRun` | Research batch/session | Yes (`started_at`) |
+| `ResearchCandidate` | Candidate evidence summary | Yes (`observed_at`) |
+| `NewsArticle` | Article, source, entity links | Yes (`published_at`) |
+| `RegimeSnapshot` | Market regime state | Yes (`observed_at`) |
+| `SignalSnapshot` | Technical/fundamental/sentiment signal | Yes (`observed_at`) |
+| `TradeMemory` | Executed trade outcome context | Yes (`executed_at`) |
+| `FailurePattern` | Repeated failure cause/context | Yes (`observed_at`) |
+| `Lesson` | Learned insight and applicability | Yes (`learned_at`) |
+| `SkillVersion` | Strategy/SKILL.md version metadata | Yes (`last_updated`) |
 
 ### Temporal Query Examples
 
-```sql
--- "What stocks did we trade today?"
-MATCH (t:Trade)
-WHERE t.executed_at >= CURRENT_DATE
+```cypher
+MATCH (t:TradeMemory)
+WHERE t.executed_at >= date()
 RETURN t;
 
--- "What lessons from last week?"
 MATCH (l:Lesson)
-WHERE l.learned_at >= CURRENT_DATE - INTERVAL '7 days'
+WHERE l.learned_at >= date() - duration({days: 7})
 RETURN l;
 
--- "News affecting tech sector this week"
-MATCH (n:News)-[:AFFECTS_SECTOR]->(s:Sector {name: "Technology"})
-WHERE n.published_at >= CURRENT_DATE - INTERVAL '7 days'
-RETURN n;
+MATCH (n:NewsArticle)-[:AFFECTS_STOCK]->(s:Stock)-[:BELONGS_TO_SECTOR]->(:Sector {name: "Technology"})
+WHERE n.published_at >= date() - duration({days: 7})
+RETURN n, s;
 ```
 
 ### Relevant Files
 
-- `swingtradev3/context/knowledge/wiki/` — current "KG" (LlM context only)
-- `swingtradev3/tools/market/news_search.py` — news integration
-- `swingtradev3/agents/research/sentiment_agent.py` — sentiment integration
-- `swingtradev3/data/universe_updater.py` — universe integration
+- `docs/features/postgress-memgraph.md` - architecture decision
+- `docs/runbooks/memgraph-backup-restore.md` - dev backup/restore
+- `docker-compose.dev.yml` - Memgraph and Lab services under the `memory` profile
+- `swingtradev3/Makefile` - dev, logs, console, and snapshot targets
+- `swingtradev3/context/knowledge/wiki/` - current file-backed memory to retire
+- `swingtradev3/tools/market/news_search.py` - future news integration
+- `swingtradev3/agents/research/sentiment_agent.py` - future sentiment integration
+- `swingtradev3/data/universe_updater.py` - future universe integration
 
 ---
 
@@ -229,13 +234,13 @@ RETURN n;
 
 ### Phase 2: Core Infrastructure (Medium Effort)
 
-3. **Knowledge Graph**: Deploy Active Graph KG in PostgreSQL, define nodes, add temporal schema
+3. **Knowledge Graph**: Deploy the Memgraph `memory` profile, define graph nodes/edges, add temporal context schema
 4. **Web Crawler Integration**: Integrate Firecrawl for periodic + on-demand crawling
 
 ### Phase 3: Advanced Features (Higher Effort)
 
 5. **Event-Driven Crawler**: Add threshold-based triggers
-6. **KG Auto-Refresh**: Connect drift detection to research pipeline
+6. **Context Graph Projector**: Connect research, execution-event projection, and post-trade learning to Memgraph
 
 ---
 
@@ -243,5 +248,6 @@ RETURN n;
 
 - Open-source/free solutions only
 - No performance degradation on existing trading system
-- Must integrate with existing PostgreSQL infrastructure
-- All timestamps must use `timestamptz` for temporal queries
+- Postgres remains execution truth; Memgraph remains context graph truth
+- File-backed knowledge and research stores must not become new sources of truth
+- All Postgres timestamps must use `timestamptz`; graph facts must include explicit temporal properties

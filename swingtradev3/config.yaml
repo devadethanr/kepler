@@ -10,6 +10,7 @@ research:
   scan_start_time: "15:45"
   briefing_time: "08:45"
   min_score_threshold: 7.0
+  debate_top_n: 3
   max_shortlist: 7
   max_same_sector_positions: 2
   exclude_earnings_within_days: 7
@@ -99,6 +100,7 @@ execution:
 
 risk:
   max_risk_pct_per_trade: 0.015
+  max_position_size_pct: 40.0
   max_weekly_loss_pct: 0.04
   max_drawdown_pct: 0.10
   max_daily_loss_pct: 0.025
@@ -336,3 +338,15 @@ data:
   news_cache_ttl_minutes: 60
   fundamentals_cache_ttl_hours: 24
   macro_cache_ttl_hours: 4
+
+context_graph:
+  enabled: true
+  uri: "bolt://memgraph:7687"
+  user: ""
+  password: ""
+  database: "memgraph"
+  connect_timeout_seconds: 2.0
+  projection_batch_size: 100
+  projection_interval_seconds: 30.0
+  dashboard_node_limit: 150
+  dashboard_edge_limit: 300

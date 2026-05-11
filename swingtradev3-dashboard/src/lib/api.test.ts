@@ -117,6 +117,113 @@ test('api client fetches news dashboard payloads', async () => {
   assert.equal(news.provider_health.nse_corporate_announcements_rss.items_emitted, 1);
 });
 
+test('api client fetches policy dashboard payloads', async () => {
+  const calls = installFetch(() =>
+    jsonResponse({
+      effective: {
+        min_score_threshold: 7,
+        max_position_size_pct: 40,
+        new_entries_enabled: true,
+        max_same_sector_positions: 2,
+        trail_stop_at_pct: 5,
+        trail_to_pct: 10,
+        debate_top_n: 3,
+        base: {},
+        sources: {},
+        applied_overlays: [],
+        ignored_overlays: [],
+        operator_controls: {},
+        resolved_at_ist: '2026-05-09T09:15:00+05:30',
+      },
+      overlays: [],
+      active_overlays: [],
+    }),
+  );
+
+  const policy = await api.policyDashboard();
+
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0]?.input, '/api/dashboard/policy');
+  assert.equal(policy.effective.max_position_size_pct, 40);
+});
+
+test('api client fetches knowledge graph payloads', async () => {
+  const calls = installFetch(() =>
+    jsonResponse({
+      status: 'available',
+      nodes: [
+        {
+          id: 'stock:RELIANCE',
+          label: 'RELIANCE',
+          type: 'Stock',
+          size: 4,
+          metadata: { sector: 'Energy' },
+        },
+      ],
+      edges: [
+        {
+          source: 'stock:RELIANCE',
+          target: 'sector:Energy',
+          relationship: 'BELONGS_TO_SECTOR',
+          weight: 0.9,
+        },
+      ],
+      last_updated: '2026-05-10T09:15:00+05:30',
+    }),
+  );
+
+  const graph = await api.knowledgeGraph();
+
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0]?.input, '/api/dashboard/knowledge/graph');
+  assert.equal(graph.nodes[0]?.metadata.sector, 'Energy');
+  assert.equal(graph.edges[0]?.relationship, 'BELONGS_TO_SECTOR');
+});
+
+test('api client fetches knowledge index payloads', async () => {
+  const calls = installFetch(() =>
+    jsonResponse({
+      status: 'degraded',
+      message: 'Memgraph fallback is serving a partial index.',
+      stocks: {
+        RELIANCE: {
+          ticker: 'RELIANCE',
+          sector: 'Energy',
+          scan_count: 3,
+          avg_score: 7.5,
+        },
+      },
+    }),
+  );
+
+  const index = await api.knowledgeIndex();
+
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0]?.input, '/api/dashboard/knowledge/index');
+  assert.equal(index.status, 'degraded');
+  assert.equal(Array.isArray(index.stocks), false);
+});
+
+test('api client fetches stock knowledge payloads with encoded ticker', async () => {
+  const calls = installFetch(() =>
+    jsonResponse({
+      status: 'available',
+      ticker: 'M&M',
+      summary: 'Autos candidate with recurring setup history.',
+      evidence: [{ source: 'ResearchRun', confidence: 0.8 }],
+      connections: ['sector:Auto'],
+      has_history: true,
+    }),
+  );
+
+  const stock = await api.stockKnowledge('M&M');
+
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0]?.input, '/api/dashboard/knowledge/stock/M%26M');
+  assert.equal(stock.ticker, 'M&M');
+  assert.equal(stock.evidence.length, 1);
+});
+
 test('api client rejects payloads that fail Zod validation', async () => {
   installFetch(() => jsonResponse({ status: 200, services: {} }));
 

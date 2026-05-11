@@ -104,6 +104,7 @@ class ResearchConfig(BaseModel):
     scan_start_time: str
     briefing_time: str
     min_score_threshold: float
+    debate_top_n: int = 3
     max_shortlist: int
     max_same_sector_positions: int
     exclude_earnings_within_days: int = 7
@@ -182,6 +183,7 @@ class ConfidenceSizingConfig(BaseModel):
 
 class RiskConfig(BaseModel):
     max_risk_pct_per_trade: float
+    max_position_size_pct: float = 40.0
     max_weekly_loss_pct: float
     max_drawdown_pct: float
     max_daily_loss_pct: float = 0.025
@@ -499,6 +501,21 @@ class DataConfig(BaseModel):
     macro_cache_ttl_hours: int = 4
 
 
+class ContextGraphConfig(BaseModel):
+    """Phase 11: Memgraph-backed context/research/learning graph."""
+
+    enabled: bool = True
+    uri: str = Field(default_factory=lambda: os.getenv("MEMGRAPH_URI", "bolt://memgraph:7687"))
+    user: str = Field(default_factory=lambda: os.getenv("MEMGRAPH_USER", ""))
+    password: str = Field(default_factory=lambda: os.getenv("MEMGRAPH_PASSWORD", ""))
+    database: str = Field(default_factory=lambda: os.getenv("MEMGRAPH_DATABASE", "memgraph"))
+    connect_timeout_seconds: float = 2.0
+    projection_batch_size: int = 100
+    projection_interval_seconds: float = 30.0
+    dashboard_node_limit: int = 150
+    dashboard_edge_limit: int = 300
+
+
 # ═══════════════════════════════════════════════════════════
 # ROOT CONFIG
 # ═══════════════════════════════════════════════════════════
@@ -521,6 +538,7 @@ class AppConfig(BaseModel):
     dashboard: DashboardConfig = Field(default_factory=DashboardConfig)
     scheduler: SchedulerConfig = Field(default_factory=SchedulerConfig)
     data: DataConfig = Field(default_factory=DataConfig)
+    context_graph: ContextGraphConfig = Field(default_factory=ContextGraphConfig)
 
     @model_validator(mode="after")
     def validate_thresholds(self) -> "AppConfig":

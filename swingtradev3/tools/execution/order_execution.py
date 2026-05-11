@@ -7,6 +7,7 @@ from config import cfg, runtime_flags
 from integrations.kite.mcp_client import KiteMCPClient
 from models import AccountState
 from paper.fill_engine import FillEngine
+from policy.effective_policy import new_entries_block_reason
 from tools.execution.gtt_manager import GTTManager
 from tools.execution.risk_check import RiskCheckTool
 
@@ -93,6 +94,11 @@ class OrderExecutionTool:
             return {"status": "rejected", "reason": "invalid_quantity", "quantity": 0}, 0
         return risk, min(int(quantity), approved_quantity)
 
+    def _entry_policy_block(self, side: str) -> str | None:
+        if side.upper() != "BUY":
+            return None
+        return new_entries_block_reason()
+
     def place_order(
         self,
         state: AccountState,
@@ -109,6 +115,15 @@ class OrderExecutionTool:
         )
         if risk.get("status") == "rejected":
             return risk
+
+        policy_block = self._entry_policy_block(side)
+        if policy_block is not None:
+            return {
+                "status": "blocked",
+                "reason": policy_block,
+                "quantity": 0,
+                "mode": cfg.trading.mode.value,
+            }
 
         live_block_reason = runtime_flags.live_entry_block_reason(cfg.trading.mode)
 
@@ -225,6 +240,14 @@ class OrderExecutionTool:
             return risk
 
         order_id = f"order-{uuid.uuid4().hex[:10]}"
+        policy_block = self._entry_policy_block(side)
+        if policy_block is not None:
+            return {
+                "status": "blocked",
+                "reason": policy_block,
+                "quantity": 0,
+                "mode": cfg.trading.mode.value,
+            }
         if cfg.trading.mode.value != "live":
             return self.place_order(
                 state,

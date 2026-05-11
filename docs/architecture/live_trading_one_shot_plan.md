@@ -1,6 +1,6 @@
 # Live Trading One-Shot Plan
 
-> Last Updated: May 4, 2026
+> Last Updated: May 10, 2026
 > This is the active end-to-end implementation plan for turning `swingtradev3` into a broker-truth-driven, bounded-autonomy live trading system.
 > It merges the execution hardening work from `findings.md` with the Slow Brain / Fast Brain architecture in `agent_cognition_architecture.md` and `agent_cognition_implementation_plan.md`.
 > Phases 0-9 build the execution-safe floor. Phases 10-13 add the cognition, policy, and memory layers required for the final non-linear autonomous system.
@@ -18,7 +18,7 @@ And, after the execution floor is stable, extend it into the full target archite
 
 - **Slow Brain**: overnight and pre-market multi-agent deliberation
 - **Fast Brain**: market-hours deterministic execution and risk control
-- **Memory**: knowledge graph plus Postgres execution and trade history
+- **Memory**: Memgraph context graph plus Postgres execution and trade history
 - **Policy Layer**: bounded dynamic overlays, not raw `config.yaml` mutation
 - **Execution Core**: broker-truth single-writer worker
 - **Recovery Layer**: reconciliation, kill switches, and operator controls
@@ -436,15 +436,15 @@ Definition of done:
 
   - Phase 8 will replace the old Reflex dashboard with the root-level React/Vite app at swingtradev3-dashboard.
   - Remove swingtradev3/dashboard and swingtradev3/dashboard_old after the React dashboard boots through Compose.
-  - Phase 8 remains dashboard/API/SSE/projection work. The knowledge graph screen stays as an explicit mock.
-  - Phase 14 becomes the real Postgres + Memgraph context graph/memory phase.
+  - Phase 8 remains dashboard/API/SSE/projection work. The knowledge graph screen stays as an explicit mock until Phase 11.
+  - Phase 11 owns the real Postgres + Memgraph context graph/memory phase.
 
   - Replace Dockerfile.dashboard with a Node/Vite runtime and update docker-compose.dev.yml to mount/build ./swingtradev3-dashboard, not ./swingtradev3/dashboard.
   - Use Vite dev proxy /api -> http://app:8000 so the browser calls same-origin /api/...; inject X-API-Key from dashboard container env in the proxy instead of hardcoding API keys into React.
   - Add frontend data layer packages: @tanstack/react-query for request/mutation cache, zod for response validation, and @microsoft/fetch-event-source for SSE because native EventSource does not support custom request headers.
   - Remove unused AI Studio/server packages from the dashboard app: @google/genai, dotenv, express, @types/express; keep react-force-graph-3d, three, recharts, motion, and lucide-react.
   - Add src/lib/api.ts, src/lib/sse.ts, src/lib/schemas.ts, and feature hooks so screens do not call fetch directly.
-  - Keep KnowledgeScreen as a deterministic local mock with a visible Phase 14 Mock badge; remove markdown/file language like “View Markdown Base” and do not read context/knowledge in Phase 8.
+  - Keep KnowledgeScreen as a deterministic local mock with an explicit pending-graph badge; remove markdown/file language like “View Markdown Base” and do not read context/knowledge in Phase 8.
   - Refactor existing FastAPI routes so dashboard reads Postgres-backed state, not state.json, trades.json, pending_approvals.json, _graph.json, or _index.json.
   - Make /sse/live durable by tailing execution_events with a cursor/heartbeat model instead of depending only on the in-memory broadcaster.
   - Fix API auth fail-closed behavior: if API auth is enabled and no key is configured, return 403, do not allow access.
@@ -464,7 +464,7 @@ Definition of done:
   | Tickers / quotes | GET /dashboard/quotes |
   | Brokers | GET /dashboard/broker, GET /ops/safety |
   | Telemetry | GET /dashboard/telemetry, GET /dashboard/events, GET /sse/live |
-  | Knowledge graph | local mock only in Phase 8; real API deferred to Phase 14 |
+  | Knowledge graph | local mock only in Phase 8; real API belongs to Phase 11 |
 
 
 Definition of done:
@@ -517,7 +517,7 @@ Completion evidence as of May 4, 2026:
 - Live market/news/LLM evaluation is opt-in via `RUN_LIVE_EVAL=true` and is not part of the deterministic Docker gate.
 - The 10-trading-day paper soak and staged live modes remain operational rollout controls that require operator evidence before advancing runtime flags.
 
-### Phase 10: Policy Layer And Effective Policy
+### Phase 10 [X]: Policy Layer And Effective Policy
 
 Implementation:
 
@@ -540,6 +540,18 @@ Definition of done:
 
 - no runtime path mutates `config.yaml`
 - adaptive behavior is bounded, auditable, and reversible
+
+Implemented:
+
+- `swingtradev3/policy/` now owns bounded overlay validation, lifecycle transitions, and
+  effective-policy resolution.
+- `policy_overlays` is used as the durable audit table; overlays carry reason, proposer,
+  approver, expiry, rollback handle, and transition history in Postgres.
+- `GET /policy/effective`, `GET/POST /policy/overlays`, approve/reject/rollback endpoints, and
+  `GET /dashboard/policy` expose the runtime policy and audit trail.
+- Runtime entry approval/execution, risk sizing, sector concentration, research score thresholds,
+  and trailing thresholds read the effective policy instead of only raw config.
+- The dashboard Risk panel shows effective policy values and active overlays.
 
 ### Phase 11: Context Graph Memory
 
@@ -589,10 +601,11 @@ Context and cognition state, with no write path back to execution:
 
 #### Infrastructure
 
-- Add `memgraph` and `memgraph-mage` services behind an optional Docker Compose profile (`--profile memory`)
-- Add `memgraph-lab` service for graph debugging (dev only)
+- Add `memgraph` behind the optional Docker Compose `memory` profile, using the official `memgraph/memgraph-mage:latest` image
+- Add `memgraph-lab` behind the same profile, using the official `memgraph/lab:latest` image for graph debugging (dev only)
+- `make dev` and `make dev-detach` start the `memory` profile alongside the normal dev stack; app and worker must not depend on Memgraph to boot
+- Persist Memgraph data and logs in Docker volumes, cap the dev memory budget with `MEMGRAPH_MEMORY_LIMIT_MIB`, and keep snapshots/WAL enabled
 - Use Python `neo4j` driver over Bolt protocol for all Memgraph access
-- Add durability config: snapshots and WAL enabled
 - Add backup/restore runbook
 
 #### Connection Flow
@@ -643,18 +656,20 @@ Keep as file cache for now (not yet promoted to graph):
 #### Dashboard
 
 - Update the knowledge graph screen to read the real Memgraph graph instead of the Phase 8 local mock
-- Remove the `Phase 14 Mock` badge from the knowledge graph panel
+- Remove the pending mock badge from the knowledge graph panel
 - Back the `/api/knowledge-graph` route with `ContextGraphRepository` queries
 
 #### Documentation Updates Required In This Phase
 
 - Update `docs/architecture/agent_cognition_architecture.md` memory section: replace markdown KG as long-term memory with Memgraph
 - Update `docs/architecture/agent_cognition_implementation_plan.md`: add the Phase 11 graph-memory implementation section
-- Update `docs/features/future-feature.md`: supersede the old "no new database" and "Active Graph KG" entries with the Memgraph architecture decision
+- Update `docs/features/future-feature.md`: supersede the old Postgres-only graph entries with the Memgraph architecture decision
 
 #### Definition Of Done
 
-- Memgraph runs as an optional Docker Compose service; `make dev-detach` starts it alongside the app and worker
+- Memgraph runs as an optional Docker Compose service; `make dev` and `make dev-detach` start it alongside the app and worker through the `memory` profile
+- Memgraph Lab is available for local graph debugging
+- Memgraph backup/restore is documented in `docs/runbooks/memgraph-backup-restore.md`
 - `GraphProjector` is live and projects `execution_events` into Memgraph asynchronously
 - `ContextGraphRepository` is the only way agents access Memgraph — no raw Cypher in agent code
 - Research pipeline writes `ResearchRun` and candidate summaries to Memgraph, not to JSON files
@@ -802,8 +817,8 @@ Reason:
 - policy (Phase 10) comes after execution truth because `policy_overlays` depend on stable Postgres state
 - **Phase 11 (Context Graph) precedes Phase 12 (Toolbox)** so the Toolbox is built correctly the first time — regime snapshots and trade memories go straight into Memgraph, never as throwaway Postgres views
 - **Phase 12 (Toolbox) precedes Phase 13 (Slow Brain)** because Slow Brain agents need structured, curated access to both Postgres and Memgraph via the Toolbox
-- **Phase 14 (Exception Reasoning)** comes last because it sits on top of the full stack: execution floor, graph memory, Toolbox, and Slow Brain desk
-- post-trade lessons written in Phase 14 feed back into Memgraph (Phase 11), closing the learning loop
+- **Phase 14 (Exception Reasoning)** comes last because it sits on top of the full stack: execution floor, Toolbox, and Slow Brain desk
+- post-trade lessons feed back into the Phase 11 Memgraph graph, closing the learning loop
 
 > See [docs/features/postgress-memgraph.md](../features/postgress-memgraph.md) for the full design rationale behind the Postgres + Memgraph split.
 

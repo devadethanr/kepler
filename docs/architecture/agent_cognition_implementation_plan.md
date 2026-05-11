@@ -1,6 +1,6 @@
 # Agent Cognition Implementation Plan
 
-> Last Updated: April 17, 2026
+> Last Updated: May 10, 2026
 > This document is the repo-specific implementation plan for the cognitive and execution overhaul described in `agent_cognition_architecture.md`.
 >
 > **Phase numbering:** `live_trading_one_shot_plan.md` owns the canonical phase counter and `[X]` status tags. Phase numbers in *this* document are independent groupings of cognitive work (Postgres foundation, broker overhaul, slow brain, fast brain, learning, etc.) and do not map 1:1 to the delivery phases there.
@@ -12,6 +12,7 @@ This plan implements:
 - slow-brain multi-agent deliberation
 - fast-brain deterministic execution
 - Postgres operational memory
+- Memgraph context graph memory
 - Google MCP Toolbox read-only toolsets
 - dynamic policy overlays
 - broker-truth execution and recovery
@@ -25,7 +26,7 @@ The overhaul is successful when:
 1. Overnight and pre-market research produce structured `entry_intents` through a small multi-agent desk.
 2. Market-hours execution remains deterministic and broker-correct without depending on live LLM availability.
 3. All live state is persisted in Postgres.
-4. LLM agents read from curated Postgres views and the knowledge graph, not raw JSON.
+4. LLM agents read from curated Postgres views and the Memgraph context graph, not raw JSON.
 5. Dynamic adaptation happens through bounded overlays, not direct YAML mutation.
 6. The system can restart, reconcile, and recover without duplicating orders or losing protection.
 
@@ -35,10 +36,11 @@ Implement from the bottom up:
 
 1. Postgres truth and worker ownership
 2. Broker ingestion and reconciliation
-3. Policy overlays and memory views
-4. Slow-brain desk
-5. Dashboard and read-side migration
-6. Staged live enablement
+3. Policy overlays
+4. Memgraph context graph and memory views
+5. Slow-brain desk
+6. Dashboard and read-side migration
+7. Staged live enablement
 
 ## Phase 0 [X]: Guardrails And Freeze
 
@@ -288,30 +290,49 @@ Import:
 - no code path needs to mutate `config.yaml` at runtime
 - dynamic policy lives in Postgres with full auditability
 
-## Phase 5: Memory Views And MCP Toolbox
+## Phase 5: Context Graph Memory And MCP Toolbox
 
 ### Objectives
 
-- expose safe, compact agent-facing memory
+- deploy Memgraph as the context graph memory store
+- expose safe, compact agent-facing memory across Postgres and Memgraph
+- keep Memgraph out of the execution hot path
 
 ### New Modules
 
+- `swingtradev3/context_graph/repository.py`
+- `swingtradev3/context_graph/projector.py`
+- `swingtradev3/context_graph/context_builder.py`
+- `swingtradev3/context_graph/intent_writer.py`
+- `swingtradev3/context_graph/policy_proposal_writer.py`
 - `swingtradev3/memory/views.py`
 - `swingtradev3/memory/context_builders.py`
 - `swingtradev3/toolbox/toolsets.yaml`
 - `swingtradev3/toolbox/README.md`
 
-### Required Views
+### Infrastructure
 
-- `regime_snapshot_view`
-- `candidate_memory_view`
+- Compose `memory` profile runs `memgraph/memgraph-mage:latest` and `memgraph/lab:latest`
+- `make dev` and `make dev-detach` start the memory profile for local development
+- Memgraph uses Bolt for repository access and Lab for dev graph inspection
+- snapshots and WAL stay enabled, with backup/restore documented in
+  `docs/runbooks/memgraph-backup-restore.md`
+
+### Required Postgres Views
+
 - `portfolio_risk_view`
 - `open_positions_view`
-- `similar_trades_view`
-- `trade_lesson_view`
 - `execution_incidents_view`
 - `policy_effective_view`
 - `session_readiness_view`
+
+### Required Memgraph Context Views
+
+- `regime_snapshot_context`
+- `candidate_memory_context`
+- `similar_trades_context`
+- `trade_lesson_context`
+- `stock_context_graph_summary`
 
 ### Google MCP Toolbox Usage
 
@@ -327,14 +348,20 @@ Toolsets:
 Rules:
 
 - read-only DB role
-- parameterized curated SQL tools only
+- parameterized curated SQL tools only for Postgres
+- typed repository-backed context tools only for Memgraph
 - no unrestricted SQL
+- no unrestricted Cypher
 - no writes
 - no worker dependency on Toolbox
+- no worker dependency on Memgraph
 
 ### Exit Criteria
 
-- LLM agents can query compact Postgres-backed memory without touching raw tables
+- LLM agents can query compact Postgres-backed execution memory and Memgraph-backed
+  context memory without touching raw tables or raw Cypher
+- Memgraph downtime degrades research context only; execution, reconciliation, flattening,
+  and kill switches remain available
 
 ## Phase 6: Slow Brain Desk
 
@@ -608,6 +635,7 @@ Rules:
 
 - `swingtradev3/broker/`
 - `swingtradev3/cognition/`
+- `swingtradev3/context_graph/`
 - `swingtradev3/execution/`
 - `swingtradev3/memory/`
 - `swingtradev3/policy/`
@@ -618,6 +646,8 @@ Rules:
 - `context/state.json`
 - `context/trades.json`
 - `context/pending_approvals.json`
+- `context/knowledge/` as a memory source
+- `context/research/` as a memory source
 - route-triggered execution through ADK background runs
 - scheduler ownership inside FastAPI lifespan
 
@@ -626,6 +656,7 @@ Rules:
 - execution worker remains single writer
 - broker truth remains authoritative
 - Toolbox remains read-only
+- Memgraph remains context-only
 - `config.yaml` remains base config, not a live mutable control plane
 - LLMs remain out of direct broker action paths
 

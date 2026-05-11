@@ -1,4 +1,4 @@
-import { useDashboardSnapshot, useSafety } from '@/hooks/useDashboardData';
+import { useDashboardSnapshot, usePolicyDashboard, useSafety } from '@/hooks/useDashboardData';
 import { pctFromRiskValue } from '@/lib/time';
 import { cn } from '@/lib/utils';
 
@@ -15,7 +15,10 @@ function ringOffset(pct: number) {
 export function RiskScreen() {
   const snapshotQuery = useDashboardSnapshot();
   const safetyQuery = useSafety();
+  const policyQuery = usePolicyDashboard();
   const portfolio = snapshotQuery.data?.portfolio;
+  const policy = policyQuery.data?.effective;
+  const activeOverlays = policyQuery.data?.active_overlays ?? [];
   const exposure = portfolio?.total_invested ?? 0;
   const cash = portfolio?.cash_inr ?? 0;
   const grossPct = cash + exposure > 0 ? (exposure / (cash + exposure)) * 100 : 0;
@@ -77,6 +80,46 @@ export function RiskScreen() {
           })}
           {!sectors.length && <div className="text-[12px] font-mono text-on-surface-variant">{snapshotQuery.isLoading ? 'Loading sector exposure...' : snapshotQuery.isError ? 'Sector exposure unavailable.' : 'No sector exposure recorded.'}</div>}
         </div>
+      </div>
+
+      <div className="mt-6 bg-surface-container-low border border-outline-variant/20 rounded p-5">
+        <div className="flex items-center justify-between gap-3 mb-5">
+          <h2 className="text-[12px] font-headline font-bold text-on-surface uppercase tracking-wider">Effective Policy</h2>
+          <span className={cn("text-[10px] font-mono uppercase", policy?.new_entries_enabled ? 'text-secondary' : 'text-error')}>
+            {policy?.new_entries_enabled ? 'Entries Enabled' : 'Entries Blocked'}
+          </span>
+        </div>
+        {policy ? (
+          <>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+              {[
+                ['Min Score', policy.min_score_threshold.toFixed(1), policy.sources.min_score_threshold],
+                ['Max Size', `${policy.max_position_size_pct.toFixed(0)}%`, policy.sources.max_position_size_pct],
+                ['Sector Cap', String(policy.max_same_sector_positions), policy.sources.max_same_sector_positions],
+                ['Trail', `${policy.trail_stop_at_pct.toFixed(1)} -> ${policy.trail_to_pct.toFixed(1)}%`, policy.sources.trail_stop_at_pct],
+              ].map(([label, value, source]) => (
+                <div key={label} className="border border-outline-variant/15 rounded p-3">
+                  <div className="text-[10px] font-mono uppercase text-on-surface-variant mb-1">{label}</div>
+                  <div className="text-lg font-mono text-white font-bold">{value}</div>
+                  <div className="text-[10px] font-mono text-on-surface-variant truncate">{source}</div>
+                </div>
+              ))}
+            </div>
+            <div className="text-[11px] font-mono text-on-surface-variant mb-2">Active overlays: {activeOverlays.length}</div>
+            <div className="space-y-2">
+              {activeOverlays.slice(0, 5).map((overlay) => (
+                <div key={overlay.overlay_id} className="flex items-center justify-between gap-3 border-t border-outline-variant/10 pt-2">
+                  <span className="text-[11px] font-mono text-on-surface">{overlay.key}</span>
+                  <span className="text-[11px] font-mono text-primary">{String(overlay.value)}</span>
+                  <span className="text-[10px] font-mono text-on-surface-variant truncate max-w-[45%]">{overlay.reason}</span>
+                </div>
+              ))}
+              {!activeOverlays.length && <div className="text-[12px] font-mono text-on-surface-variant">No active overlays.</div>}
+            </div>
+          </>
+        ) : (
+          <div className="text-[12px] font-mono text-on-surface-variant">{policyQuery.isLoading ? 'Loading policy...' : 'Policy unavailable.'}</div>
+        )}
       </div>
     </div>
   );

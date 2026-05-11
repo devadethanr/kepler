@@ -7,13 +7,17 @@ import {
   DashboardSnapshotSchema,
   ExecutionSchema,
   HealthSchema,
+  KnowledgeGraphSchema,
+  KnowledgeIndexSchema,
   NewsDashboardSchema,
+  PolicyDashboardSchema,
   PortfolioSummarySchema,
   PositionSchema,
   QuotesSchema,
   SafetySchema,
   ScanStatusSchema,
   SessionSchema,
+  StockKnowledgeSchema,
   TelemetrySchema,
   TradeSchema,
 } from './schemas';
@@ -82,6 +86,19 @@ export const api = {
     request('/dashboard/telemetry', TelemetrySchema, 'GET', { signal }),
   newsDashboard: (limit = 100, signal?: AbortSignal) =>
     request(`/dashboard/news?limit=${limit}`, NewsDashboardSchema, 'GET', { signal }),
+  policyDashboard: (signal?: AbortSignal) =>
+    request('/dashboard/policy', PolicyDashboardSchema, 'GET', { signal }),
+  knowledgeGraph: (signal?: AbortSignal) =>
+    request('/dashboard/knowledge/graph', KnowledgeGraphSchema, 'GET', { signal }),
+  knowledgeIndex: (signal?: AbortSignal) =>
+    request('/dashboard/knowledge/index', KnowledgeIndexSchema, 'GET', { signal }),
+  stockKnowledge: (ticker: string, signal?: AbortSignal) =>
+    request(
+      `/dashboard/knowledge/stock/${encodeURIComponent(ticker)}`,
+      StockKnowledgeSchema,
+      'GET',
+      { signal },
+    ),
   activity: (signal?: AbortSignal) =>
     request('/dashboard/activity', AgentActivityDashboardSchema, 'GET', { signal }),
   session: (signal?: AbortSignal) =>

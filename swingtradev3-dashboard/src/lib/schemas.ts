@@ -265,6 +265,132 @@ export const NewsDashboardSchema = z
   })
   .passthrough();
 
+export const PolicyOverlaySchema = z
+  .object({
+    overlay_id: z.string(),
+    key: z.string(),
+    value: z.unknown(),
+    status: z.string(),
+    reason: z.string().default(''),
+    proposer: z.string().default(''),
+    approver: z.string().nullable().optional(),
+    expires_at: z.string().nullable().optional(),
+    rollback_handle: z.string().default(''),
+    payload: z.record(z.string(), z.unknown()).default({}),
+  })
+  .passthrough();
+
+export const EffectivePolicySchema = z
+  .object({
+    min_score_threshold: z.number(),
+    max_position_size_pct: z.number(),
+    new_entries_enabled: z.boolean(),
+    max_same_sector_positions: z.number(),
+    trail_stop_at_pct: z.number(),
+    trail_to_pct: z.number(),
+    debate_top_n: z.number(),
+    base: z.record(z.string(), z.unknown()).default({}),
+    sources: z.record(z.string(), z.string()).default({}),
+    applied_overlays: z.array(z.record(z.string(), z.unknown())).default([]),
+    ignored_overlays: z.array(z.record(z.string(), z.unknown())).default([]),
+    operator_controls: z.record(z.string(), z.unknown()).default({}),
+    resolved_at_ist: z.string(),
+  })
+  .passthrough();
+
+export const PolicyDashboardSchema = z
+  .object({
+    effective: EffectivePolicySchema,
+    overlays: z.array(PolicyOverlaySchema).default([]),
+    active_overlays: z.array(PolicyOverlaySchema).default([]),
+  })
+  .passthrough();
+
+const KnowledgeMetadataSchema = z.record(z.string(), z.unknown()).default({});
+
+export const KnowledgeGraphNodeSchema = z
+  .object({
+    id: z.string(),
+    label: z.string().nullable().optional(),
+    name: z.string().nullable().optional(),
+    type: z.string().default('unknown'),
+    size: z.number().nullable().optional(),
+    val: z.number().nullable().optional(),
+    color: z.string().nullable().optional(),
+    summary: z.string().nullable().optional(),
+    metadata: KnowledgeMetadataSchema,
+  })
+  .passthrough();
+
+export const KnowledgeGraphEdgeSchema = z
+  .object({
+    source: z.string(),
+    target: z.string(),
+    label: z.string().nullable().optional(),
+    relationship: z.string().nullable().optional(),
+    weight: z.number().default(1),
+    metadata: KnowledgeMetadataSchema,
+  })
+  .passthrough();
+
+export const KnowledgeGraphSchema = z
+  .object({
+    status: z.string().default('available'),
+    phase: z.string().nullable().optional(),
+    message: z.string().nullable().optional(),
+    nodes: z.array(KnowledgeGraphNodeSchema).default([]),
+    edges: z.array(KnowledgeGraphEdgeSchema).default([]),
+    last_updated: z.string().nullable().optional(),
+    counts: z.record(z.string(), z.number()).default({}),
+    degraded_reason: z.string().nullable().optional(),
+    last_error: z.string().nullable().optional(),
+  })
+  .passthrough();
+
+export const KnowledgeIndexStockSchema = z
+  .object({
+    ticker: z.string(),
+    note_path: z.string().nullable().optional(),
+    scan_count: z.number().default(0),
+    avg_score: z.number().default(0),
+    last_scanned: z.string().nullable().optional(),
+    sector: z.string().nullable().optional(),
+    tags: z.array(z.string()).default([]),
+  })
+  .passthrough();
+
+export const KnowledgeIndexSchema = z
+  .object({
+    status: z.string().default('available'),
+    message: z.string().nullable().optional(),
+    stocks: z
+      .union([
+        z.record(z.string(), KnowledgeIndexStockSchema),
+        z.array(KnowledgeIndexStockSchema),
+      ])
+      .default({}),
+    last_updated: z.string().nullable().optional(),
+    counts: z.record(z.string(), z.number()).default({}),
+    degraded_reason: z.string().nullable().optional(),
+    last_error: z.string().nullable().optional(),
+  })
+  .passthrough();
+
+export const StockKnowledgeSchema = z
+  .object({
+    status: z.string().default('available'),
+    ticker: z.string(),
+    summary: z.string().nullable().optional(),
+    evidence: z.array(z.record(z.string(), z.unknown())).default([]),
+    connections: z.array(z.union([z.string(), z.record(z.string(), z.unknown())])).default([]),
+    has_history: z.boolean().optional(),
+    last_updated: z.string().nullable().optional(),
+    message: z.string().nullable().optional(),
+    degraded_reason: z.string().nullable().optional(),
+    last_error: z.string().nullable().optional(),
+  })
+  .passthrough();
+
 export type DashboardSnapshot = z.infer<typeof DashboardSnapshotSchema>;
 export type DashboardEvent = z.infer<typeof DashboardEventSchema>;
 export type ExecutionDashboard = z.infer<typeof ExecutionSchema>;
@@ -279,3 +405,12 @@ export type AgentActivityDashboard = z.infer<typeof AgentActivityDashboardSchema
 export type NewsDashboard = z.infer<typeof NewsDashboardSchema>;
 export type NewsItem = z.infer<typeof NewsItemSchema>;
 export type NewsProviderHealth = z.infer<typeof NewsProviderHealthSchema>;
+export type EffectivePolicy = z.infer<typeof EffectivePolicySchema>;
+export type PolicyDashboard = z.infer<typeof PolicyDashboardSchema>;
+export type PolicyOverlay = z.infer<typeof PolicyOverlaySchema>;
+export type KnowledgeGraph = z.infer<typeof KnowledgeGraphSchema>;
+export type KnowledgeGraphNode = z.infer<typeof KnowledgeGraphNodeSchema>;
+export type KnowledgeGraphEdge = z.infer<typeof KnowledgeGraphEdgeSchema>;
+export type KnowledgeIndex = z.infer<typeof KnowledgeIndexSchema>;
+export type KnowledgeIndexStock = z.infer<typeof KnowledgeIndexStockSchema>;
+export type StockKnowledge = z.infer<typeof StockKnowledgeSchema>;
