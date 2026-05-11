@@ -141,7 +141,7 @@ services:
     profiles:
       - memory
     ports:
-      - "${MEMGRAPH_LAB_PORT:-3000}:3000"
+      - "${MEMGRAPH_LAB_PORT:-3001}:3000"
     environment:
       - QUICK_CONNECT_MG_HOST=memgraph
       - QUICK_CONNECT_MG_PORT=7687

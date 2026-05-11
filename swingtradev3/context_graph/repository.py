@@ -143,6 +143,7 @@ class ContextGraphRepository:
             return {"status": "degraded", "uri": self.uri, "error": str(exc)}
 
     def ensure_schema(self) -> None:
+        """Create uniqueness constraints and indexes in Memgraph."""
         statements = [
             "CREATE CONSTRAINT ON (n:Stock) ASSERT n.id IS UNIQUE;",
             "CREATE CONSTRAINT ON (n:Sector) ASSERT n.id IS UNIQUE;",
@@ -156,9 +157,20 @@ class ContextGraphRepository:
             "CREATE CONSTRAINT ON (n:SkillVersion) ASSERT n.id IS UNIQUE;",
             "CREATE CONSTRAINT ON (n:ExecutionEvent) ASSERT n.id IS UNIQUE;",
             "CREATE CONSTRAINT ON (n:ProjectionCursor) ASSERT n.name IS UNIQUE;",
+            "CREATE CONSTRAINT ON (n:Index) ASSERT n.id IS UNIQUE;",
+            "CREATE CONSTRAINT ON (n:SignalSnapshot) ASSERT n.id IS UNIQUE;",
+            "CREATE CONSTRAINT ON (n:TechnicalSnapshot) ASSERT n.id IS UNIQUE;",
+            "CREATE CONSTRAINT ON (n:FundamentalSnapshot) ASSERT n.id IS UNIQUE;",
+            "CREATE CONSTRAINT ON (n:Lesson) ASSERT n.id IS UNIQUE;",
+            "CREATE CONSTRAINT ON (n:RegimeSnapshot) ASSERT n.id IS UNIQUE;",
             "CREATE INDEX ON :Stock(ticker);",
             "CREATE INDEX ON :ResearchRun(observed_at);",
             "CREATE INDEX ON :NewsArticle(observed_at);",
+            "CREATE INDEX ON :RegimeSnapshot(regime);",
+            "CREATE INDEX ON :SignalSnapshot(observed_at);",
+            "CREATE INDEX ON :TechnicalSnapshot(observed_at);",
+            "CREATE INDEX ON :FundamentalSnapshot(observed_at);",
+            "CREATE INDEX ON :TradeMemory(observed_at);",
         ]
         for statement in statements:
             try:
@@ -254,6 +266,33 @@ class ContextGraphRepository:
             """
             MERGE (s:Sector {id: $id})
             SET s += $props
+            """,
+            {"id": props["id"], "props": props},
+        )
+
+    def upsert_index(
+        self,
+        name: str,
+        *,
+        index_type: str = "index",
+        payload: dict[str, Any] | None = None,
+        source: str = "context_graph",
+    ) -> None:
+        normalized = name.strip().upper()
+        if not normalized:
+            return
+        body = dict(payload or {})
+        props = {
+            "id": f"index:{normalized}",
+            "name": normalized,
+            "index_type": index_type,
+            "label": normalized,
+            **self._meta(source=source, source_id=normalized, payload=body),
+        }
+        self._run(
+            """
+            MERGE (i:Index {id: $id})
+            SET i += $props
             """,
             {"id": props["id"], "props": props},
         )
@@ -540,6 +579,228 @@ class ContextGraphRepository:
             {"id": props["id"], "props": props},
         )
 
+    def upsert_signal_snapshot(
+        self,
+        *,
+        ticker: str,
+        signal_type: str,
+        payload: dict[str, Any],
+        observed_at: Any = None,
+        source: str = "signal_analyzer",
+    ) -> None:
+        source_id = str(payload.get("signal_id") or f"{ticker}:{signal_type}:{_iso(observed_at)}")
+        props = {
+            "id": f"signal:{source_id}",
+            "ticker": ticker.upper(),
+            "signal_type": signal_type,
+            "label": f"{ticker}:{signal_type}",
+            **self._meta(source=source, source_id=source_id, payload=payload, observed_at=observed_at),
+        }
+        self._run(
+            """
+            MERGE (s:SignalSnapshot {id: $id})
+            SET s += $props
+            """,
+            {"id": props["id"], "props": props},
+        )
+        normalized = ticker.strip().upper()
+        if normalized:
+            self.upsert_stock(normalized, source=source)
+            self._run(
+                """
+                MATCH (st:Stock {id: $stock_id}), (sig:SignalSnapshot {id: $signal_id})
+                MERGE (st)-[rel:HAS_SIGNAL]->(sig)
+                SET rel.source = $source,
+                    rel.signal_type = $signal_type,
+                    rel.ingested_at = $ingested_at,
+                    rel.projection_version = $projection_version
+                """,
+                {
+                    "stock_id": f"stock:{normalized}",
+                    "signal_id": props["id"],
+                    "source": source,
+                    "signal_type": signal_type,
+                    "ingested_at": props["ingested_at"],
+                    "projection_version": PROJECTION_VERSION,
+                },
+            )
+
+    def upsert_technical_snapshot(
+        self,
+        *,
+        ticker: str,
+        payload: dict[str, Any],
+        observed_at: Any = None,
+        source: str = "technical_analyzer",
+    ) -> None:
+        source_id = str(payload.get("tech_id") or f"{ticker}:{_iso(observed_at)}")
+        normalized = ticker.strip().upper()
+        props = {
+            "id": f"technical:{source_id}",
+            "ticker": normalized,
+            "label": f"{normalized} technical",
+            **self._meta(source=source, source_id=source_id, payload=payload, observed_at=observed_at),
+        }
+        self._run(
+            """
+            MERGE (t:TechnicalSnapshot {id: $id})
+            SET t += $props
+            """,
+            {"id": props["id"], "props": props},
+        )
+        if normalized:
+            self.upsert_stock(normalized, source=source)
+
+    def upsert_fundamental_snapshot(
+        self,
+        *,
+        ticker: str,
+        payload: dict[str, Any],
+        observed_at: Any = None,
+        source: str = "fundamental_analyzer",
+    ) -> None:
+        source_id = str(payload.get("fund_id") or f"{ticker}:{_iso(observed_at)}")
+        normalized = ticker.strip().upper()
+        props = {
+            "id": f"fundamental:{source_id}",
+            "ticker": normalized,
+            "label": f"{normalized} fundamentals",
+            **self._meta(source=source, source_id=source_id, payload=payload, observed_at=observed_at),
+        }
+        self._run(
+            """
+            MERGE (f:FundamentalSnapshot {id: $id})
+            SET f += $props
+            """,
+            {"id": props["id"], "props": props},
+        )
+        if normalized:
+            self.upsert_stock(normalized, source=source)
+
+    def upsert_trade_memory(
+        self,
+        *,
+        trade_id: str,
+        ticker: str,
+        payload: dict[str, Any],
+        entry_price: float = 0.0,
+        exit_price: float = 0.0,
+        pnl_pct: float = 0.0,
+        setup_type: str | None = None,
+        sector: str | None = None,
+        observed_at: Any = None,
+        similar_trade_ids: list[str] | None = None,
+        source: str = "trade_reviewer",
+    ) -> None:
+        normalized = ticker.strip().upper()
+        props = {
+            "id": f"trade_memory:{trade_id}",
+            "trade_id": trade_id,
+            "ticker": normalized,
+            "entry_price": entry_price,
+            "exit_price": exit_price,
+            "pnl_pct": pnl_pct,
+            "setup_type": setup_type or "",
+            "sector": sector or "",
+            "label": f"{normalized} {setup_type or 'trade'} {pnl_pct:+.1f}%",
+            **self._meta(source=source, source_id=trade_id, payload=payload, observed_at=observed_at),
+        }
+        self._run(
+            """
+            MERGE (tm:TradeMemory {id: $id})
+            SET tm += $props
+            """,
+            {"id": props["id"], "props": props},
+        )
+        if normalized:
+            self.upsert_stock(normalized, source=source)
+            self._run(
+                """
+                MATCH (tm:TradeMemory {id: $tm_id}), (s:Stock {id: $stock_id})
+                MERGE (tm)-[rel:ABOUT_STOCK]->(s)
+                SET rel.source = $source,
+                    rel.ingested_at = $ingested_at,
+                    rel.projection_version = $projection_version
+                """,
+                {
+                    "tm_id": props["id"],
+                    "stock_id": f"stock:{normalized}",
+                    "source": source,
+                    "ingested_at": props["ingested_at"],
+                    "projection_version": PROJECTION_VERSION,
+                },
+            )
+        if similar_trade_ids:
+            for other_id in similar_trade_ids:
+                if other_id == trade_id:
+                    continue
+                self._run(
+                    """
+                    MATCH (a:TradeMemory {id: $a_id}), (b:TradeMemory {id: $b_id})
+                    MERGE (a)-[rel:SIMILAR_TO]->(b)
+                    SET rel.source = $source,
+                        rel.ingested_at = $ingested_at,
+                        rel.projection_version = $projection_version
+                    """,
+                    {
+                        "a_id": f"trade_memory:{trade_id}",
+                        "b_id": f"trade_memory:{other_id}",
+                        "source": source,
+                        "ingested_at": props["ingested_at"],
+                        "projection_version": PROJECTION_VERSION,
+                    },
+                )
+
+    def upsert_lesson(
+        self,
+        *,
+        lesson_id: str,
+        lesson_text: str,
+        category: str = "general",
+        ticker: str | None = None,
+        observation_ids: list[str] | None = None,
+        payload: dict[str, Any] | None = None,
+        observed_at: Any = None,
+        source: str = "learning_agent",
+    ) -> None:
+        body = dict(payload or {})
+        props = {
+            "id": f"lesson:{lesson_id}",
+            "lesson_text": lesson_text[:2000],
+            "category": category,
+            "ticker": (ticker or "").upper(),
+            "label": f"{category}: {lesson_text[:60]}",
+            **self._meta(source=source, source_id=lesson_id, payload=body, observed_at=observed_at),
+        }
+        self._run(
+            """
+            MERGE (l:Lesson {id: $id})
+            SET l += $props
+            """,
+            {"id": props["id"], "props": props},
+        )
+        if ticker:
+            normalized = ticker.strip().upper()
+            self.upsert_stock(normalized, source=source)
+        if observation_ids:
+            for obs_id in observation_ids:
+                self._run(
+                    """
+                    MATCH (l:Lesson {id: $lesson_id}), (o:Observation {id: $obs_id})
+                    MERGE (l)-[rel:SUPPORTS_LESSON]->(o)
+                    SET rel.source = $source,
+                        rel.ingested_at = $ingested_at,
+                        rel.projection_version = $projection_version
+                    """,
+                    {
+                        "lesson_id": props["id"],
+                        "obs_id": f"observation:{obs_id}",
+                        "source": source,
+                        "ingested_at": props["ingested_at"],
+                        "projection_version": PROJECTION_VERSION,
+                    },
+                )
+
     def record_observation(
         self,
         *,
@@ -693,6 +954,33 @@ class ContextGraphRepository:
             },
         )
 
+    def upsert_skill_version(
+        self,
+        *,
+        version_id: str,
+        name: str,
+        content: str = "",
+        payload: dict[str, Any] | None = None,
+        observed_at: Any = None,
+        source: str = "strategy_manager",
+    ) -> None:
+        body = dict(payload or {})
+        props = {
+            "id": f"skill:{version_id}",
+            "name": name,
+            "version_id": version_id,
+            "content_preview": content[:500],
+            "label": name,
+            **self._meta(source=source, source_id=version_id, payload=body, observed_at=observed_at),
+        }
+        self._run(
+            """
+            MERGE (sv:SkillVersion {id: $id})
+            SET sv += $props
+            """,
+            {"id": props["id"], "props": props},
+        )
+
     def get_projection_cursor(self, name: str = CURSOR_NAME) -> int:
         records = self._run(
             "MATCH (c:ProjectionCursor {name: $name}) RETURN c.last_event_id AS cursor",
@@ -744,7 +1032,7 @@ class ContextGraphRepository:
         for record in node_records:
             properties = dict(record.get("properties") or {})
             labels = [str(label) for label in record.get("labels") or []]
-            node_id = str(record.get("id") or properties.get("id") or "")
+            node_id = str(record.get("id") or "")
             if not node_id:
                 continue
             node_ids.add(node_id)

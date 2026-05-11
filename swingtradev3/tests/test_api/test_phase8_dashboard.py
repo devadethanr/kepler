@@ -14,7 +14,7 @@ from api.main import app
 from api.routes import approvals, dashboard, portfolio, positions, sse, trades
 from config import cfg
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from api.tasks.session_phase import IST, session_snapshot
 
 
@@ -322,14 +322,12 @@ def test_phase8_knowledge_routes_are_explicitly_deferred_mocks():
     graph_response = client.get("/dashboard/knowledge/graph")
     assert graph_response.status_code == 200
     graph = graph_response.json()
-    assert graph["phase"] == "phase_14_mock"
-    assert graph["nodes"]
-    assert graph["edges"]
+    assert graph["phase"] == "phase_11"
+    assert "status" in graph  # "ok" or "degraded"
 
     stock_response = client.get("/dashboard/knowledge/stock/reliance")
     assert stock_response.status_code == 200
     stock = stock_response.json()
-    assert stock["phase"] == "phase_14_mock"
     assert stock["ticker"] == "RELIANCE"
 
 

@@ -8,6 +8,9 @@ from google.adk.events import Event
 from google.genai import types
 
 from config import cfg
+from context_graph.intent_writer import IntentWriter
+from context_graph.repository import ContextGraphRepository, GraphUnavailableError
+from context_graph.models import ResearchRunPayload
 from agents.research.regime_agent import RegimeAgent
 from agents.research.filter_agent import FilterAgent
 from agents.research.scanner import BatchScannerAgent
@@ -62,7 +65,7 @@ class ResultsSaverAgent(BaseAgent):
             )
         return payload
 
-    async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, None]:
+    async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, Any]:
         scan_date = date.today().isoformat()
         regime = ctx.session.state.get("regime", {})
         qualified_stocks = ctx.session.state.get("qualified_stocks", [])
@@ -82,7 +85,7 @@ class ResultsSaverAgent(BaseAgent):
             "analyzed_at": analyzed_at.isoformat(),
         }
 
-        # Save to context
+        # Save to context (file-based, existing behavior)
         research_dir = CONTEXT_DIR / "research" / scan_date
         research_dir.mkdir(parents=True, exist_ok=True)
         for stale_path in research_dir.glob("*.json"):
@@ -121,6 +124,43 @@ class ResultsSaverAgent(BaseAgent):
                 "timesfm": stock_data.get(ticker, {}).get("timesfm", {}),
             }
             write_json(research_dir / f"{ticker}.json", stock_info)
+
+        # Phase 11: Write scan results to Memgraph context graph
+        try:
+            graph_repo = ContextGraphRepository()
+            run_id = f"research:{scan_date}"
+            graph_repo.upsert_research_run(
+                run_id=run_id,
+                scan_date=scan_date,
+                analyzed_at=analyzed_at,
+                regime=regime,
+                diagnostics=diagnostics or {},
+                qualified_count=len(qualified_stocks),
+                total_screened=200,
+                shortlist=shortlist,
+                scan_results=scan_results,
+                stock_data=stock_data,
+            )
+            graph_repo.close()
+        except GraphUnavailableError:
+            pass  # Memgraph down — file-based pipeline still works
+
+        # Phase 11: Write shortlisted intents to Postgres via IntentWriter
+        try:
+            from context_graph.intent_writer import IntentWriter
+
+            writer = IntentWriter()
+            for item in shortlist:
+                ticker = str(item.get("ticker") or "").strip().upper()
+                if not ticker:
+                    continue
+                writer.write_intent_from_candidate(
+                    run_id=run_id,
+                    ticker=ticker,
+                    candidate=item,
+                )
+        except GraphUnavailableError:
+            pass  # IntentWriter degrades gracefully
 
         yield Event(
             author=self.name,

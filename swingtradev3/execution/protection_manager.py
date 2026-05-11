@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Any
 
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from models import AccountState, GTTOrder, PositionState
 from tools.execution.alerts import AlertsTool
 from tools.execution.gtt_manager import GTTManager

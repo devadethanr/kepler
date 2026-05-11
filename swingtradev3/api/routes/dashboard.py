@@ -14,7 +14,9 @@ from api.routes.scan import _load_status as load_scan_status
 from api.tasks.activity_manager import activity_manager
 from api.tasks.session_phase import session_snapshot
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
+
+from context_graph.repository import ContextGraphRepository
 
 router = APIRouter()
 IST = ZoneInfo("Asia/Kolkata")
@@ -105,41 +107,83 @@ def _scan_status() -> dict[str, Any]:
 
 @router.get("/knowledge/index")
 async def get_knowledge_index():
-    """Phase 8 keeps the graph UI local-only; the real graph API is Phase 14."""
-    return {
-        "phase": "phase_14_mock",
-        "status": "deferred",
-        "stocks": {},
-        "message": "Knowledge graph API is intentionally disabled until Phase 14.",
-    }
+    """Knowledge graph index backed by Memgraph context graph (Phase 11)."""
+    from context_graph.repository import GraphUnavailableError
+
+    try:
+        with session_scope() as session:
+            pg_repo = MemoryRepository(session)
+            latest_run = pg_repo.events.get_latest_execution_event_id()
+        graph = ContextGraphRepository()
+        if not graph.enabled:
+            return {
+                "phase": "phase_11",
+                "status": "disabled",
+                "message": "Context graph is disabled in configuration.",
+            }
+        summary = graph.latest_research_summary()
+        graph.close()
+        return {
+            "phase": "phase_11",
+            "status": "ok",
+            "latest_research": summary,
+            "latest_event_id": latest_run,
+            "message": "Knowledge graph backed by Memgraph.",
+        }
+    except GraphUnavailableError:
+        return {
+            "phase": "phase_11",
+            "status": "degraded",
+            "memgraph": "unavailable",
+            "message": "Memgraph is not reachable; graph features degraded.",
+        }
 
 
 @router.get("/knowledge/graph")
-async def get_knowledge_graph():
-    """Phase 8 deterministic placeholder; no context files are read here."""
-    return {
-        "phase": "phase_14_mock",
-        "nodes": [
-            {"id": "mock:regime", "label": "Regime", "type": "Regime"},
-            {"id": "mock:stock", "label": "Candidate", "type": "Stock"},
-            {"id": "mock:lesson", "label": "Lesson", "type": "Lesson"},
-        ],
-        "edges": [
-            {"source": "mock:regime", "target": "mock:stock", "label": "constrains"},
-            {"source": "mock:stock", "target": "mock:lesson", "label": "informs"},
-        ],
-    }
+async def get_knowledge_graph(
+    limit: int = 150,
+    edge_limit: int = 300,
+):
+    """Knowledge graph dashboard data backed by Memgraph context graph (Phase 11)."""
+    from context_graph.repository import GraphUnavailableError
+
+    try:
+        graph = ContextGraphRepository()
+        payload = graph.dashboard_graph(node_limit=limit, edge_limit=edge_limit)
+        graph.close()
+        return payload.model_dump(mode="json")
+    except GraphUnavailableError:
+        return {
+            "phase": "phase_11",
+            "status": "degraded",
+            "nodes": [],
+            "edges": [],
+            "node_count": 0,
+            "edge_count": 0,
+            "message": "Memgraph unavailable — showing empty graph.",
+        }
 
 
 @router.get("/knowledge/stock/{ticker}")
 async def get_stock_knowledge(ticker: str):
-    """Phase 8 placeholder; real stock graph memory is deferred to Phase 14."""
-    return {
-        "phase": "phase_14_mock",
-        "ticker": ticker.upper(),
-        "summary": "Local mock only. Real Postgres/Memgraph memory arrives in Phase 14.",
-        "evidence": [],
-    }
+    """Per-stock research context backed by Memgraph context graph (Phase 11)."""
+    from context_graph.repository import GraphUnavailableError
+
+    try:
+        graph = ContextGraphRepository()
+        ctx = graph.stock_context(ticker)
+        graph.close()
+        return ctx.model_dump(mode="json")
+    except GraphUnavailableError:
+        return {
+            "ticker": ticker.upper(),
+            "has_history": False,
+            "phase": "phase_11",
+            "memgraph": "unavailable",
+            "research": [],
+            "news": [],
+            "observations": [],
+        }
 
 
 @router.get("/snapshot")

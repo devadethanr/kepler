@@ -10,7 +10,7 @@ from execution.operator_controls import read_block_new_entries
 from execution.protection_manager import ProtectionManager
 from memory.db import session_scope
 from memory.models import ProtectiveTriggerRow
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from models import AccountState, GTTOrder, PendingApproval
 from paths import CONTEXT_DIR
 from storage import read_json, write_json

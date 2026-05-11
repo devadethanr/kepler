@@ -31,7 +31,7 @@ from execution.operator_controls import (
     set_trading_enabled,
 )
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from models import AccountState, TradingMode
 
 

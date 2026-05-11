@@ -6,7 +6,7 @@ from uuid import uuid4
 from zoneinfo import ZoneInfo
 
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from policy.bounds import PolicyValidationError, validate_policy_key, validate_policy_value
 from policy.effective_policy import build_base_policy
 from policy.models import PolicyOverlay

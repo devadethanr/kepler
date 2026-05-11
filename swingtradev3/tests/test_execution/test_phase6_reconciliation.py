@@ -27,7 +27,7 @@ from memory.models import (
     PositionRow,
     ReconciliationRunRow,
 )
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from models import AccountState, TradingMode
 
 
@@ -714,7 +714,7 @@ async def test_reconciler_escalates_after_consecutive_failures(monkeypatch):
 @pytest.mark.asyncio
 async def test_reconciler_flags_stale_auth(monkeypatch):
     # Write an auth session created > 24h ago.
-    from memory.repositories import StoredKiteSessionPayload
+    from memory.models import StoredKiteSessionPayload
 
     old_iso = (datetime.now() - timedelta(hours=30)).isoformat()
     payload = StoredKiteSessionPayload(

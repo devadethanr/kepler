@@ -7,7 +7,7 @@ from typing import Any
 from paths import CONTEXT_DIR, ensure_runtime_dirs
 
 from .db import session_scope
-from .repositories import MemoryRepository
+from .repository import MemoryRepository
 
 
 STATE_PATH = CONTEXT_DIR / "state.json"

@@ -2,33 +2,7 @@
   "cash_inr": 100000.0,
   "consecutive_losses": 0,
   "drawdown_pct": 0.0,
-  "positions": [
-    {
-      "current_price": 4014.01,
-      "entry_order_id": "order-0b78fda720",
-      "entry_price": 4014.01,
-      "lifecycle_state": "open",
-      "oco_gtt_id": "pos-48d79ae0b0",
-      "opened_at": "2026-05-09T21:16:00.886665",
-      "pending_corporate_action": {
-        "adjustment_alert_sent_at": null,
-        "amount": null,
-        "ex_date": null,
-        "gtt_adjustment_sent": false,
-        "requires_manual_action": false,
-        "type": null
-      },
-      "product": "CNC",
-      "quantity": 5,
-      "research_date": "2026-04-16",
-      "sector": "IT",
-      "skill_version": "phase1-test",
-      "stop_price": 3920.0,
-      "target_price": 4200.0,
-      "thesis_score": 8.4,
-      "ticker": "TCS"
-    }
-  ],
+  "positions": [],
   "realized_pnl": 0.0,
   "unrealized_pnl": 0.0,
   "weekly_loss_pct": 0.0

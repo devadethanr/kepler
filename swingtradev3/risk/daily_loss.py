@@ -18,7 +18,7 @@ from sqlalchemy import select
 from config import cfg
 from memory.db import session_scope
 from memory.models import TradeRow
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from models import AccountState
 
 

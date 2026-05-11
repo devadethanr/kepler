@@ -32,7 +32,7 @@ from execution.operator_controls import (
 from execution.quote_cache import QuoteCache
 from execution.reconciler import Reconciler
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from models import TradingMode
 
 
@@ -237,7 +237,7 @@ async def test_quote_freshness_is_observability_only_in_paper(monkeypatch):
 
     with patch.object(cfg.trading, "mode", TradingMode.PAPER):
         monkeypatch.setattr(
-            "memory.repositories.MemoryRepository.list_positions",
+            "memory.repository.MemoryRepository.list_positions",
             lambda self: [{"ticker": ticker, "state": "open"}],
         )
         result = await reconciler._check_quote_freshness(source="unit")
@@ -405,7 +405,7 @@ def test_auth_preflight_age_handles_timezone_aware_created_at(monkeypatch):
         lambda: datetime(2026, 4, 22, 10, 0, 0, tzinfo=ist),
     )
     monkeypatch.setattr(
-        "memory.repositories.MemoryRepository.get_auth_session_payload",
+        "memory.repository.MemoryRepository.get_auth_session_payload",
         lambda _self: {"created_at": "2026-04-22T08:00:00+05:30"},
     )
 

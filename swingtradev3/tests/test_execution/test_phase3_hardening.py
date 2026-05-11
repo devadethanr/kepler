@@ -17,7 +17,7 @@ from broker.kite_stream import KiteBrokerStream
 from config import cfg
 from execution.bootstrap import WorkerRuntime
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from models import PendingApproval, TradingMode
 
 

@@ -11,7 +11,7 @@ from config import cfg, runtime_flags
 from api.sse_broadcaster import broadcaster
 from memory.db import session_scope
 from memory.projections import project_all_managed_files
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from models import ApprovalResponse, PendingApproval
 from policy.effective_policy import new_entries_block_reason
 

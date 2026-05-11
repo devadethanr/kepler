@@ -10,7 +10,7 @@ from api.main import app
 from api.routes import approvals as approvals_route
 from config import cfg
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from models import AccountState, PendingApproval, TradingMode
 from tools.execution.order_execution import OrderExecutionTool
 

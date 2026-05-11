@@ -13,7 +13,7 @@ from execution.bootstrap import WorkerRuntime
 from execution.operator_controls import read_worker_status, write_worker_status
 from execution.state_machine import WorkerExecutionStateMachine
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from models import PendingApproval, TradingMode
 
 

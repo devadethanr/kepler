@@ -7,7 +7,7 @@ from typing import Any
 
 from .db import session_scope
 from .projections import APPROVALS_PATH, KITE_SESSION_PATH, STATE_PATH, TRADES_PATH, project_all_managed_files
-from .repositories import MemoryRepository
+from .repository import MemoryRepository
 
 
 MANAGED_PATHS = {

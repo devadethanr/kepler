@@ -111,7 +111,7 @@ export function useKnowledgeGraph() {
   return useQuery({
     queryKey: queryKeys.knowledgeGraph,
     queryFn: ({ signal }) => api.knowledgeGraph(signal),
-    refetchInterval: 30_000,
+    refetchInterval: 5_000,
   });
 }
 

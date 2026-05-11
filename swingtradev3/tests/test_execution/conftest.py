@@ -8,7 +8,7 @@ import pytest
 from execution.operator_controls import clear_block_new_entries
 from memory.db import session_scope
 from memory.models import ApprovalRow, EntryIntentRow, OrderIntentRow
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from models import PendingApproval
 
 

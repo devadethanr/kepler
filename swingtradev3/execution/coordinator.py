@@ -6,7 +6,7 @@ from typing import Any
 from config import cfg
 from data.market_regime import MarketRegimeDetector
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from models import AccountState, PositionState
 from paths import CONTEXT_DIR
 from policy.effective_policy import new_entries_block_reason

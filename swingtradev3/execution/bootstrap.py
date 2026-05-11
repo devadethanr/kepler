@@ -13,6 +13,8 @@ from auth.kite.client import has_kite_session
 from broker.kite_stream import KiteBrokerStream
 from broker.reducer import BrokerReducer
 from config import cfg, runtime_flags
+from context_graph.projector import GraphProjector
+from context_graph.repository import GraphUnavailableError
 from memory.bootstrap import initialize_memory_layer
 from memory.db import get_engine
 
@@ -88,6 +90,7 @@ class WorkerRuntime:
             exchange=cfg.trading.exchange,
         )
         self._reconciler.register_stop_event(self._stop_event)
+        self._graph_projector = GraphProjector()
         self._started = False
 
     async def start(self) -> None:
@@ -135,6 +138,15 @@ class WorkerRuntime:
                 source="worker_non_live_startup"
             )
         await scheduler.start()
+
+        # Phase 11: start graph projector (non-blocking, Memgraph optional)
+        try:
+            self._graph_projector.ensure_schema()
+        except GraphUnavailableError:
+            print("GraphProjector: schema unavailable — will retry in loop")
+        # Always start the loop — it handles Memgraph being down gracefully
+        await self._graph_projector.start()
+
         self._started = True
         await self._write_status()
         self._tasks = [
@@ -207,6 +219,16 @@ class WorkerRuntime:
         bind_broker_stream(None)
         bind_mutation_lock(None)
         bind_quote_cache(None)
+
+        # Phase 11: stop graph projector and close driver gracefully
+        try:
+            await self._graph_projector.stop()
+        except Exception:
+            pass
+        try:
+            self._graph_projector.close()
+        except Exception:
+            pass
         self._started = False
 
     async def run_forever(self) -> None:

@@ -111,7 +111,7 @@ class NewsCoreMixin:
             return
         try:
             from memory.db import session_scope
-            from memory.repositories import MemoryRepository
+            from memory.repository import MemoryRepository
 
             with session_scope() as session:
                 repo = MemoryRepository(session)

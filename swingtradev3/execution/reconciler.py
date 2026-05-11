@@ -17,7 +17,7 @@ from broker.types import (
 )
 from config import cfg
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 
 from .operator_controls import (
     clear_block_new_entries,

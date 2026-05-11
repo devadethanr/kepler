@@ -21,7 +21,7 @@ class GraphEdge(BaseModel):
 
 
 class GraphDashboardPayload(BaseModel):
-    phase: str = "phase_11_memgraph"
+    phase: str = "phase_11"
     status: str = "ok"
     nodes: list[GraphNode] = Field(default_factory=list)
     edges: list[GraphEdge] = Field(default_factory=list)

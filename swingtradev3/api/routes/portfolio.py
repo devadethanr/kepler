@@ -7,7 +7,7 @@ from models import AccountState
 from api.tasks.event_bus import event_bus
 from execution.operator_controls import request_failed_event_retry
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 
 router = APIRouter()
 

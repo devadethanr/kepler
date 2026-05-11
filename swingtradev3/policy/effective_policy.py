@@ -6,7 +6,7 @@ from zoneinfo import ZoneInfo
 
 from config import cfg
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from policy.bounds import PolicyValidationError, canonical_value, validate_policy_value
 from policy.models import AppliedOverlay, EffectivePolicy, IgnoredOverlay
 

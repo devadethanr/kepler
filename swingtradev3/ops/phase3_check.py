@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from auth.kite.client import has_kite_session
 from broker.reducer import BrokerReducer
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from paths import CONTEXT_DIR
 from storage import read_json
 

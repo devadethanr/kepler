@@ -31,7 +31,7 @@ from execution.operator_controls import (
     read_flatten_request,
 )
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 
 
 @dataclass(slots=True)

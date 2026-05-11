@@ -6,7 +6,7 @@ import uuid
 from broker.reducer import BrokerReducer
 from memory.db import session_scope
 from memory.models import BrokerFillRow, BrokerOrderRow, ExecutionEventRow, ProtectiveTriggerRow
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from models import PendingApproval
 from paths import CONTEXT_DIR
 from storage import read_json, write_json

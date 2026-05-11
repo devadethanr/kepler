@@ -16,8 +16,8 @@
       "source": "missing",
       "status": "neutral_default"
     },
-    "vix": 16.84,
+    "vix": null,
     "volatility_state": "normal"
   },
-  "fetched_at": "2026-05-10T12:30:03.409543"
+  "fetched_at": "2026-05-11T20:05:29.622732"
 }

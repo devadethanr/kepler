@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException
 from typing import List
 
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from models import PositionState
 
 router = APIRouter()

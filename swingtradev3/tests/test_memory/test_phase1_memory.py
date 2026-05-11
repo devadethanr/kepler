@@ -12,7 +12,7 @@ from memory.models import (
     OrderIntentRow,
     TradeRow,
 )
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from models import PendingApproval
 from paths import CONTEXT_DIR
 from storage import read_json, write_json

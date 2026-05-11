@@ -6,7 +6,7 @@ from typing import Any, Callable
 from auth.kite.client import fetch_ltp, has_kite_session
 from config import cfg
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from models import AccountState, PositionState
 from policy.effective_policy import resolve_effective_policy
 from tools.execution.alerts import AlertsTool
