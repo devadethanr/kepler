@@ -22,6 +22,11 @@ from memory.repository import MemoryRepository
 GRAPH_PROJECTION_BATCH = 500
 INTERVAL_SECONDS = 2.0
 
+# High-frequency events with no graph value — skip to avoid clutter.
+_SKIP_EVENT_TYPES: frozenset[str] = frozenset({
+    "operator_control_updated",
+})
+
 
 class GraphProjector:
     """Cursor-based async projector: Postgres execution_events → Memgraph."""
@@ -140,6 +145,10 @@ class GraphProjector:
             norm = str(raw).strip().upper()
             if norm:
                 tickers.add(norm)
+
+        # Skip high-frequency events that add no graph value
+        if event_type in _SKIP_EVENT_TYPES:
+            return
 
         # Write the execution event into Memgraph
         try:

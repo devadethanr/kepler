@@ -439,9 +439,13 @@ export function KnowledgeScreen() {
         nodeVal={(node: any) => node.val}
         linkLabel={(link: any) => link.label}
         linkWidth={(link: any) => Math.max(0.5, Math.min(3, Number(link.weight) || 1))}
-        linkColor={() => (graphState === 'degraded' ? 'rgba(247,201,72,0.35)' : 'rgba(147,204,255,0.35)')}
-        linkDirectionalParticles={graphState === 'unavailable' ? 0 : 1}
-        linkDirectionalParticleSpeed={0.003}
+        linkColor={() => (graphState === 'degraded' ? 'rgba(250,204,21,0.5)' : 'rgba(168,85,247,0.5)')}
+        linkDirectionalParticles={graphState === 'unavailable' ? 0 : 2}
+        linkDirectionalParticleSpeed={0.006}
+        linkDirectionalParticleWidth={2.5}
+        linkDirectionalParticleColor={() => (graphState === 'degraded' ? 'rgba(250,204,21,0.9)' : 'rgba(124,58,237,0.9)')}
+        linkDirectionalArrowLength={4}
+        linkDirectionalArrowRelPos={0.95}
         onNodeClick={(node: any) => setSelectedNode(node)}
       />
 

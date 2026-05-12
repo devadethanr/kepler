@@ -42,6 +42,27 @@ test:
 test-file:
 	$(call RUN_PYTEST_ISOLATED,$(file))
 
+.PHONY: test-memgraph
+test-memgraph:
+	@echo "Starting Memgraph for integration tests..."
+	$(DOCKER_COMPOSE) --profile memory up -d memgraph
+	@echo "Waiting for Memgraph..."
+	@for i in $$(seq 1 30); do \
+		if $(DOCKER_COMPOSE) exec -T app python3 -c "from context_graph.repository import ContextGraphRepository; r = ContextGraphRepository(); r.health()" 2>/dev/null; then \
+			echo "Memgraph ready."; \
+			break; \
+		fi; \
+		if [ $$i -eq 30 ]; then echo "Memgraph not ready after 30s."; exit 1; fi; \
+		sleep 1; \
+	done
+	$(call RUN_PYTEST_ISOLATED,tests/test_context_graph -v)
+	@echo "Cleaning Memgraph test data..."
+	$(DOCKER_COMPOSE) exec -T app \
+		python3 -c "from context_graph.repository import ContextGraphRepository; r = ContextGraphRepository(); r._client(); exec("with r._driver.session() as s: s.run('MATCH (n) DETACH DELETE n')"); print('Memgraph cleaned.')" \
+		2>/dev/null || echo "(Memgraph cleanup skipped - not running)"
+	@echo "Stopping Memgraph..."
+	$(DOCKER_COMPOSE) --profile memory stop memgraph
+
 lint:
 	$(DOCKER_COMPOSE) exec app ruff check .
 

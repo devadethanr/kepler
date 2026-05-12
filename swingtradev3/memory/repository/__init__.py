@@ -16,8 +16,7 @@ Domain modules:
     trades        — TradeRow
 
 MemoryRepository aggregates all sub-repos and is the sole public API.
-All 41 existing call sites import ``from memory.repository import MemoryRepository``
-and continue to work via the shim at ``../repositories.py``.
+All existing call sites import ``from memory.repository import MemoryRepository``.
 """
 
 from .account import AccountRepository

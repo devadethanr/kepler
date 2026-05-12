@@ -191,21 +191,14 @@ async def handle_stop_hit(event: BusEvent) -> None:
     except Exception as e:
         print(f"handle_stop_hit: observation failed: {e}")
 
-    # Update knowledge graph
+    # Phase 11: best-effort Memgraph mirror via wiki renderer
     try:
-        from knowledge.wiki_renderer import WikiRenderer
+        from knowledge.wiki_renderer import _graph_repo
 
-        renderer = WikiRenderer()
-        renderer.upsert_stock_note(
-            ticker,
-            {
-                "date": datetime.now().strftime("%Y-%m-%d"),
-                "event": "stop_hit",
-                "pnl_pct": pnl_pct,
-            },
-        )
+        repo = _graph_repo()
+        repo.upsert_stock(ticker, source="event_handler:stop_hit")
     except Exception as e:
-        print(f"handle_stop_hit: KG update failed: {e}")
+        print(f"handle_stop_hit: Memgraph update failed: {e}")
 
 
 async def handle_target_hit(event: BusEvent) -> None:
@@ -238,21 +231,14 @@ async def handle_target_hit(event: BusEvent) -> None:
     except Exception as e:
         print(f"handle_target_hit: observation failed: {e}")
 
-    # Update knowledge graph
+    # Phase 11: best-effort Memgraph mirror via wiki renderer
     try:
-        from knowledge.wiki_renderer import WikiRenderer
+        from knowledge.wiki_renderer import _graph_repo
 
-        renderer = WikiRenderer()
-        renderer.upsert_stock_note(
-            ticker,
-            {
-                "date": datetime.now().strftime("%Y-%m-%d"),
-                "event": "target_hit",
-                "pnl_pct": pnl_pct,
-            },
-        )
+        repo = _graph_repo()
+        repo.upsert_stock(ticker, source="event_handler:target_hit")
     except Exception as e:
-        print(f"handle_target_hit: KG update failed: {e}")
+        print(f"handle_target_hit: Memgraph update failed: {e}")
 
 
 async def handle_auth_expiring(event: BusEvent) -> None:
