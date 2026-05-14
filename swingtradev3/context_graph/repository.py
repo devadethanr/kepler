@@ -1031,6 +1031,24 @@ class ContextGraphRepository:
         node_ids = set()
         for record in node_records:
             properties = dict(record.get("properties") or {})
+            # Promote fields from payload_json to top-level so the
+            # frontend can display headlines, summaries, tickers etc.
+            raw_pj = properties.get("payload_json")
+            if isinstance(raw_pj, str) and raw_pj.strip():
+                try:
+                    pj = json.loads(raw_pj)
+                    if isinstance(pj, dict):
+                        for key in ("headline", "summary", "title", "ticker",
+                                     "status", "action", "side", "reason"):
+                            if key not in properties or not properties.get(key):
+                                val = pj.get(key)
+                                if val is not None:
+                                    properties[key] = val
+                        tickers = pj.get("tickers")
+                        if tickers and isinstance(tickers, list):
+                            properties["tickers"] = ",".join(str(t) for t in tickers)
+                except (json.JSONDecodeError, TypeError):
+                    pass
             labels = [str(label) for label in record.get("labels") or []]
             node_id = str(record.get("id") or "")
             if not node_id:

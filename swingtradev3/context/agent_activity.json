@@ -7,7 +7,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-12T18:00:04.233927",
+      "started_at": "2026-05-13T18:00:03.922135",
       "status": "running"
     },
     "FilterAgent": {
@@ -17,7 +17,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-12T18:00:04.231512",
+      "started_at": "2026-05-13T18:00:03.919889",
       "status": "running"
     },
     "FundamentalsAgent_ABB": {
@@ -117,7 +117,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-12T18:00:04.465507",
+      "started_at": "2026-05-13T18:00:04.014456",
       "status": "running"
     },
     "MarketDataAgent_ABB": {
@@ -317,27 +317,27 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-12T18:00:03.113534",
+      "started_at": "2026-05-13T18:00:02.904723",
       "status": "running"
     },
     "ResearchPipeline": {
       "agent_name": "ResearchPipeline",
-      "completed_at": "2026-05-12T18:00:04.467055",
+      "completed_at": "2026-05-13T18:00:04.015852",
       "current_task": "Full evening research scan",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-12T18:00:00.276218",
+      "started_at": "2026-05-13T18:00:00.443956",
       "status": "completed"
     },
     "ResultsSaverAgent": {
       "agent_name": "ResultsSaverAgent",
       "completed_at": null,
-      "current_task": "Research results saved to /app/context/research/2026-05-12",
+      "current_task": "Research results saved to /app/context/research/2026-05-13",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-12T18:00:04.464142",
+      "started_at": "2026-05-13T18:00:04.012959",
       "status": "running"
     },
     "ScorerAgent": {
@@ -347,7 +347,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-12T18:00:04.235402",
+      "started_at": "2026-05-13T18:00:03.923367",
       "status": "running"
     },
     "SentimentAgent_ABB": {
@@ -532,17 +532,17 @@
     },
     "scheduler": {
       "agent_name": "scheduler",
-      "completed_at": "2026-05-12T21:45:00.416806",
-      "current_task": "health_check",
+      "completed_at": "2026-05-14T11:26:35.925946",
+      "current_task": "position_monitor",
       "last_error": null,
       "metadata": {
-        "last_job": "health_check"
+        "last_job": "position_monitor"
       },
       "progress": null,
-      "started_at": "2026-05-12T21:45:00.415542",
+      "started_at": "2026-05-14T11:26:35.924480",
       "status": "completed"
     }
   },
-  "last_updated": "2026-05-12T21:45:00.416810",
-  "scheduler_phase": "wind_down"
+  "last_updated": "2026-05-14T11:26:35.925954",
+  "scheduler_phase": "market_hours"
 }
