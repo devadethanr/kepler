@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import pytest
-import json
 from unittest.mock import patch, MagicMock
 from google.adk import Runner
 from google.adk.sessions import InMemorySessionService
@@ -9,8 +8,6 @@ from google.genai import types
 
 from agents.learning.reviewer import learning_reviewer, TradeReviewSchema
 from agents.learning.stats_agent import stats_agent
-from agents.learning.lesson_agent import lesson_agent, LessonResponse, SkillEdit
-from models import TradeRecord, TradeObservation
 from datetime import datetime
 
 @pytest.mark.asyncio
@@ -32,32 +29,51 @@ async def test_learning_loop_reviewer():
         "pnl_pct": 10.0
     }
     
-    with patch("agents.learning.reviewer.read_json", return_value=[trade]):
-        with patch("agents.learning.reviewer.write_json") as mock_write:
-            # Mock the SMART ROUTER
-            with patch("llm_bridge.SmartRouter.generate_structured") as mock_gen:
-                mock_gen.return_value = TradeReviewSchema(
-                    observation="Successful trade",
-                    thesis_held=True,
-                    exit_reason="target"
-                )
-                
-                runner = Runner(
-                    app_name="learning",
-                    agent=learning_reviewer,
-                    session_service=InMemorySessionService(),
-                    auto_create_session=True
-                )
-                
-                async for _ in runner.run_async(
-                    user_id="system",
-                    session_id="learn_session",
-                    new_message=types.Content(role="user", parts=[types.Part(text="Review latest trades")])
-                ):
-                    pass
-                    
-                assert mock_write.called
-                print(f"\n✅ Learning Test Passed: ReviewerAgent successfully logged trade observation.")
+    class FakeSessionScope:
+        def __enter__(self):
+            return object()
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+    class FakeMemoryRepository:
+        def __init__(self, session):
+            self.session = session
+
+        def get_trades_payload(self):
+            return [trade]
+
+    fake_graph = MagicMock()
+    with patch("agents.learning.reviewer.session_scope", return_value=FakeSessionScope()):
+        with patch("agents.learning.reviewer.MemoryRepository", FakeMemoryRepository):
+            with patch("agents.learning.reviewer.ContextGraphRepository", return_value=fake_graph):
+                # Mock the SMART ROUTER
+                with patch("llm_bridge.SmartRouter.generate_structured") as mock_gen:
+                    mock_gen.return_value = TradeReviewSchema(
+                        observation="Successful trade",
+                        thesis_held=True,
+                        exit_reason="target"
+                    )
+
+                    runner = Runner(
+                        app_name="learning",
+                        agent=learning_reviewer,
+                        session_service=InMemorySessionService(),
+                        auto_create_session=True
+                    )
+
+                    async for _ in runner.run_async(
+                        user_id="system",
+                        session_id="learn_session",
+                        new_message=types.Content(
+                            role="user",
+                            parts=[types.Part(text="Review latest trades")]
+                        )
+                    ):
+                        pass
+
+                    assert fake_graph.record_observation.called
+                    print("\n✅ Learning Test Passed: ReviewerAgent logged graph observation.")
 
 @pytest.mark.asyncio
 async def test_learning_loop_stats():
@@ -111,4 +127,4 @@ async def test_learning_loop_stats():
                 pass
                 
             assert mock_write.called
-            print(f"\n✅ Learning Test Passed: StatsAgent correctly updated performance dashboard.")
+            print("\n✅ Learning Test Passed: StatsAgent correctly updated performance dashboard.")

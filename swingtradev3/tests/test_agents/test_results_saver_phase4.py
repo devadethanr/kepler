@@ -8,7 +8,7 @@ import pytest
 
 from agents.research.pipeline import ResultsSaverAgent
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from paths import CONTEXT_DIR
 from storage import read_json, write_json
 

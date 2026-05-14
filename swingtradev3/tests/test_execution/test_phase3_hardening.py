@@ -17,7 +17,7 @@ from broker.kite_stream import KiteBrokerStream
 from config import cfg
 from execution.bootstrap import WorkerRuntime
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from models import PendingApproval, TradingMode
 
 
@@ -61,24 +61,24 @@ def _stored_session() -> KiteSessionPayload:
     )
 
 
-def test_approval_route_persists_order_intent_for_worker_queue(monkeypatch):
+def test_approval_route_persists_order_intent_for_worker_queue(monkeypatch, persist_approvals):
     ticker = f"REL{uuid4().hex[:6]}".upper()
-    payload = _approval_payload(ticker)
-    mock_write = MagicMock()
+    payload = persist_approvals(_approval_payload(ticker))
     mock_broadcast = AsyncMock()
 
-    monkeypatch.setattr(approvals_route, "read_json", lambda *_args, **_kwargs: payload)
-    monkeypatch.setattr(approvals_route, "write_json", mock_write)
+    monkeypatch.setattr(approvals_route, "project_all_managed_files", lambda: None)
     monkeypatch.setattr(approvals_route.broadcaster, "broadcast", mock_broadcast)
 
     response = client.post(f"/approvals/{PendingApproval.model_validate(payload[0]).approval_id}/yes")
 
     assert response.status_code == 200
-    assert payload[0]["execution_requested"] is True
-    assert payload[0]["order_intent_id"]
     with session_scope() as session:
         repo = MemoryRepository(session)
+        approval = repo.get_approval(str(payload[0]["approval_id"]))
         order_intent = repo.get_order_intent(str(payload[0]["order_intent_id"]))
+    assert approval is not None
+    assert approval["execution_requested"] is True
+    assert approval["order_intent_id"]
     assert order_intent is not None
     assert order_intent["ticker"] == ticker
     assert order_intent["status"] == "queued"

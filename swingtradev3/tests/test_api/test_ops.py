@@ -9,7 +9,7 @@ from api.main import app
 from config import cfg
 from execution.operator_controls import read_worker_status, write_worker_status
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 
 
 client = TestClient(app)

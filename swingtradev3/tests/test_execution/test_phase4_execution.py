@@ -10,7 +10,7 @@ from config import cfg
 from execution.coordinator import ExecutionCoordinator
 from memory.db import session_scope
 from memory.models import ApprovalRow, BrokerFillRow, ProtectiveTriggerRow
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from models import AccountState, GTTOrder, PendingApproval, TradingMode
 from paths import CONTEXT_DIR
 from storage import read_json, write_json
@@ -281,6 +281,81 @@ async def test_execution_coordinator_materializes_filled_intent_and_arms_protect
         assert len(positions) == 1
         assert positions[0]["entry_order_id"] == broker_order_id
         assert positions[0]["oco_gtt_id"] == "34567"
+    finally:
+        write_json(STATE_PATH, original_state)
+
+
+@pytest.mark.asyncio
+async def test_reconcile_protection_pending_intent_arms_gtt_after_restart():
+    ticker = f"RST{uuid4().hex[:5]}".upper()
+    order_intent_id = f"order-intent:{ticker}:restart-protection"
+    intent_payload = {
+        **_intent_payload(ticker, order_intent_id),
+        "broker_tag": "STV3RSTPHASE9TAG",
+        "broker_order_id": "entry-order-restart",
+        "requested_quantity": 5,
+        "filled_quantity": 5,
+        "average_price": 1002.0,
+        "position_materialized_at": datetime.now().isoformat(),
+    }
+    original_state = read_json(STATE_PATH, {})
+
+    try:
+        write_json(
+            STATE_PATH,
+            AccountState(
+                cash_inr=150000.0,
+                positions=[
+                    {
+                        "ticker": ticker,
+                        "quantity": 5,
+                        "entry_price": 1002.0,
+                        "current_price": 1002.0,
+                        "stop_price": 980.0,
+                        "target_price": 1080.0,
+                        "opened_at": datetime.now().isoformat(),
+                        "entry_order_id": "entry-order-restart",
+                    }
+                ],
+            ).model_dump(mode="json"),
+        )
+        _store_order_intent(
+            order_intent_id,
+            ticker,
+            status="protection_pending",
+            payload=intent_payload,
+        )
+
+        coordinator = ExecutionCoordinator(
+            risk_tool=MagicMock(),
+            order_tool=MagicMock(),
+            alerts_tool=MagicMock(send_alert=AsyncMock()),
+            gtt_manager=MagicMock(),
+        )
+        coordinator.gtt_manager.place_gtt_async = AsyncMock(
+            return_value=GTTOrder(
+                oco_gtt_id="restart-gtt-1",
+                ticker=ticker,
+                stop_price=980.0,
+                target_price=1080.0,
+                status="active",
+            )
+        )
+
+        result = await coordinator.reconcile_order_intent(order_intent_id)
+
+        assert result == "advanced"
+        state = read_json(STATE_PATH, {})
+        assert state["positions"][0]["oco_gtt_id"] == "restart-gtt-1"
+        with session_scope() as session:
+            repo = MemoryRepository(session)
+            order_intent = repo.get_order_intent(order_intent_id)
+            trigger = session.get(ProtectiveTriggerRow, "restart-gtt-1")
+        assert order_intent is not None
+        assert order_intent["status"] == "protected"
+        assert order_intent["payload"]["oco_gtt_id"] == "restart-gtt-1"
+        assert trigger is not None
+        assert trigger.status == "active"
     finally:
         write_json(STATE_PATH, original_state)
 

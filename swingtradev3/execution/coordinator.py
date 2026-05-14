@@ -6,9 +6,10 @@ from typing import Any
 from config import cfg
 from data.market_regime import MarketRegimeDetector
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from models import AccountState, PositionState
 from paths import CONTEXT_DIR
+from policy.effective_policy import new_entries_block_reason
 from regime_adapter import RegimeAdaptiveConfig
 from storage import read_json, write_json
 from tools.execution.alerts import AlertsTool
@@ -24,13 +25,13 @@ from .operator_controls import (
     clear_flatten_request,
     is_block_new_entries_active,
     is_exit_only_mode,
-    is_new_entries_enabled,
     is_trading_enabled,
     read_block_new_entries,
     read_flatten_request,
     set_block_new_entries,
 )
 from .protection_manager import ProtectionManager
+from .session_guards import entry_stream_required_for_new_entries
 
 
 QUEUED_ORDER_INTENT_STATUSES = {"queued"}
@@ -54,6 +55,12 @@ OPEN_BROKER_ORDER_STATUSES = {
     "validation_pending",
 }
 APPROVALS_PATH = CONTEXT_DIR / "pending_approvals.json"
+ENTRY_BLOCK_ALERT_COOLDOWN_SECONDS = 15 * 60
+SESSION_SCOPED_ENTRY_BLOCK_REASONS = {
+    "broker_disconnected",
+    "stale_quotes",
+    "stream_unavailable",
+}
 
 
 def _now() -> datetime:
@@ -87,6 +94,7 @@ class ExecutionCoordinator:
         self._order_failures = FailureCounter(
             threshold=int(cfg.execution.safety.order_failure_threshold)
         )
+        self._last_block_alert_at_by_reason: dict[str, datetime] = {}
         self._hydrate_order_failure_counter()
 
     def _hydrate_order_failure_counter(self) -> None:
@@ -139,14 +147,16 @@ class ExecutionCoordinator:
     async def submit_queued_order_intents(self) -> int:
         if not is_trading_enabled():
             return 0
-        if not is_new_entries_enabled() or is_exit_only_mode():
+        if new_entries_block_reason() is not None or is_exit_only_mode():
             return 0
         if is_block_new_entries_active():
             block = read_block_new_entries() or {}
-            await self.alerts_tool.send_alert(
-                f"⛔ New entries blocked by reconciler: reason={block.get('latest_reason') or block.get('reason') or 'unknown'}",
-                level="warning",
-            )
+            reason = self._block_reason(block)
+            if self._should_send_block_alert(reason):
+                await self.alerts_tool.send_alert(
+                    f"⛔ New entries blocked by reconciler: reason={reason}",
+                    level="warning",
+                )
             return 0
         submitted = 0
         for intent in self.pending_execution_requests():
@@ -154,6 +164,28 @@ class ExecutionCoordinator:
             if result != "ignored":
                 submitted += 1
         return submitted
+
+    @staticmethod
+    def _block_reason(block: dict[str, Any]) -> str:
+        reason = str(block.get("latest_reason") or block.get("reason") or "unknown").strip()
+        return reason or "unknown"
+
+    def _should_send_block_alert(self, reason: str) -> bool:
+        if (
+            reason in SESSION_SCOPED_ENTRY_BLOCK_REASONS
+            and not entry_stream_required_for_new_entries()
+        ):
+            return False
+
+        now = _now()
+        last_alert_at = self._last_block_alert_at_by_reason.get(reason)
+        if (
+            last_alert_at is not None
+            and (now - last_alert_at).total_seconds() < ENTRY_BLOCK_ALERT_COOLDOWN_SECONDS
+        ):
+            return False
+        self._last_block_alert_at_by_reason[reason] = now
+        return True
 
     async def reconcile_active_order_intents(self) -> int:
         advanced = 0
@@ -164,7 +196,7 @@ class ExecutionCoordinator:
         return advanced
 
     async def submit_order_intent(self, order_intent_id: str) -> str:
-        if not is_trading_enabled() or not is_new_entries_enabled() or is_exit_only_mode():
+        if not is_trading_enabled() or new_entries_block_reason() is not None or is_exit_only_mode():
             return "ignored"
         if is_block_new_entries_active():
             return "ignored"
@@ -224,7 +256,14 @@ class ExecutionCoordinator:
 
         regime = str(MarketRegimeDetector().detect_regime().get("regime", "neutral"))
         regime_config = RegimeAdaptiveConfig(regime)
-        risk = self.risk_tool.check_risk(state, score, entry_price, stop_price, target_price)
+        risk = self.risk_tool.check_risk(
+            state,
+            score,
+            entry_price,
+            stop_price,
+            target_price,
+            sector=payload.get("sector") if isinstance(payload.get("sector"), str) else None,
+        )
         if not risk["approved"]:
             self._store_order_intent(
                 order_intent_id=order_intent_id,
@@ -304,6 +343,29 @@ class ExecutionCoordinator:
                 f"🟢 Submitted live entry for {ticker}: order_id={result.get('order_id')}"
             )
             return "submitted"
+
+        if status == "submission_uncertain":
+            self._store_order_intent(
+                order_intent_id=order_intent_id,
+                ticker=ticker,
+                status="submitting",
+                payload=_merge_payload(
+                    merged_payload,
+                    {
+                        "submission_uncertain_at": _now().isoformat(),
+                        "reconciliation_required": True,
+                    },
+                ),
+                broker_tag=broker_tag,
+                source="execution_coordinator",
+            )
+            self._remove_pending_approval(order_intent_id)
+            await self.alerts_tool.send_alert(
+                f"⚠️ {ticker} entry submission timed out; waiting for broker reconciliation "
+                f"tag={broker_tag}",
+                level="warning",
+            )
+            return "submitting"
 
         if status == "filled":
             self._record_submission_success()
@@ -794,7 +856,13 @@ class ExecutionCoordinator:
         if status == "protection_pending":
             await self._arm_protection(order_intent_id)
             return "advanced"
-        if status not in {"submitted", "entry_open", "entry_partially_filled", "entry_filled"}:
+        if status not in {
+            "submitting",
+            "submitted",
+            "entry_open",
+            "entry_partially_filled",
+            "entry_filled",
+        }:
             return "noop"
 
         payload = dict(intent["payload"])

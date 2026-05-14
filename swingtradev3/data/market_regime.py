@@ -13,14 +13,12 @@ Pure computation — no LLM, no decisions.
 """
 from __future__ import annotations
 
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-import numpy as np
 import pandas as pd
 
-from config import cfg
 from paths import CONTEXT_DIR
 from storage import read_json, write_json
 
@@ -73,9 +71,11 @@ class MarketRegimeDetector:
         scores: dict[str, float] = {}
 
         # Signal 1: Nifty trend (weight: 0.35)
-        trend_score = 0.0
-        trend_details: dict[str, Any] = {}
+        trend_score = 0.5
+        trend_details: dict[str, Any] = {"source": "missing", "status": "neutral_default"}
         if nifty_close is not None and len(nifty_close) >= 200:
+            trend_score = 0.0
+            trend_details = {"source": "nifty_close"}
             ema_200 = nifty_close.ewm(span=200, adjust=False).mean().iloc[-1]
             ema_50 = nifty_close.ewm(span=50, adjust=False).mean().iloc[-1]
             current = nifty_close.iloc[-1]

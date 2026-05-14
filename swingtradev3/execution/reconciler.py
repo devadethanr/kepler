@@ -2,9 +2,8 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from collections.abc import Iterable
 from contextlib import asynccontextmanager, nullcontext
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Any
 
 from auth.kite.client import has_kite_session
@@ -18,7 +17,7 @@ from broker.types import (
 )
 from config import cfg
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 
 from .operator_controls import (
     clear_block_new_entries,
@@ -29,6 +28,7 @@ from .operator_controls import (
 from .protection_manager import ProtectionManager
 from .quote_cache import QuoteCache
 from .runtime_context import get_mutation_lock
+from .session_guards import entry_stream_required_for_new_entries
 
 
 OPEN_ORDER_INTENT_STATUSES = {
@@ -252,11 +252,13 @@ class Reconciler:
         self,
         *,
         wait_for_stream_seconds: float | None = None,
+        require_stream: bool = True,
     ) -> dict[str, Any]:
         """Phase 6 G6: second-phase startup check after stream.start().
 
         Confirms the WebSocket actually connected within timeout. Flips
-        ``block_new_entries(reason="stream_unavailable")`` if it did not.
+        ``block_new_entries(reason="stream_unavailable")`` if it did not and
+        the current session requires stream data for new entries.
         """
         started_at = _now().isoformat()
         run_id = _run_id("stream_ready", started_at)
@@ -271,14 +273,23 @@ class Reconciler:
             if wait_for_stream_seconds is not None
             else float(self._conf.startup_stream_wait_seconds)
         )
-        connected = await self._await_stream(wait_seconds)
+        connected = await self._await_stream(wait_seconds if require_stream else 0.0)
         payload = {
             "started_at": started_at,
             "completed_at": _now().isoformat(),
-            "wait_seconds": wait_seconds,
+            "wait_seconds": wait_seconds if require_stream else 0.0,
+            "stream_required": require_stream,
             "stream_connected": connected,
         }
         self._write_run(run_id, "completed", payload, source="reconciler_post_stream")
+        if not require_stream:
+            async with self._acquire_lock():
+                clear_block_new_entries(
+                    source="reconciler_post_stream",
+                    reason="stream_unavailable",
+                )
+                self._resolve_incident("stream_unavailable", source="reconciler_post_stream")
+            return payload
         if not connected:
             set_block_new_entries(
                 reason="stream_unavailable",
@@ -949,6 +960,7 @@ class Reconciler:
 
     async def _check_quote_freshness(self, *, source: str) -> dict[str, Any]:
         started_at = _now().isoformat()
+        stream_required = entry_stream_required_for_new_entries()
         with session_scope() as session:
             repo = MemoryRepository(session)
             tickers = [
@@ -967,6 +979,10 @@ class Reconciler:
                 },
                 source=source,
             )
+            if not self._live_broker_enforcement_enabled:
+                await self._clear_session_scoped_quote_blocks(source=source)
+            elif not stream_required:
+                await self._clear_session_scoped_quote_blocks(source=source, include_stream=True)
             return {"tickers": [], "stale_ratio": 0.0}
 
         freshness = self._quote_cache.check_freshness(
@@ -999,9 +1015,11 @@ class Reconciler:
         )
 
         if not self._live_broker_enforcement_enabled:
-            async with self._acquire_lock():
-                clear_block_new_entries(source=source, reason="stale_quotes")
-                self._resolve_incident("stale_quotes", source=source)
+            await self._clear_session_scoped_quote_blocks(source=source)
+            return post_refresh
+
+        if not stream_required:
+            await self._clear_session_scoped_quote_blocks(source=source, include_stream=True)
             return post_refresh
 
         if post_refresh["stale_ratio"] >= float(self._conf.quote_stale_ratio_threshold):
@@ -1029,6 +1047,33 @@ class Reconciler:
             self._resolve_incident("stale_quotes", source=source)
         return post_refresh
 
+    async def _clear_session_scoped_quote_blocks(
+        self,
+        *,
+        source: str,
+        include_stream: bool = False,
+    ) -> None:
+        block = read_block_new_entries() or {}
+        active_reasons = {
+            str(item).strip()
+            for item in block.get("active_reasons", [])
+            if str(item).strip()
+        }
+        reasons_to_clear = {"stale_quotes"}
+        if include_stream:
+            reasons_to_clear.add("stream_unavailable")
+        active_clear_reasons = active_reasons & reasons_to_clear
+        if not active_clear_reasons:
+            return
+
+        async with self._acquire_lock():
+            if "stale_quotes" in active_clear_reasons:
+                clear_block_new_entries(source=source, reason="stale_quotes")
+                self._resolve_incident("stale_quotes", source=source)
+            if "stream_unavailable" in active_clear_reasons:
+                clear_block_new_entries(source=source, reason="stream_unavailable")
+                self._resolve_incident("stream_unavailable", source=source)
+
     # ------------------------------------------------------------------
     # Auth freshness (G8)
     # ------------------------------------------------------------------
@@ -1037,9 +1082,11 @@ class Reconciler:
         from .auth_preflight import is_session_fresh
 
         if not self._live_broker_enforcement_enabled:
-            async with self._acquire_lock():
-                clear_block_new_entries(source=source, reason="stale_auth")
-                self._resolve_incident("stale_auth", source=source)
+            await self._clear_block_reason_if_active(
+                reason="stale_auth",
+                source=source,
+                incident_id="stale_auth",
+            )
             return
 
         # Only act when we have a session; "no session" is a separate path that
@@ -1052,8 +1099,11 @@ class Reconciler:
             max_age_hours=float(self._conf.auth_max_age_hours)
         )
         if fresh:
-            clear_block_new_entries(source=source, reason="stale_auth")
-            self._resolve_incident("stale_auth", source=source)
+            await self._clear_block_reason_if_active(
+                reason="stale_auth",
+                source=source,
+                incident_id="stale_auth",
+            )
             return
 
         # missing_timestamp and stale both trip the kill switch.
@@ -1070,6 +1120,24 @@ class Reconciler:
             },
         )
         set_block_new_entries(reason="stale_auth", source=source, detail=detail)
+
+    async def _clear_block_reason_if_active(
+        self,
+        *,
+        reason: str,
+        source: str,
+        incident_id: str | None = None,
+    ) -> None:
+        block = read_block_new_entries() or {}
+        active_reasons = {
+            str(item).strip()
+            for item in block.get("active_reasons", [])
+            if str(item).strip()
+        }
+        if reason in active_reasons:
+            async with self._acquire_lock():
+                clear_block_new_entries(source=source, reason=reason)
+        self._resolve_incident(incident_id or reason, source=source)
 
     # ------------------------------------------------------------------
     # Phase 7: broker-disconnect runtime kill switch (P7)

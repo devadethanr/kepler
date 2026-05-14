@@ -7,8 +7,14 @@ from config import cfg, runtime_flags
 from integrations.kite.mcp_client import KiteMCPClient
 from models import AccountState
 from paper.fill_engine import FillEngine
+from policy.effective_policy import new_entries_block_reason
 from tools.execution.gtt_manager import GTTManager
 from tools.execution.risk_check import RiskCheckTool
+
+
+def _is_submission_timeout(exc: Exception) -> bool:
+    marker = f"{type(exc).__module__}.{type(exc).__name__}:{exc}".lower()
+    return "timeout" in marker or "timed out" in marker
 
 
 class OrderExecutionTool:
@@ -88,6 +94,11 @@ class OrderExecutionTool:
             return {"status": "rejected", "reason": "invalid_quantity", "quantity": 0}, 0
         return risk, min(int(quantity), approved_quantity)
 
+    def _entry_policy_block(self, side: str) -> str | None:
+        if side.upper() != "BUY":
+            return None
+        return new_entries_block_reason()
+
     def place_order(
         self,
         state: AccountState,
@@ -104,6 +115,15 @@ class OrderExecutionTool:
         )
         if risk.get("status") == "rejected":
             return risk
+
+        policy_block = self._entry_policy_block(side)
+        if policy_block is not None:
+            return {
+                "status": "blocked",
+                "reason": policy_block,
+                "quantity": 0,
+                "mode": cfg.trading.mode.value,
+            }
 
         live_block_reason = runtime_flags.live_entry_block_reason(cfg.trading.mode)
 
@@ -139,14 +159,37 @@ class OrderExecutionTool:
 
             broker_tag = self._build_broker_tag(ticker)
 
-            order_id = place_live_order(
-                exchange=cfg.trading.exchange,
-                ticker=ticker,
-                side=side,
-                quantity=resolved_quantity,
-                price=price,
-                tag=broker_tag,
-            )
+            try:
+                order_id = place_live_order(
+                    exchange=cfg.trading.exchange,
+                    ticker=ticker,
+                    side=side,
+                    quantity=resolved_quantity,
+                    price=price,
+                    tag=broker_tag,
+                )
+            except Exception as exc:
+                if _is_submission_timeout(exc):
+                    return {
+                        "order_id": None,
+                        "status": "submission_uncertain",
+                        "reason": "live_order_submission_timeout",
+                        "average_price": None,
+                        "quantity": resolved_quantity,
+                        "mode": "live",
+                        "product": "CNC",
+                        "broker_tag": broker_tag,
+                        "margin": margin_payload,
+                        "protection_status": "pending_broker_reconciliation",
+                    }
+                return {
+                    "status": "failed",
+                    "reason": f"live_order_submission_failed:{exc}",
+                    "quantity": resolved_quantity,
+                    "mode": "live",
+                    "broker_tag": broker_tag,
+                    "margin": margin_payload,
+                }
             return {
                 "order_id": order_id,
                 "status": "submitted",
@@ -197,6 +240,14 @@ class OrderExecutionTool:
             return risk
 
         order_id = f"order-{uuid.uuid4().hex[:10]}"
+        policy_block = self._entry_policy_block(side)
+        if policy_block is not None:
+            return {
+                "status": "blocked",
+                "reason": policy_block,
+                "quantity": 0,
+                "mode": cfg.trading.mode.value,
+            }
         if cfg.trading.mode.value != "live":
             return self.place_order(
                 state,
@@ -251,12 +302,29 @@ class OrderExecutionTool:
                     price=price,
                     tag=broker_tag,
                 )
-            except Exception:
+            except Exception as exc:
+                if _is_submission_timeout(exc):
+                    return {
+                        "order_id": None,
+                        "status": "submission_uncertain",
+                        "reason": "live_order_submission_timeout",
+                        "average_price": None,
+                        "quantity": resolved_quantity,
+                        "mode": "live",
+                        "product": "CNC",
+                        "broker_tag": broker_tag,
+                        "margin": margin_payload,
+                        "position_id": None,
+                        "oco_gtt_id": None,
+                        "protection_status": "pending_broker_reconciliation",
+                    }
                 return {
                     "status": "failed",
-                    "reason": "live_order_submission_failed",
+                    "reason": f"live_order_submission_failed:{exc}",
                     "quantity": resolved_quantity,
                     "mode": "live",
+                    "broker_tag": broker_tag,
+                    "margin": margin_payload,
                 }
         return {
             "order_id": order_id,

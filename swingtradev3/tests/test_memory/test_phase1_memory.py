@@ -12,6 +12,7 @@ from memory.models import (
     OrderIntentRow,
     TradeRow,
 )
+from memory.repository import MemoryRepository
 from models import PendingApproval
 from paths import CONTEXT_DIR
 from storage import read_json, write_json
@@ -85,7 +86,7 @@ def test_managed_approvals_and_auth_session_project_from_postgres():
             "execution_requested": True,
             "execution_request_id": "req-phase1",
             "created_at": "2026-04-17T08:55:00",
-            "expires_at": "2026-04-17T12:55:00",
+            "expires_at": "2030-04-17T12:55:00",
             "research_date": "2026-04-16",
             "skill_version": "phase1-test",
         }
@@ -129,6 +130,41 @@ def test_managed_approvals_and_auth_session_project_from_postgres():
             write_json(KITE_SESSION_PATH, original_session)
         else:
             write_json(KITE_SESSION_PATH, {})
+
+
+def test_expired_approvals_stay_in_audit_but_not_active_queue():
+    expired_payload = {
+        "ticker": "TCS",
+        "score": 8.4,
+        "setup_type": "breakout",
+        "entry_zone": {"low": 4000.0, "high": 4010.0},
+        "stop_price": 3920.0,
+        "target_price": 4200.0,
+        "holding_days_expected": 8,
+        "confidence_reasoning": "Expired test setup",
+        "risk_flags": [],
+        "approved": True,
+        "execution_requested": False,
+        "created_at": "2026-04-17T08:55:00",
+        "expires_at": "2026-04-17T12:55:00",
+        "research_date": "2026-04-16",
+    }
+    approval = PendingApproval.model_validate(expired_payload)
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        repo.replace_pending_approvals([expired_payload], source="test_memory")
+        active = repo.get_pending_approvals_payload()
+        row = session.get(ApprovalRow, approval.approval_id)
+        if row is not None:
+            session.delete(row)
+        entry_row = session.get(EntryIntentRow, approval.entry_intent_id)
+        if entry_row is not None:
+            session.delete(entry_row)
+        order_row = session.get(OrderIntentRow, approval.order_intent_id)
+        if order_row is not None:
+            session.delete(order_row)
+
+    assert all(item.get("approval_id") != approval.approval_id for item in active)
 
 
 def test_trades_are_imported_and_execution_events_are_recorded():

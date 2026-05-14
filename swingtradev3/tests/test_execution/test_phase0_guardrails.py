@@ -9,6 +9,8 @@ from fastapi.testclient import TestClient
 from api.main import app
 from api.routes import approvals as approvals_route
 from config import cfg
+from memory.db import session_scope
+from memory.repository import MemoryRepository
 from models import AccountState, PendingApproval, TradingMode
 from tools.execution.order_execution import OrderExecutionTool
 
@@ -150,18 +152,59 @@ async def test_live_order_stays_submitted_until_fill_confirmation(monkeypatch):
     tool.gtt_manager.place_gtt_async.assert_not_called()
 
 
-def test_approval_route_respects_live_guardrails(monkeypatch):
+@pytest.mark.asyncio
+async def test_live_order_timeout_is_submission_uncertain_with_broker_tag(monkeypatch):
+    monkeypatch.setattr(cfg.trading, "mode", TradingMode.LIVE)
+    monkeypatch.setenv("LIVE_TRADING_ENABLED", "true")
+    monkeypatch.setenv("NEW_ENTRIES_ENABLED", "true")
+    monkeypatch.setenv("EXIT_ONLY_MODE", "false")
+
+    tool = OrderExecutionTool()
+    tool.risk_tool.check_risk = MagicMock(
+        return_value={"approved": True, "quantity": 10, "reason": "ok"}
+    )
+
+    with patch("tools.execution.order_execution.has_kite_session", return_value=True):
+        with patch(
+            "tools.execution.order_execution.calculate_live_order_margins",
+            return_value=[{"total": 5000.0}],
+        ):
+            with patch(
+                "tools.execution.order_execution.fetch_margins",
+                return_value={"equity": {"available": {"cash": 100000.0}}},
+            ):
+                with patch(
+                    "tools.execution.order_execution.place_live_order",
+                    side_effect=TimeoutError("Timed out waiting for broker response"),
+                ):
+                    result = await tool.place_order_async(
+                        state=_state(),
+                        ticker="RELIANCE",
+                        side="buy",
+                        score=8.2,
+                        price=1010.0,
+                        stop_price=980.0,
+                        target_price=1080.0,
+                        quantity=5,
+                    )
+
+    assert result["status"] == "submission_uncertain"
+    assert result["reason"] == "live_order_submission_timeout"
+    assert result["quantity"] == 5
+    assert result["broker_tag"]
+    assert result["protection_status"] == "pending_broker_reconciliation"
+
+
+def test_approval_route_respects_live_guardrails(monkeypatch, persist_approvals):
     monkeypatch.setattr(cfg.trading, "mode", TradingMode.LIVE)
     monkeypatch.setenv("LIVE_TRADING_ENABLED", "false")
     monkeypatch.setenv("NEW_ENTRIES_ENABLED", "false")
     monkeypatch.setenv("EXIT_ONLY_MODE", "false")
 
-    payload = _approval_payload()
-    mock_write = MagicMock()
+    payload = persist_approvals(_approval_payload())
     mock_broadcast = AsyncMock()
 
-    monkeypatch.setattr(approvals_route, "read_json", lambda *_args, **_kwargs: payload)
-    monkeypatch.setattr(approvals_route, "write_json", mock_write)
+    monkeypatch.setattr(approvals_route, "project_all_managed_files", lambda: None)
     monkeypatch.setattr(approvals_route.broadcaster, "broadcast", mock_broadcast)
 
     response = client.post(f"/approvals/{PendingApproval.model_validate(payload[0]).approval_id}/yes")
@@ -170,21 +213,26 @@ def test_approval_route_respects_live_guardrails(monkeypatch):
     body = response.json()
     assert body["decision"] == "approved"
     assert "blocked by runtime guardrails" in body["message"]
-    assert payload[0]["approved"] is True
-    assert payload[0]["execution_requested"] is False
-    mock_write.assert_called_once()
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        approval = repo.get_approval(str(payload[0]["approval_id"]))
+        order_intent = repo.get_order_intent(str(payload[0]["order_intent_id"]))
+    assert approval is not None
+    assert approval["approved"] is True
+    assert approval["execution_requested"] is False
+    assert order_intent is not None
+    assert order_intent["status"] == "approved"
     mock_broadcast.assert_awaited_once()
 
 
-def test_approval_route_rejects_expired_payload(monkeypatch):
-    expired = _approval_payload()
-    expired[0]["expires_at"] = (datetime.now() - timedelta(minutes=5)).isoformat()
+def test_approval_route_rejects_expired_payload(monkeypatch, persist_approvals):
+    expired_payload = _approval_payload()
+    expired_payload[0]["expires_at"] = (datetime.now() - timedelta(minutes=5)).isoformat()
+    expired = persist_approvals(expired_payload)
 
-    mock_write = MagicMock()
     mock_broadcast = AsyncMock()
 
-    monkeypatch.setattr(approvals_route, "read_json", lambda *_args, **_kwargs: expired)
-    monkeypatch.setattr(approvals_route, "write_json", mock_write)
+    monkeypatch.setattr(approvals_route, "project_all_managed_files", lambda: None)
     monkeypatch.setattr(approvals_route.broadcaster, "broadcast", mock_broadcast)
 
     response = client.post(f"/approvals/{PendingApproval.model_validate(expired[0]).approval_id}/yes")
@@ -192,21 +240,24 @@ def test_approval_route_rejects_expired_payload(monkeypatch):
     assert response.status_code == 200
     body = response.json()
     assert body["decision"] == "expired"
-    mock_write.assert_not_called()
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        approval = repo.get_approval(str(expired[0]["approval_id"]))
+    assert approval is not None
+    assert approval["status"] == "expired"
+    assert approval["execution_requested"] is False
     mock_broadcast.assert_not_awaited()
 
 
-def test_approval_route_is_idempotent_for_already_queued_execution(monkeypatch):
-    payload = _approval_payload()
-    payload[0]["approved"] = True
-    payload[0]["execution_requested"] = True
-    payload[0]["execution_request_id"] = "existing123"
-
-    mock_write = MagicMock()
+def test_approval_route_is_idempotent_for_already_queued_execution(monkeypatch, persist_approvals):
+    queued_payload = _approval_payload()
+    queued_payload[0]["approved"] = True
+    queued_payload[0]["execution_requested"] = True
+    queued_payload[0]["execution_request_id"] = "existing123"
+    payload = persist_approvals(queued_payload)
     mock_broadcast = AsyncMock()
 
-    monkeypatch.setattr(approvals_route, "read_json", lambda *_args, **_kwargs: payload)
-    monkeypatch.setattr(approvals_route, "write_json", mock_write)
+    monkeypatch.setattr(approvals_route, "project_all_managed_files", lambda: None)
     monkeypatch.setattr(approvals_route.broadcaster, "broadcast", mock_broadcast)
 
     response = client.post(f"/approvals/{PendingApproval.model_validate(payload[0]).approval_id}/yes")
@@ -216,7 +267,11 @@ def test_approval_route_is_idempotent_for_already_queued_execution(monkeypatch):
     assert body["decision"] == "approved"
     assert "already queued" in body["message"].lower()
     assert payload[0]["order_intent_id"] == PendingApproval.model_validate(payload[0]).order_intent_id
-    mock_write.assert_not_called()
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        order_intent = repo.get_order_intent(str(payload[0]["order_intent_id"]))
+    assert order_intent is not None
+    assert order_intent["status"] == "queued"
     mock_broadcast.assert_not_awaited()
 
 

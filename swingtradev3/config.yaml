@@ -10,6 +10,7 @@ research:
   scan_start_time: "15:45"
   briefing_time: "08:45"
   min_score_threshold: 7.0
+  debate_top_n: 3
   max_shortlist: 7
   max_same_sector_positions: 2
   exclude_earnings_within_days: 7
@@ -33,6 +34,29 @@ research:
     min_priority_signals: 1
     batch_size: 10
     news_sweep_query: "Indian stock market today Nifty 200 news"
+    trusted_news_domains:
+      - reuters.com
+      - moneycontrol.com
+      - economictimes.indiatimes.com
+      - business-standard.com
+      - livemint.com
+      - cnbctv18.com
+      - ndtvprofit.com
+      - nseindia.com
+      - bseindia.com
+    excluded_news_domains:
+      - businessoffashion.com
+      - wwd.com
+      - redbluffdailynews.com
+    news_max_age_hours: 72
+    news_alert_cooldown_hours: 24
+    news_sweep_max_results: 10
+    stock_news_max_results: 10
+    news_position_alert_max_items: 3
+    market_news_digest_max_items: 10
+    market_news_digest_max_ticker_groups: 5
+    market_news_digest_max_items_per_ticker: 2
+    market_news_digest_max_general_items: 4
     options_pcr_threshold: 1.2
     options_oi_spike_pct: 20
     trend_filter_ema: 200
@@ -76,6 +100,7 @@ execution:
 
 risk:
   max_risk_pct_per_trade: 0.015
+  max_position_size_pct: 40.0
   max_weekly_loss_pct: 0.04
   max_drawdown_pct: 0.10
   max_daily_loss_pct: 0.025
@@ -313,3 +338,15 @@ data:
   news_cache_ttl_minutes: 60
   fundamentals_cache_ttl_hours: 24
   macro_cache_ttl_hours: 4
+
+context_graph:
+  enabled: true
+  uri: "bolt://memgraph:7687"
+  user: ""
+  password: ""
+  database: "memgraph"
+  connect_timeout_seconds: 2.0
+  projection_batch_size: 100
+  projection_interval_seconds: 30.0
+  dashboard_node_limit: 150
+  dashboard_edge_limit: 300

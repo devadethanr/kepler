@@ -83,15 +83,14 @@ services:
     container_name: swingtradev3-dashboard
     ports:
       - "8502:3000"
-      - "8002:8000"
     env_file:
       - swingtradev3/.env
     environment:
       - FASTAPI_URL=http://app:8000
       - TZ=Asia/Kolkata
-      - API_KEY=${FASTAPI_API_KEY}
     volumes:
-      - ./swingtradev3/dashboard:/app
+      - ./swingtradev3-dashboard:/app
+      - dashboard_node_modules:/app/node_modules
     depends_on:
       - app
     restart: unless-stopped
@@ -107,10 +106,52 @@ services:
       - swingtradev3/.env
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/health"]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/"]
       interval: 30s
       timeout: 10s
       retries: 3
 
+  memgraph:
+    image: memgraph/memgraph-mage:latest
+    container_name: swingtradev3-memgraph
+    profiles:
+      - memory
+    ports:
+      - "${MEMGRAPH_BOLT_PORT:-7687}:7687"
+      - "${MEMGRAPH_MONITORING_PORT:-7444}:7444"
+    volumes:
+      - memgraph_data:/var/lib/memgraph
+      - memgraph_logs:/var/log/memgraph
+    command:
+      - "--log-level=${MEMGRAPH_LOG_LEVEL:-INFO}"
+      - "--memory-limit=${MEMGRAPH_MEMORY_LIMIT_MIB:-2048}"
+      - "--storage-snapshot-interval-sec=${MEMGRAPH_SNAPSHOT_INTERVAL_SEC:-300}"
+      - "--storage-snapshot-on-exit=true"
+      - "--storage-wal-enabled=true"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "echo 'RETURN 0;' | mgconsole || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  memgraph-lab:
+    image: memgraph/lab:latest
+    container_name: swingtradev3-memgraph-lab
+    profiles:
+      - memory
+    ports:
+      - "${MEMGRAPH_LAB_PORT:-3001}:3000"
+    environment:
+      - QUICK_CONNECT_MG_HOST=memgraph
+      - QUICK_CONNECT_MG_PORT=7687
+    depends_on:
+      memgraph:
+        condition: service_healthy
+    restart: unless-stopped
+
 volumes:
   postgres_data:
+  dashboard_node_modules:
+  memgraph_data:
+  memgraph_logs:

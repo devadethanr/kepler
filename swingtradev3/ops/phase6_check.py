@@ -30,7 +30,7 @@ from execution.operator_controls import (
 )
 from memory.db import session_scope
 from memory.models import ReconciliationRunRow
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 
 
 @dataclass(slots=True)

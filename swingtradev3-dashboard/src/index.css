@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-surface: #121317;
+  --color-surface-container: #1f1f24;
+  --color-surface-high: #292a2e;
+  --color-surface-highest: #343439;
+  --color-surface-low: #1a1b20;
+  --color-surface-lowest: #0d0e12;
+  --color-on-surface: #e3e2e8;
+  --color-on-surface-variant: #bec7d3;
+  --color-primary: #93ccff;
+  --color-primary-container: #3bb0ff;
+  --color-on-primary-container: #004165;
+  --color-secondary: #42e09a;
+  --color-tertiary: #f1afff;
+  --color-tertiary-container: #e480ff;
+  --color-error: #ffb4ab;
+  --color-error-container: #93000a;
+  --color-outline-variant: #3f4851;
+  --color-outline: #89929c;
+}
+
+body {
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+  font-family: var(--font-sans);
+  overflow: hidden;
+}
+
+.tabular-nums { font-variant-numeric: tabular-nums; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--color-surface-low); }
+::-webkit-scrollbar-thumb { background: var(--color-outline-variant); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-outline); }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+@keyframes data-flow {
+  from { stroke-dashoffset: 10; }
+  to { stroke-dashoffset: 0; }
+}
+
+.animate-data-flow {
+  stroke-dasharray: 0.4 2;
+  animation: data-flow 0.8s linear infinite;
+}
+
+.animate-data-flow-fast {
+  stroke-dasharray: 0.3 1.5;
+  animation: data-flow 0.5s linear infinite;
+}
+
+@keyframes flow-pulse {
+  0%, 100% { opacity: 0.2; transform: scale(0.95); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+.animate-flow-pulse {
+  animation: flow-pulse 2s ease-in-out infinite;
+}

@@ -1,93 +1,454 @@
-"""
-API routes for the Knowledge Graph, Event Bus, and Agent Activity.
-Powers the dashboard's real-time views.
-"""
 from __future__ import annotations
+
+from collections import Counter
+from datetime import datetime
+from typing import Any
+from zoneinfo import ZoneInfo
 
 from fastapi import APIRouter
 
-from api.tasks.event_bus import event_bus, EventType
-from api.tasks.activity_manager import activity_manager
+from auth.kite.client import has_kite_session
+from config import cfg
 from execution.operator_controls import read_worker_status
-from knowledge.wiki_renderer import (
-    get_stock_context,
-    INDEX_PATH,
-    GRAPH_PATH,
-)
-from storage import read_json
+from api.routes.scan import _load_status as load_scan_status
+from api.tasks.activity_manager import activity_manager
+from api.tasks.session_phase import session_snapshot
+from memory.db import session_scope
+from memory.repository import MemoryRepository
+
+from context_graph.repository import ContextGraphRepository
 
 router = APIRouter()
+IST = ZoneInfo("Asia/Kolkata")
+ACTIVE_POSITION_STATES = {"open", "closing"}
+ACTIONABLE_APPROVAL_STATUSES = {"pending", "approved", "queued"}
 
 
-# ─────────────────────────────────────────────────────────────
-# Knowledge Graph
-# ─────────────────────────────────────────────────────────────
+def _portfolio_summary(state_payload: dict[str, Any]) -> dict[str, Any]:
+    positions = [
+        position
+        for position in list(state_payload.get("positions") or [])
+        if str(position.get("lifecycle_state") or "open").lower() in ACTIVE_POSITION_STATES
+    ]
+    total_invested = 0.0
+    sector_exposure: dict[str, float] = {}
+    for position in positions:
+        quantity = float(position.get("quantity") or 0)
+        price = float(position.get("current_price") or position.get("entry_price") or 0)
+        value = quantity * price
+        total_invested += value
+        sector = str(position.get("sector") or "Unknown")
+        sector_exposure[sector] = sector_exposure.get(sector, 0.0) + value
+
+    realized_pnl = float(state_payload.get("realized_pnl") or 0.0)
+    unrealized_pnl = float(state_payload.get("unrealized_pnl") or 0.0)
+    return {
+        "cash_inr": float(state_payload.get("cash_inr") or 0.0),
+        "realized_pnl": realized_pnl,
+        "unrealized_pnl": unrealized_pnl,
+        "total_pnl": realized_pnl + unrealized_pnl,
+        "open_positions_count": len(positions),
+        "sector_exposure": sector_exposure,
+        "total_invested": total_invested,
+        "drawdown_pct": float(state_payload.get("drawdown_pct") or 0.0),
+        "weekly_loss_pct": float(state_payload.get("weekly_loss_pct") or 0.0),
+        "consecutive_losses": int(state_payload.get("consecutive_losses") or 0),
+    }
+
+
+def _status_counts(items: list[dict[str, Any]]) -> dict[str, int]:
+    counts = Counter(str(item.get("status") or "unknown") for item in items)
+    return dict(sorted(counts.items()))
+
+
+def _parse_datetime(value: Any) -> datetime | None:
+    if not value:
+        return None
+    try:
+        parsed = datetime.fromisoformat(str(value))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=IST)
+    return parsed.astimezone(IST)
+
+
+def _quote_is_stale(updated_at: Any) -> bool:
+    parsed = _parse_datetime(updated_at)
+    if parsed is None:
+        return True
+    max_age = float(cfg.execution.reconciliation.quote_max_age_seconds)
+    return (datetime.now(IST) - parsed).total_seconds() > max_age
+
+
+def _source_activity(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    grouped: dict[str, dict[str, Any]] = {}
+    for event in events:
+        source = str(event.get("source") or "unknown")
+        current = grouped.setdefault(
+            source,
+            {
+                "agent_name": source,
+                "status": "observed",
+                "event_count": 0,
+                "last_event": None,
+                "updated_at": None,
+            },
+        )
+        current["event_count"] += 1
+        current["last_event"] = event.get("event_type")
+        current["updated_at"] = event.get("created_at")
+    return list(grouped.values())
+
+
+def _scan_status() -> dict[str, Any]:
+    return load_scan_status()
+
 
 @router.get("/knowledge/index")
 async def get_knowledge_index():
-    """Get the full Knowledge Graph index (fast lookup of all stocks)."""
-    return read_json(INDEX_PATH, {"stocks": {}})
+    """Knowledge graph index backed by Memgraph context graph (Phase 11)."""
+    from context_graph.repository import GraphUnavailableError
+
+    try:
+        with session_scope() as session:
+            pg_repo = MemoryRepository(session)
+            latest_run = pg_repo.events.get_latest_execution_event_id()
+        graph = ContextGraphRepository()
+        if not graph.enabled:
+            return {
+                "phase": "phase_11",
+                "status": "disabled",
+                "message": "Context graph is disabled in configuration.",
+                "stocks": {},
+                "counts": {"stocks": 0},
+            }
+        summary = graph.latest_research_summary()
+        index = graph.knowledge_index()
+        graph.close()
+        return {
+            **index,
+            "phase": "phase_11",
+            "status": "ok",
+            "latest_research": summary,
+            "latest_event_id": latest_run,
+            "message": "Knowledge graph backed by Memgraph.",
+        }
+    except GraphUnavailableError:
+        return {
+            "phase": "phase_11",
+            "status": "degraded",
+            "memgraph": "unavailable",
+            "stocks": {},
+            "counts": {"stocks": 0},
+            "message": "Memgraph is not reachable; graph features degraded.",
+        }
 
 
 @router.get("/knowledge/graph")
-async def get_knowledge_graph():
-    """Get the Knowledge Graph (nodes + edges for visualization)."""
-    return read_json(GRAPH_PATH, {"nodes": [], "edges": []})
+async def get_knowledge_graph(
+    limit: int = 150,
+    edge_limit: int = 300,
+):
+    """Knowledge graph dashboard data backed by Memgraph context graph (Phase 11)."""
+    from context_graph.repository import GraphUnavailableError
+
+    try:
+        graph = ContextGraphRepository()
+        payload = graph.dashboard_graph(node_limit=limit, edge_limit=edge_limit)
+        graph.close()
+        return payload.model_dump(mode="json")
+    except GraphUnavailableError:
+        return {
+            "phase": "phase_11",
+            "status": "degraded",
+            "nodes": [],
+            "edges": [],
+            "node_count": 0,
+            "edge_count": 0,
+            "counts": {"nodes": 0, "edges": 0},
+            "last_updated": datetime.now(IST).isoformat(),
+            "message": "Memgraph unavailable — showing empty graph.",
+        }
 
 
 @router.get("/knowledge/stock/{ticker}")
 async def get_stock_knowledge(ticker: str):
-    """Get historical context for a specific stock from the KG."""
-    ctx = get_stock_context(ticker.upper())
-    return ctx.model_dump(mode="json")
+    """Per-stock research context backed by Memgraph context graph (Phase 11)."""
+    from context_graph.repository import GraphUnavailableError
+
+    try:
+        graph = ContextGraphRepository()
+        ctx = graph.stock_context(ticker)
+        graph.close()
+        return ctx.model_dump(mode="json")
+    except GraphUnavailableError:
+        return {
+            "ticker": ticker.upper(),
+            "has_history": False,
+            "phase": "phase_11",
+            "memgraph": "unavailable",
+            "status": "degraded",
+            "summary": None,
+            "evidence": [],
+            "connections": [],
+            "last_updated": datetime.now(IST).isoformat(),
+            "research": [],
+            "news": [],
+            "observations": [],
+        }
 
 
-# ─────────────────────────────────────────────────────────────
-# Agent Activity
-# ─────────────────────────────────────────────────────────────
+@router.get("/snapshot")
+async def get_dashboard_snapshot() -> dict[str, Any]:
+    """Operator overview backed by Postgres execution truth."""
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        state = repo.get_account_state_payload()
+        positions = repo.list_positions(states=ACTIVE_POSITION_STATES)
+        approvals = repo.get_pending_approvals_payload()
+        actionable_approvals = [
+            approval
+            for approval in approvals
+            if str(approval.get("status") or "pending").lower() in ACTIONABLE_APPROVAL_STATUSES
+        ]
+        trades = repo.get_trades_payload()
+        incidents = repo.list_failure_incidents(status="open")
+        order_intents = repo.list_order_intents()
+        broker_orders = repo.list_broker_orders()
+        protective_triggers = repo.list_protective_triggers()
+        latest_event_id = repo.get_latest_execution_event_id()
+
+    return {
+        "portfolio": _portfolio_summary(state),
+        "account": state,
+        "counts": {
+            "positions": len(positions),
+            "approvals": len(actionable_approvals),
+            "trades": len(trades),
+            "open_incidents": len(incidents),
+            "order_intents": len(order_intents),
+            "broker_orders": len(broker_orders),
+            "protective_triggers": len(protective_triggers),
+        },
+        "status_counts": {
+            "positions": _status_counts(positions),
+            "approvals": _status_counts(actionable_approvals),
+            "order_intents": _status_counts(order_intents),
+            "broker_orders": _status_counts(broker_orders),
+            "protective_triggers": _status_counts(protective_triggers),
+        },
+        "positions": [position["payload"] for position in positions],
+        "approvals": actionable_approvals,
+        "recent_trades": trades[:10],
+        "open_incidents": incidents,
+        "worker_status": read_worker_status() or {},
+        "latest_event_id": latest_event_id,
+        "session": session_snapshot(),
+    }
+
 
 @router.get("/activity")
 async def get_agent_activity():
-    """Get current activity snapshot for all agents."""
-    return activity_manager.get_snapshot().model_dump(mode="json")
+    """Current agent activity plus durable event-source audit context."""
+    activity_snapshot = activity_manager.get_snapshot().model_dump(mode="json")
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        events = repo.list_execution_events(limit=200)
+    current_agents = list(dict(activity_snapshot.get("agents") or {}).values())
+    return {
+        "agents": current_agents,
+        "observed_sources": _source_activity(events),
+        "scheduler_phase": activity_snapshot.get("scheduler_phase", "unknown"),
+        "last_updated": activity_snapshot.get("last_updated"),
+        "worker_status": read_worker_status() or {},
+        "scan_status": _scan_status(),
+        "session": session_snapshot(),
+        "recent_events": events,
+        "event_count": len(events),
+    }
 
 
 @router.get("/activity/{agent_name}")
 async def get_agent_status(agent_name: str):
-    """Get a specific agent's current status."""
-    status = activity_manager.get_agent_status(agent_name)
-    if status is None:
-        return {"agent_name": agent_name, "status": "unknown"}
-    return status.model_dump(mode="json")
+    """Current status for one agent/source with recent durable events."""
+    current = activity_manager.get_agent_status(agent_name)
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        events = [
+            event
+            for event in repo.list_execution_events(limit=200)
+            if str(event.get("source") or "").lower() == agent_name.lower()
+        ]
+    observed = _source_activity(events)
+    return {
+        "agent": current.model_dump(mode="json") if current is not None else None,
+        "observed": observed[0] if observed else None,
+        "events": events,
+        "event_count": len(events),
+    }
 
-
-# ─────────────────────────────────────────────────────────────
-# Event Bus
-# ─────────────────────────────────────────────────────────────
 
 @router.get("/events")
-async def get_recent_events(limit: int = 20, event_type: str | None = None):
-    """Get recent events from the event bus."""
-    et = EventType(event_type) if event_type else None
-    events = event_bus.get_recent(event_type=et, limit=limit, refresh_from_disk=True)
-    return [e.model_dump(mode="json") for e in events]
+async def get_recent_events(
+    limit: int = 20,
+    after_id: int | None = None,
+    event_type: str | None = None,
+):
+    """Durable execution-event feed for dashboard tables and SSE resume."""
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        return repo.list_execution_events(limit=limit, after_id=after_id, event_type=event_type)
 
 
-# ─────────────────────────────────────────────────────────────
-# Scheduler
-# ─────────────────────────────────────────────────────────────
+@router.get("/execution")
+async def get_execution_dashboard() -> dict[str, Any]:
+    """Full execution state machine surface for the React dashboard."""
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        positions = repo.list_positions(states=ACTIVE_POSITION_STATES)
+        order_intents = repo.list_order_intents()
+        broker_orders = repo.list_broker_orders()
+        broker_fills = repo.list_broker_fills()
+        protective_triggers = repo.list_protective_triggers()
+        reconciliation_runs = repo.list_reconciliation_runs(limit=20)
+        incidents = repo.list_failure_incidents()
+        entry_intents = repo.list_entry_intents()
+
+    return {
+        "positions": positions,
+        "entry_intents": entry_intents,
+        "order_intents": order_intents,
+        "broker_orders": broker_orders,
+        "broker_fills": broker_fills,
+        "protective_triggers": protective_triggers,
+        "reconciliation_runs": reconciliation_runs,
+        "incidents": incidents,
+        "status_counts": {
+            "positions": _status_counts(positions),
+            "entry_intents": _status_counts(entry_intents),
+            "order_intents": _status_counts(order_intents),
+            "broker_orders": _status_counts(broker_orders),
+            "protective_triggers": _status_counts(protective_triggers),
+            "incidents": _status_counts(incidents),
+        },
+    }
+
+
+@router.get("/quotes")
+async def get_dashboard_quotes() -> dict[str, Any]:
+    """Quote-facing dashboard model derived from broker-confirmed positions."""
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        positions = repo.list_positions(states=ACTIVE_POSITION_STATES)
+
+    quotes = []
+    for position in positions:
+        payload = dict(position.get("payload") or {})
+        current_price = payload.get("current_price")
+        updated_at = payload.get("price_updated_at")
+        quotes.append(
+            {
+                "ticker": position.get("ticker"),
+                "price": current_price or payload.get("entry_price"),
+                "source": "position",
+                "stale": current_price is None or _quote_is_stale(updated_at),
+                "position_state": position.get("state"),
+                "updated_at": updated_at,
+            }
+        )
+    return {"quotes": quotes, "count": len(quotes)}
+
+
+@router.get("/broker")
+async def get_dashboard_broker() -> dict[str, Any]:
+    """Broker state without exposing secret auth material."""
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        auth_session = repo.get_auth_session_payload()
+        broker_orders = repo.list_broker_orders()
+        broker_fills = repo.list_broker_fills()
+
+    return {
+        "auth_session": {
+            "provider": "kite",
+            "user_id": auth_session.get("user_id"),
+            "user_name": auth_session.get("user_name"),
+            "has_api_key": bool(auth_session.get("api_key")),
+            "has_access_token": bool(auth_session.get("access_token")),
+            "runtime_session_present": has_kite_session(),
+            "created_at": auth_session.get("created_at"),
+            "login_time": auth_session.get("login_time"),
+        },
+        "broker_orders": broker_orders,
+        "broker_fills": broker_fills,
+        "status_counts": {
+            "broker_orders": _status_counts(broker_orders),
+        },
+    }
+
+
+@router.get("/telemetry")
+async def get_dashboard_telemetry(limit: int = 100) -> dict[str, Any]:
+    """Runtime telemetry backed by durable execution events and controls."""
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        events = repo.list_execution_events(limit=limit)
+        controls = repo.list_operator_controls()
+
+    return {
+        "worker_status": read_worker_status() or {},
+        "events": events,
+        "operator_controls": controls,
+        "event_type_counts": dict(Counter(event["event_type"] for event in events)),
+        "source_counts": dict(Counter(event["source"] for event in events)),
+    }
+
+
+@router.get("/policy")
+async def get_dashboard_policy() -> dict[str, Any]:
+    """Effective runtime policy and auditable overlays for the risk panel."""
+    from policy.effective_policy import resolve_effective_policy
+    from policy.governor import PolicyGovernor
+
+    governor = PolicyGovernor()
+    overlays = governor.list_overlays()
+    effective = resolve_effective_policy()
+    active_overlay_ids = {overlay.overlay_id for overlay in effective.applied_overlays}
+    active = [overlay for overlay in overlays if overlay.overlay_id in active_overlay_ids]
+    return {
+        "effective": effective.model_dump(mode="json"),
+        "overlays": [overlay.model_dump(mode="json") for overlay in overlays],
+        "active_overlays": [overlay.model_dump(mode="json") for overlay in active],
+    }
+
+
+@router.get("/news")
+async def get_dashboard_news(limit: int = 100) -> dict[str, Any]:
+    """News provider health, normalized headlines, and ingestion audit metadata."""
+    from data.news import NewsAggregator
+
+    return NewsAggregator().dashboard_payload(limit=limit)
+
 
 @router.get("/scheduler")
 async def get_scheduler_info():
     """Get scheduler status and current phase."""
     status = read_worker_status()
     if status is not None:
-        return status
+        return {**status, "session": session_snapshot()}
     return {
         "is_running": False,
         "current_phase": "stopped",
         "total_jobs": 0,
         "next_run": None,
         "next_task": None,
-        "failed_events": len(event_bus.get_failed_events(refresh_from_disk=True)),
+        "failed_events": 0,
+        "session": session_snapshot(),
     }
+
+
+@router.get("/session")
+async def get_session_info():
+    """Current IST trading-session phase for the React dashboard."""
+    return session_snapshot()

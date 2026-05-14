@@ -20,7 +20,7 @@ from zoneinfo import ZoneInfo
 from auth.kite.client import has_kite_session
 from config import cfg
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 
 
 IST = ZoneInfo("Asia/Kolkata")

@@ -1,6 +1,6 @@
 # Agent Cognition Architecture
 
-> Last Updated: April 17, 2026
+> Last Updated: May 10, 2026
 > This document defines the target cognitive architecture for `swingtradev3`.
 > It complements `live_trading_one_shot_plan.md` by specifying the agent roles, memory model, decision rights, and phase-by-phase orchestration.
 >
@@ -12,7 +12,7 @@ The target system is not a linear “scan -> score -> order” bot. It is a boun
 
 - **Slow Brain**: overnight and pre-market multi-agent deliberation
 - **Fast Brain**: market-hours deterministic execution and risk control
-- **Memory**: knowledge graph plus Postgres execution and trade history
+- **Memory**: Memgraph context graph plus Postgres execution and trade history
 - **Policy Layer**: dynamic overlays, not free-form config mutation
 - **Execution Core**: broker-truth worker
 - **Recovery Layer**: reconciliation, kill switches, and incident handling
@@ -186,7 +186,7 @@ Type:
 Responsibilities:
 
 - normalize all candidate context into a compact structured packet
-- attach relevant memory from Postgres and the knowledge graph
+- attach relevant memory from Postgres and the Memgraph context graph
 
 Inputs:
 
@@ -449,19 +449,24 @@ Authority:
 
 The system uses three memory classes.
 
-### Long-Term Memory
+### Context Graph Memory
 
-- markdown knowledge graph under `context/knowledge/wiki`
+- Memgraph context graph
 - thesis evolution
 - stock notes
-- sector notes
-- trade journals
+- sector relationships
+- research runs and candidate evidence
+- news/entity links
+- trade memories
+- failure patterns and lessons
+- strategy and skill versions
 
 Use:
 
 - qualitative context
 - historical analogs
 - narrative continuity
+- GraphRAG retrieval and relationship traversal
 
 ### Operational Memory
 
@@ -513,23 +518,52 @@ Agents should not read these base tables directly. They should read curated view
 
 ### Required Read Models
 
-- `regime_snapshot_view`
-- `candidate_memory_view`
 - `portfolio_risk_view`
 - `open_positions_view`
-- `similar_trades_view`
 - `execution_incidents_view`
 - `policy_effective_view`
 - `session_readiness_view`
-- `trade_lesson_view`
+
+## Memgraph As Context Memory
+
+Memgraph is the authority for context and cognition graph state:
+
+- `Stock`
+- `Sector`
+- `Index`
+- `ResearchRun`
+- `ResearchCandidate`
+- `NewsArticle`
+- `RegimeSnapshot`
+- `SignalSnapshot`
+- `TechnicalSnapshot`
+- `FundamentalSnapshot`
+- `SentimentSnapshot`
+- `TradeMemory`
+- `Observation`
+- `Lesson`
+- `FailurePattern`
+- `SkillVersion`
+
+Agents should access Memgraph through typed repositories or curated tool views, not raw
+Cypher scattered through agent code.
+
+### Required Context Views
+
+- `regime_snapshot_context`
+- `candidate_memory_context`
+- `similar_trades_context`
+- `trade_lesson_context`
+- `stock_context_graph_summary`
 
 ## Google MCP Toolbox Usage
 
-Use Google MCP Toolbox for Databases only as a read-only agent access layer over Postgres.
+Use Google MCP Toolbox for Databases only as a read-only agent access layer over curated
+Postgres views and typed Memgraph-backed context views.
 
 ### Why It Fits
 
-- good for slow-brain agent retrieval
+- good for slow-brain agent retrieval across execution state and graph context
 - good for analyst and post-trade queries
 - good for ops/incident copilots
 
@@ -556,11 +590,12 @@ Only expose parameterized curated SQL tools such as:
 - `get_portfolio_risk_snapshot`
 - `get_active_policy`
 - `get_execution_incidents`
-- `get_stock_kg_summary`
+- `get_stock_context_graph_summary`
 
 Do not expose:
 
 - generic unrestricted SQL execution
+- generic unrestricted Cypher execution
 - any write-capable DB tool
 - any direct broker action through Toolbox
 
@@ -654,7 +689,7 @@ Output:
 
 - `TradeReviewer`
 - `PolicyAnalyst`
-- knowledge-graph updates
+- Memgraph context-graph updates
 
 ### Monthly / Quarterly
 

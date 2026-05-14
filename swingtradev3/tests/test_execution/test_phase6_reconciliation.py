@@ -23,16 +23,19 @@ from execution.reconciler import Reconciler
 from memory.db import session_scope
 from memory.models import (
     AuthSessionRow,
+    OrderIntentRow,
     PositionRow,
-    ProtectiveTriggerRow,
     ReconciliationRunRow,
 )
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 from models import AccountState, TradingMode
 
 
 def _ticker() -> str:
     return f"REC{uuid4().hex[:5]}".upper()
+
+
+_SEEDED_ORDER_INTENT_IDS: set[str] = set()
 
 
 def _seed_position(
@@ -68,6 +71,7 @@ def _seed_position(
 
 def _seed_order_intent(*, ticker: str, status: str, broker_tag: str) -> str:
     order_intent_id = f"oi-{uuid4().hex[:10]}"
+    _SEEDED_ORDER_INTENT_IDS.add(order_intent_id)
     with session_scope() as session:
         repo = MemoryRepository(session)
         repo.upsert_order_intent(
@@ -107,11 +111,21 @@ def _make_reconciler() -> tuple[Reconciler, MagicMock, MagicMock, QuoteCache]:
 
 
 @pytest.fixture(autouse=True)
-def _clear_block_flag():
+def _clear_block_flag(monkeypatch):
+    monkeypatch.setattr(
+        "execution.operator_controls._dispatch_control_alert",
+        lambda *args, **kwargs: None,
+    )
     # Each test starts with no active block; clean up after too.
     clear_block_new_entries(source="phase6_test_fixture")
     yield
     clear_block_new_entries(source="phase6_test_fixture")
+    with session_scope() as session:
+        for order_intent_id in list(_SEEDED_ORDER_INTENT_IDS):
+            row = session.get(OrderIntentRow, order_intent_id)
+            if row is not None:
+                session.delete(row)
+        _SEEDED_ORDER_INTENT_IDS.clear()
 
 
 @pytest.mark.asyncio
@@ -330,6 +344,41 @@ async def test_coordinator_skips_queue_when_block_active():
 
 
 @pytest.mark.asyncio
+async def test_coordinator_suppresses_stream_block_alert_off_hours(monkeypatch):
+    set_block_new_entries(reason="stream_unavailable", source="phase6_test", detail={})
+    monkeypatch.setattr(
+        "execution.coordinator.entry_stream_required_for_new_entries",
+        lambda: False,
+    )
+    coordinator = ExecutionCoordinator()
+    coordinator.alerts_tool = MagicMock()
+    coordinator.alerts_tool.send_alert = AsyncMock()
+
+    submitted = await coordinator.submit_queued_order_intents()
+
+    assert submitted == 0
+    coordinator.alerts_tool.send_alert.assert_not_awaited()
+
+
+@pytest.mark.asyncio
+async def test_coordinator_throttles_repeated_block_alerts(monkeypatch):
+    current = {"value": datetime(2026, 1, 2, 9, 15, 0)}
+    monkeypatch.setattr("execution.coordinator._now", lambda: current["value"])
+    set_block_new_entries(reason="test_block", source="phase6_test", detail={})
+    coordinator = ExecutionCoordinator()
+    coordinator.alerts_tool = MagicMock()
+    coordinator.alerts_tool.send_alert = AsyncMock()
+
+    await coordinator.submit_queued_order_intents()
+    current["value"] = current["value"] + timedelta(seconds=60)
+    await coordinator.submit_queued_order_intents()
+    current["value"] = current["value"] + timedelta(minutes=16)
+    await coordinator.submit_queued_order_intents()
+
+    assert coordinator.alerts_tool.send_alert.await_count == 2
+
+
+@pytest.mark.asyncio
 async def test_coordinator_submit_order_intent_ignored_when_blocked():
     ticker = _ticker()
     order_intent_id = _seed_order_intent(ticker=ticker, status="queued", broker_tag="STV3BLOCKED")
@@ -447,6 +496,11 @@ async def test_reconciler_quote_freshness_blocks_when_stale(monkeypatch):
     )
 
     monkeypatch.setattr(cfg.trading, "mode", TradingMode.LIVE)
+    monkeypatch.setattr(
+        reconciler_module,
+        "entry_stream_required_for_new_entries",
+        lambda: True,
+    )
     result = await reconciler._check_quote_freshness(source="unit_test")
     assert result["stale_ratio"] >= 0.5
     assert is_block_new_entries_active() is True
@@ -660,8 +714,7 @@ async def test_reconciler_escalates_after_consecutive_failures(monkeypatch):
 @pytest.mark.asyncio
 async def test_reconciler_flags_stale_auth(monkeypatch):
     # Write an auth session created > 24h ago.
-    from auth.kite.session_store import KiteSessionPayload
-    from memory.repositories import StoredKiteSessionPayload
+    from memory.models import StoredKiteSessionPayload
 
     old_iso = (datetime.now() - timedelta(hours=30)).isoformat()
     payload = StoredKiteSessionPayload(
@@ -739,6 +792,50 @@ async def test_post_stream_readiness_clears_on_connect():
     payload = await reconciler.run_post_stream_readiness_check(wait_for_stream_seconds=0.0)
     assert payload["stream_connected"] is True
     assert "stream_unavailable" not in (read_block_new_entries() or {}).get("active_reasons", [])
+
+
+@pytest.mark.asyncio
+async def test_post_stream_readiness_clears_when_stream_not_required():
+    stream = SimpleNamespace(_connected=False, latest_quotes_by_ticker={})
+    cache = QuoteCache(broker_stream=stream, rest_fetcher=lambda e, t: 0.0)
+    protection_manager = MagicMock()
+    protection_manager.run_watchdog = AsyncMock(return_value={"positions": 0})
+    reconciler = Reconciler(
+        broker_reducer=BrokerReducer(),
+        broker_stream=stream,
+        quote_cache=cache,
+        protection_manager=protection_manager,
+    )
+
+    set_block_new_entries(reason="stream_unavailable", source="unit_test")
+    payload = await reconciler.run_post_stream_readiness_check(
+        wait_for_stream_seconds=0.0,
+        require_stream=False,
+    )
+
+    assert payload["stream_required"] is False
+    assert payload["stream_connected"] is False
+    assert "stream_unavailable" not in (read_block_new_entries() or {}).get("active_reasons", [])
+
+
+@pytest.mark.asyncio
+async def test_quote_freshness_clears_stream_block_when_stream_not_required(monkeypatch):
+    reconciler, _, _, _ = _make_reconciler()
+    monkeypatch.setattr(cfg.trading, "mode", TradingMode.LIVE)
+    monkeypatch.setattr(
+        reconciler_module,
+        "entry_stream_required_for_new_entries",
+        lambda: False,
+    )
+    set_block_new_entries(reason="stream_unavailable", source="unit_test")
+    set_block_new_entries(reason="stale_quotes", source="unit_test")
+
+    result = await reconciler._check_quote_freshness(source="unit_test")
+
+    assert "stale_ratio" in result
+    reasons = (read_block_new_entries() or {}).get("active_reasons", [])
+    assert "stream_unavailable" not in reasons
+    assert "stale_quotes" not in reasons
 
 
 # ──────────────────────────────────────────────────────────────────

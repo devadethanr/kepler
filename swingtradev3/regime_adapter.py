@@ -15,9 +15,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
-from config import cfg
+from policy.effective_policy import resolve_effective_policy
 
 
 class RegimeOverlay(BaseModel):
@@ -128,7 +128,7 @@ class RegimeAdaptiveConfig:
 
     def min_entry_score(self) -> float:
         """Minimum score required for entry in this regime."""
-        return self._overlay.min_score
+        return max(self._overlay.min_score, resolve_effective_policy().min_score_threshold)
 
     def can_enter(self) -> bool:
         """Whether new entries are allowed at all."""
@@ -154,7 +154,7 @@ class RegimeAdaptiveConfig:
             "regime": self._regime_key,
             "label": self._overlay.label,
             "position_size_pct": self._overlay.position_size_pct,
-            "min_score": self._overlay.min_score,
+            "min_score": self.min_entry_score(),
             "stop_tightness_pct": self._overlay.stop_tightness_pct,
             "new_entries_allowed": self._overlay.new_entries_allowed,
         }

@@ -5,7 +5,7 @@ from typing import Any
 
 from models import AccountState, PositionState
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 
 from .kite_rest import fetch_gtts, fetch_holdings, fetch_order_trades, fetch_orders, fetch_positions
 from .types import (

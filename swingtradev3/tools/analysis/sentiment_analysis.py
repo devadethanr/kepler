@@ -10,14 +10,15 @@ Pure computation — no decisions, no agent logic.
 """
 from __future__ import annotations
 
-import os
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from paths import CONTEXT_DIR
 from storage import read_json, write_json
 
+IST = ZoneInfo("Asia/Kolkata")
 
 # FinBERT model loaded lazily
 _FINBERT_PIPELINE = None
@@ -54,20 +55,54 @@ class SentimentAnalyzer:
 
     def __init__(self, cache_path: Path | None = None, ttl_hours: int = 6) -> None:
         self.cache_path = cache_path or (CONTEXT_DIR / "sentiment_cache.json")
+        self.persist_files = cache_path is not None
+        self._memory_cache: dict[str, Any] = {}
         self.ttl_hours = ttl_hours
 
     def _cached(self, text_hash: str) -> dict[str, Any] | None:
+        if not self.persist_files:
+            return self._memory_cache.get(text_hash)
         cache = read_json(self.cache_path, {})
         item = cache.get(text_hash)
         if not item:
             return None
         return item
 
-    def _store(self, text_hash: str, result: dict[str, Any]) -> dict[str, Any]:
+    def _store(
+        self,
+        text_hash: str,
+        result: dict[str, Any],
+        *,
+        text: str | None = None,
+    ) -> dict[str, Any]:
+        if not self.persist_files:
+            self._memory_cache[text_hash] = result
+            self._persist_context_graph(text_hash, result, text=text)
+            return result
         cache = read_json(self.cache_path, {})
         cache[text_hash] = result
         write_json(self.cache_path, cache)
+        self._persist_context_graph(text_hash, result, text=text)
         return result
+
+    def _persist_context_graph(
+        self,
+        text_hash: str,
+        result: dict[str, Any],
+        *,
+        text: str | None = None,
+    ) -> None:
+        graph = None
+        try:
+            from context_graph.repository import ContextGraphRepository
+
+            graph = ContextGraphRepository()
+            graph.upsert_sentiment_snapshot(text_hash=text_hash, result=result, text=text)
+        except Exception:
+            return
+        finally:
+            if graph is not None:
+                graph.close()
 
     def _hash_text(self, text: str) -> str:
         import hashlib
@@ -138,8 +173,18 @@ class SentimentAnalyzer:
         if cached is not None:
             return cached
 
-        # Layer 1: FinBERT
-        finbert_result = self._finbert_sentiment(text)
+        # Layer 1: FinBERT. If the local model stack is unavailable, keep the
+        # research path alive with keyword sentiment instead of returning an
+        # agent-level error payload.
+        try:
+            finbert_result = self._finbert_sentiment(text)
+        except Exception as exc:
+            finbert_result = {
+                "score": 0.0,
+                "label": "neutral",
+                "source": "finbert_unavailable",
+                "error": str(exc),
+            }
 
         # Layer 2: Keyword
         keyword_result = self._keyword_sentiment(text)
@@ -169,10 +214,10 @@ class SentimentAnalyzer:
             "keyword_score": keyword_result["score"],
             "novelty": "unknown",  # Would need historical comparison
             "source_count": 1 + (1 if finbert_result["source"] == "finbert" else 0),
-            "analyzed_at": datetime.utcnow().isoformat(),
+            "analyzed_at": datetime.now(IST).isoformat(),
         }
 
-        return self._store(text_hash, result)
+        return self._store(text_hash, result, text=text)
 
     def analyze_news_list(self, news_items: list[dict[str, Any]]) -> dict[str, Any]:
         """
@@ -197,14 +242,23 @@ class SentimentAnalyzer:
         all_catalysts = set()
         bullish_count = 0
         bearish_count = 0
+        official_count = 0
+        source_counts: dict[str, int] = {}
 
         for item in news_items:
-            text = f"{item.get('title', '')} {item.get('content', '')}"
+            text = " ".join(
+                str(item.get(field) or "")
+                for field in ("title", "summary", "content_text", "content_markdown", "content")
+            )
             if not text.strip():
                 continue
             result = self.analyze_sentiment(text)
             scores.append(result["sentiment_score"])
             all_catalysts.update(result.get("catalyst_type", []))
+            source_type = str(item.get("source_type") or "unknown")
+            source_counts[source_type] = source_counts.get(source_type, 0) + 1
+            if source_type in {"official_filing", "regulator", "broker_api", "publisher_rss"}:
+                official_count += 1
             if result["sentiment_label"] == "bullish":
                 bullish_count += 1
             elif result["sentiment_label"] == "bearish":
@@ -227,6 +281,8 @@ class SentimentAnalyzer:
             "bullish_count": bullish_count,
             "bearish_count": bearish_count,
             "neutral_count": len(scores) - bullish_count - bearish_count,
+            "official_source_count": official_count,
+            "source_counts": source_counts,
             "source": "aggregated",
-            "analyzed_at": datetime.utcnow().isoformat(),
+            "analyzed_at": datetime.now(IST).isoformat(),
         }

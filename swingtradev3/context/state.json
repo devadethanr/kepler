@@ -4,12 +4,12 @@
   "drawdown_pct": 0.0,
   "positions": [
     {
-      "current_price": 1020.0,
-      "entry_order_id": "entry-RECE271E",
-      "entry_price": 1000.0,
+      "current_price": 4014.01,
+      "entry_order_id": "order-9a280871d6",
+      "entry_price": 4014.01,
       "lifecycle_state": "open",
-      "oco_gtt_id": null,
-      "opened_at": "2026-04-22T09:44:05.862054",
+      "oco_gtt_id": "pos-8af1bff12e",
+      "opened_at": "2026-05-14T22:23:39.912444",
       "pending_corporate_action": {
         "adjustment_alert_sent_at": null,
         "amount": null,
@@ -20,16 +20,16 @@
       },
       "product": "CNC",
       "quantity": 5,
-      "research_date": null,
+      "research_date": "2026-04-16",
       "sector": "IT",
-      "skill_version": null,
-      "stop_price": 980.0,
-      "target_price": 1080.0,
-      "thesis_score": null,
-      "ticker": "RECE271E"
+      "skill_version": "phase1-test",
+      "stop_price": 3920.0,
+      "target_price": 4200.0,
+      "thesis_score": 8.4,
+      "ticker": "TCS"
     }
   ],
   "realized_pnl": 0.0,
-  "unrealized_pnl": 100.0,
+  "unrealized_pnl": 0.0,
   "weekly_loss_pct": 0.0
 }

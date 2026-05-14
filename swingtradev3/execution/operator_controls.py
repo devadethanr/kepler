@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Any
 
 from memory.db import session_scope
-from memory.repositories import MemoryRepository
+from memory.repository import MemoryRepository
 
 
 WORKER_STATUS_KEY = "worker_status"

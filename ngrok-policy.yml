@@ -1,0 +1,8 @@
+on_http_request:
+  - actions:
+      - type: basic-auth
+        config:
+          realm: "SwingTrade Dashboard"
+          credentials:
+            - "admin:Admin!@12"
+          enforce: true

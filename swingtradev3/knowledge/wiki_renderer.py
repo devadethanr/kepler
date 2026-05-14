@@ -17,6 +17,7 @@ from typing import Any
 
 import frontmatter
 
+from context_graph.repository import ContextGraphRepository, GraphUnavailableError
 from paths import KNOWLEDGE_DIR
 from storage import read_json, write_json
 from knowledge.knowledge_models import (
@@ -31,6 +32,12 @@ from knowledge.knowledge_models import (
     SectorNoteFrontmatter,
     TradeJournalFrontmatter,
 )
+
+
+def _graph_repo() -> ContextGraphRepository:
+    if not hasattr(_graph_repo, "_repo"):
+        _graph_repo._repo = ContextGraphRepository()
+    return _graph_repo._repo
 
 
 WIKI_DIR = KNOWLEDGE_DIR / "wiki"
@@ -179,6 +186,15 @@ def upsert_stock_note(
     # Update graph
     _update_graph_for_stock(ticker, fm, connections)
 
+    # Mirror to Memgraph (best-effort)
+    try:
+        repo = _graph_repo()
+        repo.upsert_stock(ticker, sector=sector, source="wiki_renderer")
+        if sector:
+            repo.upsert_sector(sector, source="wiki_renderer")
+    except GraphUnavailableError:
+        pass
+
 
 # ─────────────────────────────────────────────────────────────
 # Trade Journal Operations
@@ -249,6 +265,32 @@ def upsert_trade_journal(
 
     # Update graph with trade node
     _update_graph_for_trade(trade_id, ticker, pnl_pct, sector)
+
+    # Mirror to Memgraph (best-effort)
+    try:
+        repo = _graph_repo()
+        repo.upsert_trade_memory(
+            trade_id=trade_id,
+            ticker=ticker,
+            payload={
+                "entry_price": entry_price,
+                "exit_price": exit_price,
+                "pnl_pct": pnl_pct,
+                "setup_type": setup_type,
+                "exit_reason": exit_reason,
+                "what_worked": what_worked,
+                "what_failed": what_failed,
+                "sector": sector,
+            },
+            entry_price=entry_price,
+            exit_price=exit_price,
+            pnl_pct=pnl_pct,
+            setup_type=setup_type,
+            sector=sector,
+            source="wiki_renderer",
+        )
+    except GraphUnavailableError:
+        pass
 
 
 # ─────────────────────────────────────────────────────────────

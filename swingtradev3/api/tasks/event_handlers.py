@@ -11,13 +11,59 @@ Each handler responds to a specific EventType and takes action:
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Any
+from urllib.parse import urlparse
+from zoneinfo import ZoneInfo
 
 from api.tasks.event_bus import BusEvent, EventType, event_bus
+from config import cfg
+
+IST = ZoneInfo("Asia/Kolkata")
 
 
 # ─────────────────────────────────────────────────────────────
 # Handler implementations
 # ─────────────────────────────────────────────────────────────
+
+def _headline_domain(url: str) -> str:
+    host = urlparse(url).netloc.lower()
+    return host[4:] if host.startswith("www.") else host
+
+
+def _format_headline(item: Any) -> str | None:
+    if isinstance(item, str):
+        text = item.strip()
+        return f"• {text[:220]}" if text else None
+    if not isinstance(item, dict):
+        return None
+    title = str(item.get("title") or item.get("content") or "").strip()
+    url = str(item.get("url") or "").strip()
+    if not title and not url:
+        return None
+    if len(title) > 180:
+        title = f"{title[:177]}..."
+    domain = str(item.get("domain") or _headline_domain(url) or "").strip()
+    published = str(
+        item.get("published_at_ist")
+        or item.get("published_at")
+        or item.get("fetched_at_ist")
+        or ""
+    ).strip()
+    source_type = str(item.get("source_type") or "").strip()
+    label = "official" if source_type in {"official_filing", "regulator", "broker_api"} else ""
+    if source_type == "publisher_rss":
+        label = "publisher"
+    if source_type == "crawler":
+        label = "crawler"
+    confidence = item.get("confidence")
+    confidence_text = (
+        f"conf={float(confidence):.2f}" if isinstance(confidence, (int, float)) else ""
+    )
+    meta = " | ".join(part for part in (domain, label, confidence_text, published) if part)
+    suffix = f" ({meta})" if meta else ""
+    if url:
+        return f"• {title}{suffix}\n  {url}"
+    return f"• {title}{suffix}"
 
 
 async def handle_gtt_triggered(event: BusEvent) -> None:
@@ -55,10 +101,67 @@ async def handle_position_news(event: BusEvent) -> None:
         from notifications.telegram_client import TelegramClient
 
         tg = TelegramClient()
-        news_text = "\n".join(f"• {h}" for h in headlines[:5])
+        alert_limit = int(cfg.research.filter.news_position_alert_max_items)
+        lines = [
+            line for line in (_format_headline(item) for item in headlines[:alert_limit]) if line
+        ]
+        if not lines:
+            return
+        news_text = "\n".join(lines)
         await tg.send_briefing(f"📰 News Alert: {ticker}", news_text)
     except Exception as e:
         print(f"handle_position_news: Telegram failed: {e}")
+
+
+async def handle_market_news_digest(event: BusEvent) -> None:
+    """General market news digest, grouped by detected stock where possible."""
+    ticker_groups = event.payload.get("ticker_groups", [])
+    general = event.payload.get("general", [])
+    item_count = int(event.payload.get("item_count") or 0)
+
+    print(
+        f"[EVENT] Market news digest: {len(ticker_groups)} ticker groups, "
+        f"{len(general)} general items"
+    )
+
+    if not item_count:
+        return
+
+    sections: list[str] = []
+    filter_cfg = cfg.research.filter
+    max_groups = int(filter_cfg.market_news_digest_max_ticker_groups)
+    max_per_ticker = int(filter_cfg.market_news_digest_max_items_per_ticker)
+    max_general = int(filter_cfg.market_news_digest_max_general_items)
+
+    for group in ticker_groups[:max_groups]:
+        if not isinstance(group, dict):
+            continue
+        ticker = str(group.get("ticker") or "UNKNOWN").upper()
+        company = str(group.get("company_name") or ticker).strip()
+        lines = [
+            line
+            for line in (_format_headline(item) for item in group.get("items", [])[:max_per_ticker])
+            if line
+        ]
+        if lines:
+            sections.append(f"📌 {ticker} — {company}\n" + "\n".join(lines))
+
+    general_lines = [
+        line for line in (_format_headline(item) for item in general[:max_general]) if line
+    ]
+    if general_lines:
+        sections.append("🌐 General / Macro\n" + "\n".join(general_lines))
+
+    if not sections:
+        return
+
+    try:
+        from notifications.telegram_client import TelegramClient
+
+        tg = TelegramClient()
+        await tg.send_briefing("🗞️ Market News Digest", "\n\n".join(sections))
+    except Exception as e:
+        print(f"handle_market_news_digest: Telegram failed: {e}")
 
 
 async def handle_stop_hit(event: BusEvent) -> None:
@@ -70,42 +173,27 @@ async def handle_stop_hit(event: BusEvent) -> None:
 
     print(f"[EVENT] Stop hit: {ticker} — P&L: {pnl_pct:.1f}%")
 
-    # Log observation
     try:
-        from storage import read_json, write_json
-        from paths import CONTEXT_DIR
+        from context_graph.repository import ContextGraphRepository
 
-        observations = read_json(CONTEXT_DIR / "observations.json", [])
-        observations.append(
-            {
-                "timestamp": datetime.now().isoformat(),
+        repo = ContextGraphRepository()
+        repo.record_observation(
+            observation_type="stop_hit",
+            ticker=str(ticker),
+            payload={
+                "timestamp": datetime.now(IST).isoformat(),
                 "type": "stop_hit",
                 "ticker": ticker,
                 "entry_price": entry_price,
                 "stop_price": stop_price,
                 "pnl_pct": pnl_pct,
-                "lesson": f"{ticker} stopped out at ₹{stop_price} ({pnl_pct:.1f}%)",
-            }
+                "lesson": f"{ticker} stopped out at Rs {stop_price} ({pnl_pct:.1f}%)",
+            },
+            source="event_handler:stop_hit",
         )
-        write_json(CONTEXT_DIR / "observations.json", observations)
+        repo.close()
     except Exception as e:
         print(f"handle_stop_hit: observation failed: {e}")
-
-    # Update knowledge graph
-    try:
-        from knowledge.wiki_renderer import WikiRenderer
-
-        renderer = WikiRenderer()
-        renderer.upsert_stock_note(
-            ticker,
-            {
-                "date": datetime.now().strftime("%Y-%m-%d"),
-                "event": "stop_hit",
-                "pnl_pct": pnl_pct,
-            },
-        )
-    except Exception as e:
-        print(f"handle_stop_hit: KG update failed: {e}")
 
 
 async def handle_target_hit(event: BusEvent) -> None:
@@ -117,42 +205,27 @@ async def handle_target_hit(event: BusEvent) -> None:
 
     print(f"[EVENT] Target hit: {ticker} — P&L: +{pnl_pct:.1f}%")
 
-    # Log observation
     try:
-        from storage import read_json, write_json
-        from paths import CONTEXT_DIR
+        from context_graph.repository import ContextGraphRepository
 
-        observations = read_json(CONTEXT_DIR / "observations.json", [])
-        observations.append(
-            {
-                "timestamp": datetime.now().isoformat(),
+        repo = ContextGraphRepository()
+        repo.record_observation(
+            observation_type="target_hit",
+            ticker=str(ticker),
+            payload={
+                "timestamp": datetime.now(IST).isoformat(),
                 "type": "target_hit",
                 "ticker": ticker,
                 "entry_price": entry_price,
                 "target_price": target_price,
                 "pnl_pct": pnl_pct,
-                "lesson": f"{ticker} hit target at ₹{target_price} (+{pnl_pct:.1f}%)",
-            }
+                "lesson": f"{ticker} hit target at Rs {target_price} (+{pnl_pct:.1f}%)",
+            },
+            source="event_handler:target_hit",
         )
-        write_json(CONTEXT_DIR / "observations.json", observations)
+        repo.close()
     except Exception as e:
         print(f"handle_target_hit: observation failed: {e}")
-
-    # Update knowledge graph
-    try:
-        from knowledge.wiki_renderer import WikiRenderer
-
-        renderer = WikiRenderer()
-        renderer.upsert_stock_note(
-            ticker,
-            {
-                "date": datetime.now().strftime("%Y-%m-%d"),
-                "event": "target_hit",
-                "pnl_pct": pnl_pct,
-            },
-        )
-    except Exception as e:
-        print(f"handle_target_hit: KG update failed: {e}")
 
 
 async def handle_auth_expiring(event: BusEvent) -> None:
@@ -217,8 +290,9 @@ def register_all_handlers(bus=None) -> None:
     target_bus = bus or event_bus
     target_bus.subscribe(EventType.GTT_ALERT, handle_gtt_triggered)
     target_bus.subscribe(EventType.NEWS_BREAK, handle_position_news)
+    target_bus.subscribe(EventType.MARKET_NEWS_DIGEST, handle_market_news_digest)
     target_bus.subscribe(EventType.STOP_HIT, handle_stop_hit)
     target_bus.subscribe(EventType.TARGET_HIT, handle_target_hit)
     target_bus.subscribe(EventType.AUTH_EXPIRING, handle_auth_expiring)
     target_bus.subscribe(EventType.REGIME_CHANGE, handle_regime_change)
-    print("EventHandlers: registered 6 handlers")
+    print("EventHandlers: registered 7 handlers")

@@ -27,8 +27,9 @@ import schedule
 
 from config import cfg, runtime_flags
 from paths import CONTEXT_DIR
-from api.tasks.event_bus import event_bus, BusEvent, EventType
 from api.tasks.activity_manager import activity_manager
+from api.tasks.event_bus import BusEvent, EventType, event_bus
+from api.tasks.session_phase import IST_ZONE, is_trading_day
 
 IST = ZoneInfo("Asia/Kolkata")
 
@@ -79,29 +80,29 @@ class TradingScheduler:
 
         # ── Phase 2: Pre-Market Preparation (06:00 → 09:15) ──
         m = cfg.scheduler.morning
-        schedule.every().day.at(_ist_time(m.news_digest_time)).do(
+        schedule.every().day.at(_ist_time(m.news_digest_time), IST_ZONE).do(
             self._job, "morning_news_digest", self._morning_news_digest
         )
-        schedule.every().day.at(_ist_time(m.regime_check_time)).do(
+        schedule.every().day.at(_ist_time(m.regime_check_time), IST_ZONE).do(
             self._job, "morning_regime_check", self._morning_regime_check
         )
-        schedule.every().day.at(_ist_time(m.fii_dii_check_time)).do(
+        schedule.every().day.at(_ist_time(m.fii_dii_check_time), IST_ZONE).do(
             self._job, "fii_dii_check", self._fii_dii_check
         )
-        schedule.every().day.at(_ist_time(m.briefing_generation_time)).do(
+        schedule.every().day.at(_ist_time(m.briefing_generation_time), IST_ZONE).do(
             self._job, "morning_briefing", self._generate_morning_briefing
         )
-        schedule.every().day.at(_ist_time(m.approval_reminder_time)).do(
+        schedule.every().day.at(_ist_time(m.approval_reminder_time), IST_ZONE).do(
             self._job, "approval_reminder", self._approval_reminder
         )
-        schedule.every().day.at(_ist_time(m.premarket_setup_time)).do(
+        schedule.every().day.at(_ist_time(m.premarket_setup_time), IST_ZONE).do(
             self._job, "premarket_setup", self._premarket_setup
         )
         # Phase 7 (P8): pre-market auth preflight (default 08:50). Re-auth is the
         # operator's responsibility; we surface the alert loudly so they notice
         # before market open. Also clears any stale daily-loss block from the
         # previous session.
-        schedule.every().day.at(_ist_time(cfg.schedule.auth_refresh)).do(
+        schedule.every().day.at(_ist_time(cfg.schedule.auth_refresh), IST_ZONE).do(
             self._job,
             "auth_preflight",
             lambda: self._auth_preflight(clear_prior_day_blocks=True),
@@ -120,37 +121,37 @@ class TradingScheduler:
 
         # ── Phase 4: Post-Market (15:30 → 18:00) ──
         pm = cfg.scheduler.post_market
-        schedule.every().day.at(_ist_time(pm.eod_data_collection)).do(
+        schedule.every().day.at(_ist_time(pm.eod_data_collection), IST_ZONE).do(
             self._job, "eod_data_collection", self._eod_data_collection
         )
-        schedule.every().day.at(_ist_time(pm.pnl_calculation)).do(
+        schedule.every().day.at(_ist_time(pm.pnl_calculation), IST_ZONE).do(
             self._job, "pnl_calculation", self._pnl_calculation
         )
-        schedule.every().day.at(_ist_time(pm.fii_dii_final)).do(
+        schedule.every().day.at(_ist_time(pm.fii_dii_final), IST_ZONE).do(
             self._job, "fii_dii_final", self._fii_dii_final
         )
-        schedule.every().day.at(_ist_time(pm.observation_logging)).do(
+        schedule.every().day.at(_ist_time(pm.observation_logging), IST_ZONE).do(
             self._job, "observation_logging", self._observation_logging
         )
 
         # ── Phase 5: Evening Research (18:00 → 21:00) ──
         er = cfg.scheduler.evening_research
-        schedule.every().day.at(_ist_time(er.start_time)).do(
+        schedule.every().day.at(_ist_time(er.start_time), IST_ZONE).do(
             self._job, "evening_research_pipeline", self._trigger_research_pipeline
         )
 
         # ── Phase 6: Wind-Down (21:00 → 22:00) ──
         wd = cfg.scheduler.wind_down
-        schedule.every().day.at(_ist_time(wd.state_persistence)).do(
+        schedule.every().day.at(_ist_time(wd.state_persistence), IST_ZONE).do(
             self._job, "state_snapshot", self._state_snapshot
         )
-        schedule.every().day.at(_ist_time(wd.log_rotation)).do(
+        schedule.every().day.at(_ist_time(wd.log_rotation), IST_ZONE).do(
             self._job, "log_rotation", self._log_rotation
         )
-        schedule.every().day.at(_ist_time(wd.health_check)).do(
+        schedule.every().day.at(_ist_time(wd.health_check), IST_ZONE).do(
             self._job, "health_check", self._health_check
         )
-        schedule.every().day.at(_ist_time(wd.final_news_scan)).do(
+        schedule.every().day.at(_ist_time(wd.final_news_scan), IST_ZONE).do(
             self._job, "daily_summary", self._daily_summary
         )
 
@@ -181,8 +182,8 @@ class TradingScheduler:
         """Main scheduler loop — runs pending jobs every second."""
         while self.is_running:
             # Determine current phase
-            now = _now_ist().time()
-            new_phase = self._get_current_phase(now)
+            now = _now_ist()
+            new_phase = self._get_current_phase(now.time(), trading_day=is_trading_day(now))
             if new_phase != self._current_phase:
                 self._current_phase = new_phase
                 await activity_manager.set_scheduler_phase(new_phase)
@@ -197,14 +198,14 @@ class TradingScheduler:
             schedule.run_pending()
             await asyncio.sleep(1)
 
-    def _get_current_phase(self, now: dt_time) -> str:
+    def _get_current_phase(self, now: dt_time, *, trading_day: bool = True) -> str:
         """Determine which phase we're in based on current IST time."""
         if now < dt_time(6, 0):
             return "overnight_monitoring"
         elif now < dt_time(9, 15):
-            return "pre_market_prep"
+            return "pre_market_prep" if trading_day else "market_closed"
         elif now < dt_time(15, 30):
-            return "market_hours"
+            return "market_hours" if trading_day else "market_closed"
         elif now < dt_time(18, 0):
             return "post_market"
         elif now < dt_time(21, 0):
@@ -248,9 +249,14 @@ class TradingScheduler:
 
     async def _overnight_news_sweep(self) -> None:
         """Sweep global news for holdings-relevant events."""
-        from data.news_aggregator import NewsAggregator
+        from data.news import NewsAggregator
+        from data.nifty200_loader import Nifty200Loader
         from storage import read_json
         from models import AccountState
+
+        now = _now_ist().time()
+        if dt_time(6, 0) <= now < dt_time(22, 0):
+            return
 
         state_data = read_json(CONTEXT_DIR / "state.json", {})
         if not state_data or not state_data.get("positions"):
@@ -258,15 +264,26 @@ class TradingScheduler:
 
         state = AccountState.model_validate(state_data)
         news = NewsAggregator()
+        universe = Nifty200Loader()
+        alert_limit = int(cfg.research.filter.news_position_alert_max_items)
 
         for pos in state.positions:
-            news_data = await asyncio.to_thread(news.search_news, pos.ticker)
-            headlines = news_data.get("results", [])[:3]
+            company_name = universe.name_for(pos.ticker)
+            news_data = await asyncio.to_thread(
+                news.search_stock_news,
+                pos.ticker,
+                company_name,
+            )
+            headlines = news.filter_new_alerts(
+                pos.ticker,
+                news_data.get("results", [])[:alert_limit],
+                company_name=company_name,
+            )
             if headlines:
                 await event_bus.publish(
                     BusEvent(
                         type=EventType.NEWS_BREAK,
-                        payload={"ticker": pos.ticker, "headlines": headlines[:3]},
+                        payload={"ticker": pos.ticker, "headlines": headlines[:alert_limit]},
                         source="overnight_monitor",
                     )
                 )
@@ -285,10 +302,19 @@ class TradingScheduler:
 
     async def _morning_news_digest(self) -> None:
         """06:00 — Sweep market news for overnight developments."""
-        from data.news_aggregator import NewsAggregator
+        from data.news import NewsAggregator
 
         news = NewsAggregator()
-        await asyncio.to_thread(news.sweep_market_news)
+        payload = await asyncio.to_thread(news.sweep_market_news)
+        digest = news.build_market_digest(payload)
+        if digest.get("item_count"):
+            await event_bus.publish(
+                BusEvent(
+                    type=EventType.MARKET_NEWS_DIGEST,
+                    payload=digest,
+                    source="morning_news_digest",
+                )
+            )
         print(f"[{_now_ist().isoformat()}] Morning news digest completed")
 
     async def _morning_regime_check(self) -> None:
@@ -416,7 +442,7 @@ class TradingScheduler:
     async def _position_monitor(self) -> None:
         """Every N minutes during market hours: trail stops from live quote truth."""
         now = _now_ist().time()
-        if not (dt_time(9, 15) <= now <= dt_time(15, 30)):
+        if not is_trading_day(_now_ist()) or not (dt_time(9, 15) <= now <= dt_time(15, 30)):
             return  # Only during market hours
         if not self._live_protection_enabled():
             return
@@ -443,10 +469,11 @@ class TradingScheduler:
     async def _intraday_news_sweep(self) -> None:
         """Sweep news for held positions during market hours."""
         now = _now_ist().time()
-        if not (dt_time(9, 15) <= now <= dt_time(15, 30)):
+        if not is_trading_day(_now_ist()) or not (dt_time(9, 15) <= now <= dt_time(15, 30)):
             return
 
-        from data.news_aggregator import NewsAggregator
+        from data.news import NewsAggregator
+        from data.nifty200_loader import Nifty200Loader
         from storage import read_json
         from models import AccountState
 
@@ -456,15 +483,26 @@ class TradingScheduler:
 
         state = AccountState.model_validate(state_data)
         news = NewsAggregator()
+        universe = Nifty200Loader()
+        alert_limit = int(cfg.research.filter.news_position_alert_max_items)
 
         for pos in state.positions:
-            news_data = await asyncio.to_thread(news.search_news, pos.ticker)
-            headlines = news_data.get("results", [])[:3]
+            company_name = universe.name_for(pos.ticker)
+            news_data = await asyncio.to_thread(
+                news.search_stock_news,
+                pos.ticker,
+                company_name,
+            )
+            headlines = news.filter_new_alerts(
+                pos.ticker,
+                news_data.get("results", [])[:alert_limit],
+                company_name=company_name,
+            )
             if headlines:
                 await event_bus.publish(
                     BusEvent(
                         type=EventType.NEWS_BREAK,
-                        payload={"ticker": pos.ticker, "headlines": headlines[:3]},
+                        payload={"ticker": pos.ticker, "headlines": headlines[:alert_limit]},
                         source="intraday_news",
                     )
                 )

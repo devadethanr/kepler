@@ -1,27 +1,30 @@
 from __future__ import annotations
 
-import json
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 from typing import Any, AsyncGenerator
+from zoneinfo import ZoneInfo
 
 from google.adk.agents import SequentialAgent, BaseAgent
 from google.adk.events import Event
 from google.genai import types
 
 from config import cfg
+from context_graph.repository import ContextGraphRepository, GraphUnavailableError
+from memory.db import session_scope
+from memory.projections import project_all_managed_files
+from memory.repository import MemoryRepository
 from agents.research.regime_agent import RegimeAgent
 from agents.research.filter_agent import FilterAgent
 from agents.research.scanner import BatchScannerAgent
 from agents.research.scorer_agent import ScorerAgent
 from agents.research.knowledge_graph_agent import KnowledgeGraphAgent
 
-from paths import CONTEXT_DIR
-from storage import write_json
+IST = ZoneInfo("Asia/Kolkata")
 
 
 class ResultsSaverAgent(BaseAgent):
     """
-    Saves the final research results to context files.
+    Saves final research results to Memgraph and Postgres-backed approvals.
     """
     def __init__(self, name: str = "ResultsSaverAgent") -> None:
         super().__init__(name=name)
@@ -51,6 +54,10 @@ class ResultsSaverAgent(BaseAgent):
                     "confidence_reasoning": item.get("confidence_reasoning"),
                     "risk_flags": item.get("risk_flags", []),
                     "sector": item.get("sector"),
+                    "approved": None,
+                    "execution_requested": False,
+                    "execution_request_id": None,
+                    "status": "pending",
                     "created_at": analyzed_at.isoformat(),
                     "expires_at": expires_at.isoformat(),
                     "research_date": item.get("research_date") or scan_date,
@@ -59,66 +66,65 @@ class ResultsSaverAgent(BaseAgent):
             )
         return payload
 
-    async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, None]:
-        scan_date = date.today().isoformat()
+    async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, Any]:
+        analyzed_at = datetime.now(IST)
+        scan_date = analyzed_at.date().isoformat()
         regime = ctx.session.state.get("regime", {})
         qualified_stocks = ctx.session.state.get("qualified_stocks", [])
         shortlist = ctx.session.state.get("shortlist", [])
         stock_data = ctx.session.state.get("stock_data", {})
         scan_results = ctx.session.state.get("scan_results", [])
+        diagnostics = ctx.session.state.get("scan_diagnostics", {})
+        total_screened = int(
+            diagnostics.get("total_screened")
+            or diagnostics.get("screened_count")
+            or len(scan_results)
+            or len(qualified_stocks)
+        )
+        run_id = f"research:{scan_date}"
 
-        analyzed_at = datetime.now()
-        result = {
-            "scan_date": scan_date,
-            "regime": regime,
-            "total_screened": 200,
-            "qualified_count": len(qualified_stocks),
-            "shortlist": shortlist,
-            "analyzed_at": analyzed_at.isoformat(),
-        }
-
-        # Save to context
-        research_dir = CONTEXT_DIR / "research" / scan_date
-        research_dir.mkdir(parents=True, exist_ok=True)
-        write_json(research_dir / "scan_result.json", result)
-        write_json(
-            CONTEXT_DIR / "pending_approvals.json",
-            self._build_pending_approvals(
-                shortlist=shortlist,
+        # Phase 11: Write scan results to Memgraph context graph
+        graph_repo: ContextGraphRepository | None = None
+        try:
+            graph_repo = ContextGraphRepository()
+            graph_repo.upsert_research_run(
+                run_id=run_id,
                 scan_date=scan_date,
                 analyzed_at=analyzed_at,
-            ),
-        )
+                regime=regime,
+                diagnostics=diagnostics or {},
+                qualified_count=len(qualified_stocks),
+                total_screened=total_screened,
+                shortlist=shortlist,
+                scan_results=scan_results,
+                stock_data=stock_data,
+            )
+        except GraphUnavailableError:
+            pass
+        finally:
+            if graph_repo is not None:
+                graph_repo.close()
 
-        # Save individual stock analyses
-        for stock in scan_results:
-            ticker = stock.get("ticker")
-            if not ticker:
-                continue
-            stock_info = {
-                "ticker": ticker,
-                "score": stock.get("score"),
-                "setup_type": stock.get("setup_type"),
-                "entry_zone": stock.get("entry_zone"),
-                "stop_price": stock.get("stop_price"),
-                "target_price": stock.get("target_price"),
-                "reasoning": stock.get("reasoning"),
-                "bull_case": stock.get("bull_case"),
-                "bear_case": stock.get("bear_case"),
-                "signals": stock.get("signals", {}),
-                "technical": stock_data.get(ticker, {}).get("technical", {}),
-                "fundamentals": stock_data.get(ticker, {}).get("fundamentals", {}),
-                "sentiment": stock_data.get(ticker, {}).get("sentiment", {}),
-                "options": stock_data.get(ticker, {}).get("options", {}),
-                "timesfm": stock_data.get(ticker, {}).get("timesfm", {}),
-            }
-            write_json(research_dir / f"{ticker}.json", stock_info)
+        pending_approvals = self._build_pending_approvals(
+            shortlist=shortlist,
+            scan_date=scan_date,
+            analyzed_at=analyzed_at,
+        )
+        try:
+            with session_scope() as session:
+                MemoryRepository(session).replace_pending_approvals(
+                    pending_approvals,
+                    source="research_pipeline",
+                )
+            project_all_managed_files()
+        except Exception as exc:
+            print(f"Research approval persistence failed: {exc}")
 
         yield Event(
             author=self.name,
             content=types.Content(
                 role="assistant",
-                parts=[types.Part(text=f"Research results saved to {research_dir}")]
+                parts=[types.Part(text="Research results saved to context graph and approvals.")]
             ),
         )
 

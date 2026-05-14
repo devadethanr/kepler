@@ -15,6 +15,14 @@ class RiskCheckTool:
         entry_price: float,
         stop_price: float,
         target_price: float,
+        sector: str | None = None,
     ) -> dict[str, object]:
-        decision = self.engine.evaluate(state, score, entry_price, stop_price, target_price)
+        decision = self.engine.evaluate(
+            state,
+            score,
+            entry_price,
+            stop_price,
+            target_price,
+            sector=sector,
+        )
         return {"approved": decision.approved, "quantity": decision.quantity, "reason": decision.reason}

@@ -1,6 +1,6 @@
 # Live Trading One-Shot Plan
 
-> Last Updated: April 17, 2026
+> Last Updated: May 10, 2026
 > This is the active end-to-end implementation plan for turning `swingtradev3` into a broker-truth-driven, bounded-autonomy live trading system.
 > It merges the execution hardening work from `findings.md` with the Slow Brain / Fast Brain architecture in `agent_cognition_architecture.md` and `agent_cognition_implementation_plan.md`.
 > Phases 0-9 build the execution-safe floor. Phases 10-13 add the cognition, policy, and memory layers required for the final non-linear autonomous system.
@@ -18,7 +18,7 @@ And, after the execution floor is stable, extend it into the full target archite
 
 - **Slow Brain**: overnight and pre-market multi-agent deliberation
 - **Fast Brain**: market-hours deterministic execution and risk control
-- **Memory**: knowledge graph plus Postgres execution and trade history
+- **Memory**: Memgraph context graph plus Postgres execution and trade history
 - **Policy Layer**: bounded dynamic overlays, not raw `config.yaml` mutation
 - **Execution Core**: broker-truth single-writer worker
 - **Recovery Layer**: reconciliation, kill switches, and operator controls
@@ -430,35 +430,48 @@ Definition of done:
 
 - the system fails closed instead of failing dangerously
 
-### Phase 8: Dashboard, API, And Compatibility Projections
+ ## Phase 8 React Dashboard
 
-Refactor:
+  ## Summary
 
-- `dashboard/dashboard/state.py`
-- `api/routes/positions.py`
-- `api/routes/trades.py`
-- `api/routes/portfolio.py`
-- `api/routes/dashboard.py`
+  - Phase 8 will replace the old Reflex dashboard with the root-level React/Vite app at swingtradev3-dashboard.
+  - Remove swingtradev3/dashboard and swingtradev3/dashboard_old after the React dashboard boots through Compose.
+  - Phase 8 remains dashboard/API/SSE/projection work. The knowledge graph screen stays as an explicit mock until Phase 11.
+  - Phase 11 owns the real Postgres + Memgraph context graph/memory phase.
 
-Implementation:
+  - Replace Dockerfile.dashboard with a Node/Vite runtime and update docker-compose.dev.yml to mount/build ./swingtradev3-dashboard, not ./swingtradev3/dashboard.
+  - Use Vite dev proxy /api -> http://app:8000 so the browser calls same-origin /api/...; inject X-API-Key from dashboard container env in the proxy instead of hardcoding API keys into React.
+  - Add frontend data layer packages: @tanstack/react-query for request/mutation cache, zod for response validation, and @microsoft/fetch-event-source for SSE because native EventSource does not support custom request headers.
+  - Remove unused AI Studio/server packages from the dashboard app: @google/genai, dotenv, express, @types/express; keep react-force-graph-3d, three, recharts, motion, and lucide-react.
+  - Add src/lib/api.ts, src/lib/sse.ts, src/lib/schemas.ts, and feature hooks so screens do not call fetch directly.
+  - Keep KnowledgeScreen as a deterministic local mock with an explicit pending-graph badge; remove markdown/file language like “View Markdown Base” and do not read context/knowledge in Phase 8.
+  - Refactor existing FastAPI routes so dashboard reads Postgres-backed state, not state.json, trades.json, pending_approvals.json, _graph.json, or _index.json.
+  - Make /sse/live durable by tailing execution_events with a cursor/heartbeat model instead of depending only on the in-memory broadcaster.
+  - Fix API auth fail-closed behavior: if API auth is enabled and no key is configured, return 403, do not allow access.
 
-- switch UI to DB-backed projections:
-  - intent status
-  - broker order state
-  - GTT protection state
-  - last reconciliation time
-  - auth/session status
-  - kill-switch state
-  - unresolved incidents
-- keep `pending_approvals.json`, `state.json`, and `trades.json` only as migration-era compatibility views
-- remove the hardcoded dashboard API key fallback
-- make SSE read from execution projections or an `execution_events` tail instead of the in-process event bus only
+  ## Required API Surface
+
+  | UI Area | Routes |
+  |---|---|
+  | Top bar / shell | GET /health, GET /ops/safety, GET /dashboard/snapshot |
+  | Dashboard overview | GET /dashboard/snapshot, GET /dashboard/events?limit=..., GET /sse/live |
+  | Orders / approvals | GET /approvals, POST /approvals/{id}/yes, POST /approvals/{id}/no |
+  | Execution | GET /dashboard/execution, GET /ops/reconciliation, GET /dashboard/events |
+  | Positions | GET /positions, POST /ops/positions/{ticker}/close |
+  | Trades / portfolio | GET /trades, GET /portfolio/summary |
+  | Incidents | GET /ops/safety, GET /ops/reconciliation, POST /ops/block/clear |
+  | Control pane | GET /ops/safety, POST /ops/mode, POST /ops/flatten, DELETE /ops/flatten, POST /scan, GET /scan/status |
+  | Tickers / quotes | GET /dashboard/quotes |
+  | Brokers | GET /dashboard/broker, GET /ops/safety |
+  | Telemetry | GET /dashboard/telemetry, GET /dashboard/events, GET /sse/live |
+  | Knowledge graph | local mock only in Phase 8; real API belongs to Phase 11 |
+
 
 Definition of done:
 
 - the dashboard reflects broker-confirmed state, not stale local assumptions
 
-### Phase 9: Tests And Staged Enablement
+### Phase 9 [X]: Tests And Staged Enablement
 
 New test areas:
 
@@ -496,7 +509,15 @@ Enablement ladder:
 5. same-day unattended live mode
 6. multi-day unattended mode only after DDPI/POA confirmation and stable daily login operations
 
-### Phase 10: Policy Layer And Effective Policy
+Completion evidence as of May 4, 2026:
+
+- `make test` runs in Docker with worker isolation and restores the worker after pytest.
+- Backend deterministic gate: 281 passed, 3 skipped, 41 warnings.
+- Dashboard API/SSE client gate: 8 passed through the dashboard Docker service.
+- Live market/news/LLM evaluation is opt-in via `RUN_LIVE_EVAL=true` and is not part of the deterministic Docker gate.
+- The 10-trading-day paper soak and staged live modes remain operational rollout controls that require operator evidence before advancing runtime flags.
+
+### Phase 10 [X]: Policy Layer And Effective Policy
 
 Implementation:
 
@@ -513,38 +534,179 @@ Implementation:
   - `max_same_sector_positions`
   - `trail_stop_at_pct`
   - `trail_to_pct`
-  - `debate_top_n`
+- `debate_top_n`
 
 Definition of done:
 
 - no runtime path mutates `config.yaml`
 - adaptive behavior is bounded, auditable, and reversible
 
-### Phase 11: Memory Views And Google MCP Toolbox
+Implemented:
+
+- `swingtradev3/policy/` now owns bounded overlay validation, lifecycle transitions, and
+  effective-policy resolution.
+- `policy_overlays` is used as the durable audit table; overlays carry reason, proposer,
+  approver, expiry, rollback handle, and transition history in Postgres.
+- `GET /policy/effective`, `GET/POST /policy/overlays`, approve/reject/rollback endpoints, and
+  `GET /dashboard/policy` expose the runtime policy and audit trail.
+- Runtime entry approval/execution, risk sizing, sector concentration, research score thresholds,
+  and trailing thresholds read the effective policy instead of only raw config.
+- The dashboard Risk panel shows effective policy values and active overlays.
+
+### Phase 11: Context Graph Memory
+
+> Full design specification: [docs/features/postgress-memgraph.md](../features/postgress-memgraph.md)
+
+#### Core Principle
+
+```
+Postgres = execution truth     (protects money)
+Memgraph = context graph truth (improves memory and reasoning)
+Files    = temporary caches + compatibility exports only
+```
+
+If Memgraph is down, trading safety must still work. The only acceptable degradation is:
+`"less historical/research context available"` — never `"cannot reconcile"` or `"cannot place/flatten"`.
+
+#### What Postgres Continues To Own
+
+All execution-critical state stays in Postgres:
+
+- `entry_intents`, `approvals`, `order_intents`, `broker_orders`, `broker_fills`
+- `positions`, `protective_triggers`, `trades`
+- `operator_controls`, `failure_incidents`, `reconciliation_runs`
+- `auth_sessions`, `policy_overlays`
+
+#### What Memgraph Owns
+
+Context and cognition state, with no write path back to execution:
+
+- `Stock`, `Sector`, `Index`
+- `ResearchRun`, `ResearchCandidate`
+- `NewsArticle`, `SignalSnapshot`, `TechnicalSnapshot`, `FundamentalSnapshot`, `SentimentSnapshot`
+- `RegimeSnapshot`
+- `TradeMemory`
+- `Observation`, `Lesson`, `FailurePattern`
+- `SkillVersion`
+- Edges: `MEMBER_OF`, `BELONGS_TO_SECTOR`, `ANALYZED_IN`, `HAS_SIGNAL`, `MENTIONS`, `AFFECTS_STOCK`, `UNDER_REGIME`, `GENERATED_INTENT`, `EXECUTED_AS`, `CLOSED_AS`, `PRODUCED_OBSERVATION`, `SUPPORTS_LESSON`, `SIMILAR_TO`, `FAILED_DURING`
+- Every node/edge carries: `source`, `source_id`, `postgres_table/postgres_pk`, `observed_at`, `ingested_at`, `payload_hash`, `confidence`, `projection_version`
+
+#### New Modules
+
+- `swingtradev3/context_graph/repository.py` — `ContextGraphRepository`: typed Memgraph access layer; no raw Cypher scattered across agents
+- `swingtradev3/context_graph/projector.py` — `GraphProjector`: reads Postgres `execution_events` and writes derived memory nodes/edges to Memgraph
+- `swingtradev3/context_graph/context_builder.py` — `ContextBuilder`: reads Memgraph for agent prompts and research context
+- `swingtradev3/context_graph/intent_writer.py` — `IntentWriter`: converts approved research output from Memgraph into Postgres `entry_intents`
+- `swingtradev3/context_graph/policy_proposal_writer.py` — `PolicyProposalWriter`: converts graph/learning insights into Postgres `policy_overlay` candidates; never mutates config directly
+
+#### Infrastructure
+
+- Add `memgraph` behind the optional Docker Compose `memory` profile, using the official `memgraph/memgraph-mage:latest` image
+- Add `memgraph-lab` behind the same profile, using the official `memgraph/lab:latest` image for graph debugging (dev only)
+- `make dev` and `make dev-detach` start the `memory` profile alongside the normal dev stack; app and worker must not depend on Memgraph to boot
+- Persist Memgraph data and logs in Docker volumes, cap the dev memory budget with `MEMGRAPH_MEMORY_LIMIT_MIB`, and keep snapshots/WAL enabled
+- Use Python `neo4j` driver over Bolt protocol for all Memgraph access
+- Add backup/restore runbook
+
+#### Connection Flow
+
+```
+Research / agents / market data
+        |
+        v
+Postgres execution truth          Memgraph context truth
+        |                                 ^
+        |                                 |
+        +-------- GraphProjector ---------+
+                  (one-way, async)
+```
+
+Allowed directionality:
+
+- `Postgres → Memgraph` (via GraphProjector)
+- `Memgraph → research context` (via ContextBuilder)
+- `Memgraph → entry intent proposal → Postgres` (via IntentWriter)
+- `Memgraph → policy proposal → Postgres` (via PolicyProposalWriter)
+
+Not allowed:
+
+- `Memgraph → live order decision`
+- `Memgraph → direct position mutation`
+- `Memgraph → direct kill-switch mutation`
+- `Memgraph → direct config mutation`
+
+Plain English: **Memgraph can suggest. Postgres decides. Worker executes.**
+
+#### What To Stop Writing To Files
+
+Replace these file-based stores with Memgraph:
+
+- `context/knowledge/wiki/` — stock/sector notes, scan history, wikilinks
+- `context/research/` — dated scan outputs and per-stock research evidence
+- `news_cache.json`, `sentiment_cache.json` — durable news/articles/entities/sentiment
+- `trade_observations.json`, `observations.json` — lessons and event observations
+- meaningful operational incidents from Postgres, projected as `FailurePattern` memory
+- `SKILL.md` / strategy versions as `SkillVersion` nodes
+
+Keep as file cache for now (not yet promoted to graph):
+
+- `macro_cache.json`, `options_cache.json`, `timesfm_cache.json`, `fundamentals_cache.json`, `institutional_flows_cache.json`
+- When any of these values influence a research decision, persist a graph fact linked to the `ResearchRun` node.
+
+#### Dashboard
+
+- Update the knowledge graph screen to read the real Memgraph graph instead of the Phase 8 local mock
+- Remove the pending mock badge from the knowledge graph panel
+- Back the `/api/knowledge-graph` route with `ContextGraphRepository` queries
+
+#### Documentation Updates Required In This Phase
+
+- Update `docs/architecture/agent_cognition_architecture.md` memory section: replace markdown KG as long-term memory with Memgraph
+- Update `docs/architecture/agent_cognition_implementation_plan.md`: add the Phase 11 graph-memory implementation section
+- Update `docs/features/future-feature.md`: supersede the old Postgres-only graph entries with the Memgraph architecture decision
+
+#### Definition Of Done
+
+- Memgraph runs as an optional Docker Compose service; `make dev` and `make dev-detach` start it alongside the app and worker through the `memory` profile
+- Memgraph Lab is available for local graph debugging
+- Memgraph backup/restore is documented in `docs/runbooks/memgraph-backup-restore.md`
+- `GraphProjector` is live and projects `execution_events` into Memgraph asynchronously
+- `ContextGraphRepository` is the only way agents access Memgraph — no raw Cypher in agent code
+- Research pipeline writes `ResearchRun` and candidate summaries to Memgraph, not to JSON files
+- Knowledge graph dashboard screen reads real graph data from Memgraph
+- Memgraph downtime does not affect order placement, reconciliation, or kill switch operation
+- File-based memory stores (`context/knowledge/`, `context/research/`, observation caches) are no longer written by new code paths
+
+### Phase 12: Memory Views And Google MCP Toolbox
 
 Implementation:
 
-- add compact Postgres-backed views for:
-  - regime snapshots
+- add compact **Postgres-backed** views for execution state:
   - portfolio risk
   - open positions
-  - similar past trades
   - execution incidents
   - effective policy
   - session readiness
+- add compact **Memgraph-backed** views for context/cognition state (Memgraph is live from Phase 11):
+  - regime snapshots (reads `RegimeSnapshot` nodes from Memgraph)
+  - similar past trades (reads `TradeMemory` nodes and `SIMILAR_TO` edges from Memgraph)
 - add read-only Google MCP Toolbox toolsets for:
-  - research
-  - allocator
-  - post-trade review
-  - ops diagnostics
-- do not allow unrestricted SQL and do not allow writes through Toolbox
+  - research (context from Memgraph: `ResearchRun`, `ResearchCandidate`, `SignalSnapshot`)
+  - allocator (execution state from Postgres: positions, risk budget, effective policy)
+  - post-trade review (hybrid: `TradeMemory` from Memgraph, trade rows from Postgres)
+  - ops diagnostics (Postgres: incidents, reconciliation runs, operator controls)
+- do not allow unrestricted SQL or unrestricted Cypher — all access goes through typed views
+- do not allow writes through Toolbox
+- if Memgraph is down, Toolbox falls back gracefully on Postgres-only context; execution is never blocked
 
 Definition of done:
 
-- LLM agents read compact, curated Postgres views instead of raw JSON or unrestricted tables
+- LLM agents read compact, curated views (Postgres or Memgraph as appropriate) instead of raw JSON or unrestricted tables
+- Toolbox is Memgraph-aware and Postgres-aware, with clean typed access for each data domain
 - Toolbox remains fully out of the execution hot path
+- Memgraph downtime degrades context quality only — it never blocks execution, reconciliation, or kill switches
 
-### Phase 12: Slow Brain Desk And Session Planning
+### Phase 13: Slow Brain Desk And Session Planning
 
 Implementation:
 
@@ -562,13 +724,14 @@ Implementation:
   - `portfolio_fit_report`
   - optional `policy_proposal`
 - keep the pre-market desk portfolio-aware across all active universes
+- agents read regime and trade context from Memgraph (Phase 11) via the Toolbox (Phase 12)
 
 Definition of done:
 
 - new entries are produced by the bounded multi-agent desk, not by a single-pass scorer alone
 - pre-market activation is portfolio-aware and universe-aware
 
-### Phase 13: Bounded Intraday Exception Reasoning And Learning
+### Phase 14: Bounded Intraday Exception Reasoning And Learning
 
 Implementation:
 
@@ -580,6 +743,7 @@ Implementation:
   - unexpected regime break on existing positions
 - add post-trade reviewer and policy analyst flows that can propose bounded overlays or strategy lessons
 - require all intraday reasoning outputs to stay advisory unless explicitly mapped to a narrow deterministic policy hook
+- post-trade lessons and failure patterns are written to Memgraph (Phase 11) for future reasoning cycles
 
 Definition of done:
 
@@ -642,6 +806,7 @@ If the goal is one clean push instead of another partial retrofit, implement in 
 5. Phase 8 and Phase 9
 6. Phase 10 and Phase 11
 7. Phase 12 and Phase 13
+8. Phase 14
 
 Reason:
 
@@ -649,8 +814,13 @@ Reason:
 - broker integration must exist before entry and protection state machines
 - reconciliation and safety must be complete before unattended mode is enabled
 - UI comes after execution truth, not before
-- policy and memory views come after execution truth because they depend on stable Postgres state
-- the slow-brain desk and exception analyst come after the execution floor because agentic reasoning should sit on top of a safe, deterministic runtime
+- policy (Phase 10) comes after execution truth because `policy_overlays` depend on stable Postgres state
+- **Phase 11 (Context Graph) precedes Phase 12 (Toolbox)** so the Toolbox is built correctly the first time — regime snapshots and trade memories go straight into Memgraph, never as throwaway Postgres views
+- **Phase 12 (Toolbox) precedes Phase 13 (Slow Brain)** because Slow Brain agents need structured, curated access to both Postgres and Memgraph via the Toolbox
+- **Phase 14 (Exception Reasoning)** comes last because it sits on top of the full stack: execution floor, Toolbox, and Slow Brain desk
+- post-trade lessons feed back into the Phase 11 Memgraph graph, closing the learning loop
+
+> See [docs/features/postgress-memgraph.md](../features/postgress-memgraph.md) for the full design rationale behind the Postgres + Memgraph split.
 
 ## Sources
 
