@@ -7,7 +7,6 @@ to the execution layer.  Never mutates Memgraph.
 
 from __future__ import annotations
 
-from datetime import datetime
 from typing import Any
 
 from context_graph.repository import ContextGraphRepository, GraphUnavailableError

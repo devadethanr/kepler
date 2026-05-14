@@ -120,10 +120,14 @@ async def get_knowledge_index():
                 "phase": "phase_11",
                 "status": "disabled",
                 "message": "Context graph is disabled in configuration.",
+                "stocks": {},
+                "counts": {"stocks": 0},
             }
         summary = graph.latest_research_summary()
+        index = graph.knowledge_index()
         graph.close()
         return {
+            **index,
             "phase": "phase_11",
             "status": "ok",
             "latest_research": summary,
@@ -135,6 +139,8 @@ async def get_knowledge_index():
             "phase": "phase_11",
             "status": "degraded",
             "memgraph": "unavailable",
+            "stocks": {},
+            "counts": {"stocks": 0},
             "message": "Memgraph is not reachable; graph features degraded.",
         }
 
@@ -160,6 +166,8 @@ async def get_knowledge_graph(
             "edges": [],
             "node_count": 0,
             "edge_count": 0,
+            "counts": {"nodes": 0, "edges": 0},
+            "last_updated": datetime.now(IST).isoformat(),
             "message": "Memgraph unavailable — showing empty graph.",
         }
 
@@ -180,6 +188,11 @@ async def get_stock_knowledge(ticker: str):
             "has_history": False,
             "phase": "phase_11",
             "memgraph": "unavailable",
+            "status": "degraded",
+            "summary": None,
+            "evidence": [],
+            "connections": [],
+            "last_updated": datetime.now(IST).isoformat(),
             "research": [],
             "news": [],
             "observations": [],

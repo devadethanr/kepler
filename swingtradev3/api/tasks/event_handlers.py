@@ -13,9 +13,12 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 from urllib.parse import urlparse
+from zoneinfo import ZoneInfo
 
 from api.tasks.event_bus import BusEvent, EventType, event_bus
 from config import cfg
+
+IST = ZoneInfo("Asia/Kolkata")
 
 
 # ─────────────────────────────────────────────────────────────
@@ -170,35 +173,27 @@ async def handle_stop_hit(event: BusEvent) -> None:
 
     print(f"[EVENT] Stop hit: {ticker} — P&L: {pnl_pct:.1f}%")
 
-    # Log observation
     try:
-        from storage import read_json, write_json
-        from paths import CONTEXT_DIR
+        from context_graph.repository import ContextGraphRepository
 
-        observations = read_json(CONTEXT_DIR / "observations.json", [])
-        observations.append(
-            {
-                "timestamp": datetime.now().isoformat(),
+        repo = ContextGraphRepository()
+        repo.record_observation(
+            observation_type="stop_hit",
+            ticker=str(ticker),
+            payload={
+                "timestamp": datetime.now(IST).isoformat(),
                 "type": "stop_hit",
                 "ticker": ticker,
                 "entry_price": entry_price,
                 "stop_price": stop_price,
                 "pnl_pct": pnl_pct,
-                "lesson": f"{ticker} stopped out at ₹{stop_price} ({pnl_pct:.1f}%)",
-            }
+                "lesson": f"{ticker} stopped out at Rs {stop_price} ({pnl_pct:.1f}%)",
+            },
+            source="event_handler:stop_hit",
         )
-        write_json(CONTEXT_DIR / "observations.json", observations)
+        repo.close()
     except Exception as e:
         print(f"handle_stop_hit: observation failed: {e}")
-
-    # Phase 11: best-effort Memgraph mirror via wiki renderer
-    try:
-        from knowledge.wiki_renderer import _graph_repo
-
-        repo = _graph_repo()
-        repo.upsert_stock(ticker, source="event_handler:stop_hit")
-    except Exception as e:
-        print(f"handle_stop_hit: Memgraph update failed: {e}")
 
 
 async def handle_target_hit(event: BusEvent) -> None:
@@ -210,35 +205,27 @@ async def handle_target_hit(event: BusEvent) -> None:
 
     print(f"[EVENT] Target hit: {ticker} — P&L: +{pnl_pct:.1f}%")
 
-    # Log observation
     try:
-        from storage import read_json, write_json
-        from paths import CONTEXT_DIR
+        from context_graph.repository import ContextGraphRepository
 
-        observations = read_json(CONTEXT_DIR / "observations.json", [])
-        observations.append(
-            {
-                "timestamp": datetime.now().isoformat(),
+        repo = ContextGraphRepository()
+        repo.record_observation(
+            observation_type="target_hit",
+            ticker=str(ticker),
+            payload={
+                "timestamp": datetime.now(IST).isoformat(),
                 "type": "target_hit",
                 "ticker": ticker,
                 "entry_price": entry_price,
                 "target_price": target_price,
                 "pnl_pct": pnl_pct,
-                "lesson": f"{ticker} hit target at ₹{target_price} (+{pnl_pct:.1f}%)",
-            }
+                "lesson": f"{ticker} hit target at Rs {target_price} (+{pnl_pct:.1f}%)",
+            },
+            source="event_handler:target_hit",
         )
-        write_json(CONTEXT_DIR / "observations.json", observations)
+        repo.close()
     except Exception as e:
         print(f"handle_target_hit: observation failed: {e}")
-
-    # Phase 11: best-effort Memgraph mirror via wiki renderer
-    try:
-        from knowledge.wiki_renderer import _graph_repo
-
-        repo = _graph_repo()
-        repo.upsert_stock(ticker, source="event_handler:target_hit")
-    except Exception as e:
-        print(f"handle_target_hit: Memgraph update failed: {e}")
 
 
 async def handle_auth_expiring(event: BusEvent) -> None:

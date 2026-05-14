@@ -37,7 +37,7 @@ login:
 	$(DOCKER_COMPOSE) exec -it app python -m auth.kite.login
 
 test:
-	$(call RUN_PYTEST_ISOLATED,tests/)
+	$(call RUN_PYTEST_ISOLATED,tests/ -m "not memgraph_destructive")
 
 test-file:
 	$(call RUN_PYTEST_ISOLATED,$(file))
@@ -55,10 +55,10 @@ test-memgraph:
 		if [ $$i -eq 30 ]; then echo "Memgraph not ready after 30s."; exit 1; fi; \
 		sleep 1; \
 	done
-	$(call RUN_PYTEST_ISOLATED,tests/test_context_graph -v)
+	$(call RUN_PYTEST_ISOLATED,tests/test_context_graph/test_repository.py -m memgraph_destructive -v)
 	@echo "Cleaning Memgraph test data..."
 	$(DOCKER_COMPOSE) exec -T app \
-		python3 -c "from context_graph.repository import ContextGraphRepository; r = ContextGraphRepository(); r._client(); exec("with r._driver.session() as s: s.run('MATCH (n) DETACH DELETE n')"); print('Memgraph cleaned.')" \
+		python3 -c 'from context_graph.repository import ContextGraphRepository; r = ContextGraphRepository(); r._client(); s = r._driver.session(); s.run("MATCH (n) DETACH DELETE n"); s.close(); r.close(); print("Memgraph cleaned.")' \
 		2>/dev/null || echo "(Memgraph cleanup skipped - not running)"
 	@echo "Stopping Memgraph..."
 	$(DOCKER_COMPOSE) --profile memory stop memgraph

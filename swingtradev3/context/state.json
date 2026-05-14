@@ -5,11 +5,11 @@
   "positions": [
     {
       "current_price": 4014.01,
-      "entry_order_id": "order-457d753b3e",
+      "entry_order_id": "order-9a280871d6",
       "entry_price": 4014.01,
       "lifecycle_state": "open",
-      "oco_gtt_id": "pos-9f5abb7d13",
-      "opened_at": "2026-05-12T02:02:42.150504",
+      "oco_gtt_id": "pos-8af1bff12e",
+      "opened_at": "2026-05-14T22:23:39.912444",
       "pending_corporate_action": {
         "adjustment_alert_sent_at": null,
         "amount": null,
@@ -27,31 +27,6 @@
       "target_price": 4200.0,
       "thesis_score": 8.4,
       "ticker": "TCS"
-    },
-    {
-      "current_price": 1011.01,
-      "entry_order_id": "order-08a774e588",
-      "entry_price": 1011.01,
-      "lifecycle_state": "open",
-      "oco_gtt_id": "pos-af42a166d6",
-      "opened_at": "2026-05-12T10:02:56.284949",
-      "pending_corporate_action": {
-        "adjustment_alert_sent_at": null,
-        "amount": null,
-        "ex_date": null,
-        "gtt_adjustment_sent": false,
-        "requires_manual_action": false,
-        "type": null
-      },
-      "product": "CNC",
-      "quantity": 23,
-      "research_date": "2026-04-18",
-      "sector": "energy",
-      "skill_version": "phase4-test",
-      "stop_price": 980.0,
-      "target_price": 1080.0,
-      "thesis_score": 8.9,
-      "ticker": "RELIANCE"
     }
   ],
   "realized_pnl": 0.0,

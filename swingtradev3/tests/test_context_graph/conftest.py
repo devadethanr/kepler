@@ -8,6 +8,8 @@ Each test receives a fresh ``graph`` instance with Memgraph pre-wiped.
 
 from __future__ import annotations
 
+from collections.abc import Generator
+
 import pytest
 
 from context_graph.repository import ContextGraphRepository, GraphUnavailableError

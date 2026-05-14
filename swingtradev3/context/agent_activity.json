@@ -3,22 +3,22 @@
     "BatchScannerAgent": {
       "agent_name": "BatchScannerAgent",
       "completed_at": null,
-      "current_task": "Deep analysis completed for 0 stocks.",
+      "current_task": "Deep analysis completed for 3 stocks.",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-13T18:00:03.922135",
+      "started_at": "2026-05-14T22:22:20.757499",
       "status": "running"
     },
     "FilterAgent": {
       "agent_name": "FilterAgent",
-      "completed_at": null,
-      "current_task": "Funnel completed: 0 stocks qualified for deep analysis.",
-      "last_error": null,
+      "completed_at": "2026-05-14T22:23:33.126311",
+      "current_task": "Filtering stocks",
+      "last_error": "Connection timeout",
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-13T18:00:03.919889",
-      "status": "running"
+      "started_at": "2026-05-14T22:23:33.124765",
+      "status": "error"
     },
     "FundamentalsAgent_ABB": {
       "agent_name": "FundamentalsAgent_ABB",
@@ -80,6 +80,16 @@
       "started_at": "2026-05-06T04:05:45.210141",
       "status": "running"
     },
+    "FundamentalsAgent_HUDCO": {
+      "agent_name": "FundamentalsAgent_HUDCO",
+      "completed_at": null,
+      "current_task": "Fundamentals fetched for HUDCO",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T18:11:40.429927",
+      "status": "running"
+    },
     "FundamentalsAgent_INDIANB": {
       "agent_name": "FundamentalsAgent_INDIANB",
       "completed_at": null,
@@ -88,6 +98,26 @@
       "metadata": {},
       "progress": null,
       "started_at": "2026-05-06T04:05:38.773581",
+      "status": "running"
+    },
+    "FundamentalsAgent_LICHSGFIN": {
+      "agent_name": "FundamentalsAgent_LICHSGFIN",
+      "completed_at": null,
+      "current_task": "Fundamentals fetched for LICHSGFIN",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T17:45:53.443505",
+      "status": "running"
+    },
+    "FundamentalsAgent_MFSL": {
+      "agent_name": "FundamentalsAgent_MFSL",
+      "completed_at": null,
+      "current_task": "Fundamentals fetched for MFSL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T22:22:03.353853",
       "status": "running"
     },
     "FundamentalsAgent_OIL": {
@@ -100,6 +130,26 @@
       "started_at": "2026-04-16T02:19:33.200187",
       "status": "running"
     },
+    "FundamentalsAgent_ONGC": {
+      "agent_name": "FundamentalsAgent_ONGC",
+      "completed_at": null,
+      "current_task": "Fundamentals fetched for ONGC",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T18:02:08.040861",
+      "status": "running"
+    },
+    "FundamentalsAgent_POWERGRID": {
+      "agent_name": "FundamentalsAgent_POWERGRID",
+      "completed_at": null,
+      "current_task": "Fundamentals fetched for POWERGRID",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T22:22:03.314391",
+      "status": "running"
+    },
     "FundamentalsAgent_RELIANCE": {
       "agent_name": "FundamentalsAgent_RELIANCE",
       "completed_at": null,
@@ -110,14 +160,44 @@
       "started_at": "2026-05-04T01:01:22.705299",
       "status": "running"
     },
-    "KnowledgeGraphAgent": {
-      "agent_name": "KnowledgeGraphAgent",
+    "FundamentalsAgent_SAIL": {
+      "agent_name": "FundamentalsAgent_SAIL",
       "completed_at": null,
-      "current_task": "No scan results to update knowledge graph.",
+      "current_task": "Fundamentals fetched for SAIL",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-13T18:00:04.014456",
+      "started_at": "2026-05-14T17:41:23.952862",
+      "status": "running"
+    },
+    "FundamentalsAgent_SHRIRAMFIN": {
+      "agent_name": "FundamentalsAgent_SHRIRAMFIN",
+      "completed_at": null,
+      "current_task": "Fundamentals fetched for SHRIRAMFIN",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T17:41:26.544325",
+      "status": "running"
+    },
+    "FundamentalsAgent_SOLARINDS": {
+      "agent_name": "FundamentalsAgent_SOLARINDS",
+      "completed_at": null,
+      "current_task": "Fundamentals fetched for SOLARINDS",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T22:22:05.814803",
+      "status": "running"
+    },
+    "KnowledgeGraphAgent": {
+      "agent_name": "KnowledgeGraphAgent",
+      "completed_at": null,
+      "current_task": "Context graph checked: 3 stocks, 3 sectors.",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T22:22:55.570855",
       "status": "running"
     },
     "MarketDataAgent_ABB": {
@@ -180,6 +260,16 @@
       "started_at": "2026-05-06T04:05:38.681095",
       "status": "running"
     },
+    "MarketDataAgent_HUDCO": {
+      "agent_name": "MarketDataAgent_HUDCO",
+      "completed_at": null,
+      "current_task": "Market data fetched for HUDCO",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T18:11:23.381564",
+      "status": "running"
+    },
     "MarketDataAgent_INDIANB": {
       "agent_name": "MarketDataAgent_INDIANB",
       "completed_at": null,
@@ -188,6 +278,26 @@
       "metadata": {},
       "progress": null,
       "started_at": "2026-05-06T04:05:38.750724",
+      "status": "running"
+    },
+    "MarketDataAgent_LICHSGFIN": {
+      "agent_name": "MarketDataAgent_LICHSGFIN",
+      "completed_at": null,
+      "current_task": "Market data fetched for LICHSGFIN",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T17:45:47.023162",
+      "status": "running"
+    },
+    "MarketDataAgent_MFSL": {
+      "agent_name": "MarketDataAgent_MFSL",
+      "completed_at": null,
+      "current_task": "Market data fetched for MFSL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T22:21:55.161840",
       "status": "running"
     },
     "MarketDataAgent_OIL": {
@@ -200,6 +310,26 @@
       "started_at": "2026-04-16T02:19:33.188329",
       "status": "running"
     },
+    "MarketDataAgent_ONGC": {
+      "agent_name": "MarketDataAgent_ONGC",
+      "completed_at": null,
+      "current_task": "Market data fetched for ONGC",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T18:02:01.129180",
+      "status": "running"
+    },
+    "MarketDataAgent_POWERGRID": {
+      "agent_name": "MarketDataAgent_POWERGRID",
+      "completed_at": null,
+      "current_task": "Market data fetched for POWERGRID",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T22:21:55.205491",
+      "status": "running"
+    },
     "MarketDataAgent_RELIANCE": {
       "agent_name": "MarketDataAgent_RELIANCE",
       "completed_at": null,
@@ -208,6 +338,36 @@
       "metadata": {},
       "progress": null,
       "started_at": "2026-05-04T01:01:22.564117",
+      "status": "running"
+    },
+    "MarketDataAgent_SAIL": {
+      "agent_name": "MarketDataAgent_SAIL",
+      "completed_at": null,
+      "current_task": "Market data fetched for SAIL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T17:41:18.904596",
+      "status": "running"
+    },
+    "MarketDataAgent_SHRIRAMFIN": {
+      "agent_name": "MarketDataAgent_SHRIRAMFIN",
+      "completed_at": null,
+      "current_task": "Market data fetched for SHRIRAMFIN",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T17:41:18.883997",
+      "status": "running"
+    },
+    "MarketDataAgent_SOLARINDS": {
+      "agent_name": "MarketDataAgent_SOLARINDS",
+      "completed_at": null,
+      "current_task": "Market data fetched for SOLARINDS",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T22:21:55.196147",
       "status": "running"
     },
     "OptionsAgent_ABB": {
@@ -270,6 +430,16 @@
       "started_at": "2026-05-06T04:05:46.508473",
       "status": "running"
     },
+    "OptionsAgent_HUDCO": {
+      "agent_name": "OptionsAgent_HUDCO",
+      "completed_at": null,
+      "current_task": "Options data analyzed for HUDCO",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T18:11:52.888661",
+      "status": "running"
+    },
     "OptionsAgent_INDIANB": {
       "agent_name": "OptionsAgent_INDIANB",
       "completed_at": null,
@@ -278,6 +448,26 @@
       "metadata": {},
       "progress": null,
       "started_at": "2026-05-06T04:05:49.866287",
+      "status": "running"
+    },
+    "OptionsAgent_LICHSGFIN": {
+      "agent_name": "OptionsAgent_LICHSGFIN",
+      "completed_at": null,
+      "current_task": "Options data analyzed for LICHSGFIN",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T17:46:04.398134",
+      "status": "running"
+    },
+    "OptionsAgent_MFSL": {
+      "agent_name": "OptionsAgent_MFSL",
+      "completed_at": null,
+      "current_task": "Options data analyzed for MFSL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T22:22:19.942656",
       "status": "running"
     },
     "OptionsAgent_OIL": {
@@ -290,6 +480,26 @@
       "started_at": "2026-04-16T02:19:39.395102",
       "status": "running"
     },
+    "OptionsAgent_ONGC": {
+      "agent_name": "OptionsAgent_ONGC",
+      "completed_at": null,
+      "current_task": "Options data analyzed for ONGC",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T18:02:23.052542",
+      "status": "running"
+    },
+    "OptionsAgent_POWERGRID": {
+      "agent_name": "OptionsAgent_POWERGRID",
+      "completed_at": null,
+      "current_task": "Options data analyzed for POWERGRID",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T22:22:20.409520",
+      "status": "running"
+    },
     "OptionsAgent_RELIANCE": {
       "agent_name": "OptionsAgent_RELIANCE",
       "completed_at": null,
@@ -300,6 +510,36 @@
       "started_at": "2026-05-04T01:01:22.766766",
       "status": "running"
     },
+    "OptionsAgent_SAIL": {
+      "agent_name": "OptionsAgent_SAIL",
+      "completed_at": null,
+      "current_task": "Options data analyzed for SAIL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T17:41:42.310130",
+      "status": "running"
+    },
+    "OptionsAgent_SHRIRAMFIN": {
+      "agent_name": "OptionsAgent_SHRIRAMFIN",
+      "completed_at": null,
+      "current_task": "Options data analyzed for SHRIRAMFIN",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T17:41:42.090285",
+      "status": "running"
+    },
+    "OptionsAgent_SOLARINDS": {
+      "agent_name": "OptionsAgent_SOLARINDS",
+      "completed_at": null,
+      "current_task": "Options data analyzed for SOLARINDS",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T22:22:11.398282",
+      "status": "running"
+    },
     "Pipeline": {
       "agent_name": "Pipeline",
       "completed_at": null,
@@ -307,7 +547,7 @@
       "last_error": null,
       "metadata": {},
       "progress": "3/10 stocks scored",
-      "started_at": "2026-05-12T02:02:35.654519",
+      "started_at": "2026-05-14T22:23:33.131867",
       "status": "running"
     },
     "RegimeAgent": {
@@ -317,38 +557,38 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-13T18:00:02.904723",
+      "started_at": "2026-05-14T22:21:52.515060",
       "status": "running"
     },
     "ResearchPipeline": {
       "agent_name": "ResearchPipeline",
-      "completed_at": "2026-05-13T18:00:04.015852",
+      "completed_at": "2026-05-14T18:00:04.644793",
       "current_task": "Full evening research scan",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-13T18:00:00.443956",
+      "started_at": "2026-05-14T18:00:00.207920",
       "status": "completed"
     },
     "ResultsSaverAgent": {
       "agent_name": "ResultsSaverAgent",
       "completed_at": null,
-      "current_task": "Research results saved to /app/context/research/2026-05-13",
+      "current_task": "Research results saved to context graph and approvals.",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-13T18:00:04.012959",
+      "started_at": "2026-05-14T22:22:55.554961",
       "status": "running"
     },
     "ScorerAgent": {
       "agent_name": "ScorerAgent",
-      "completed_at": null,
-      "current_task": "No qualified stocks to score.",
+      "completed_at": "2026-05-14T22:23:33.120183",
+      "current_task": "Scoring RELIANCE",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-13T18:00:03.923367",
-      "status": "running"
+      "started_at": "2026-05-14T22:23:33.118307",
+      "status": "completed"
     },
     "SentimentAgent_ABB": {
       "agent_name": "SentimentAgent_ABB",
@@ -410,6 +650,16 @@
       "started_at": "2026-05-06T04:05:46.501500",
       "status": "running"
     },
+    "SentimentAgent_HUDCO": {
+      "agent_name": "SentimentAgent_HUDCO",
+      "completed_at": null,
+      "current_task": "Sentiment analyzed for HUDCO",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T18:11:52.884899",
+      "status": "running"
+    },
     "SentimentAgent_INDIANB": {
       "agent_name": "SentimentAgent_INDIANB",
       "completed_at": null,
@@ -418,6 +668,26 @@
       "metadata": {},
       "progress": null,
       "started_at": "2026-05-06T04:05:49.862548",
+      "status": "running"
+    },
+    "SentimentAgent_LICHSGFIN": {
+      "agent_name": "SentimentAgent_LICHSGFIN",
+      "completed_at": null,
+      "current_task": "Sentiment analyzed for LICHSGFIN",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T17:46:04.392919",
+      "status": "running"
+    },
+    "SentimentAgent_MFSL": {
+      "agent_name": "SentimentAgent_MFSL",
+      "completed_at": null,
+      "current_task": "Sentiment analyzed for MFSL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T22:22:19.937658",
       "status": "running"
     },
     "SentimentAgent_OIL": {
@@ -430,6 +700,26 @@
       "started_at": "2026-04-16T02:19:39.392250",
       "status": "running"
     },
+    "SentimentAgent_ONGC": {
+      "agent_name": "SentimentAgent_ONGC",
+      "completed_at": null,
+      "current_task": "Sentiment analyzed for ONGC",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T18:02:23.048330",
+      "status": "running"
+    },
+    "SentimentAgent_POWERGRID": {
+      "agent_name": "SentimentAgent_POWERGRID",
+      "completed_at": null,
+      "current_task": "Sentiment analyzed for POWERGRID",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T22:22:20.405832",
+      "status": "running"
+    },
     "SentimentAgent_RELIANCE": {
       "agent_name": "SentimentAgent_RELIANCE",
       "completed_at": null,
@@ -438,6 +728,36 @@
       "metadata": {},
       "progress": null,
       "started_at": "2026-05-04T01:01:22.747183",
+      "status": "running"
+    },
+    "SentimentAgent_SAIL": {
+      "agent_name": "SentimentAgent_SAIL",
+      "completed_at": null,
+      "current_task": "Sentiment analyzed for SAIL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T17:41:42.305589",
+      "status": "running"
+    },
+    "SentimentAgent_SHRIRAMFIN": {
+      "agent_name": "SentimentAgent_SHRIRAMFIN",
+      "completed_at": null,
+      "current_task": "Sentiment analyzed for SHRIRAMFIN",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T17:41:42.074985",
+      "status": "running"
+    },
+    "SentimentAgent_SOLARINDS": {
+      "agent_name": "SentimentAgent_SOLARINDS",
+      "completed_at": null,
+      "current_task": "Sentiment analyzed for SOLARINDS",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T22:22:11.394818",
       "status": "running"
     },
     "TimesfmAgent_ABB": {
@@ -500,6 +820,16 @@
       "started_at": "2026-05-06T04:05:46.661976",
       "status": "running"
     },
+    "TimesfmAgent_HUDCO": {
+      "agent_name": "TimesfmAgent_HUDCO",
+      "completed_at": null,
+      "current_task": "TimesFM forecast generated for HUDCO",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T18:11:55.636312",
+      "status": "running"
+    },
     "TimesfmAgent_INDIANB": {
       "agent_name": "TimesfmAgent_INDIANB",
       "completed_at": null,
@@ -508,6 +838,26 @@
       "metadata": {},
       "progress": null,
       "started_at": "2026-05-06T04:05:49.998853",
+      "status": "running"
+    },
+    "TimesfmAgent_LICHSGFIN": {
+      "agent_name": "TimesfmAgent_LICHSGFIN",
+      "completed_at": null,
+      "current_task": "TimesFM forecast generated for LICHSGFIN",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T17:46:07.460478",
+      "status": "running"
+    },
+    "TimesfmAgent_MFSL": {
+      "agent_name": "TimesfmAgent_MFSL",
+      "completed_at": null,
+      "current_task": "TimesFM forecast generated for MFSL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T22:22:20.427928",
       "status": "running"
     },
     "TimesfmAgent_OIL": {
@@ -520,6 +870,26 @@
       "started_at": "2026-04-16T02:19:44.669359",
       "status": "running"
     },
+    "TimesfmAgent_ONGC": {
+      "agent_name": "TimesfmAgent_ONGC",
+      "completed_at": null,
+      "current_task": "TimesFM forecast generated for ONGC",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T18:02:27.772122",
+      "status": "running"
+    },
+    "TimesfmAgent_POWERGRID": {
+      "agent_name": "TimesfmAgent_POWERGRID",
+      "completed_at": null,
+      "current_task": "TimesFM forecast generated for POWERGRID",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T22:22:20.754750",
+      "status": "running"
+    },
     "TimesfmAgent_RELIANCE": {
       "agent_name": "TimesfmAgent_RELIANCE",
       "completed_at": null,
@@ -530,19 +900,49 @@
       "started_at": "2026-05-04T01:01:23.190747",
       "status": "running"
     },
+    "TimesfmAgent_SAIL": {
+      "agent_name": "TimesfmAgent_SAIL",
+      "completed_at": null,
+      "current_task": "TimesFM forecast generated for SAIL",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T17:41:47.471144",
+      "status": "running"
+    },
+    "TimesfmAgent_SHRIRAMFIN": {
+      "agent_name": "TimesfmAgent_SHRIRAMFIN",
+      "completed_at": null,
+      "current_task": "TimesFM forecast generated for SHRIRAMFIN",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T17:41:47.737682",
+      "status": "running"
+    },
+    "TimesfmAgent_SOLARINDS": {
+      "agent_name": "TimesfmAgent_SOLARINDS",
+      "completed_at": null,
+      "current_task": "TimesFM forecast generated for SOLARINDS",
+      "last_error": null,
+      "metadata": {},
+      "progress": null,
+      "started_at": "2026-05-14T22:22:19.955688",
+      "status": "running"
+    },
     "scheduler": {
       "agent_name": "scheduler",
-      "completed_at": "2026-05-14T11:26:35.925946",
+      "completed_at": "2026-05-14T22:53:43.994834",
       "current_task": "position_monitor",
       "last_error": null,
       "metadata": {
-        "last_job": "position_monitor"
+        "last_job": "overnight_news_sweep"
       },
       "progress": null,
-      "started_at": "2026-05-14T11:26:35.924480",
+      "started_at": "2026-05-14T22:53:40.624273",
       "status": "completed"
     }
   },
-  "last_updated": "2026-05-14T11:26:35.925954",
-  "scheduler_phase": "market_hours"
+  "last_updated": "2026-05-14T22:53:43.994840",
+  "scheduler_phase": "overnight_monitoring"
 }

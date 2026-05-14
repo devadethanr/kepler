@@ -26,6 +26,29 @@ GENERIC_LINK_BLOCKLIST = {
     "javascript:;",
 }
 
+LEGAL_SUFFIX_WORDS = {
+    "LTD",
+    "LIMITED",
+    "INDIA",
+    "CO",
+    "COMPANY",
+    "CORP",
+    "CORPORATION",
+    "PVT",
+    "PRIVATE",
+    "PLC",
+}
+
+AMBIGUOUS_TICKER_WORDS = {
+    "OIL",
+    "BSE",
+    "NSE",
+    "BANK",
+    "POWER",
+    "STEEL",
+    "HIND",
+}
+
 
 def clean_text(value: Any) -> str:
     text = unescape(str(value or ""))
@@ -65,17 +88,19 @@ def extract_tickers_from_text(
         name = str(entry.get("name") or ticker).upper()
         if not ticker:
             continue
-        aliases = {ticker}
-        cleaned_name = re.sub(
-            r"\b(LTD|LIMITED|INDIA|CO|COMPANY|CORP|CORPORATION|PVT|PRIVATE)\b",
-            " ",
-            name,
-        )
-        words = [word for word in re.split(r"[^A-Z0-9&]+", cleaned_name) if len(word) >= 3]
-        if words:
-            aliases.add(words[0])
+        aliases: set[str] = set()
+        if ticker not in AMBIGUOUS_TICKER_WORDS:
+            aliases.add(ticker)
+        words = [
+            word
+            for word in re.split(r"[^A-Z0-9&]+", name)
+            if len(word) >= 3 and word not in LEGAL_SUFFIX_WORDS
+        ]
         if len(words) >= 2:
+            aliases.add(" ".join(words))
             aliases.add(" ".join(words[:2]))
+        if len(words) >= 3:
+            aliases.add(" ".join(words[:3]))
         for alias in aliases:
             if len(alias) < 3:
                 continue

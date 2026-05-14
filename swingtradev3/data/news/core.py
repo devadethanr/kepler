@@ -39,6 +39,9 @@ class NewsCoreMixin:
         items_path: Path | None = None,
         provider_health_path: Path | None = None,
     ) -> None:
+        self.persist_files = any(
+            path is not None for path in (cache_path, items_path, provider_health_path)
+        )
         self.cache_path = cache_path or (CONTEXT_DIR / "news_cache.json")
         base_dir = self.cache_path.parent
         self.items_path = items_path or (
@@ -49,6 +52,7 @@ class NewsCoreMixin:
             if cache_path is None
             else base_dir / "news_provider_health.json"
         )
+        self.alert_history_path = ALERT_HISTORY_PATH if cache_path is None else base_dir / "news_alert_history.json"
         if ttl_minutes is None:
             ttl_minutes = int(cfg.data.news_cache_ttl_minutes)
         if ttl_hours is not None:
@@ -56,13 +60,18 @@ class NewsCoreMixin:
         self.ttl_minutes = ttl_minutes
         self.provider_health: dict[str, dict[str, Any]] = self._load_provider_health()
         self._universe_entries: list[dict[str, str]] | None = None
-        self.persist_postgres = cache_path is None
+        self._memory_cache: dict[str, Any] = {}
+        self._memory_items: list[dict[str, Any]] = []
+        self._alert_history: dict[str, str] = {}
+        self.persist_postgres = not self.persist_files
 
     @staticmethod
     def _now_ist() -> datetime:
         return datetime.now(IST_ZONE)
 
     def _load_provider_health(self) -> dict[str, dict[str, Any]]:
+        if not self.persist_files:
+            return {}
         try:
             payload = read_json(self.provider_health_path, {})
         except (OSError, TypeError, ValueError):
@@ -70,9 +79,13 @@ class NewsCoreMixin:
         return payload if isinstance(payload, dict) else {}
 
     def _write_provider_health(self) -> None:
+        if not self.persist_files:
+            return
         write_json(self.provider_health_path, self.provider_health)
 
     def _load_news_items(self) -> list[dict[str, Any]]:
+        if not self.persist_files:
+            return list(self._memory_items)
         try:
             payload = read_json(self.items_path, [])
         except (OSError, TypeError, ValueError):
@@ -80,6 +93,9 @@ class NewsCoreMixin:
         return payload if isinstance(payload, list) else []
 
     def _write_news_items(self, items: list[dict[str, Any]]) -> None:
+        if not self.persist_files:
+            self._memory_items = items[-NEWS_AUDIT_MAX_ITEMS:]
+            return
         write_json(self.items_path, items[-NEWS_AUDIT_MAX_ITEMS:])
 
     def _persist_results(self, results: list[dict[str, Any]]) -> None:
@@ -105,6 +121,7 @@ class NewsCoreMixin:
         self._write_news_items(ordered)
         self._write_provider_health()
         self._persist_postgres(results)
+        self._persist_context_graph(results)
 
     def _persist_postgres(self, results: list[dict[str, Any]]) -> None:
         if not self.persist_postgres:
@@ -120,6 +137,21 @@ class NewsCoreMixin:
                 repo.upsert_news_provider_health(self.provider_health)
         except Exception:
             return
+
+    def _persist_context_graph(self, results: list[dict[str, Any]]) -> None:
+        if not self.persist_postgres or not results:
+            return
+        graph = None
+        try:
+            from context_graph.repository import ContextGraphRepository
+
+            graph = ContextGraphRepository()
+            graph.upsert_news_items(results, source="news_aggregator")
+        except Exception:
+            return
+        finally:
+            if graph is not None:
+                graph.close()
 
     def _universe(self) -> list[dict[str, str]]:
         if self._universe_entries is None:
@@ -202,9 +234,30 @@ class NewsCoreMixin:
         source_url = url.strip()
         text = content or summary
         inferred_category = category or infer_category(title, summary, content)
-        inferred_tickers = tickers or extract_tickers_from_text(
-            f"{title} {summary or ''} {content or ''}",
+        explicit_tickers = sorted({str(ticker).upper() for ticker in (tickers or []) if ticker})
+        company_list = [name for name in (company_names or []) if name]
+        extracted_tickers = extract_tickers_from_text(
+            f"{title} {summary or ''} {content or ''} {' '.join(company_list)}",
             self._universe(),
+        )
+        structured_source = source_type in {"official_filing", "regulator", "broker_api"}
+        verified_tickers = explicit_tickers or (extracted_tickers if structured_source else [])
+        mentioned_tickers = sorted(
+            {
+                str(ticker).upper()
+                for ticker in [*extracted_tickers, *explicit_tickers]
+                if ticker and str(ticker).upper() not in verified_tickers
+            }
+        )
+        all_tickers = sorted({*verified_tickers, *mentioned_tickers})
+        mapping_reason = (
+            "provider_verified_ticker"
+            if explicit_tickers
+            else "structured_company_match"
+            if verified_tickers
+            else "text_mention"
+            if mentioned_tickers
+            else "none"
         )
         item = {
             "provider": provider,
@@ -224,9 +277,16 @@ class NewsCoreMixin:
             "fetched_at_ist": self._now_ist().isoformat(),
             "url": source_url,
             "domain": self.domain_for({"url": source_url}),
-            "tickers": sorted({str(ticker).upper() for ticker in inferred_tickers if ticker}),
+            "tickers": all_tickers,
+            "verified_tickers": verified_tickers,
+            "mentioned_tickers": mentioned_tickers,
+            "ticker_match_type": "verified" if verified_tickers else "mentioned",
+            "mapping_reason": mapping_reason,
+            "mapping_confidence": confidence
+            if confidence is not None
+            else SOURCE_TYPE_CONFIDENCE.get(source_type, 0.6),
             "isins": sorted({str(isin).upper() for isin in (isins or []) if isin}),
-            "company_names": [name for name in (company_names or []) if name],
+            "company_names": company_list,
             "category": inferred_category,
             "confidence": (
                 confidence
@@ -448,6 +508,8 @@ class NewsCoreMixin:
         return text.strip("-")
 
     def _load_cache(self) -> dict[str, Any]:
+        if not self.persist_files:
+            return dict(self._memory_cache)
         try:
             payload = read_json(self.cache_path, {})
         except (OSError, TypeError, ValueError):
@@ -455,6 +517,9 @@ class NewsCoreMixin:
         return payload if isinstance(payload, dict) else {}
 
     def _write_cache(self, payload: dict[str, Any]) -> None:
+        if not self.persist_files:
+            self._memory_cache = dict(payload)
+            return
         write_json(self.cache_path, payload)
 
     def _cached(self, query: str) -> dict[str, Any] | None:
@@ -641,10 +706,13 @@ class NewsCoreMixin:
     ) -> tuple[list[dict[str, Any]], dict[str, str], datetime]:
         cooldown = cooldown_hours or int(cfg.research.filter.news_alert_cooldown_hours)
         now = datetime.utcnow()
-        try:
-            history = read_json(ALERT_HISTORY_PATH, {})
-        except (OSError, TypeError, ValueError):
-            history = {}
+        if self.persist_files:
+            try:
+                history = read_json(self.alert_history_path, {})
+            except (OSError, TypeError, ValueError):
+                history = {}
+        else:
+            history = dict(self._alert_history)
         if not isinstance(history, dict):
             history = {}
         cutoff = now - timedelta(hours=cooldown)
@@ -672,7 +740,10 @@ class NewsCoreMixin:
         updated = dict(history)
         for item in items:
             updated[self._market_article_identity(item)] = seen_at.isoformat()
-        write_json(ALERT_HISTORY_PATH, updated)
+        if not self.persist_files:
+            self._alert_history = updated
+            return
+        write_json(self.alert_history_path, updated)
 
     def build_market_digest(
         self,
@@ -763,10 +834,13 @@ class NewsCoreMixin:
     ) -> list[dict[str, Any]]:
         cooldown = cooldown_hours or int(cfg.research.filter.news_alert_cooldown_hours)
         now = datetime.utcnow()
-        try:
-            history = read_json(ALERT_HISTORY_PATH, {})
-        except (OSError, TypeError, ValueError):
-            history = {}
+        if self.persist_files:
+            try:
+                history = read_json(self.alert_history_path, {})
+            except (OSError, TypeError, ValueError):
+                history = {}
+        else:
+            history = dict(self._alert_history)
         if not isinstance(history, dict):
             history = {}
         cutoff = now - timedelta(hours=cooldown)
@@ -790,7 +864,10 @@ class NewsCoreMixin:
                 continue
             pruned[identity] = now.isoformat()
             new_items.append(item)
-        write_json(ALERT_HISTORY_PATH, pruned)
+        if not self.persist_files:
+            self._alert_history = pruned
+            return new_items
+        write_json(self.alert_history_path, pruned)
         return new_items
 
     @staticmethod

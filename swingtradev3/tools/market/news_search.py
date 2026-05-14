@@ -4,7 +4,6 @@ from pathlib import Path
 
 from config import cfg
 from data.news import NewsAggregator
-from paths import CONTEXT_DIR
 
 
 class NewsSearchTool:
@@ -14,9 +13,9 @@ class NewsSearchTool:
         ttl_hours: int | None = None,
         ttl_minutes: int | None = None,
     ) -> None:
-        self.cache_path = cache_path or (CONTEXT_DIR / "news_cache.json")
+        self.cache_path = cache_path
         self.aggregator = NewsAggregator(
-            cache_path=self.cache_path,
+            cache_path=cache_path,
             ttl_hours=ttl_hours,
             ttl_minutes=ttl_minutes,
         )

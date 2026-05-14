@@ -1,14 +1,21 @@
 from __future__ import annotations
 
-import hashlib
 import json
 from collections.abc import Iterable
-from datetime import datetime
 from typing import Any
-from zoneinfo import ZoneInfo
 
 from config import cfg
 from context_graph.models import GraphDashboardPayload, GraphEdge, GraphNode, StockGraphContext
+from .helpers import (
+    clean_key as _clean_key,
+    iso as _iso,
+    label_for as _label_for,
+    now_ist as _now_ist,
+    payload_hash as _payload_hash,
+    payload_json as _payload_json,
+    ticker_list as _ticker_list,
+)
+from .schema import CURSOR_NAME, GRAPH_LABELS, PROJECTION_VERSION
 
 try:
     from neo4j import GraphDatabase
@@ -16,72 +23,8 @@ except Exception:  # pragma: no cover - exercised when dependency is missing loc
     GraphDatabase = None  # type: ignore[assignment]
 
 
-IST = ZoneInfo("Asia/Kolkata")
-PROJECTION_VERSION = "phase11.v1"
-CURSOR_NAME = "execution_events"
-GRAPH_LABELS = {
-    "Stock",
-    "Sector",
-    "Index",
-    "ResearchRun",
-    "ResearchCandidate",
-    "NewsArticle",
-    "SignalSnapshot",
-    "TechnicalSnapshot",
-    "FundamentalSnapshot",
-    "SentimentSnapshot",
-    "RegimeSnapshot",
-    "TradeMemory",
-    "Observation",
-    "Lesson",
-    "FailurePattern",
-    "SkillVersion",
-    "ExecutionEvent",
-}
-
-
 class GraphUnavailableError(RuntimeError):
     """Raised when Memgraph is disabled or not reachable."""
-
-
-def _now_ist() -> datetime:
-    return datetime.now(IST)
-
-
-def _iso(value: Any | None = None) -> str:
-    if isinstance(value, datetime):
-        parsed = value
-    elif value:
-        try:
-            parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
-        except ValueError:
-            return str(value)
-    else:
-        parsed = _now_ist()
-    if parsed.tzinfo is None:
-        parsed = parsed.replace(tzinfo=IST)
-    return parsed.astimezone(IST).isoformat()
-
-
-def _payload_json(payload: dict[str, Any]) -> str:
-    return json.dumps(payload, sort_keys=True, default=str)
-
-
-def _payload_hash(payload: dict[str, Any]) -> str:
-    return hashlib.sha256(_payload_json(payload).encode("utf-8")).hexdigest()
-
-
-def _clean_key(value: str) -> str:
-    return "".join(ch if ch.isalnum() or ch in {"_", "-", ":", "."} else "_" for ch in value)
-
-
-def _label_for(properties: dict[str, Any], labels: list[str]) -> str:
-    for key in ("label", "ticker", "name", "title", "event_type", "id"):
-        value = properties.get(key)
-        if value:
-            text = str(value)
-            return text if len(text) <= 80 else f"{text[:77]}..."
-    return labels[0] if labels else "Node"
 
 
 class ContextGraphRepository:
@@ -109,8 +52,10 @@ class ContextGraphRepository:
             self._driver.close()
             self._driver = None
 
-    def _auth(self) -> tuple[str, str]:
-        return (self.user or "", self.password or "")
+    def _auth(self) -> tuple[str, str] | None:
+        if self.user or self.password:
+            return (self.user or "", self.password or "")
+        return None
 
     def _client(self) -> Any:
         if not self.enabled:
@@ -163,7 +108,11 @@ class ContextGraphRepository:
             "CREATE CONSTRAINT ON (n:FundamentalSnapshot) ASSERT n.id IS UNIQUE;",
             "CREATE CONSTRAINT ON (n:Lesson) ASSERT n.id IS UNIQUE;",
             "CREATE CONSTRAINT ON (n:RegimeSnapshot) ASSERT n.id IS UNIQUE;",
+            "CREATE CONSTRAINT ON (n:OrderIntent) ASSERT n.id IS UNIQUE;",
+            "CREATE CONSTRAINT ON (n:Approval) ASSERT n.id IS UNIQUE;",
+            "CREATE CONSTRAINT ON (n:Position) ASSERT n.id IS UNIQUE;",
             "CREATE INDEX ON :Stock(ticker);",
+            "CREATE INDEX ON :Stock(sector);",
             "CREATE INDEX ON :ResearchRun(observed_at);",
             "CREATE INDEX ON :NewsArticle(observed_at);",
             "CREATE INDEX ON :RegimeSnapshot(regime);",
@@ -171,6 +120,12 @@ class ContextGraphRepository:
             "CREATE INDEX ON :TechnicalSnapshot(observed_at);",
             "CREATE INDEX ON :FundamentalSnapshot(observed_at);",
             "CREATE INDEX ON :TradeMemory(observed_at);",
+            "CREATE INDEX ON :OrderIntent(ticker);",
+            "CREATE INDEX ON :OrderIntent(status);",
+            "CREATE INDEX ON :Approval(ticker);",
+            "CREATE INDEX ON :Approval(status);",
+            "CREATE INDEX ON :Position(ticker);",
+            "CREATE INDEX ON :Position(state);",
         ]
         for statement in statements:
             try:
@@ -217,10 +172,16 @@ class ContextGraphRepository:
         if not normalized:
             return
         body = dict(payload or {})
+        sector_value = sector or body.get("sector")
+        label = body.get("company_name") or body.get("name") or normalized
         props = {
             "id": f"stock:{normalized}",
             "ticker": normalized,
-            "label": normalized,
+            "label": str(label),
+            "company_name": str(body.get("company_name") or body.get("name") or ""),
+            "sector": str(sector_value or ""),
+            "industry": str(body.get("industry") or ""),
+            "description": str(body.get("description") or body.get("business_description") or "")[:2000],
             **self._meta(source=source, source_id=normalized, payload=body),
         }
         self._run(
@@ -230,8 +191,9 @@ class ContextGraphRepository:
             """,
             {"id": props["id"], "props": props},
         )
-        if sector:
-            self.upsert_sector(sector, source=source)
+        if sector_value:
+            sector_name = str(sector_value)
+            self.upsert_sector(sector_name, source=source)
             self._run(
                 """
                 MATCH (s:Stock {id: $stock_id}), (sec:Sector {id: $sector_id})
@@ -243,7 +205,7 @@ class ContextGraphRepository:
                 """,
                 {
                     "stock_id": props["id"],
-                    "sector_id": f"sector:{_clean_key(sector.lower())}",
+                    "sector_id": f"sector:{_clean_key(sector_name.lower())}",
                     "source": source,
                     "observed_at": props["observed_at"],
                     "ingested_at": props["ingested_at"],
@@ -362,6 +324,124 @@ class ContextGraphRepository:
                 observed_at=analyzed_at,
                 source=source,
             )
+        if stock_data:
+            self._upsert_research_snapshots(
+                run_id=run_id,
+                stock_data=stock_data,
+                observed_at=analyzed_at,
+                source=source,
+            )
+
+    def _upsert_research_snapshots(
+        self,
+        *,
+        run_id: str,
+        stock_data: dict[str, Any],
+        observed_at: Any,
+        source: str,
+    ) -> None:
+        for raw_ticker, raw_data in stock_data.items():
+            ticker = str(raw_ticker or "").strip().upper()
+            if not ticker or not isinstance(raw_data, dict):
+                continue
+            self.upsert_stock(ticker, payload=raw_data, source=source)
+            technical = raw_data.get("technical")
+            if isinstance(technical, dict) and not technical.get("error"):
+                payload = {**technical, "tech_id": f"{run_id}:{ticker}", "run_id": run_id}
+                self.upsert_technical_snapshot(
+                    ticker=ticker,
+                    payload=payload,
+                    observed_at=observed_at,
+                    source=source,
+                )
+                self._link_research_run_to_node(
+                    run_id,
+                    node_label="TechnicalSnapshot",
+                    node_id=f"technical:{run_id}:{ticker}",
+                    relationship="GENERATED_SNAPSHOT",
+                    source=source,
+                )
+            fundamentals = raw_data.get("fundamentals")
+            if isinstance(fundamentals, dict) and not fundamentals.get("error"):
+                payload = {**fundamentals, "fund_id": f"{run_id}:{ticker}", "run_id": run_id}
+                self.upsert_fundamental_snapshot(
+                    ticker=ticker,
+                    payload=payload,
+                    observed_at=observed_at,
+                    source=source,
+                )
+                self._link_research_run_to_node(
+                    run_id,
+                    node_label="FundamentalSnapshot",
+                    node_id=f"fundamental:{run_id}:{ticker}",
+                    relationship="GENERATED_SNAPSHOT",
+                    source=source,
+                )
+            sentiment = raw_data.get("sentiment")
+            if isinstance(sentiment, dict) and not sentiment.get("error"):
+                self.upsert_sentiment_snapshot(
+                    text_hash=f"{run_id}:{ticker}",
+                    result={**sentiment, "ticker": ticker, "run_id": run_id},
+                    source=source,
+                    ticker=ticker,
+                )
+                self._link_research_run_to_node(
+                    run_id,
+                    node_label="SentimentSnapshot",
+                    node_id=f"sentiment:{run_id}:{ticker}",
+                    relationship="GENERATED_SNAPSHOT",
+                    source=source,
+                )
+            for signal_type in ("options", "timesfm"):
+                signal_payload = raw_data.get(signal_type)
+                if isinstance(signal_payload, dict) and not signal_payload.get("error"):
+                    payload = {
+                        **signal_payload,
+                        "signal_id": f"{run_id}:{ticker}:{signal_type}",
+                        "run_id": run_id,
+                    }
+                    self.upsert_signal_snapshot(
+                        ticker=ticker,
+                        signal_type=signal_type,
+                        payload=payload,
+                        observed_at=observed_at,
+                        source=source,
+                    )
+                    self._link_research_run_to_node(
+                        run_id,
+                        node_label="SignalSnapshot",
+                        node_id=f"signal:{run_id}:{ticker}:{signal_type}",
+                        relationship="GENERATED_SNAPSHOT",
+                        source=source,
+                    )
+
+    def _link_research_run_to_node(
+        self,
+        run_id: str,
+        *,
+        node_label: str,
+        node_id: str,
+        relationship: str,
+        source: str,
+    ) -> None:
+        if node_label not in GRAPH_LABELS:
+            return
+        self._run(
+            f"""
+            MATCH (r:ResearchRun {{id: $run_id}}), (n:{node_label} {{id: $node_id}})
+            MERGE (r)-[rel:{relationship}]->(n)
+            SET rel.source = $source,
+                rel.ingested_at = $ingested_at,
+                rel.projection_version = $projection_version
+            """,
+            {
+                "run_id": run_id,
+                "node_id": node_id,
+                "source": source,
+                "ingested_at": _now_ist().isoformat(),
+                "projection_version": PROJECTION_VERSION,
+            },
+        )
 
     def upsert_regime_snapshot(
         self,
@@ -504,20 +584,43 @@ class ContextGraphRepository:
             return
         news_id = source_id if len(source_id) <= 120 else _payload_hash({"source_id": source_id})
         observed_at = item.get("published_at_ist") or item.get("published_at_utc") or item.get("fetched_at_ist")
+        legacy_tickers = _ticker_list(item.get("tickers"))
+        verified_tickers = _ticker_list(item.get("verified_tickers"))
+        if not verified_tickers and item.get("ticker_match_type") == "verified":
+            verified_tickers = legacy_tickers
+        if (
+            not verified_tickers
+            and legacy_tickers
+            and not item.get("mentioned_tickers")
+            and not item.get("ticker_match_type")
+        ):
+            verified_tickers = legacy_tickers
+        mentioned_tickers = _ticker_list(item.get("mentioned_tickers"))
+        mentioned_tickers.extend(t for t in legacy_tickers if t not in mentioned_tickers)
+        mentioned_tickers = [ticker for ticker in mentioned_tickers if ticker not in verified_tickers]
+        try:
+            confidence = float(item.get("confidence") or item.get("mapping_confidence") or 0.0)
+        except (TypeError, ValueError):
+            confidence = 0.0
         props = {
             "id": f"news:{news_id}",
             "title": str(item.get("title") or "")[:500],
+            "summary": str(item.get("summary") or item.get("description") or "")[:2000],
             "provider": str(item.get("provider") or item.get("source") or "unknown"),
             "source_type": str(item.get("source_type") or "unknown"),
             "category": str(item.get("category") or "unknown"),
             "url": str(item.get("canonical_url") or item.get("url") or ""),
+            "verified_tickers": ",".join(verified_tickers),
+            "mentioned_tickers": ",".join(mentioned_tickers),
+            "mapping_reason": str(item.get("mapping_reason") or ""),
+            "mapping_confidence": confidence,
             "label": str(item.get("title") or news_id)[:80],
             **self._meta(
                 source=source,
                 source_id=news_id,
                 payload=item,
                 observed_at=observed_at,
-                confidence=float(item.get("confidence") or 0.0),
+                confidence=confidence,
                 postgres_table="news_articles" if item.get("news_id") else None,
                 postgres_pk=item.get("news_id"),
             ),
@@ -529,7 +632,7 @@ class ContextGraphRepository:
             """,
             {"id": props["id"], "props": props},
         )
-        for ticker in item.get("tickers") or []:
+        for ticker in verified_tickers:
             normalized = str(ticker).strip().upper()
             if not normalized:
                 continue
@@ -554,6 +657,31 @@ class ContextGraphRepository:
                     "projection_version": PROJECTION_VERSION,
                 },
             )
+        for ticker in mentioned_tickers:
+            normalized = str(ticker).strip().upper()
+            if not normalized:
+                continue
+            self.upsert_stock(normalized, source=source)
+            self._run(
+                """
+                MATCH (n:NewsArticle {id: $news_id}), (s:Stock {id: $stock_id})
+                MERGE (n)-[rel:MENTIONS]->(s)
+                SET rel.source = $source,
+                    rel.confidence = $confidence,
+                    rel.observed_at = $observed_at,
+                    rel.ingested_at = $ingested_at,
+                    rel.projection_version = $projection_version
+                """,
+                {
+                    "news_id": props["id"],
+                    "stock_id": f"stock:{normalized}",
+                    "source": source,
+                    "confidence": props["confidence"],
+                    "observed_at": props["observed_at"],
+                    "ingested_at": props["ingested_at"],
+                    "projection_version": PROJECTION_VERSION,
+                },
+            )
 
     def upsert_sentiment_snapshot(
         self,
@@ -562,13 +690,16 @@ class ContextGraphRepository:
         result: dict[str, Any],
         text: str | None = None,
         source: str = "sentiment_analyzer",
+        ticker: str | None = None,
     ) -> None:
         payload = {"result": result, "text": (text or "")[:2000]}
+        normalized = str(ticker or result.get("ticker") or "").strip().upper()
         props = {
             "id": f"sentiment:{text_hash}",
             "label": str(result.get("label") or "sentiment"),
             "score": float(result.get("score") or result.get("sentiment_score") or 0.0),
             "sentiment_label": str(result.get("label") or result.get("sentiment_label") or "unknown"),
+            "ticker": normalized,
             **self._meta(source=source, source_id=text_hash, payload=payload),
         }
         self._run(
@@ -578,6 +709,40 @@ class ContextGraphRepository:
             """,
             {"id": props["id"], "props": props},
         )
+        if normalized:
+            self.upsert_stock(normalized, source=source)
+            self._run(
+                """
+                MATCH (st:Stock {id: $stock_id}), (tech:TechnicalSnapshot {id: $technical_id})
+                MERGE (st)-[rel:HAS_TECHNICAL]->(tech)
+                SET rel.source = $source,
+                    rel.ingested_at = $ingested_at,
+                    rel.projection_version = $projection_version
+                """,
+                {
+                    "stock_id": f"stock:{normalized}",
+                    "technical_id": props["id"],
+                    "source": source,
+                    "ingested_at": props["ingested_at"],
+                    "projection_version": PROJECTION_VERSION,
+                },
+            )
+            self._run(
+                """
+                MATCH (st:Stock {id: $stock_id}), (sent:SentimentSnapshot {id: $sentiment_id})
+                MERGE (st)-[rel:HAS_SENTIMENT]->(sent)
+                SET rel.source = $source,
+                    rel.ingested_at = $ingested_at,
+                    rel.projection_version = $projection_version
+                """,
+                {
+                    "stock_id": f"stock:{normalized}",
+                    "sentiment_id": props["id"],
+                    "source": source,
+                    "ingested_at": props["ingested_at"],
+                    "projection_version": PROJECTION_VERSION,
+                },
+            )
 
     def upsert_signal_snapshot(
         self,
@@ -650,6 +815,22 @@ class ContextGraphRepository:
         )
         if normalized:
             self.upsert_stock(normalized, source=source)
+            self._run(
+                """
+                MATCH (st:Stock {id: $stock_id}), (fund:FundamentalSnapshot {id: $fundamental_id})
+                MERGE (st)-[rel:HAS_FUNDAMENTAL]->(fund)
+                SET rel.source = $source,
+                    rel.ingested_at = $ingested_at,
+                    rel.projection_version = $projection_version
+                """,
+                {
+                    "stock_id": f"stock:{normalized}",
+                    "fundamental_id": props["id"],
+                    "source": source,
+                    "ingested_at": props["ingested_at"],
+                    "projection_version": PROJECTION_VERSION,
+                },
+            )
 
     def upsert_fundamental_snapshot(
         self,
@@ -782,6 +963,22 @@ class ContextGraphRepository:
         if ticker:
             normalized = ticker.strip().upper()
             self.upsert_stock(normalized, source=source)
+            self._run(
+                """
+                MATCH (l:Lesson {id: $lesson_id}), (s:Stock {id: $stock_id})
+                MERGE (l)-[rel:APPLIES_TO_STOCK]->(s)
+                SET rel.source = $source,
+                    rel.ingested_at = $ingested_at,
+                    rel.projection_version = $projection_version
+                """,
+                {
+                    "lesson_id": props["id"],
+                    "stock_id": f"stock:{normalized}",
+                    "source": source,
+                    "ingested_at": props["ingested_at"],
+                    "projection_version": PROJECTION_VERSION,
+                },
+            )
         if observation_ids:
             for obs_id in observation_ids:
                 self._run(
@@ -845,6 +1042,47 @@ class ContextGraphRepository:
                 },
             )
 
+    def _hydrate_news_item_from_postgres(
+        self,
+        news_id: str,
+        payload: dict[str, Any],
+    ) -> dict[str, Any]:
+        if payload.get("title") and (payload.get("canonical_url") or payload.get("url")):
+            return payload
+        try:
+            from memory import models as models_module
+            from memory.db import session_scope
+
+            with session_scope() as session:
+                row = session.get(models_module.NewsArticleRow, news_id)
+                if row is None:
+                    return payload
+                stored = dict(row.payload or {})
+                return {
+                    **stored,
+                    **payload,
+                    "news_id": news_id,
+                    "provider": row.provider or stored.get("provider") or payload.get("provider"),
+                    "source_type": row.source_type
+                    or stored.get("source_type")
+                    or payload.get("source_type"),
+                    "title": row.title or stored.get("title") or payload.get("title"),
+                    "canonical_url": row.canonical_url
+                    or stored.get("canonical_url")
+                    or payload.get("canonical_url")
+                    or payload.get("url"),
+                    "category": row.category or stored.get("category") or payload.get("category"),
+                    "confidence": row.confidence
+                    if row.confidence is not None
+                    else stored.get("confidence", payload.get("confidence")),
+                    "tickers": list(row.tickers or stored.get("tickers") or payload.get("tickers") or []),
+                    "published_at_utc": (
+                        row.published_at.isoformat() if row.published_at else stored.get("published_at_utc")
+                    ),
+                }
+        except Exception:
+            return payload
+
     def record_execution_event(self, event: dict[str, Any]) -> None:
         payload = dict(event.get("payload") or {})
         event_id = int(event["event_id"])
@@ -903,7 +1141,8 @@ class ContextGraphRepository:
             )
 
         if event_type == "news_item_ingested":
-            self.upsert_news_item({**payload, "news_id": entity_id}, source=source)
+            news_item = self._hydrate_news_item_from_postgres(entity_id, {**payload, "news_id": entity_id})
+            self.upsert_news_item(news_item, source=source)
             self._run(
                 """
                 MATCH (e:ExecutionEvent {id: $event_id}), (n:NewsArticle {id: $news_id})
@@ -1055,12 +1294,29 @@ class ContextGraphRepository:
                 continue
             node_ids.add(node_id)
             node_type = next((label for label in labels if label in GRAPH_LABELS), labels[0] if labels else "Node")
+            display_label = _label_for(properties, labels)
+            summary = (
+                properties.get("summary")
+                or properties.get("description")
+                or properties.get("reason")
+                or properties.get("event_type")
+                or ""
+            )
+            value = properties.get("score") or properties.get("confidence") or properties.get("pnl_pct")
+            try:
+                val = float(value) if value not in (None, "") else None
+            except (TypeError, ValueError):
+                val = None
             nodes.append(
                 GraphNode(
                     id=node_id,
-                    label=_label_for(properties, labels),
+                    label=display_label,
                     type=node_type,
                     properties=properties,
+                    metadata=properties,
+                    name=display_label,
+                    summary=str(summary)[:500] if summary else None,
+                    val=val,
                 )
             )
         edge_records = []
@@ -1074,24 +1330,73 @@ class ContextGraphRepository:
                 """,
                 {"node_ids": sorted(node_ids), "limit": int(edges_limit)},
             )
-        edges = [
-            GraphEdge(
-                source=str(record.get("source")),
-                target=str(record.get("target")),
-                label=str(record.get("label")),
-                properties=dict(record.get("properties") or {}),
+        edges: list[GraphEdge] = []
+        for record in edge_records:
+            if not record.get("source") or not record.get("target"):
+                continue
+            properties = dict(record.get("properties") or {})
+            relationship = str(record.get("label"))
+            try:
+                weight = float(properties.get("weight") or properties.get("confidence") or 1.0)
+            except (TypeError, ValueError):
+                weight = 1.0
+            edges.append(
+                GraphEdge(
+                    source=str(record.get("source")),
+                    target=str(record.get("target")),
+                    label=relationship,
+                    properties=properties,
+                    metadata=properties,
+                    relationship=relationship,
+                    weight=weight,
+                )
             )
-            for record in edge_records
-            if record.get("source") and record.get("target")
-        ]
+        counts: dict[str, int] = {"nodes": len(nodes), "edges": len(edges)}
+        for node in nodes:
+            counts[node.type] = counts.get(node.type, 0) + 1
+        last_updated = _now_ist().isoformat()
         return GraphDashboardPayload(
             status="ok",
             nodes=nodes,
             edges=edges,
             node_count=len(nodes),
             edge_count=len(edges),
-            generated_at_ist=_now_ist().isoformat(),
+            counts=counts,
+            generated_at_ist=last_updated,
+            last_updated=last_updated,
         )
+
+    def _stock_connections(self, ticker: str, *, limit: int = 20) -> list[dict[str, Any]]:
+        records = self._run(
+            """
+            MATCH (s:Stock {id: $stock_id})-[r]-(n)
+            WHERE any(label IN labels(n) WHERE label IN $labels)
+            RETURN n.id AS id, labels(n) AS labels, type(r) AS relationship,
+                   properties(n) AS properties, properties(r) AS edge_properties
+            ORDER BY coalesce(n.ingested_at, n.observed_at, n.updated_at, "") DESC
+            LIMIT $limit
+            """,
+            {"stock_id": f"stock:{ticker}", "labels": sorted(GRAPH_LABELS), "limit": int(limit)},
+        )
+        connections: list[dict[str, Any]] = []
+        for record in records:
+            properties = dict(record.get("properties") or {})
+            labels = [str(label) for label in record.get("labels") or []]
+            connection_type = next(
+                (label for label in labels if label in GRAPH_LABELS),
+                labels[0] if labels else "Node",
+            )
+            connections.append(
+                {
+                    "id": record.get("id"),
+                    "type": connection_type,
+                    "label": _label_for(properties, labels),
+                    "relationship": record.get("relationship"),
+                    "metadata": properties,
+                    "edge_metadata": dict(record.get("edge_properties") or {}),
+                }
+            )
+        return connections
 
     def stock_context(self, ticker: str) -> StockGraphContext:
         normalized = ticker.strip().upper()
@@ -1110,7 +1415,7 @@ class ContextGraphRepository:
                 run_id: r.id,
                 payload_json: c.payload_json
             })[..5] AS research
-            OPTIONAL MATCH (n:NewsArticle)-[:AFFECTS_STOCK]->(s)
+            OPTIONAL MATCH (n:NewsArticle)-[:AFFECTS_STOCK|MENTIONS]->(s)
             WITH s, research, n
             ORDER BY coalesce(n.observed_at, "") DESC
             WITH s, research, collect({
@@ -1133,20 +1438,147 @@ class ContextGraphRepository:
             """,
             {"stock_id": f"stock:{normalized}"},
         )
+        generated_at = _now_ist().isoformat()
         if not records:
-            return StockGraphContext(ticker=normalized, generated_at_ist=_now_ist().isoformat())
+            return StockGraphContext(
+                ticker=normalized,
+                status="missing",
+                summary=f"No context graph history found for {normalized}.",
+                generated_at_ist=generated_at,
+                last_updated=generated_at,
+            )
         record = records[0]
         research = [item for item in record.get("research") or [] if item.get("score") is not None]
         news = [item for item in record.get("news") or [] if item.get("title")]
         observations = [item for item in record.get("observations") or [] if item.get("type")]
+        evidence: list[dict[str, Any]] = []
+        for item in research:
+            evidence.append({"kind": "research", **item})
+        for item in news:
+            evidence.append({"kind": "news", **item})
+        for item in observations:
+            evidence.append({"kind": "observation", **item})
+        connections = self._stock_connections(normalized)
+        latest_time = next(
+            (
+                str(item.get("observed_at"))
+                for item in [*research, *news, *observations]
+                if item.get("observed_at")
+            ),
+            generated_at,
+        )
+        summary = (
+            f"{normalized} has {len(research)} research items, {len(news)} news items, "
+            f"and {len(observations)} observations in the context graph."
+        )
         return StockGraphContext(
             ticker=normalized,
             has_history=bool(research or news or observations),
+            summary=summary,
+            evidence=evidence[:15],
+            connections=connections,
             research=research,
             news=news,
             observations=observations,
-            generated_at_ist=_now_ist().isoformat(),
+            generated_at_ist=generated_at,
+            last_updated=latest_time,
         )
+
+    def knowledge_index(self, *, limit: int = 500) -> dict[str, Any]:
+        records = self._run(
+            """
+            MATCH (s:Stock)
+            OPTIONAL MATCH (c:ResearchCandidate)-[:CANDIDATE_FOR]->(s)
+            WITH s, collect(c) AS candidates
+            RETURN s.ticker AS ticker,
+                   s.sector AS sector,
+                   s.description AS description,
+                   s.company_name AS company_name,
+                   size(candidates) AS scan_count,
+                   reduce(total = 0.0, c IN candidates | total + coalesce(c.score, 0.0)) AS score_sum,
+                   max(coalesce(s.observed_at, s.ingested_at, s.updated_at, "")) AS last_scanned
+            ORDER BY last_scanned DESC, ticker ASC
+            LIMIT $limit
+            """,
+            {"limit": int(limit)},
+        )
+        stocks: dict[str, dict[str, Any]] = {}
+        for record in records:
+            ticker = str(record.get("ticker") or "").upper()
+            if not ticker:
+                continue
+            scan_count = int(record.get("scan_count") or 0)
+            score_sum = float(record.get("score_sum") or 0.0)
+            stocks[ticker] = {
+                "ticker": ticker,
+                "name": record.get("company_name") or ticker,
+                "sector": record.get("sector") or None,
+                "description": record.get("description") or None,
+                "note_path": None,
+                "scan_count": scan_count,
+                "avg_score": round(score_sum / scan_count, 2) if scan_count else 0.0,
+                "last_scanned": record.get("last_scanned") or None,
+                "tags": ["memgraph"],
+            }
+        last_updated = _now_ist().isoformat()
+        return {
+            "phase": "phase_11",
+            "status": "ok",
+            "stocks": stocks,
+            "counts": {"stocks": len(stocks)},
+            "last_updated": last_updated,
+            "generated_at_ist": last_updated,
+        }
+
+    def get_recent_observations(self, *, limit: int = 20) -> list[dict[str, Any]]:
+        records = self._run(
+            """
+            MATCH (o:Observation)
+            RETURN o.observation_type AS type,
+                   o.ticker AS ticker,
+                   o.observed_at AS observed_at,
+                   o.payload_json AS payload
+            ORDER BY o.observed_at DESC
+            LIMIT $limit
+            """,
+            {"limit": int(limit)},
+        )
+        return [
+            {
+                "type": record.get("type", ""),
+                "ticker": record.get("ticker", ""),
+                "observed_at": record.get("observed_at"),
+                "payload": record.get("payload"),
+            }
+            for record in records
+        ]
+
+    def get_failure_patterns(self, *, limit: int = 20) -> list[dict[str, Any]]:
+        records = self._run(
+            """
+            MATCH (f:FailurePattern)
+            RETURN f.id AS id,
+                   f.event_type AS event_type,
+                   f.severity AS severity,
+                   f.label AS label,
+                   f.observed_at AS observed_at,
+                   f.payload_json AS payload
+            ORDER BY f.observed_at DESC
+            LIMIT $limit
+            """,
+            {"limit": int(limit)},
+        )
+        return [
+            {
+                "id": record.get("id", ""),
+                "event_type": record.get("event_type", ""),
+                "severity": record.get("severity", ""),
+                "label": record.get("label", ""),
+                "observed_at": record.get("observed_at"),
+                "payload": record.get("payload"),
+            }
+            for record in records
+        ]
 
     def latest_research_summary(self) -> dict[str, Any] | None:
         records = self._run(
@@ -1175,4 +1607,3 @@ class ContextGraphRepository:
             "shortlist_count": props.get("shortlist_count") or payload.get("shortlist_count"),
             "analyzed_at": props.get("observed_at"),
         }
-

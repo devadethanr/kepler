@@ -7,6 +7,7 @@ from typing import Any, Iterable
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from pydantic import ValidationError
 
 from ..models import TradeRecord
 from .. import models as models_module
@@ -92,7 +93,10 @@ class TradeRepository:
         seen_trade_ids: set[str] = set()
         normalized_payload: list[dict[str, Any]] = []
         for item in payload:
-            trade = TradeRecord.model_validate(item)
+            try:
+                trade = TradeRecord.model_validate(item)
+            except ValidationError:
+                continue
             normalized = trade.model_dump(mode="json")
             row = self.session.get(models_module.TradeRow, trade.trade_id)
             if row is None:

@@ -120,7 +120,7 @@ function inferTicker(
 
 function normalizeNode(node: KnowledgeGraphNode, index: number): GraphNode {
   const raw = node as Record<string, unknown>;
-  const metadata = node.metadata ?? {};
+  const metadata = (node.metadata ?? raw.properties ?? {}) as Record<string, unknown>;
   const type = normalizeType(node.type);
   const name =
     displayValue(node.name) ??
@@ -153,12 +153,14 @@ function normalizeNode(node: KnowledgeGraphNode, index: number): GraphNode {
 }
 
 function normalizeLink(edge: KnowledgeGraphEdge): GraphLink {
+  const raw = edge as Record<string, unknown>;
+  const metadata = (edge.metadata ?? raw.properties ?? {}) as Record<string, unknown>;
   return {
     source: edge.source,
     target: edge.target,
     label: displayValue(edge.label) ?? displayValue(edge.relationship) ?? 'RELATED_TO',
     weight: normalizeSize(edge.weight, 1),
-    metadata: edge.metadata ?? {},
+    metadata,
     raw: edge,
   };
 }

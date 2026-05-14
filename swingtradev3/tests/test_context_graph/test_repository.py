@@ -8,7 +8,11 @@ from __future__ import annotations
 
 from typing import Any
 
+import pytest
+
 from context_graph.repository import ContextGraphRepository
+
+pytestmark = pytest.mark.memgraph_destructive
 
 # ── helpers ──────────────────────────────────────────────────────────────
 

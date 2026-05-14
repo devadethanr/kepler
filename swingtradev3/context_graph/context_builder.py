@@ -7,11 +7,15 @@ no raw Cypher leaks into calling code.
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Any
 
 from context_graph.models import StockGraphContext
 from context_graph.repository import ContextGraphRepository, GraphUnavailableError
+
+
+def _clean_key(value: str) -> str:
+    return "".join(ch if ch.isalnum() or ch in {"_", "-", ":", "."} else "_" for ch in value)
 
 
 class ContextBuilder:
@@ -37,10 +41,14 @@ class ContextBuilder:
         try:
             return self._repo.stock_context(ticker)
         except GraphUnavailableError:
+            generated_at = datetime.now().isoformat()
             return StockGraphContext(
                 ticker=ticker.upper(),
+                status="graph_unavailable",
                 has_history=False,
-                generated_at_ist=datetime.now().isoformat(),
+                generated_at_ist=generated_at,
+                last_updated=generated_at,
+                degraded_reason="context graph unavailable",
             )
 
     def get_stock_score_history(self, ticker: str) -> list[dict[str, Any]]:
@@ -90,7 +98,7 @@ class ContextBuilder:
                        latest.setup_type AS latest_setup
                 ORDER BY s.ticker
                 """,
-                {"sector_id": f"sector:{normalized_sector}"},
+                {"sector_id": f"sector:{_clean_key(normalized_sector)}"},
             )
             return [
                 {
@@ -164,7 +172,7 @@ class ContextBuilder:
                 normalized = ticker.strip().upper()
                 records = self._repo._run(
                     """
-                    MATCH (n:NewsArticle)-[:AFFECTS_STOCK]->(s:Stock {id: $stock_id})
+                    MATCH (n:NewsArticle)-[:AFFECTS_STOCK|MENTIONS]->(s:Stock {id: $stock_id})
                     RETURN n.title AS title,
                            n.provider AS provider,
                            n.category AS category,
@@ -317,3 +325,29 @@ class ContextBuilder:
             return self._repo.health()
         except Exception as exc:
             return {"status": "unreachable", "error": str(exc)}
+
+
+def format_context_for_llm(context: StockGraphContext) -> str:
+    """Render graph context compactly for research prompts."""
+    if not context.has_history:
+        return f"No prior graph history for {context.ticker}."
+
+    lines = [context.summary or f"Context graph history for {context.ticker}."]
+    if context.research:
+        lines.append("Recent research:")
+        for item in context.research[:5]:
+            score = item.get("score")
+            setup = item.get("setup_type") or "unknown setup"
+            observed_at = item.get("observed_at") or "unknown time"
+            lines.append(f"- score={score}, setup={setup}, observed_at={observed_at}")
+    if context.news:
+        lines.append("Recent news:")
+        for item in context.news[:5]:
+            title = item.get("title") or "untitled"
+            provider = item.get("provider") or "unknown"
+            lines.append(f"- {title} ({provider})")
+    if context.observations:
+        lines.append("Recent observations:")
+        for item in context.observations[:5]:
+            lines.append(f"- {item.get('type') or 'observation'} at {item.get('observed_at')}")
+    return "\n".join(lines)

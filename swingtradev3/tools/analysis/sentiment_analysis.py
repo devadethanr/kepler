@@ -13,10 +13,12 @@ from __future__ import annotations
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from paths import CONTEXT_DIR
 from storage import read_json, write_json
 
+IST = ZoneInfo("Asia/Kolkata")
 
 # FinBERT model loaded lazily
 _FINBERT_PIPELINE = None
@@ -53,20 +55,54 @@ class SentimentAnalyzer:
 
     def __init__(self, cache_path: Path | None = None, ttl_hours: int = 6) -> None:
         self.cache_path = cache_path or (CONTEXT_DIR / "sentiment_cache.json")
+        self.persist_files = cache_path is not None
+        self._memory_cache: dict[str, Any] = {}
         self.ttl_hours = ttl_hours
 
     def _cached(self, text_hash: str) -> dict[str, Any] | None:
+        if not self.persist_files:
+            return self._memory_cache.get(text_hash)
         cache = read_json(self.cache_path, {})
         item = cache.get(text_hash)
         if not item:
             return None
         return item
 
-    def _store(self, text_hash: str, result: dict[str, Any]) -> dict[str, Any]:
+    def _store(
+        self,
+        text_hash: str,
+        result: dict[str, Any],
+        *,
+        text: str | None = None,
+    ) -> dict[str, Any]:
+        if not self.persist_files:
+            self._memory_cache[text_hash] = result
+            self._persist_context_graph(text_hash, result, text=text)
+            return result
         cache = read_json(self.cache_path, {})
         cache[text_hash] = result
         write_json(self.cache_path, cache)
+        self._persist_context_graph(text_hash, result, text=text)
         return result
+
+    def _persist_context_graph(
+        self,
+        text_hash: str,
+        result: dict[str, Any],
+        *,
+        text: str | None = None,
+    ) -> None:
+        graph = None
+        try:
+            from context_graph.repository import ContextGraphRepository
+
+            graph = ContextGraphRepository()
+            graph.upsert_sentiment_snapshot(text_hash=text_hash, result=result, text=text)
+        except Exception:
+            return
+        finally:
+            if graph is not None:
+                graph.close()
 
     def _hash_text(self, text: str) -> str:
         import hashlib
@@ -178,10 +214,10 @@ class SentimentAnalyzer:
             "keyword_score": keyword_result["score"],
             "novelty": "unknown",  # Would need historical comparison
             "source_count": 1 + (1 if finbert_result["source"] == "finbert" else 0),
-            "analyzed_at": datetime.utcnow().isoformat(),
+            "analyzed_at": datetime.now(IST).isoformat(),
         }
 
-        return self._store(text_hash, result)
+        return self._store(text_hash, result, text=text)
 
     def analyze_news_list(self, news_items: list[dict[str, Any]]) -> dict[str, Any]:
         """
@@ -248,5 +284,5 @@ class SentimentAnalyzer:
             "official_source_count": official_count,
             "source_counts": source_counts,
             "source": "aggregated",
-            "analyzed_at": datetime.utcnow().isoformat(),
+            "analyzed_at": datetime.now(IST).isoformat(),
         }

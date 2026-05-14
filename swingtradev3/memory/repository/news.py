@@ -38,14 +38,26 @@ class NewsRepository:
         news_id = source_id if len(source_id) <= 120 else hashlib.sha256(
             source_id.encode("utf-8")
         ).hexdigest()
-        observed_at = item.get("published_at_ist") or item.get("published_at_utc") or item.get("fetched_at_ist")
+        tickers = [str(t).upper() for t in item.get("tickers", [])]
+        verified_tickers = [str(t).upper() for t in item.get("verified_tickers", [])]
+        mentioned_tickers = [str(t).upper() for t in item.get("mentioned_tickers", [])]
         payload = {
             "news_id": news_id,
             "provider": str(item.get("provider") or item.get("source") or "unknown"),
             "source_type": str(item.get("source_type") or "unknown"),
             "category": str(item.get("category") or "unknown"),
+            "title": str(item.get("title") or ""),
+            "summary": str(item.get("summary") or item.get("description") or ""),
             "url": str(item.get("canonical_url") or item.get("url") or ""),
-            "tickers": [str(t).upper() for t in item.get("tickers", [])],
+            "canonical_url": str(item.get("canonical_url") or item.get("url") or ""),
+            "tickers": tickers,
+            "verified_tickers": verified_tickers,
+            "mentioned_tickers": mentioned_tickers,
+            "mapping_reason": str(item.get("mapping_reason") or ""),
+            "mapping_confidence": item.get("mapping_confidence") or item.get("confidence"),
+            "published_at_ist": item.get("published_at_ist"),
+            "published_at_utc": item.get("published_at_utc"),
+            "fetched_at_ist": item.get("fetched_at_ist"),
         }
 
         row = self.session.get(models_module.NewsArticleRow, news_id)
@@ -67,8 +79,9 @@ class NewsRepository:
             row.confidence = float(item.get("confidence") or 0.0)
         except (TypeError, ValueError):
             row.confidence = 0.0
-        row.tickers = payload["tickers"]
-        row.payload = dict(item)
+        row.tickers = verified_tickers or tickers
+        row.payload = {**dict(item), **payload}
+        row.updated_at = datetime.now(ZoneInfo("Asia/Kolkata"))
 
         EventRepository(self.session).append_execution_event(
             event_type="news_item_ingested",
@@ -90,7 +103,10 @@ class NewsRepository:
             ticker_upper = ticker.upper()
             query = query.where(models_module.NewsArticleRow.tickers.contains([ticker_upper]))
         rows = self.session.scalars(
-            query.order_by(models_module.NewsArticleRow.updated_at.desc()).limit(bounded_limit)
+            query.order_by(
+                models_module.NewsArticleRow.updated_at.desc(),
+                models_module.NewsArticleRow.published_at.desc().nullslast(),
+            ).limit(bounded_limit)
         ).all()
         return [
             {
@@ -103,6 +119,8 @@ class NewsRepository:
                 "category": row.category,
                 "confidence": row.confidence,
                 "tickers": list(row.tickers or []),
+                "verified_tickers": list((row.payload or {}).get("verified_tickers") or []),
+                "mentioned_tickers": list((row.payload or {}).get("mentioned_tickers") or []),
                 "updated_at": row.updated_at.isoformat() if row.updated_at else None,
             }
             for row in rows

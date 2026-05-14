@@ -13,7 +13,7 @@ import asyncio
 from typing import Any
 
 from context_graph.models import ProjectionResult
-from context_graph.repository import ContextGraphRepository, GraphUnavailableError
+from context_graph.repository import ContextGraphRepository, GraphUnavailableError, PROJECTION_VERSION
 
 from memory.db import session_scope
 from memory.repository import MemoryRepository
@@ -133,6 +133,7 @@ class GraphProjector:
         etype = str(event.get("entity_type") or "")
         eid = str(event.get("entity_id") or "")
         payload = dict(event.get("payload") or {})
+        created_at = str(event.get("created_at") or payload.get("created_at") or "")
 
         # Collect all tickers from multiple possible sources
         tickers: set[str] = set()
@@ -158,6 +159,7 @@ class GraphProjector:
                 "entity_type": etype,
                 "entity_id": eid,
                 "source": str(event.get("source") or "projector"),
+                "created_at": created_at,
                 "payload": payload,
             })
         except GraphUnavailableError:
@@ -180,8 +182,8 @@ class GraphProjector:
                         "event_id": f"execution_event:{event.get('event_id')}",
                         "stock_id": f"stock:{t}",
                         "source": event_type,
-                        "ingested_at": event.get("created_at", ""),
-                        "pv": "phase11.v1",
+                        "ingested_at": created_at,
+                        "pv": PROJECTION_VERSION,
                     },
                 )
             except GraphUnavailableError:
@@ -190,25 +192,31 @@ class GraphProjector:
         event_id_val = int(event.get("event_id") or 0)
 
         # Handle position materialization and state changes
-        if etype == "position" and event_type in (
+        if event_type in (
             "order_intent_position_materialized",
             "position_state_changed",
         ):
-            self._project_position_event(eid, event_type, payload, tickers)
+            self._project_position_event(eid, event_type, payload, tickers, created_at=created_at)
 
         # Handle approval events — link to approval entity
         if etype == "approval" and event_type in (
             "approval_updated",
             "approvals_replaced",
         ):
-            self._project_approval_event(eid, payload, tickers)
+            self._project_approval_event(eid, payload, tickers, created_at=created_at)
 
         # Upsert research candidates if score data present
         if etype == "order_intent" and event_type == "order_intent_upserted":
-            self._project_order_intent_event(event_id_val, eid, payload, tickers)
+            self._project_order_intent_event(event_id_val, eid, payload, tickers, created_at=created_at)
 
     def _project_position_event(
-        self, entity_id: str, event_type: str, payload: dict[str, Any], tickers: set[str]
+        self,
+        entity_id: str,
+        event_type: str,
+        payload: dict[str, Any],
+        tickers: set[str],
+        *,
+        created_at: str,
     ) -> None:
         """Project position events with position node in graph.
 
@@ -217,43 +225,64 @@ class GraphProjector:
         """
         ticker_str = next(iter(tickers), "UNKNOWN")
         new_state = str(payload.get("new_state", ""))
-        now = str(payload.get("created_at", ""))
+        now = created_at or str(payload.get("created_at", ""))
+        position_id = str(
+            payload.get("position_id")
+            or payload.get("id")
+            or (ticker_str if ticker_str != "UNKNOWN" else entity_id)
+        )
+        intent_id = str(payload.get("order_intent_id") or payload.get("intent_id") or entity_id)
         try:
             self._run_cypher(
                 """
                 MATCH (s:Stock {id: $stock_id})
-                MERGE (p:Position {ticker: $ticker})
-                SET p.state = $state,
+                MERGE (p:Position {id: $position_id})
+                SET p.ticker = $ticker,
+                    p.state = $state,
                     p.label = $ticker,
-                    p.updated_at = $now
+                    p.source = $source,
+                    p.updated_at = $now,
+                    p.ingested_at = $now,
+                    p.projection_version = $pv
                 MERGE (s)-[r:POSITION_FOR]->(p)
                 SET r.ingested_at = $now,
                     r.projection_version = $pv
                 """,
                 {
                     "stock_id": f"stock:{ticker_str}",
+                    "position_id": f"position:{position_id}",
                     "ticker": ticker_str,
                     "state": str(payload.get("state", payload.get("lifecycle_state", "open"))),
+                    "source": "projector",
                     "now": now,
-                    "pv": "phase11.v1",
+                    "pv": PROJECTION_VERSION,
                 },
             )
             # EXECUTED_AS: OrderIntent → Position (on materialization)
             if event_type == "order_intent_position_materialized":
                 self._run_cypher(
                     """
-                    MATCH (oi:OrderIntent {id: $intent_id}), (p:Position {ticker: $ticker})
+                    MERGE (oi:OrderIntent {id: $intent_id})
+                    ON CREATE SET oi.ticker = $ticker,
+                                  oi.label = $ticker + ':materialized',
+                                  oi.status = 'materialized',
+                                  oi.source = $source,
+                                  oi.ingested_at = $now,
+                                  oi.projection_version = $pv
+                    WITH oi
+                    MATCH (p:Position {id: $position_id})
                     MERGE (oi)-[r:EXECUTED_AS]->(p)
                     SET r.source = $source,
                         r.ingested_at = $now,
                         r.projection_version = $pv
-                    """,
+                """,
                     {
-                        "intent_id": f"order_intent:{entity_id}",
+                        "intent_id": f"order_intent:{intent_id}",
+                        "position_id": f"position:{position_id}",
                         "ticker": ticker_str,
                         "source": "projector",
                         "now": now,
-                        "pv": "phase11.v1",
+                        "pv": PROJECTION_VERSION,
                     },
                 )
             # CLOSED_AS: OrderIntent → Position (when position is closed)
@@ -270,18 +299,24 @@ class GraphProjector:
                         "ticker": ticker_str,
                         "source": "projector",
                         "now": now,
-                        "pv": "phase11.v1",
+                        "pv": PROJECTION_VERSION,
                     },
                 )
         except GraphUnavailableError:
             pass
 
     def _project_approval_event(
-        self, entity_id: str, payload: dict[str, Any], tickers: set[str]
+        self,
+        entity_id: str,
+        payload: dict[str, Any],
+        tickers: set[str],
+        *,
+        created_at: str,
     ) -> None:
         """Project approval state changes into graph."""
         status = str(payload.get("status", ""))
         ticker_str = next(iter(tickers), "UNKNOWN")
+        now = created_at or str(payload.get("created_at", ""))
         try:
             self._run_cypher(
                 """
@@ -300,20 +335,27 @@ class GraphProjector:
                     "approval_id": f"approval:{entity_id}",
                     "status": status,
                     "ticker": ticker_str,
-                    "now": str(payload.get("created_at", "")),
-                    "pv": "phase11.v1",
+                    "now": now,
+                    "pv": PROJECTION_VERSION,
                 },
             )
         except GraphUnavailableError:
             pass
 
     def _project_order_intent_event(
-        self, event_id: int, entity_id: str, payload: dict[str, Any], tickers: set[str]
+        self,
+        event_id: int,
+        entity_id: str,
+        payload: dict[str, Any],
+        tickers: set[str],
+        *,
+        created_at: str,
     ) -> None:
         """Project order intent state into graph."""
         status = str(payload.get("status", "proposed"))
         ticker_str = next(iter(tickers), "UNKNOWN")
         intent_node_id = f"order_intent:{entity_id}"
+        now = created_at or str(payload.get("created_at", ""))
         try:
             self._run_cypher(
                 """
@@ -339,8 +381,8 @@ class GraphProjector:
                     "exec_event_id": f"execution_event:{event_id}",
                     "status": status,
                     "ticker": ticker_str,
-                    "now": str(payload.get("created_at", "")),
-                    "pv": "phase11.v1",
+                    "now": now,
+                    "pv": PROJECTION_VERSION,
                     "source": "projector",
                 },
             )

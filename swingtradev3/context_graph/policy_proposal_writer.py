@@ -7,10 +7,11 @@ Never mutates config.yaml directly.
 
 from __future__ import annotations
 
-from datetime import datetime
+import json
 from typing import Any
 
-from context_graph.repository import ContextGraphRepository, GraphUnavailableError
+from context_graph.context_builder import ContextBuilder
+from context_graph.repository import ContextGraphRepository
 from memory.db import session_scope
 from memory.repository import MemoryRepository
 from policy.governor import PolicyGovernor
@@ -22,8 +23,9 @@ class PolicyProposalWriter:
     def __init__(
         self,
         graph_repo: ContextGraphRepository | None = None,
+        context_builder: ContextBuilder | None = None,
     ) -> None:
-        self._graph = graph_repo or ContextGraphRepository()
+        self._builder = context_builder or ContextBuilder(graph_repo or ContextGraphRepository())
 
     def propose_from_failure_patterns(
         self,
@@ -72,7 +74,7 @@ class PolicyProposalWriter:
         # If many observations mention sector concentration, propose a cap
         sector_mentions = {}
         for obs in observations:
-            payload = obs.get("payload") or {}
+            payload = self._parse_payload(obs.get("payload") or {})
             sector = str(payload.get("sector") or "")
             if sector:
                 sector_mentions[sector] = sector_mentions.get(sector, 0) + 1
@@ -120,16 +122,21 @@ class PolicyProposalWriter:
     # ── helpers ──────────────────────────────────────────────────────
 
     def _get_failure_patterns(self) -> list[dict[str, Any]]:
-        try:
-            return self._graph.get_failure_patterns()
-        except GraphUnavailableError:
-            return []
+        return self._builder.get_failure_patterns()
 
     def _get_recent_observations(self) -> list[dict[str, Any]]:
-        try:
-            return self._graph.get_recent_observations()
-        except GraphUnavailableError:
-            return []
+        return self._builder.get_recent_observations()
+
+    def _parse_payload(self, payload: Any) -> dict[str, Any]:
+        if isinstance(payload, dict):
+            return payload
+        if isinstance(payload, str) and payload.strip():
+            try:
+                parsed = json.loads(payload)
+            except json.JSONDecodeError:
+                return {}
+            return parsed if isinstance(parsed, dict) else {}
+        return {}
 
     def _get_recent_trades(self) -> list[dict[str, Any]]:
         try:

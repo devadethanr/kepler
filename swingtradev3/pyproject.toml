@@ -74,3 +74,6 @@ line-length = 100
 asyncio_mode = "auto"
 pythonpath = ["."]
 testpaths = ["tests"]
+markers = [
+    "memgraph_destructive: tests that wipe the running Memgraph database; run only via make test-memgraph",
+]

@@ -11,10 +11,10 @@ from google.genai import types
 from pydantic import PrivateAttr
 
 from config import cfg
+from context_graph.context_builder import ContextBuilder, format_context_for_llm
 from models import StockScore
 from paths import STRATEGY_DIR
 from llm_bridge import SmartRouter
-from knowledge.wiki_renderer import get_stock_context, format_context_for_llm
 from regime_adapter import RegimeAdaptiveConfig
 
 
@@ -26,10 +26,12 @@ class ScorerAgent(LlmAgent):
     """
 
     _router: SmartRouter = PrivateAttr()
+    _context_builder: ContextBuilder = PrivateAttr()
 
     def __init__(self, name: str = "ScorerAgent") -> None:
         super().__init__(name=name, model=cfg.llm.adk.research_model)
         self._router = SmartRouter(role="research")
+        self._context_builder = ContextBuilder()
 
     async def _run_async_impl(self, ctx: InvocationContext) -> AsyncGenerator[Event, None]:
         qualified_stocks = ctx.session.state.get("qualified_stocks", [])
@@ -60,8 +62,8 @@ class ScorerAgent(LlmAgent):
 
             prompt = f"Analyze and score this stock setup: {json.dumps(data, default=str)}"
 
-            # Inline KG read: get historical context for comparative scoring
-            kg_context = get_stock_context(ticker)
+            # Inline context graph read: get historical context for comparative scoring.
+            kg_context = self._context_builder.get_stock_context(ticker)
             system_instruction = self._build_system_instruction(
                 ticker, kg_context, regime_str, min_score
             )
