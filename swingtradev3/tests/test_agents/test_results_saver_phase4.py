@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from datetime import date
+from datetime import date, datetime
 from types import SimpleNamespace
+from zoneinfo import ZoneInfo
 
 import pytest
 
@@ -14,6 +15,21 @@ from storage import read_json, write_json
 
 
 APPROVALS_PATH = CONTEXT_DIR / "pending_approvals.json"
+
+
+def test_results_saver_drops_shortlist_tickers_outside_configured_universe():
+    agent = ResultsSaverAgent()
+
+    approvals = agent._build_pending_approvals(
+        shortlist=[
+            {"ticker": "RELIANCE", "score": 8.1},
+            {"ticker": "SBI2C16E", "score": 8.6},
+        ],
+        scan_date="2026-05-14",
+        analyzed_at=datetime(2026, 5, 14, 18, 0, tzinfo=ZoneInfo("Asia/Kolkata")),
+    )
+
+    assert [item["ticker"] for item in approvals] == ["RELIANCE"]
 
 
 @pytest.mark.asyncio
@@ -75,6 +91,11 @@ async def test_results_saver_persists_candidate_identity_into_memory():
         assert order_intent["approval_id"] == approval["approval_id"]
     finally:
         write_json(APPROVALS_PATH, original_approvals)
+        with session_scope() as session:
+            MemoryRepository(session).replace_pending_approvals(
+                original_approvals,
+                source="test_results_saver_restore",
+            )
         if original_scan_result is None:
             if scan_result_path.exists():
                 scan_result_path.unlink()

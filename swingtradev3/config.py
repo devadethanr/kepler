@@ -93,6 +93,7 @@ class ResearchFilterConfig(BaseModel):
     market_news_digest_max_items_per_ticker: int = 2
     market_news_digest_max_general_items: int = 4
     options_pcr_threshold: float = 1.2
+    options_scan_limit: int = 0
     options_oi_spike_pct: float = 20
     trend_filter_ema: int = 200
     min_volume_ratio: float = 1.0

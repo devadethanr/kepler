@@ -10,6 +10,7 @@ from google.genai import types
 
 from config import cfg
 from context_graph.repository import ContextGraphRepository, GraphUnavailableError
+from data.nifty200_loader import Nifty200Loader
 from memory.db import session_scope
 from memory.projections import project_all_managed_files
 from memory.repository import MemoryRepository
@@ -37,10 +38,11 @@ class ResultsSaverAgent(BaseAgent):
         analyzed_at: datetime,
     ) -> list[dict[str, Any]]:
         expires_at = analyzed_at + timedelta(hours=cfg.execution.approval_timeout_hours)
+        universe = {ticker.upper() for ticker in Nifty200Loader().load()}
         payload: list[dict[str, Any]] = []
         for item in shortlist:
             ticker = str(item.get("ticker") or "").strip().upper()
-            if not ticker:
+            if not ticker or ticker not in universe:
                 continue
             payload.append(
                 {

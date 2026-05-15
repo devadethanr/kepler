@@ -188,4 +188,9 @@ async def test_submission_timeout_reconciles_later_fill_by_broker_tag(monkeypatc
         assert trigger.status == "active"
     finally:
         write_json(APPROVALS_PATH, original_approvals)
+        with session_scope() as session:
+            MemoryRepository(session).replace_pending_approvals(
+                original_approvals,
+                source="test_reconciliation_restore",
+            )
         write_json(STATE_PATH, original_state)

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta
 from unittest.mock import AsyncMock, MagicMock, patch
+from zoneinfo import ZoneInfo
 
 import pytest
 from fastapi.testclient import TestClient
@@ -10,6 +11,7 @@ from api.main import app
 from api.routes import approvals as approvals_route
 from config import cfg
 from execution.bootstrap import WorkerRuntime
+from execution.coordinator import ExecutionCoordinator
 from execution.operator_controls import read_worker_status, write_worker_status
 from execution.state_machine import WorkerExecutionStateMachine
 from memory.db import session_scope
@@ -97,6 +99,32 @@ async def test_worker_state_machine_advances_active_executions(monkeypatch):
 
     assert advanced == 2
     advance_mock.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_worker_expiry_check_handles_ist_aware_approval_timestamps(persist_approvals):
+    now = datetime.now(ZoneInfo("Asia/Kolkata"))
+    payload = _approval_payload()[0]
+    payload.update(
+        {
+            "approved": True,
+            "execution_requested": True,
+            "execution_request_id": "req-aware-expired",
+            "created_at": (now - timedelta(hours=5)).isoformat(),
+            "expires_at": (now - timedelta(minutes=5)).isoformat(),
+        }
+    )
+    seeded = persist_approvals([payload])
+    order_intent_id = str(seeded[0]["order_intent_id"])
+
+    result = await ExecutionCoordinator().submit_order_intent(order_intent_id)
+
+    assert result == "expired"
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        order_intent = repo.get_order_intent(order_intent_id)
+    assert order_intent is not None
+    assert order_intent["status"] == "expired"
 
 
 def test_dashboard_scheduler_reads_worker_status():

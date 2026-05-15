@@ -73,6 +73,54 @@ class TestFilterAgent:
 
         assert agent._sweep_news(FakeNews(), cfg_obj, universe) == ["TCS"]
 
+    def test_news_sweep_does_not_match_ambiguous_first_company_word(self):
+        agent = FilterAgent()
+
+        class FakeNews:
+            def sweep_market_news(self, query):
+                return {
+                    "results": [
+                        {
+                            "title": "Tata Steel announces capacity expansion",
+                            "content": "Tata Steel shares were active after management commentary.",
+                        },
+                    ]
+                }
+
+            def normalize_headlines(self, headlines, max_age_hours=None):
+                return headlines
+
+        universe = [
+            {"ticker": "TCS", "name": "Tata Consultancy Services Ltd."},
+        ]
+        cfg_obj = type("Cfg", (), {"news_sweep_query": "q", "news_max_age_hours": 72})()
+
+        assert agent._sweep_news(FakeNews(), cfg_obj, universe) == []
+
+    def test_news_sweep_matches_specific_multi_word_company_alias(self):
+        agent = FilterAgent()
+
+        class FakeNews:
+            def sweep_market_news(self, query):
+                return {
+                    "results": [
+                        {
+                            "title": "Tata Consultancy Services wins cloud deal",
+                            "content": "TCS signed a large IT services agreement.",
+                        },
+                    ]
+                }
+
+            def normalize_headlines(self, headlines, max_age_hours=None):
+                return headlines
+
+        universe = [
+            {"ticker": "TCS", "name": "Tata Consultancy Services Ltd."},
+        ]
+        cfg_obj = type("Cfg", (), {"news_sweep_query": "q", "news_max_age_hours": 72})()
+
+        assert agent._sweep_news(FakeNews(), cfg_obj, universe) == ["TCS"]
+
     def test_options_filter_ignores_unavailable_cache(self):
         agent = FilterAgent()
 
@@ -82,6 +130,36 @@ class TestFilterAgent:
 
         cfg_obj = type("Cfg", (), {"options_pcr_threshold": 1.2})()
         assert agent._detect_unusual_options(FakeOptions(), cfg_obj, ["RELIANCE"]) == []
+
+    def test_options_filter_scans_full_universe_by_default(self):
+        agent = FilterAgent()
+        universe = [f"STOCK{i}" for i in range(60)]
+
+        class FakeOptions:
+            def __init__(self):
+                self.seen = []
+
+            def get_cached(self, ticker):
+                self.seen.append(ticker)
+                return {"ticker": ticker, "pcr": 1.3, "source": "cache"}
+
+        options = FakeOptions()
+        cfg_obj = type("Cfg", (), {"options_pcr_threshold": 1.2, "options_scan_limit": 0})()
+
+        assert agent._detect_unusual_options(options, cfg_obj, universe) == universe
+        assert options.seen == universe
+
+    def test_options_filter_respects_configured_scan_limit(self):
+        agent = FilterAgent()
+        universe = [f"STOCK{i}" for i in range(60)]
+
+        class FakeOptions:
+            def get_cached(self, ticker):
+                return {"ticker": ticker, "pcr": 1.3, "source": "cache"}
+
+        cfg_obj = type("Cfg", (), {"options_pcr_threshold": 1.2, "options_scan_limit": 25})()
+
+        assert agent._detect_unusual_options(FakeOptions(), cfg_obj, universe) == universe[:25]
 
     @pytest.mark.asyncio
     async def test_fast_filter_below_ema(self):

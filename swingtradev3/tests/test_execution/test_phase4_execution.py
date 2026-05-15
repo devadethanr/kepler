@@ -138,6 +138,11 @@ async def test_execution_coordinator_submits_queued_intent_and_removes_pending_a
         assert [item["ticker"] for item in approvals if item.get("ticker") == ticker] == []
     finally:
         write_json(APPROVALS_PATH, original_approvals)
+        with session_scope() as session:
+            MemoryRepository(session).replace_pending_approvals(
+                original_approvals,
+                source="test_phase4_restore",
+            )
         write_json(STATE_PATH, original_state)
 
 
@@ -197,6 +202,11 @@ async def test_execution_coordinator_removes_only_matching_candidate_for_same_ti
         assert second_payload["approval_id"] in remaining_ids
     finally:
         write_json(APPROVALS_PATH, original_approvals)
+        with session_scope() as session:
+            MemoryRepository(session).replace_pending_approvals(
+                original_approvals,
+                source="test_phase4_restore",
+            )
         write_json(STATE_PATH, original_state)
 
 

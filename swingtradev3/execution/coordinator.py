@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from config import cfg
 from data.market_regime import MarketRegimeDetector
@@ -61,10 +62,17 @@ SESSION_SCOPED_ENTRY_BLOCK_REASONS = {
     "stale_quotes",
     "stream_unavailable",
 }
+IST = ZoneInfo("Asia/Kolkata")
 
 
 def _now() -> datetime:
-    return datetime.now()
+    return datetime.now(IST)
+
+
+def _as_ist(value: datetime) -> datetime:
+    if value.tzinfo is None:
+        return value.replace(tzinfo=IST)
+    return value.astimezone(IST)
 
 
 def _merge_payload(base: dict[str, Any], patch: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -226,7 +234,7 @@ class ExecutionCoordinator:
         payload = dict(intent["payload"])
         ticker = str(intent["ticker"]).upper()
         expires_at_raw = payload.get("expires_at")
-        if expires_at_raw and datetime.fromisoformat(str(expires_at_raw)) <= _now():
+        if expires_at_raw and _as_ist(datetime.fromisoformat(str(expires_at_raw))) <= _now():
             self._store_order_intent(
                 order_intent_id=order_intent_id,
                 ticker=ticker,
