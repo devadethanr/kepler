@@ -677,7 +677,7 @@ Keep as file cache for now (not yet promoted to graph):
 - Memgraph downtime does not affect order placement, reconciliation, or kill switch operation
 - File-based memory stores (`context/knowledge/`, `context/research/`, observation caches) are no longer written by new code paths
 
-### Phase 12: Memory Views And Google MCP Toolbox
+### Phase 12 [X]: Memory Views And Google MCP Toolbox
 
 Implementation:
 
@@ -705,6 +705,14 @@ Definition of done:
 - Toolbox is Memgraph-aware and Postgres-aware, with clean typed access for each data domain
 - Toolbox remains fully out of the execution hot path
 - Memgraph downtime degrades context quality only — it never blocks execution, reconciliation, or kill switches
+
+Implementation status:
+
+- Postgres memory views are managed by Alembic and covered by `make phase12-smoke`
+- `MemoryViewClient` provides Toolbox-backed reads with local Postgres/Memgraph fallback
+- `ContextGraphRepository` exposes bounded graph traversal APIs with label and relationship allow-lists; agents do not receive raw Cypher access
+- Google MCP Toolbox runs as a read-only Docker sidecar for Postgres and Memgraph toolsets
+- research and learning agents now consume curated memory packets instead of direct JSON/trade-store reads
 
 ### Phase 13: Slow Brain Desk And Session Planning
 

@@ -351,3 +351,8 @@ context_graph:
   projection_interval_seconds: 30.0
   dashboard_node_limit: 150
   dashboard_edge_limit: 300
+
+toolbox:
+  enabled: true
+  url: "http://toolbox:5000"
+  timeout_seconds: 2.0

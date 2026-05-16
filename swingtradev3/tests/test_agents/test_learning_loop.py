@@ -29,51 +29,40 @@ async def test_learning_loop_reviewer():
         "pnl_pct": 10.0
     }
     
-    class FakeSessionScope:
-        def __enter__(self):
-            return object()
-
-        def __exit__(self, exc_type, exc, tb):
-            return False
-
-    class FakeMemoryRepository:
-        def __init__(self, session):
-            self.session = session
-
-        def get_trades_payload(self):
-            return [trade]
+    class FakeMemoryViewClient:
+        def latest_trade_payload(self):
+            return trade
 
     fake_graph = MagicMock()
-    with patch("agents.learning.reviewer.session_scope", return_value=FakeSessionScope()):
-        with patch("agents.learning.reviewer.MemoryRepository", FakeMemoryRepository):
-            with patch("agents.learning.reviewer.ContextGraphRepository", return_value=fake_graph):
-                # Mock the SMART ROUTER
-                with patch("llm_bridge.SmartRouter.generate_structured") as mock_gen:
-                    mock_gen.return_value = TradeReviewSchema(
-                        observation="Successful trade",
-                        thesis_held=True,
-                        exit_reason="target"
+    with patch("agents.learning.reviewer.MemoryViewClient", FakeMemoryViewClient):
+        with patch("agents.learning.reviewer.ContextGraphRepository", return_value=fake_graph):
+            # Mock the SMART ROUTER
+            with patch("llm_bridge.SmartRouter.generate_structured") as mock_gen:
+                mock_gen.return_value = TradeReviewSchema(
+                    observation="Successful trade",
+                    thesis_held=True,
+                    exit_reason="target"
+                )
+
+                runner = Runner(
+                    app_name="learning",
+                    agent=learning_reviewer,
+                    session_service=InMemorySessionService(),
+                    auto_create_session=True
+                )
+
+                async for _ in runner.run_async(
+                    user_id="system",
+                    session_id="learn_session",
+                    new_message=types.Content(
+                        role="user",
+                        parts=[types.Part(text="Review latest trades")]
                     )
+                ):
+                    pass
 
-                    runner = Runner(
-                        app_name="learning",
-                        agent=learning_reviewer,
-                        session_service=InMemorySessionService(),
-                        auto_create_session=True
-                    )
-
-                    async for _ in runner.run_async(
-                        user_id="system",
-                        session_id="learn_session",
-                        new_message=types.Content(
-                            role="user",
-                            parts=[types.Part(text="Review latest trades")]
-                        )
-                    ):
-                        pass
-
-                    assert fake_graph.record_observation.called
-                    print("\n✅ Learning Test Passed: ReviewerAgent logged graph observation.")
+                assert fake_graph.record_observation.called
+                print("\n✅ Learning Test Passed: ReviewerAgent logged graph observation.")
 
 @pytest.mark.asyncio
 async def test_learning_loop_stats():
@@ -110,7 +99,11 @@ async def test_learning_loop_stats():
         }
     ]
     
-    with patch("agents.learning.stats_agent.read_json", return_value=trades):
+    class FakeStatsMemoryViewClient:
+        def recent_trades(self, *, limit=1000):
+            return [{"payload": item} for item in trades]
+
+    with patch("agents.learning.stats_agent.MemoryViewClient", FakeStatsMemoryViewClient):
         with patch("agents.learning.stats_agent.write_json") as mock_write:
             runner = Runner(
                 app_name="learning",

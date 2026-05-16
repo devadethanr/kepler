@@ -7,18 +7,18 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-15T01:25:07.556185",
+      "started_at": "2026-05-16T18:00:04.363053",
       "status": "running"
     },
     "FilterAgent": {
       "agent_name": "FilterAgent",
-      "completed_at": "2026-05-15T01:26:19.169451",
-      "current_task": "Filtering stocks",
-      "last_error": "Connection timeout",
+      "completed_at": null,
+      "current_task": "Funnel completed: 0 stocks qualified for deep analysis.",
+      "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-15T01:26:19.167088",
-      "status": "error"
+      "started_at": "2026-05-16T18:00:04.360600",
+      "status": "running"
     },
     "FundamentalsAgent_ABB": {
       "agent_name": "FundamentalsAgent_ABB",
@@ -197,7 +197,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-15T01:25:07.582663",
+      "started_at": "2026-05-16T18:00:04.389106",
       "status": "running"
     },
     "MarketDataAgent_ABB": {
@@ -547,7 +547,7 @@
       "last_error": null,
       "metadata": {},
       "progress": "3/10 stocks scored",
-      "started_at": "2026-05-15T01:26:19.176003",
+      "started_at": "2026-05-15T10:51:53.808120",
       "status": "running"
     },
     "RegimeAgent": {
@@ -557,17 +557,17 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-15T01:25:07.115041",
+      "started_at": "2026-05-16T18:00:03.031085",
       "status": "running"
     },
     "ResearchPipeline": {
       "agent_name": "ResearchPipeline",
-      "completed_at": "2026-05-14T18:00:04.644793",
+      "completed_at": "2026-05-16T18:00:04.391051",
       "current_task": "Full evening research scan",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-14T18:00:00.207920",
+      "started_at": "2026-05-16T18:00:00.124050",
       "status": "completed"
     },
     "ResultsSaverAgent": {
@@ -577,18 +577,18 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-15T01:25:07.581038",
+      "started_at": "2026-05-16T18:00:04.387386",
       "status": "running"
     },
     "ScorerAgent": {
       "agent_name": "ScorerAgent",
-      "completed_at": "2026-05-15T01:26:19.159518",
-      "current_task": "Scoring RELIANCE",
+      "completed_at": null,
+      "current_task": "No qualified stocks to score.",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-15T01:26:19.156390",
-      "status": "completed"
+      "started_at": "2026-05-16T18:00:04.364694",
+      "status": "running"
     },
     "SentimentAgent_ABB": {
       "agent_name": "SentimentAgent_ABB",
@@ -932,17 +932,17 @@
     },
     "scheduler": {
       "agent_name": "scheduler",
-      "completed_at": "2026-05-15T09:52:28.368719",
+      "completed_at": "2026-05-16T23:31:02.758777",
       "current_task": "position_monitor",
       "last_error": null,
       "metadata": {
         "last_job": "position_monitor"
       },
       "progress": null,
-      "started_at": "2026-05-15T09:52:28.367180",
+      "started_at": "2026-05-16T23:31:02.757496",
       "status": "completed"
     }
   },
-  "last_updated": "2026-05-15T09:52:28.368724",
-  "scheduler_phase": "market_hours"
+  "last_updated": "2026-05-16T23:31:02.758781",
+  "scheduler_phase": "overnight_monitoring"
 }

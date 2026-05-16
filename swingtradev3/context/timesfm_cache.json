@@ -391,7 +391,7 @@
   },
   "CACHED_TEST_5": {
     "data": {
-      "as_of": "2026-05-14T16:53:31.183339",
+      "as_of": "2026-05-15T05:21:52.429445",
       "forecast_direction": "flat",
       "forecast_lower_10": [
         75.94,
@@ -420,7 +420,7 @@
       "source": "timesfm",
       "ticker": "CACHED_TEST"
     },
-    "fetched_at": "2026-05-14T16:53:31.183934"
+    "fetched_at": "2026-05-15T05:21:52.430914"
   },
   "HAL_20": {
     "data": {
@@ -1438,7 +1438,7 @@
   },
   "TEST_10": {
     "data": {
-      "as_of": "2026-05-14T16:53:30.895769",
+      "as_of": "2026-05-15T05:21:52.137406",
       "forecast_direction": "flat",
       "forecast_lower_10": [
         75.94,
@@ -1482,6 +1482,6 @@
       "source": "timesfm",
       "ticker": "TEST"
     },
-    "fetched_at": "2026-05-14T16:53:30.896434"
+    "fetched_at": "2026-05-15T05:21:52.138232"
   }
 }

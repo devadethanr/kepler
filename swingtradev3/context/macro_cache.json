@@ -1,13 +1,13 @@
 {
   "data": {
-    "crude_usd": 100.91,
-    "date": "2026-05-14",
-    "india_vix": 18.61,
-    "nasdaq": 26639.2,
+    "crude_usd": 101.02,
+    "date": "2026-05-16",
+    "india_vix": 18.79,
+    "nasdaq": 26225.15,
     "source": "yahoo_finance",
-    "sp500": 7500.12,
-    "us_10y_yield": 4.451,
-    "usd_inr": 95.753
+    "sp500": 7408.5,
+    "us_10y_yield": 4.595,
+    "usd_inr": 95.955
   },
-  "fetched_at": "2026-05-14T16:51:52.513998"
+  "fetched_at": "2026-05-16T12:30:02.389599"
 }

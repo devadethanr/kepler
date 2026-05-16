@@ -3,7 +3,7 @@ ENV_FILE := .env
 DOCKER_COMPOSE := docker compose -f $(COMPOSE_FILE) --env-file $(ENV_FILE)
 DOCKER_COMPOSE_MEMORY := $(DOCKER_COMPOSE) --profile memory
 
-.PHONY: dev dev-detach worker-up worker-smoke test test-file lint format logs logs-app logs-worker logs-mcp logs-dashboard logs-memory logs-memgraph logs-memgraph-lab memgraph-shell memgraph-snapshot stop clean shell health login phase0-check phase0-reconcile-state phase3-check phase6-check phase7-check db-upgrade
+.PHONY: dev dev-detach worker-up worker-smoke test test-file lint format logs logs-app logs-worker logs-mcp logs-dashboard logs-memory logs-memgraph logs-memgraph-lab logs-toolbox toolbox-health phase12-smoke memgraph-shell memgraph-snapshot stop clean shell health login phase0-check phase0-reconcile-state phase3-check phase6-check phase7-check db-upgrade
 
 define RUN_PYTEST_ISOLATED
 	@was_running=$$($(DOCKER_COMPOSE) ps --status running --services worker 2>/dev/null | grep -c '^worker$$' || true); \
@@ -92,6 +92,16 @@ logs-memgraph:
 
 logs-memgraph-lab:
 	$(DOCKER_COMPOSE_MEMORY) logs -f memgraph-lab
+
+logs-toolbox:
+	$(DOCKER_COMPOSE_MEMORY) logs -f toolbox
+
+toolbox-health:
+	$(DOCKER_COMPOSE) exec -T app python -c "import urllib.request; urllib.request.urlopen('http://toolbox:5000/api/toolset', timeout=3).read()"
+
+phase12-smoke:
+	$(DOCKER_COMPOSE) exec -T db psql -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-swingtradev3} -c '\dv *_view'
+	$(DOCKER_COMPOSE) exec -T app python -m ops.phase12_smoke
 
 memgraph-shell:
 	$(DOCKER_COMPOSE_MEMORY) exec memgraph mgconsole

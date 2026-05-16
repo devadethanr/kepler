@@ -15,7 +15,7 @@ from .helpers import (
     payload_json as _payload_json,
     ticker_list as _ticker_list,
 )
-from .schema import CURSOR_NAME, GRAPH_LABELS, PROJECTION_VERSION
+from .schema import CURSOR_NAME, GRAPH_LABELS, GRAPH_RELATIONSHIPS, PROJECTION_VERSION
 
 try:
     from neo4j import GraphDatabase
@@ -1579,6 +1579,436 @@ class ContextGraphRepository:
             }
             for record in records
         ]
+
+    # ── Phase 12 curated context/traversal views ────────────────────
+
+    @staticmethod
+    def _bounded_limit(limit: int, *, default: int = 20, maximum: int = 100) -> int:
+        try:
+            parsed = int(limit)
+        except (TypeError, ValueError):
+            parsed = default
+        return max(1, min(parsed, maximum))
+
+    @staticmethod
+    def _allowed_labels(labels: list[str] | None = None) -> list[str]:
+        if not labels:
+            return sorted(GRAPH_LABELS)
+        allowed = [label for label in labels if label in GRAPH_LABELS]
+        return allowed or sorted(GRAPH_LABELS)
+
+    @staticmethod
+    def _allowed_relationships(relationships: list[str] | None = None) -> list[str]:
+        if not relationships:
+            return sorted(GRAPH_RELATIONSHIPS)
+        allowed = [rel for rel in relationships if rel in GRAPH_RELATIONSHIPS]
+        return allowed or sorted(GRAPH_RELATIONSHIPS)
+
+    @staticmethod
+    def _relationship_pattern(relationships: list[str]) -> str:
+        return "|".join(f"`{rel}`" for rel in relationships)
+
+    def regime_snapshot_context(self, *, limit: int = 5) -> list[dict[str, Any]]:
+        bounded = self._bounded_limit(limit, default=5, maximum=50)
+        records = self._run(
+            """
+            MATCH (r:RegimeSnapshot)
+            OPTIONAL MATCH (run:ResearchRun)-[:UNDER_REGIME]->(r)
+            RETURN r.id AS id,
+                   r.regime AS regime,
+                   r.observed_at AS observed_at,
+                   r.confidence AS confidence,
+                   r.payload_json AS payload,
+                   collect(run.id)[..5] AS research_runs
+            ORDER BY coalesce(r.observed_at, r.ingested_at, "") DESC
+            LIMIT $limit
+            """,
+            {"limit": bounded},
+        )
+        return [
+            {
+                "id": record.get("id"),
+                "regime": record.get("regime") or "unknown",
+                "observed_at": record.get("observed_at"),
+                "confidence": float(record.get("confidence") or 0),
+                "payload": record.get("payload"),
+                "research_runs": list(record.get("research_runs") or []),
+            }
+            for record in records
+        ]
+
+    def candidate_memory_context(self, ticker: str, *, limit: int = 10) -> list[dict[str, Any]]:
+        normalized = ticker.strip().upper()
+        bounded = self._bounded_limit(limit, default=10, maximum=100)
+        records = self._run(
+            """
+            MATCH (c:ResearchCandidate)-[:CANDIDATE_FOR]->(s:Stock {id: $stock_id})
+            OPTIONAL MATCH (c)-[:ANALYZED_IN]->(r:ResearchRun)
+            OPTIONAL MATCH (s)-[:HAS_SIGNAL]->(sig:SignalSnapshot)
+            WITH c, r, sig ORDER BY coalesce(sig.observed_at, sig.ingested_at, "") DESC
+            RETURN c.id AS candidate_id,
+                   c.ticker AS ticker,
+                   c.score AS score,
+                   c.setup_type AS setup_type,
+                   c.shortlisted AS shortlisted,
+                   c.observed_at AS observed_at,
+                   c.payload_json AS payload,
+                   r.id AS run_id,
+                   r.scan_date AS scan_date,
+                   collect({
+                       id: sig.id,
+                       signal_type: sig.signal_type,
+                       observed_at: sig.observed_at,
+                       payload: sig.payload_json
+                   })[..5] AS signals
+            ORDER BY coalesce(c.observed_at, "") DESC
+            LIMIT $limit
+            """,
+            {"stock_id": f"stock:{normalized}", "limit": bounded},
+        )
+        return [
+            {
+                "candidate_id": record.get("candidate_id"),
+                "ticker": record.get("ticker") or normalized,
+                "score": float(record.get("score") or 0),
+                "setup_type": record.get("setup_type") or "unknown",
+                "shortlisted": bool(record.get("shortlisted")),
+                "observed_at": record.get("observed_at"),
+                "payload": record.get("payload"),
+                "run_id": record.get("run_id"),
+                "scan_date": record.get("scan_date"),
+                "signals": [item for item in record.get("signals") or [] if item.get("id")],
+            }
+            for record in records
+        ]
+
+    def similar_trades_context(
+        self,
+        ticker: str,
+        *,
+        setup_type: str | None = None,
+        limit: int = 10,
+    ) -> list[dict[str, Any]]:
+        normalized = ticker.strip().upper()
+        bounded = self._bounded_limit(limit, default=10, maximum=50)
+        records = self._run(
+            """
+            MATCH (base:TradeMemory)-[:ABOUT_STOCK]->(:Stock {id: $stock_id})
+            OPTIONAL MATCH (base)-[rel:SIMILAR_TO]->(other:TradeMemory)
+            WITH base, rel, other
+            WHERE $setup_type = "" OR base.setup_type = $setup_type OR other.setup_type = $setup_type
+            RETURN base.id AS base_id,
+                   base.ticker AS base_ticker,
+                   base.setup_type AS base_setup_type,
+                   base.pnl_pct AS base_pnl_pct,
+                   other.id AS similar_id,
+                   other.ticker AS similar_ticker,
+                   other.setup_type AS similar_setup_type,
+                   other.pnl_pct AS similar_pnl_pct,
+                   other.observed_at AS observed_at,
+                   properties(rel) AS relationship
+            ORDER BY coalesce(other.observed_at, base.observed_at, "") DESC
+            LIMIT $limit
+            """,
+            {
+                "stock_id": f"stock:{normalized}",
+                "setup_type": setup_type or "",
+                "limit": bounded,
+            },
+        )
+        return [
+            {
+                "base_id": record.get("base_id"),
+                "base_ticker": record.get("base_ticker") or normalized,
+                "base_setup_type": record.get("base_setup_type"),
+                "base_pnl_pct": float(record.get("base_pnl_pct") or 0),
+                "similar_id": record.get("similar_id"),
+                "similar_ticker": record.get("similar_ticker"),
+                "similar_setup_type": record.get("similar_setup_type"),
+                "similar_pnl_pct": float(record.get("similar_pnl_pct") or 0),
+                "observed_at": record.get("observed_at"),
+                "relationship": dict(record.get("relationship") or {}),
+            }
+            for record in records
+        ]
+
+    def trade_lesson_context(
+        self,
+        *,
+        ticker: str | None = None,
+        limit: int = 20,
+    ) -> dict[str, list[dict[str, Any]]]:
+        bounded = self._bounded_limit(limit, default=20, maximum=100)
+        normalized = ticker.strip().upper() if ticker else ""
+        lessons = self._run(
+            """
+            MATCH (l:Lesson)
+            OPTIONAL MATCH (l)-[:APPLIES_TO_STOCK]->(s:Stock)
+            WHERE $ticker = "" OR s.id = $stock_id OR l.ticker = $ticker
+            RETURN l.id AS id,
+                   l.category AS category,
+                   l.lesson_text AS lesson_text,
+                   l.ticker AS ticker,
+                   l.observed_at AS observed_at,
+                   l.payload_json AS payload
+            ORDER BY coalesce(l.observed_at, l.ingested_at, "") DESC
+            LIMIT $limit
+            """,
+            {"ticker": normalized, "stock_id": f"stock:{normalized}", "limit": bounded},
+        )
+        observations = self._run(
+            """
+            MATCH (o:Observation)
+            WHERE $ticker = "" OR o.ticker = $ticker
+            RETURN o.id AS id,
+                   o.observation_type AS type,
+                   o.ticker AS ticker,
+                   o.observed_at AS observed_at,
+                   o.payload_json AS payload
+            ORDER BY coalesce(o.observed_at, o.ingested_at, "") DESC
+            LIMIT $limit
+            """,
+            {"ticker": normalized, "limit": bounded},
+        )
+        failure_patterns = self._run(
+            """
+            MATCH (f:FailurePattern)
+            RETURN f.id AS id,
+                   f.event_type AS event_type,
+                   f.severity AS severity,
+                   f.label AS label,
+                   f.observed_at AS observed_at,
+                   f.payload_json AS payload
+            ORDER BY coalesce(f.observed_at, f.ingested_at, "") DESC
+            LIMIT $limit
+            """,
+            {"limit": bounded},
+        )
+        return {
+            "lessons": [dict(record) for record in lessons],
+            "observations": [dict(record) for record in observations],
+            "failure_patterns": [dict(record) for record in failure_patterns],
+        }
+
+    def stock_context_graph_summary(self, ticker: str) -> dict[str, Any]:
+        normalized = ticker.strip().upper()
+        stock = self.stock_context(normalized)
+        return {
+            "ticker": normalized,
+            "status": stock.status,
+            "has_history": stock.has_history,
+            "summary": stock.summary,
+            "research": stock.research,
+            "news": stock.news,
+            "observations": stock.observations,
+            "connections": stock.connections[:20],
+            "generated_at_ist": stock.generated_at_ist,
+            "last_updated": stock.last_updated,
+        }
+
+    def get_graph_neighbors(
+        self,
+        node_id: str,
+        *,
+        allowed_labels: list[str] | None = None,
+        allowed_relationships: list[str] | None = None,
+        limit: int = 25,
+    ) -> list[dict[str, Any]]:
+        bounded = self._bounded_limit(limit, default=25, maximum=100)
+        labels = self._allowed_labels(allowed_labels)
+        relationships = self._allowed_relationships(allowed_relationships)
+        records = self._run(
+            """
+            MATCH (n {id: $node_id})-[r]-(m)
+            WHERE type(r) IN $relationships
+              AND any(label IN labels(m) WHERE label IN $labels)
+            RETURN n.id AS source,
+                   m.id AS target,
+                   labels(m) AS labels,
+                   type(r) AS relationship,
+                   properties(m) AS properties,
+                   properties(r) AS relationship_properties
+            ORDER BY coalesce(m.observed_at, m.ingested_at, m.updated_at, "") DESC
+            LIMIT $limit
+            """,
+            {
+                "node_id": node_id,
+                "labels": labels,
+                "relationships": relationships,
+                "limit": bounded,
+            },
+        )
+        return [
+            {
+                "source": record.get("source"),
+                "target": record.get("target"),
+                "labels": list(record.get("labels") or []),
+                "relationship": record.get("relationship"),
+                "properties": dict(record.get("properties") or {}),
+                "relationship_properties": dict(record.get("relationship_properties") or {}),
+            }
+            for record in records
+        ]
+
+    def expand_graph_paths(
+        self,
+        start_node_id: str,
+        *,
+        allowed_relationships: list[str] | None = None,
+        max_depth: int = 2,
+        limit: int = 25,
+    ) -> list[dict[str, Any]]:
+        bounded = self._bounded_limit(limit, default=25, maximum=50)
+        depth = max(1, min(int(max_depth or 2), 3))
+        relationships = self._allowed_relationships(allowed_relationships)
+        relationship_pattern = self._relationship_pattern(relationships)
+        records = self._run(
+            f"""
+            MATCH p=(start {{id: $start_node_id}})-[r:{relationship_pattern}*1..{depth}]-(end)
+            WHERE any(label IN labels(end) WHERE label IN $labels)
+            RETURN [node IN nodes(p) | {{
+                       id: node.id,
+                       labels: labels(node),
+                       properties: properties(node)
+                   }}] AS nodes,
+                   [rel IN relationships(p) | {{
+                       type: type(rel),
+                       properties: properties(rel)
+                   }}] AS relationships
+            LIMIT $limit
+            """,
+            {
+                "start_node_id": start_node_id,
+                "labels": sorted(GRAPH_LABELS),
+                "limit": bounded,
+            },
+        )
+        return [
+            {
+                "nodes": list(record.get("nodes") or []),
+                "relationships": list(record.get("relationships") or []),
+            }
+            for record in records
+        ]
+
+    def get_candidate_evidence_trace(
+        self,
+        ticker: str,
+        *,
+        run_id: str | None = None,
+        limit: int = 25,
+    ) -> dict[str, Any]:
+        normalized = ticker.strip().upper()
+        bounded = self._bounded_limit(limit, default=25, maximum=100)
+        records = self._run(
+            """
+            MATCH (c:ResearchCandidate)-[:CANDIDATE_FOR]->(s:Stock {id: $stock_id})
+            OPTIONAL MATCH (c)-[:ANALYZED_IN]->(r:ResearchRun)
+            WHERE $run_id = "" OR r.id = $run_id
+            WITH c, r
+            ORDER BY coalesce(c.observed_at, "") DESC
+            LIMIT 1
+            OPTIONAL MATCH (s)-[rel]-(e)
+            WHERE type(rel) IN $relationships
+              AND any(label IN labels(e) WHERE label IN $labels)
+            WITH c, r, e, rel
+            LIMIT $limit
+            RETURN properties(c) AS candidate,
+                   properties(r) AS research_run,
+                   collect({
+                       id: e.id,
+                       labels: labels(e),
+                       relationship: type(rel),
+                       properties: properties(e),
+                       relationship_properties: properties(rel)
+                   }) AS evidence
+            """,
+            {
+                "stock_id": f"stock:{normalized}",
+                "run_id": run_id or "",
+                "relationships": self._allowed_relationships(),
+                "labels": sorted(GRAPH_LABELS),
+                "limit": bounded,
+            },
+        )
+        if not records:
+            return {"ticker": normalized, "candidate": None, "research_run": None, "evidence": []}
+        record = records[0]
+        return {
+            "ticker": normalized,
+            "candidate": dict(record.get("candidate") or {}),
+            "research_run": dict(record.get("research_run") or {}),
+            "evidence": [item for item in record.get("evidence") or [] if item.get("id")],
+        }
+
+    def get_sector_peer_context(
+        self,
+        *,
+        ticker: str | None = None,
+        sector: str | None = None,
+        limit: int = 25,
+    ) -> list[dict[str, Any]]:
+        bounded = self._bounded_limit(limit, default=25, maximum=100)
+        normalized = ticker.strip().upper() if ticker else ""
+        sector_value = str(sector or "").strip()
+        records = self._run(
+            """
+            OPTIONAL MATCH (seed:Stock {id: $stock_id})
+            WITH coalesce($sector, seed.sector, "") AS sector_name
+            MATCH (peer:Stock)
+            WHERE sector_name <> "" AND peer.sector = sector_name
+            OPTIONAL MATCH (c:ResearchCandidate)-[:CANDIDATE_FOR]->(peer)
+            WITH peer, c ORDER BY coalesce(c.observed_at, "") DESC
+            WITH peer, head(collect(c)) AS latest
+            RETURN peer.id AS id,
+                   peer.ticker AS ticker,
+                   peer.company_name AS company_name,
+                   peer.sector AS sector,
+                   latest.score AS latest_score,
+                   latest.setup_type AS latest_setup_type,
+                   latest.observed_at AS latest_observed_at
+            ORDER BY coalesce(latest.score, 0.0) DESC, peer.ticker ASC
+            LIMIT $limit
+            """,
+            {
+                "stock_id": f"stock:{normalized}" if normalized else "",
+                "sector": sector_value,
+                "limit": bounded,
+            },
+        )
+        return [dict(record) for record in records]
+
+    def get_regime_research_context(
+        self,
+        *,
+        regime: str | None = None,
+        limit: int = 20,
+    ) -> list[dict[str, Any]]:
+        bounded = self._bounded_limit(limit, default=20, maximum=100)
+        regime_value = str(regime or "").strip()
+        records = self._run(
+            """
+            MATCH (run:ResearchRun)-[:UNDER_REGIME]->(reg:RegimeSnapshot)
+            WHERE $regime = "" OR reg.regime = $regime
+            OPTIONAL MATCH (c:ResearchCandidate)-[:ANALYZED_IN]->(run)
+            WITH run, reg, c ORDER BY coalesce(c.score, 0.0) DESC
+            RETURN run.id AS run_id,
+                   run.scan_date AS scan_date,
+                   reg.regime AS regime,
+                   run.qualified_count AS qualified_count,
+                   run.total_screened AS total_screened,
+                   collect({
+                       ticker: c.ticker,
+                       score: c.score,
+                       setup_type: c.setup_type,
+                       shortlisted: c.shortlisted
+                   })[..10] AS top_candidates
+            ORDER BY coalesce(run.observed_at, run.ingested_at, "") DESC
+            LIMIT $limit
+            """,
+            {"regime": regime_value, "limit": bounded},
+        )
+        return [dict(record) for record in records]
 
     def latest_research_summary(self) -> dict[str, Any] | None:
         records = self._run(

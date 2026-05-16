@@ -36,6 +36,13 @@ from models import TradingMode
 from paths import PROJECT_ROOT
 
 
+def _env_bool(name: str, default: bool = False) -> bool:
+    raw = os.getenv(name)
+    if raw is None:
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
+
+
 # ═══════════════════════════════════════════════════════════
 # TRADING
 # ═══════════════════════════════════════════════════════════
@@ -517,6 +524,14 @@ class ContextGraphConfig(BaseModel):
     dashboard_edge_limit: int = 300
 
 
+class ToolboxConfig(BaseModel):
+    """Phase 12: read-only Google MCP Toolbox access for agent memory views."""
+
+    enabled: bool = Field(default_factory=lambda: _env_bool("TOOLBOX_ENABLED", True))
+    url: str = Field(default_factory=lambda: os.getenv("TOOLBOX_URL", "http://toolbox:5000"))
+    timeout_seconds: float = 2.0
+
+
 # ═══════════════════════════════════════════════════════════
 # ROOT CONFIG
 # ═══════════════════════════════════════════════════════════
@@ -540,6 +555,7 @@ class AppConfig(BaseModel):
     scheduler: SchedulerConfig = Field(default_factory=SchedulerConfig)
     data: DataConfig = Field(default_factory=DataConfig)
     context_graph: ContextGraphConfig = Field(default_factory=ContextGraphConfig)
+    toolbox: ToolboxConfig = Field(default_factory=ToolboxConfig)
 
     @model_validator(mode="after")
     def validate_thresholds(self) -> "AppConfig":
@@ -561,13 +577,6 @@ def load_config(config_path: Path | None = None) -> AppConfig:
 
 
 cfg = load_config()
-
-
-def _env_bool(name: str, default: bool = False) -> bool:
-    raw = os.getenv(name)
-    if raw is None:
-        return default
-    return raw.strip().lower() in {"1", "true", "yes", "on"}
 
 
 class RuntimeFlags:

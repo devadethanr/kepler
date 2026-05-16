@@ -11,8 +11,7 @@ from google.genai import types
 from pydantic import BaseModel, PrivateAttr
 
 from context_graph.repository import ContextGraphRepository
-from memory.db import session_scope
-from memory.repository import MemoryRepository
+from memory_views import MemoryViewClient
 from models import TradeObservation
 from llm_bridge import SmartRouter
 
@@ -36,16 +35,13 @@ class TradeReviewerAgent(BaseAgent):
         self._router = SmartRouter(role="learning")
 
     async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, None]:
-        with session_scope() as session:
-            trades = MemoryRepository(session).get_trades_payload()
-        if not trades:
+        latest_trade = MemoryViewClient().latest_trade_payload()
+        if not latest_trade:
             yield Event(
                 author=self.name,
                 content=types.Content(role="assistant", parts=[types.Part(text="No trades to review")]),
             )
             return
-
-        latest_trade = trades[-1]
 
         system_instruction = """
         Review this closed trade. 

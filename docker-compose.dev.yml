@@ -150,6 +150,39 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+  toolbox:
+    image: us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:latest
+    container_name: swingtradev3-toolbox
+    profiles:
+      - memory
+    ports:
+      - "${TOOLBOX_PORT:-5000}:5000"
+    env_file:
+      - swingtradev3/.env
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-swingtradev3}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - MEMGRAPH_URI=${MEMGRAPH_URI:-bolt://memgraph:7687}
+      - MEMGRAPH_USER=${MEMGRAPH_USER:-memgraph}
+      - MEMGRAPH_PASSWORD=${MEMGRAPH_PASSWORD:-memgraph}
+      - MEMGRAPH_DATABASE=${MEMGRAPH_DATABASE:-memgraph}
+      - TZ=Asia/Kolkata
+    volumes:
+      - ./swingtradev3/toolbox/tools.yaml:/config/tools.yaml:ro
+    depends_on:
+      db:
+        condition: service_healthy
+      memgraph:
+        condition: service_healthy
+    command: ["--config", "/config/tools.yaml", "--address", "0.0.0.0", "--port", "5000", "--enable-api"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/toolbox", "--version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
 volumes:
   postgres_data:
   dashboard_node_modules:

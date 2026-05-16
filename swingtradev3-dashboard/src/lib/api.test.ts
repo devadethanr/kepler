@@ -35,7 +35,16 @@ afterEach(() => {
 
 test('api client sends same-origin GET requests through the /api proxy', async () => {
   const calls = installFetch(() =>
-    jsonResponse({ status: 'ok', mode: 'paper', services: { app: 'running' } }),
+    jsonResponse({
+      status: 'ok',
+      mode: 'paper',
+      services: {
+        app: 'running',
+        postgres_memory_views: 'healthy',
+        memgraph_context_graph: 'degraded',
+        toolbox: 'healthy',
+      },
+    }),
   );
   const controller = new AbortController();
 
@@ -44,7 +53,12 @@ test('api client sends same-origin GET requests through the /api proxy', async (
   assert.deepEqual(health, {
     status: 'ok',
     mode: 'paper',
-    services: { app: 'running' },
+    services: {
+      app: 'running',
+      postgres_memory_views: 'healthy',
+      memgraph_context_graph: 'degraded',
+      toolbox: 'healthy',
+    },
   });
   assert.equal(calls.length, 1);
   assert.equal(calls[0]?.input, '/api/health');

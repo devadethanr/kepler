@@ -11,11 +11,9 @@ from google.genai import types
 from pydantic import BaseModel, PrivateAttr
 
 from config import cfg
-from context_graph.context_builder import ContextBuilder
 from context_graph.repository import ContextGraphRepository
 from llm_bridge import SmartRouter
-from memory.db import session_scope
-from memory.repository import MemoryRepository
+from memory_views import MemoryViewClient
 from paths import STRATEGY_DIR
 
 IST = ZoneInfo("Asia/Kolkata")
@@ -43,8 +41,11 @@ class LessonAgent(BaseAgent):
         self._router = SmartRouter(role="learning")
 
     async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, None]:
-        with session_scope() as session:
-            trades = MemoryRepository(session).get_trades_payload()
+        memory_views = MemoryViewClient()
+        trades = [
+            dict(item.get("payload") or item)
+            for item in memory_views.recent_trades(limit=1000)
+        ]
         if len(trades) < cfg.learning.min_trades_for_lesson:
             yield Event(
                 author=self.name,
@@ -55,7 +56,7 @@ class LessonAgent(BaseAgent):
             )
             return
 
-        observations = ContextBuilder().get_recent_observations(limit=50)
+        observations = memory_views.trade_lesson_context(limit=50)
         skill_path = STRATEGY_DIR / "SKILL.md"
         current_skill = skill_path.read_text(encoding="utf-8") if skill_path.exists() else ""
 

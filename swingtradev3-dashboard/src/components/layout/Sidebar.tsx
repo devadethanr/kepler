@@ -17,6 +17,15 @@ export function Sidebar({ currentTab, setTab, isOpen = false, onClose }: Sidebar
   const health = useHealth();
   const actions = useControlActions();
   const serviceRows = Object.entries(health.data?.services ?? {});
+  const degradedServiceCount = serviceRows.filter(([, status]) => {
+    const value = String(status).toLowerCase();
+    return !(
+      value.includes('healthy') ||
+      value.includes('running') ||
+      value === 'ok' ||
+      value === 'disabled'
+    );
+  }).length;
 
   const mainNav = [
     { id: 'dashboard', label: 'Dashboard', icon: 'dashboard' },
@@ -85,7 +94,10 @@ export function Sidebar({ currentTab, setTab, isOpen = false, onClose }: Sidebar
         <button onClick={() => setShowHealth(true)} className="flex items-center gap-3 px-3 py-2 w-full rounded text-slate-400 hover:text-white hover:bg-[#1c1e26] transition-colors text-left mb-1">
           <span className="material-symbols-outlined text-[18px]">sensors</span>
           <span className="text-[12px] font-medium font-sans flex-1">System Health</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+          <span className="text-[10px] font-mono text-on-surface-variant">
+            {degradedServiceCount ? `${degradedServiceCount} degraded` : 'ok'}
+          </span>
+          <span className={cn("w-1.5 h-1.5 rounded-full", degradedServiceCount ? "bg-error" : "bg-secondary")}></span>
         </button>
         <button className="flex items-center gap-3 px-3 py-2 w-full rounded text-slate-400 hover:text-white hover:bg-[#1c1e26] transition-colors text-left mb-4">
           <span className="material-symbols-outlined text-[18px]">help_outline</span>

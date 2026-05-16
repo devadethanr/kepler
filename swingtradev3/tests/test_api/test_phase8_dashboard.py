@@ -11,7 +11,7 @@ from fastapi.testclient import TestClient
 from starlette.requests import Request
 
 from api.main import app
-from api.routes import approvals, dashboard, portfolio, positions, sse, trades
+from api.routes import approvals, dashboard, health as health_route, portfolio, positions, sse, trades
 from config import cfg
 from memory.db import session_scope
 from memory.repository import MemoryRepository
@@ -338,6 +338,26 @@ def test_phase8_dashboard_routes_do_not_use_route_level_json_storage():
         assert "from storage import write_json" not in source
         assert "read_json(" not in source
         assert "write_json(" not in source
+
+
+def test_health_endpoint_exposes_phase12_memory_status(monkeypatch):
+    monkeypatch.setattr(
+        health_route,
+        "_phase12_statuses",
+        lambda: {
+            "postgres_memory_views": "healthy",
+            "memgraph_context_graph": "degraded",
+            "toolbox": "healthy",
+        },
+    )
+
+    response = client.get("/health")
+
+    assert response.status_code == 200
+    services = response.json()["services"]
+    assert services["postgres_memory_views"] == "healthy"
+    assert services["memgraph_context_graph"] == "degraded"
+    assert services["toolbox"] == "healthy"
 
 
 def test_api_auth_fails_closed_when_enabled_without_configured_key(monkeypatch):
