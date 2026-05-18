@@ -358,6 +358,7 @@ def test_health_endpoint_exposes_phase12_memory_status(monkeypatch):
     assert services["postgres_memory_views"] == "healthy"
     assert services["memgraph_context_graph"] == "degraded"
     assert services["toolbox"] == "healthy"
+    assert "local_llm" in services
 
 
 def test_api_auth_fails_closed_when_enabled_without_configured_key(monkeypatch):

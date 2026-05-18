@@ -391,6 +391,98 @@ export const StockKnowledgeSchema = z
   })
   .passthrough();
 
+export const CognitionRunSchema = z
+  .object({
+    run_id: z.string(),
+    phase: z.string().default('phase_13'),
+    status: z.string().default('unknown'),
+    started_at: z.string().nullable().optional(),
+    completed_at: z.string().nullable().optional(),
+    payload: z.record(z.string(), z.unknown()).default({}),
+    created_at: z.string().nullable().optional(),
+    updated_at: z.string().nullable().optional(),
+  })
+  .passthrough();
+
+export const CognitionReportSchema = z
+  .object({
+    report_id: z.string(),
+    run_id: z.string(),
+    ticker: z.string().nullable().optional(),
+    agent_name: z.string(),
+    schema_version: z.string().default('unknown'),
+    status: z.string().default('unknown'),
+    payload: z.record(z.string(), z.unknown()).default({}),
+    created_at: z.string().nullable().optional(),
+    updated_at: z.string().nullable().optional(),
+  })
+  .passthrough();
+
+export const CognitionRunsSchema = z
+  .object({
+    runs: z.array(CognitionRunSchema).default([]),
+    count: z.number().default(0),
+  })
+  .passthrough();
+
+export const CognitionRunDetailSchema = z
+  .object({
+    run: CognitionRunSchema.nullable().optional(),
+    reports: z.array(CognitionReportSchema).default([]),
+    count: z.number().default(0),
+  })
+  .passthrough();
+
+export const CognitionTickerReportsSchema = z
+  .object({
+    ticker: z.string(),
+    reports: z.array(CognitionReportSchema).default([]),
+    count: z.number().default(0),
+  })
+  .passthrough();
+
+export const SessionPlanItemSchema = z
+  .object({
+    entry_intent_id: z.string().nullable().optional(),
+    approval_id: z.string().nullable().optional(),
+    order_intent_id: z.string().nullable().optional(),
+    ticker: z.string(),
+    action: z.string().default('defer'),
+    reason: z.string().default(''),
+    payload: z.record(z.string(), z.unknown()).default({}),
+  })
+  .passthrough();
+
+export const SessionPlanPayloadSchema = z
+  .object({
+    plan_id: z.string().default(''),
+    trading_date: z.string().default(''),
+    status: z.string().default('unknown'),
+    generated_at: z.string().nullable().optional(),
+    items: z.array(SessionPlanItemSchema).default([]),
+    blocked_reasons: z.array(z.string()).default([]),
+    session_readiness: z.record(z.string(), z.unknown()).default({}),
+  })
+  .passthrough();
+
+export const SessionPlanRecordSchema = z
+  .object({
+    plan_id: z.string(),
+    trading_date: z.string(),
+    status: z.string().default('unknown'),
+    payload: SessionPlanPayloadSchema.optional(),
+    created_at: z.string().nullable().optional(),
+    updated_at: z.string().nullable().optional(),
+  })
+  .passthrough();
+
+export const SessionPlanResponseSchema = z
+  .object({
+    plan: z.union([SessionPlanPayloadSchema, SessionPlanRecordSchema]).nullable().optional(),
+    generated: z.boolean().default(false),
+  })
+  .passthrough();
+
 export type DashboardSnapshot = z.infer<typeof DashboardSnapshotSchema>;
 export type DashboardEvent = z.infer<typeof DashboardEventSchema>;
 export type ExecutionDashboard = z.infer<typeof ExecutionSchema>;
@@ -414,3 +506,12 @@ export type KnowledgeGraphEdge = z.infer<typeof KnowledgeGraphEdgeSchema>;
 export type KnowledgeIndex = z.infer<typeof KnowledgeIndexSchema>;
 export type KnowledgeIndexStock = z.infer<typeof KnowledgeIndexStockSchema>;
 export type StockKnowledge = z.infer<typeof StockKnowledgeSchema>;
+export type CognitionRun = z.infer<typeof CognitionRunSchema>;
+export type CognitionReport = z.infer<typeof CognitionReportSchema>;
+export type CognitionRuns = z.infer<typeof CognitionRunsSchema>;
+export type CognitionRunDetail = z.infer<typeof CognitionRunDetailSchema>;
+export type CognitionTickerReports = z.infer<typeof CognitionTickerReportsSchema>;
+export type SessionPlanItem = z.infer<typeof SessionPlanItemSchema>;
+export type SessionPlanPayload = z.infer<typeof SessionPlanPayloadSchema>;
+export type SessionPlanRecord = z.infer<typeof SessionPlanRecordSchema>;
+export type SessionPlanResponse = z.infer<typeof SessionPlanResponseSchema>;

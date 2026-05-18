@@ -233,6 +233,38 @@ class OperatorControlRow(TimestampMixin, Base):
     payload: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict, nullable=False)
 
 
+class CognitionRunRow(TimestampMixin, Base):
+    __tablename__ = "cognition_runs"
+
+    run_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    phase: Mapped[str] = mapped_column(String(32), default="phase_13", index=True, nullable=False)
+    status: Mapped[str] = mapped_column(String(32), default="started", index=True, nullable=False)
+    started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    payload: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict, nullable=False)
+
+
+class CognitionReportRow(TimestampMixin, Base):
+    __tablename__ = "cognition_reports"
+
+    report_id: Mapped[str] = mapped_column(String(160), primary_key=True)
+    run_id: Mapped[str] = mapped_column(String(128), index=True, nullable=False)
+    ticker: Mapped[str | None] = mapped_column(String(32), index=True, nullable=True)
+    agent_name: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    schema_version: Mapped[str] = mapped_column(String(64), default="v1", nullable=False)
+    status: Mapped[str] = mapped_column(String(32), default="ok", index=True, nullable=False)
+    payload: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict, nullable=False)
+
+
+class SessionExecutionPlanRow(TimestampMixin, Base):
+    __tablename__ = "session_execution_plans"
+
+    plan_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    trading_date: Mapped[date] = mapped_column(index=True, nullable=False)
+    status: Mapped[str] = mapped_column(String(32), default="draft", index=True, nullable=False)
+    payload: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict, nullable=False)
+
+
 # ── Pydantic models (runtime state / API contracts) ────────────────
 
 
@@ -363,6 +395,12 @@ class PendingApproval(BaseModel):
     execution_request_id: str | None = None
     status: str | None = None
     broker_tag: str | None = None
+    slow_brain_run_id: str | None = None
+    slow_brain_decision: str | None = None
+    portfolio_fit: str | None = None
+    source_reports: dict[str, str] = Field(default_factory=dict)
+    evidence_trace_ids: list[str] = Field(default_factory=list)
+    funnel_route: str | None = None
     created_at: datetime
     expires_at: datetime
     research_date: date | None = None

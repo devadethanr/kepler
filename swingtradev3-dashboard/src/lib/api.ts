@@ -3,6 +3,9 @@ import {
   AgentActivityDashboardSchema,
   ApprovalSchema,
   BrokerSchema,
+  CognitionRunDetailSchema,
+  CognitionRunsSchema,
+  CognitionTickerReportsSchema,
   DashboardEventSchema,
   DashboardSnapshotSchema,
   ExecutionSchema,
@@ -17,6 +20,7 @@ import {
   SafetySchema,
   ScanStatusSchema,
   SessionSchema,
+  SessionPlanResponseSchema,
   StockKnowledgeSchema,
   TelemetrySchema,
   TradeSchema,
@@ -99,6 +103,33 @@ export const api = {
       'GET',
       { signal },
     ),
+  cognitionRuns: (limit = 20, signal?: AbortSignal) =>
+    request(`/dashboard/cognition/runs?limit=${limit}`, CognitionRunsSchema, 'GET', { signal }),
+  cognitionRun: (runId: string, signal?: AbortSignal) =>
+    request(
+      `/dashboard/cognition/runs/${encodeURIComponent(runId)}`,
+      CognitionRunDetailSchema,
+      'GET',
+      { signal },
+    ),
+  cognitionReports: (ticker: string, limit = 100, signal?: AbortSignal) =>
+    request(
+      `/dashboard/cognition/reports/${encodeURIComponent(ticker)}?limit=${limit}`,
+      CognitionTickerReportsSchema,
+      'GET',
+      { signal },
+    ),
+  sessionPlan: (tradingDate?: string, generate = false, signal?: AbortSignal) => {
+    const params = new URLSearchParams();
+    if (tradingDate) {
+      params.set('trading_date', tradingDate);
+    }
+    if (generate) {
+      params.set('generate', 'true');
+    }
+    const suffix = params.size ? `?${params.toString()}` : '';
+    return request(`/dashboard/session-plan${suffix}`, SessionPlanResponseSchema, 'GET', { signal });
+  },
   activity: (signal?: AbortSignal) =>
     request('/dashboard/activity', AgentActivityDashboardSchema, 'GET', { signal }),
   session: (signal?: AbortSignal) =>

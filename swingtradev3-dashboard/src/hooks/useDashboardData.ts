@@ -18,6 +18,10 @@ export const queryKeys = {
   knowledgeGraph: ['dashboard', 'knowledge', 'graph'] as const,
   knowledgeIndex: ['dashboard', 'knowledge', 'index'] as const,
   stockKnowledge: (ticker: string) => ['dashboard', 'knowledge', 'stock', ticker] as const,
+  cognitionRuns: ['dashboard', 'cognition', 'runs'] as const,
+  cognitionRun: (runId: string) => ['dashboard', 'cognition', 'runs', runId] as const,
+  cognitionReports: (ticker: string) => ['dashboard', 'cognition', 'reports', ticker] as const,
+  sessionPlan: ['dashboard', 'session-plan'] as const,
   activity: ['dashboard', 'activity'] as const,
   session: ['dashboard', 'session'] as const,
   approvals: ['approvals'] as const,
@@ -130,6 +134,43 @@ export function useStockKnowledge(ticker?: string | null) {
     queryFn: ({ signal }) => api.stockKnowledge(normalizedTicker, signal),
     enabled: normalizedTicker.length > 0,
     refetchInterval: 60_000,
+  });
+}
+
+export function useCognitionRuns(limit = 20) {
+  return useQuery({
+    queryKey: [...queryKeys.cognitionRuns, limit],
+    queryFn: ({ signal }) => api.cognitionRuns(limit, signal),
+    refetchInterval: 15_000,
+  });
+}
+
+export function useCognitionRun(runId?: string | null) {
+  const normalizedRunId = runId?.trim() ?? '';
+  return useQuery({
+    queryKey: queryKeys.cognitionRun(normalizedRunId),
+    queryFn: ({ signal }) => api.cognitionRun(normalizedRunId, signal),
+    enabled: normalizedRunId.length > 0,
+    refetchInterval: 30_000,
+  });
+}
+
+export function useCognitionReports(ticker?: string | null, limit = 100) {
+  const normalizedTicker = ticker?.trim().toUpperCase() ?? '';
+  return useQuery({
+    queryKey: [...queryKeys.cognitionReports(normalizedTicker), limit],
+    queryFn: ({ signal }) => api.cognitionReports(normalizedTicker, limit, signal),
+    enabled: normalizedTicker.length > 0,
+    refetchInterval: 60_000,
+  });
+}
+
+export function useSessionPlan(tradingDate?: string | null) {
+  const normalizedTradingDate = tradingDate?.trim() || undefined;
+  return useQuery({
+    queryKey: [...queryKeys.sessionPlan, normalizedTradingDate ?? 'latest'],
+    queryFn: ({ signal }) => api.sessionPlan(normalizedTradingDate, false, signal),
+    refetchInterval: 15_000,
   });
 }
 
@@ -247,8 +288,21 @@ export function useLiveEvents() {
         void queryClient.invalidateQueries({ queryKey: queryKeys.telemetry });
         void queryClient.invalidateQueries({ queryKey: queryKeys.news });
         void queryClient.invalidateQueries({ queryKey: queryKeys.activity });
+        if (
+          eventType.includes('cognition') ||
+          entityType.includes('cognition') ||
+          eventType.includes('entry_intent') ||
+          entityType.includes('entry_intent')
+        ) {
+          void queryClient.invalidateQueries({ queryKey: queryKeys.cognitionRuns });
+          void queryClient.invalidateQueries({ queryKey: queryKeys.sessionPlan });
+        }
+        if (eventType.includes('session_plan') || entityType.includes('session_execution_plan')) {
+          void queryClient.invalidateQueries({ queryKey: queryKeys.sessionPlan });
+        }
         if (eventType.includes('approval') || entityType === 'approval') {
           void queryClient.invalidateQueries({ queryKey: queryKeys.approvals });
+          void queryClient.invalidateQueries({ queryKey: queryKeys.sessionPlan });
         }
         if (entityType.includes('position') || eventType.includes('position')) {
           void queryClient.invalidateQueries({ queryKey: queryKeys.positions });

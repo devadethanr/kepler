@@ -7,13 +7,14 @@ from datetime import datetime
 # Services are "Healthy" until an operation fails.
 _HEALTH_STATUS: Dict[str, Dict[str, Any]] = {
     "nvidia_nim": {"status": "healthy", "last_update": datetime.now(), "error": None},
+    "local_llm": {"status": "disabled", "last_update": datetime.now(), "error": None},
     "google_gemini": {"status": "healthy", "last_update": datetime.now(), "error": None},
     "news_search": {"status": "healthy", "last_update": datetime.now(), "error": None},
     "kite_api": {"status": "healthy", "last_update": datetime.now(), "error": None},
 }
 
 def update_service_status(
-    service: Literal["nvidia_nim", "google_gemini", "news_search", "kite_api"],
+    service: Literal["nvidia_nim", "local_llm", "google_gemini", "news_search", "kite_api"],
     is_success: bool,
     error_msg: str | None = None
 ):

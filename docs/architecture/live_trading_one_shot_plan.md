@@ -714,7 +714,7 @@ Implementation status:
 - Google MCP Toolbox runs as a read-only Docker sidecar for Postgres and Memgraph toolsets
 - research and learning agents now consume curated memory packets instead of direct JSON/trade-store reads
 
-### Phase 13: Slow Brain Desk And Session Planning
+### Phase 13 [X]: Slow Brain Desk And Session Planning
 
 Implementation:
 
@@ -738,6 +738,22 @@ Definition of done:
 
 - new entries are produced by the bounded multi-agent desk, not by a single-pass scorer alone
 - pre-market activation is portfolio-aware and universe-aware
+
+Implementation status:
+
+- `cognition/slow_brain/` implements the bounded desk:
+  `RegimeSynthesizer -> UniverseFunnel -> EvidenceAssembler -> ThesisAgent -> SkepticAgent ->
+  PortfolioRiskJudge -> FinalIntentJudge`.
+- `cognition/pre_market/session_planner.py` creates portfolio-aware pre-market activation plans and
+  keeps broker/order mutation out of the research desk.
+- `cognition_runs`, `cognition_reports`, and `session_execution_plans` are managed by Alembic and
+  surfaced through `MemoryRepository`.
+- `USE_SLOW_BRAIN=true` inserts `SlowBrainDeskAgent` between `ScorerAgent` and
+  `ResultsSaverAgent`; actionable final decisions become pending approvals, while
+  `WAIT_FOR_PULLBACK` and `AVOID_NO_TRADE` persist as audited entry intents only.
+- Dashboard/API routes expose run lists, per-run reports, per-ticker cognition reports, and the
+  latest session plan.
+- Verification: `make phase13-smoke` and `make test` pass in Docker.
 
 ### Phase 14: Bounded Intraday Exception Reasoning And Learning
 

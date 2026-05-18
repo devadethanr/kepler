@@ -15,6 +15,7 @@ from api.tasks.activity_manager import activity_manager
 from api.tasks.session_phase import session_snapshot
 from memory.db import session_scope
 from memory.repository import MemoryRepository
+from cognition.pre_market.session_planner import SessionPlanner
 
 from context_graph.repository import ContextGraphRepository
 
@@ -333,6 +334,49 @@ async def get_execution_dashboard() -> dict[str, Any]:
             "incidents": _status_counts(incidents),
         },
     }
+
+
+@router.get("/cognition/runs")
+async def get_cognition_runs(limit: int = 50) -> dict[str, Any]:
+    """Phase 13 slow-brain run list for dashboard audit views."""
+    with session_scope() as session:
+        runs = MemoryRepository(session).list_cognition_runs(limit=limit)
+    return {"runs": runs, "count": len(runs)}
+
+
+@router.get("/cognition/runs/{run_id}")
+async def get_cognition_run(run_id: str) -> dict[str, Any]:
+    """One slow-brain run plus its per-agent report trail."""
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        run = repo.get_cognition_run(run_id)
+        reports = repo.list_cognition_reports(run_id=run_id, limit=500)
+    return {"run": run, "reports": reports, "count": len(reports)}
+
+
+@router.get("/cognition/reports/{ticker}")
+async def get_cognition_reports_for_ticker(ticker: str, limit: int = 100) -> dict[str, Any]:
+    """Per-stock Phase 13 report trail."""
+    normalized = ticker.strip().upper()
+    with session_scope() as session:
+        reports = MemoryRepository(session).list_cognition_reports(
+            ticker=normalized,
+            limit=limit,
+        )
+    return {"ticker": normalized, "reports": reports, "count": len(reports)}
+
+
+@router.get("/session-plan")
+async def get_session_plan(trading_date: str | None = None, generate: bool = False) -> dict[str, Any]:
+    """Latest pre-market session execution plan, optionally generated on demand."""
+    if generate:
+        plan = SessionPlanner().build_plan(trading_date=trading_date, persist=True)
+        return {"plan": plan.model_dump(mode="json"), "generated": True}
+    with session_scope() as session:
+        plan = MemoryRepository(session).latest_session_execution_plan(
+            trading_date=trading_date,
+        )
+    return {"plan": plan, "generated": False}
 
 
 @router.get("/quotes")

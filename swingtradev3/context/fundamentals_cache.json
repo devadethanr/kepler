@@ -398,6 +398,25 @@
     "source": "yfinance",
     "ticker": "ONGC"
   },
+  "POWERGRID": {
+    "as_of": "2026-05-19",
+    "debt_equity": 150.993,
+    "dii_holding_pct": null,
+    "dividend_yield": 3.03,
+    "eps_growth_3yr_pct": 0.097,
+    "fii_holding_pct": null,
+    "industry": "Utilities - Regulated Electric",
+    "is_stale": false,
+    "market_cap_cr": 275809.4094336,
+    "pe_ratio": 17.3,
+    "promoter_holding_pct": null,
+    "promoter_pledge_pct": null,
+    "revenue_growth_pct": null,
+    "roce": null,
+    "sector": "Utilities",
+    "source": "yfinance",
+    "ticker": "POWERGRID"
+  },
   "RELIANCE": {
     "as_of": "2026-05-01",
     "debt_equity": 36.653,

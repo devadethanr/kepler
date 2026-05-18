@@ -6,9 +6,11 @@ from zoneinfo import ZoneInfo
 
 from google.adk.agents import SequentialAgent, BaseAgent
 from google.adk.events import Event
+from google.adk.events.event_actions import EventActions
 from google.genai import types
 
-from config import cfg
+from config import cfg, runtime_flags
+from cognition.slow_brain.orchestrator import SlowBrainOrchestrator
 from context_graph.repository import ContextGraphRepository, GraphUnavailableError
 from data.nifty200_loader import Nifty200Loader
 from memory.db import session_scope
@@ -44,28 +46,41 @@ class ResultsSaverAgent(BaseAgent):
             ticker = str(item.get("ticker") or "").strip().upper()
             if not ticker or ticker not in universe:
                 continue
-            payload.append(
-                {
-                    "ticker": ticker,
-                    "score": item.get("score"),
-                    "setup_type": item.get("setup_type"),
-                    "entry_zone": item.get("entry_zone"),
-                    "stop_price": item.get("stop_price"),
-                    "target_price": item.get("target_price"),
-                    "holding_days_expected": item.get("holding_days_expected"),
-                    "confidence_reasoning": item.get("confidence_reasoning"),
-                    "risk_flags": item.get("risk_flags", []),
-                    "sector": item.get("sector"),
-                    "approved": None,
-                    "execution_requested": False,
-                    "execution_request_id": None,
-                    "status": "pending",
-                    "created_at": analyzed_at.isoformat(),
-                    "expires_at": expires_at.isoformat(),
-                    "research_date": item.get("research_date") or scan_date,
-                    "skill_version": item.get("skill_version"),
-                }
-            )
+            approval_payload = {
+                "ticker": ticker,
+                "score": item.get("score"),
+                "setup_type": item.get("setup_type"),
+                "entry_zone": item.get("entry_zone"),
+                "stop_price": item.get("stop_price"),
+                "target_price": item.get("target_price"),
+                "holding_days_expected": item.get("holding_days_expected"),
+                "confidence_reasoning": item.get("confidence_reasoning"),
+                "risk_flags": item.get("risk_flags", []),
+                "sector": item.get("sector"),
+                "approved": item.get("approved"),
+                "execution_requested": bool(item.get("execution_requested", False)),
+                "execution_request_id": item.get("execution_request_id"),
+                "status": item.get("status") or "pending",
+                "created_at": item.get("created_at") or analyzed_at.isoformat(),
+                "expires_at": item.get("expires_at") or expires_at.isoformat(),
+                "research_date": item.get("research_date") or scan_date,
+                "skill_version": item.get("skill_version"),
+            }
+            for key in (
+                "approval_id",
+                "entry_intent_id",
+                "order_intent_id",
+                "broker_tag",
+                "slow_brain_run_id",
+                "slow_brain_decision",
+                "portfolio_fit",
+                "source_reports",
+                "evidence_trace_ids",
+                "funnel_route",
+            ):
+                if item.get(key) not in (None, ""):
+                    approval_payload[key] = item.get(key)
+            payload.append(approval_payload)
         return payload
 
     async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, Any]:
@@ -131,6 +146,67 @@ class ResultsSaverAgent(BaseAgent):
         )
 
 
+class SlowBrainDeskAgent(BaseAgent):
+    """Phase 13 multi-agent desk between scoring and approval persistence."""
+
+    def __init__(self, name: str = "SlowBrainDeskAgent") -> None:
+        super().__init__(name=name)
+
+    async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, Any]:
+        if not runtime_flags.use_slow_brain:
+            yield Event(
+                author=self.name,
+                content=types.Content(
+                    role="assistant",
+                    parts=[types.Part(text="Slow brain disabled; scorer shortlist unchanged.")],
+                ),
+            )
+            return
+
+        try:
+            result = await SlowBrainOrchestrator().run(ctx.session.state, persist=True)
+        except Exception as exc:
+            yield Event(
+                author=self.name,
+                actions=EventActions(
+                    state_delta={
+                        "slow_brain": {"status": "failed", "error": str(exc)},
+                        "shortlist": [],
+                    }
+                ),
+                content=types.Content(
+                    role="assistant",
+                    parts=[types.Part(text=f"Slow brain failed closed: {exc}")],
+                ),
+            )
+            return
+
+        yield Event(
+            author=self.name,
+            actions=EventActions(
+                state_delta={
+                    "slow_brain": result.model_dump(mode="json"),
+                    "shortlist": result.approval_candidates,
+                    "slow_brain_decisions": [
+                        decision.model_dump(mode="json") for decision in result.decisions
+                    ],
+                }
+            ),
+            content=types.Content(
+                role="assistant",
+                parts=[
+                    types.Part(
+                        text=(
+                            "Slow brain completed: "
+                            f"{len(result.approval_candidates)} actionable approval(s), "
+                            f"{len(result.decisions)} audited decision(s)."
+                        )
+                    )
+                ],
+            ),
+        )
+
+
 research_pipeline = SequentialAgent(
     name="ResearchPipeline",
     sub_agents=[
@@ -138,8 +214,12 @@ research_pipeline = SequentialAgent(
         FilterAgent(),
         BatchScannerAgent(),
         ScorerAgent(),
+        SlowBrainDeskAgent(),
         ResultsSaverAgent(),
         KnowledgeGraphAgent(),
     ],
-    description="Complete research pipeline: regime → filter → scan → score → save → knowledge graph",
+    description=(
+        "Complete research pipeline: regime → filter → scan → score → slow brain → save → "
+        "knowledge graph"
+    ),
 )

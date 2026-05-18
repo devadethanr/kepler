@@ -115,6 +115,11 @@ class ResearchConfig(BaseModel):
     debate_top_n: int = 3
     max_shortlist: int
     max_same_sector_positions: int
+    slow_brain_max_candidates: int = 6
+    slow_brain_full_debate_candidates: int = 3
+    slow_brain_lightweight_candidates: int = 3
+    slow_brain_min_score: float = 7.0
+    slow_brain_min_confidence_score: int = 6
     exclude_earnings_within_days: int = 7
     exclude_corporate_actions_within_days: int = 5
     async_scan: bool = True
@@ -301,9 +306,49 @@ class LlmAdkConfig(BaseModel):
     judge_model: str = "openai/meta/llama-3.1-70b-instruct"
 
 
+class LocalLLMConfig(BaseModel):
+    """Host-running llama.cpp OpenAI-compatible server for slow-brain agents."""
+
+    enabled: bool = False
+    provider: str = "llama_cpp"
+    model: str = "Qwen3-4B-Instruct-2507-Q4_K_M.gguf"
+    base_url: str = "http://host.docker.internal:8080/v1"
+    health_url: str = "http://host.docker.internal:8080/health"
+    api_key: str = "not-needed"
+    timeout_seconds: float = 30.0
+    max_retries: int = 1
+    max_tokens: int = 1200
+    structured_output: bool = True
+
+    @model_validator(mode="before")
+    @classmethod
+    def apply_env_overrides(cls, value: Any) -> Any:
+        payload = dict(value or {})
+        if os.getenv("LOCAL_LLM_ENABLED") is not None:
+            payload["enabled"] = _env_bool("LOCAL_LLM_ENABLED", False)
+        env_map = {
+            "LLAMA_CPP_PROVIDER": "provider",
+            "LLAMA_CPP_MODEL": "model",
+            "LLAMA_CPP_BASE_URL": "base_url",
+            "LLAMA_CPP_HEALTH_URL": "health_url",
+            "LLAMA_CPP_API_KEY": "api_key",
+            "LLAMA_CPP_TIMEOUT_SECONDS": "timeout_seconds",
+            "LLAMA_CPP_MAX_RETRIES": "max_retries",
+            "LLAMA_CPP_MAX_TOKENS": "max_tokens",
+        }
+        for env_name, field_name in env_map.items():
+            raw = os.getenv(env_name)
+            if raw not in (None, ""):
+                payload[field_name] = raw
+        if os.getenv("LLAMA_CPP_STRUCTURED_OUTPUT") is not None:
+            payload["structured_output"] = _env_bool("LLAMA_CPP_STRUCTURED_OUTPUT", True)
+        return payload
+
+
 class LLMConfig(BaseModel):
     timeout_seconds: float
     max_tool_calls_per_stock: int
+    local: LocalLLMConfig = Field(default_factory=LocalLLMConfig)
     roles: LLMRolesConfig
     fallback_chain: list[LLMFallbackConfig] = Field(default_factory=list)
     adk: LlmAdkConfig = Field(default_factory=LlmAdkConfig)

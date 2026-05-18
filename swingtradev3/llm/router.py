@@ -13,6 +13,8 @@ class LLMRouter:
         self.nim_client = nim_client or NIMClient()
 
     def _provider_has_credentials(self, provider: str) -> bool:
+        if provider == cfg.llm.local.provider:
+            return cfg.llm.local.enabled
         env_map = {
             "nim": "NIM_API_KEY",
             "groq": "GROQ_API_KEY",
@@ -32,18 +34,29 @@ class LLMRouter:
         tools: list[dict[str, Any]] | None,
         temperature: float,
         max_tokens: int,
+        response_format: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         try:
             from openai import AsyncOpenAI
         except ImportError as exc:
             raise RuntimeError("openai package is required for LLM access") from exc
-        client = AsyncOpenAI(api_key=api_key, base_url=base_url)
+        timeout = (
+            cfg.llm.local.timeout_seconds
+            if provider == cfg.llm.local.provider
+            else cfg.llm.timeout_seconds
+        )
+        client = AsyncOpenAI(api_key=api_key, base_url=base_url, timeout=timeout)
+        payload: dict[str, Any] = {
+            "model": model,
+            "messages": messages,
+            "tools": tools or [],
+            "temperature": temperature,
+            "max_tokens": max_tokens,
+        }
+        if response_format is not None:
+            payload["response_format"] = response_format
         response = await client.chat.completions.create(
-            model=model,
-            messages=messages,
-            tools=tools or [],
-            temperature=temperature,
-            max_tokens=max_tokens,
+            **payload,
         )
         return {"provider": provider, "response": response.model_dump()}
 
@@ -55,7 +68,20 @@ class LLMRouter:
         tools: list[dict[str, Any]] | None,
         temperature: float,
         max_tokens: int,
+        response_format: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
+        if provider == cfg.llm.local.provider:
+            return await self._call_openai_compatible(
+                provider=provider,
+                base_url=cfg.llm.local.base_url,
+                api_key=cfg.llm.local.api_key,
+                model=model or cfg.llm.local.model,
+                messages=messages,
+                tools=tools,
+                temperature=temperature,
+                max_tokens=max_tokens,
+                response_format=response_format,
+            )
         if provider == "nim":
             return {
                 "provider": provider,
@@ -77,6 +103,7 @@ class LLMRouter:
                 tools=tools,
                 temperature=temperature,
                 max_tokens=max_tokens,
+                response_format=response_format,
             )
         if provider == "gemini":
             return await self._call_openai_compatible(
@@ -90,6 +117,7 @@ class LLMRouter:
                 tools=tools,
                 temperature=temperature,
                 max_tokens=max_tokens,
+                response_format=response_format,
             )
         if provider == "anthropic":
             try:
@@ -97,7 +125,9 @@ class LLMRouter:
             except ImportError as exc:
                 raise RuntimeError("anthropic package is required for Anthropic fallback") from exc
             client = anthropic.AsyncAnthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-            prompt = "\n\n".join(message["content"] for message in messages if isinstance(message.get("content"), str))
+            prompt = "\n\n".join(
+                message["content"] for message in messages if isinstance(message.get("content"), str)
+            )
             response = await client.messages.create(
                 model=model,
                 max_tokens=max_tokens,
@@ -112,6 +142,7 @@ class LLMRouter:
         role: str,
         messages: list[dict[str, Any]],
         tools: list[dict[str, Any]] | None = None,
+        response_format: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         role_cfg = getattr(cfg.llm.roles, role)
         attempts = [{"provider": role_cfg.provider, "model": role_cfg.model}] + [
@@ -132,6 +163,7 @@ class LLMRouter:
                     tools=tools,
                     temperature=role_cfg.temperature,
                     max_tokens=role_cfg.max_tokens,
+                    response_format=response_format,
                 )
             except Exception as exc:
                 failures.append(f"{provider}:{exc}")

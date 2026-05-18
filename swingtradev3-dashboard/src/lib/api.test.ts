@@ -43,6 +43,7 @@ test('api client sends same-origin GET requests through the /api proxy', async (
         postgres_memory_views: 'healthy',
         memgraph_context_graph: 'degraded',
         toolbox: 'healthy',
+        local_llm: 'disabled',
       },
     }),
   );
@@ -58,6 +59,7 @@ test('api client sends same-origin GET requests through the /api proxy', async (
       postgres_memory_views: 'healthy',
       memgraph_context_graph: 'degraded',
       toolbox: 'healthy',
+      local_llm: 'disabled',
     },
   });
   assert.equal(calls.length, 1);
@@ -236,6 +238,101 @@ test('api client fetches stock knowledge payloads with encoded ticker', async ()
   assert.equal(calls[0]?.input, '/api/dashboard/knowledge/stock/M%26M');
   assert.equal(stock.ticker, 'M&M');
   assert.equal(stock.evidence.length, 1);
+});
+
+test('api client fetches Phase 13 cognition runs and reports', async () => {
+  const calls = installFetch((call) => {
+    if (String(call.input).includes('/dashboard/cognition/runs/phase13%3Arun')) {
+      return jsonResponse({
+        run: {
+          run_id: 'phase13:run',
+          phase: 'phase_13',
+          status: 'completed',
+          started_at: '2026-05-17T08:45:00+05:30',
+          payload: {
+            diagnostics: { approval_candidates: 1 },
+          },
+        },
+        reports: [
+          {
+            report_id: 'phase13:run:SBIN:final',
+            run_id: 'phase13:run',
+            ticker: 'SBIN',
+            agent_name: 'final_intent_judge',
+            status: 'proposed',
+            payload: { decision: 'BUY_ONLY_ABOVE_TRIGGER' },
+          },
+        ],
+        count: 1,
+      });
+    }
+    return jsonResponse({
+      runs: [
+        {
+          run_id: 'phase13:run',
+          phase: 'phase_13',
+          status: 'completed',
+          started_at: '2026-05-17T08:45:00+05:30',
+          payload: {
+            diagnostics: { scan_candidates: 4, approval_candidates: 1 },
+          },
+        },
+      ],
+      count: 1,
+    });
+  });
+
+  const runs = await api.cognitionRuns(5);
+  const run = await api.cognitionRun('phase13:run');
+
+  assert.equal(calls[0]?.input, '/api/dashboard/cognition/runs?limit=5');
+  assert.equal(calls[1]?.input, '/api/dashboard/cognition/runs/phase13%3Arun');
+  assert.deepEqual(runs.runs[0]?.payload.diagnostics, {
+    scan_candidates: 4,
+    approval_candidates: 1,
+  });
+  assert.equal(run.reports[0]?.agent_name, 'final_intent_judge');
+});
+
+test('api client fetches Phase 13 ticker reports and session plan payloads', async () => {
+  const calls = installFetch((call) => {
+    if (String(call.input).includes('/dashboard/session-plan')) {
+      return jsonResponse({
+        generated: false,
+        plan: {
+          plan_id: 'session-plan:2026-05-17:084500',
+          trading_date: '2026-05-17',
+          status: 'ready',
+          payload: {
+            plan_id: 'session-plan:2026-05-17:084500',
+            status: 'ready',
+          },
+        },
+      });
+    }
+    return jsonResponse({
+      ticker: 'M&M',
+      reports: [
+        {
+          report_id: 'phase13:run:MM:thesis',
+          run_id: 'phase13:run',
+          ticker: 'M&M',
+          agent_name: 'thesis_agent',
+          status: 'ok',
+          payload: { confidence_score: 7 },
+        },
+      ],
+      count: 1,
+    });
+  });
+
+  const reports = await api.cognitionReports('M&M', 25);
+  const plan = await api.sessionPlan('2026-05-17');
+
+  assert.equal(calls[0]?.input, '/api/dashboard/cognition/reports/M%26M?limit=25');
+  assert.equal(calls[1]?.input, '/api/dashboard/session-plan?trading_date=2026-05-17');
+  assert.equal(reports.reports[0]?.ticker, 'M&M');
+  assert.equal(plan.plan?.status, 'ready');
 });
 
 test('api client rejects payloads that fail Zod validation', async () => {

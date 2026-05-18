@@ -13,6 +13,11 @@ research:
   debate_top_n: 3
   max_shortlist: 7
   max_same_sector_positions: 2
+  slow_brain_max_candidates: 6
+  slow_brain_full_debate_candidates: 3
+  slow_brain_lightweight_candidates: 3
+  slow_brain_min_score: 7.0
+  slow_brain_min_confidence_score: 6
   exclude_earnings_within_days: 7
   exclude_corporate_actions_within_days: 5
   async_scan: true
@@ -169,6 +174,17 @@ indicators:
 llm:
   timeout_seconds: 5.0
   max_tool_calls_per_stock: 8
+  local:
+    enabled: false
+    provider: llama_cpp
+    model: "Qwen3-4B-Instruct-2507-Q4_K_M.gguf"
+    base_url: "http://host.docker.internal:8080/v1"
+    health_url: "http://host.docker.internal:8080/health"
+    api_key: "not-needed"
+    timeout_seconds: 30.0
+    max_retries: 1
+    max_tokens: 1200
+    structured_output: true
   roles:
     research:
       provider: nim

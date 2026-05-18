@@ -69,11 +69,30 @@ def _toolbox_status() -> str:
         return "degraded"
 
 
+def _local_llm_status() -> str:
+    if not cfg.llm.local.enabled:
+        return "disabled"
+    try:
+        with urllib.request.urlopen(
+            cfg.llm.local.health_url,
+            timeout=min(cfg.llm.local.timeout_seconds, 2.0),
+        ) as response:
+            return "healthy" if response.status == 200 else "degraded"
+    except Exception:
+        return "degraded"
+
+
 def _phase12_statuses() -> dict[str, str]:
     return {
         "postgres_memory_views": _postgres_memory_views_status(),
         "memgraph_context_graph": _context_graph_status(),
         "toolbox": _toolbox_status(),
+    }
+
+
+def _llm_statuses() -> dict[str, str]:
+    return {
+        "local_llm": _local_llm_status(),
     }
 
 
@@ -85,6 +104,7 @@ async def health_check():
     }
     services.update(get_all_statuses())
     services.update(_phase12_statuses())
+    services.update(_llm_statuses())
 
     return HealthResponse(
         status="ok",

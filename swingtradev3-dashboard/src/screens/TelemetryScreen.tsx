@@ -1,5 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { type LiveEventsState, useAgentActivity, useTelemetry } from '@/hooks/useDashboardData';
+import {
+  type LiveEventsState,
+  useAgentActivity,
+  useCognitionRuns,
+  useSessionPlan,
+  useTelemetry,
+} from '@/hooks/useDashboardData';
 import type { DashboardEvent } from '@/lib/schemas';
 import { formatIstDateTime, formatIstTime } from '@/lib/time';
 import { cn } from '@/lib/utils';
@@ -30,9 +36,33 @@ function compactPayload(payload: Record<string, unknown>) {
   return keys.slice(0, 4).map((key) => `${key}=${JSON.stringify(payload[key])}`).join(' ');
 }
 
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : {};
+}
+
+function asArray(value: unknown): unknown[] {
+  return Array.isArray(value) ? value : [];
+}
+
+function asCount(value: unknown) {
+  if (typeof value === 'number' && Number.isFinite(value)) return value;
+  if (typeof value === 'string' && value.trim() !== '') return Number(value) || 0;
+  return 0;
+}
+
+function unwrapSessionPlan(plan: unknown): Record<string, unknown> {
+  const record = asRecord(plan);
+  const payload = asRecord(record.payload);
+  return Object.keys(payload).length ? payload : record;
+}
+
 export function TelemetryScreen({ live }: { live: LiveEventsState }) {
   const telemetryQuery = useTelemetry();
   const activityQuery = useAgentActivity();
+  const cognitionQuery = useCognitionRuns(10);
+  const sessionPlanQuery = useSessionPlan();
   const [logsExpanded, setLogsExpanded] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -49,6 +79,14 @@ export function TelemetryScreen({ live }: { live: LiveEventsState }) {
   const scanStatus = activityQuery.data?.scan_status;
   const workerStatus = activityQuery.data?.worker_status ?? telemetryQuery.data?.worker_status ?? {};
   const session = activityQuery.data?.session;
+  const latestRun = cognitionQuery.data?.runs[0] ?? null;
+  const latestRunPayload = asRecord(latestRun?.payload);
+  const latestRunDiagnostics = asRecord(latestRunPayload.diagnostics);
+  const latestRunDecisions = asArray(latestRunPayload.decisions);
+  const latestRunApprovalCount = asCount(latestRunDiagnostics.approval_candidates);
+  const sessionPlan = unwrapSessionPlan(sessionPlanQuery.data?.plan);
+  const sessionPlanItems = asArray(sessionPlan.items);
+  const sessionPlanBlocks = asArray(sessionPlan.blocked_reasons);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -113,7 +151,7 @@ export function TelemetryScreen({ live }: { live: LiveEventsState }) {
                 {observedSources.length} sources
               </span>
             </div>
-            <div className="p-3 grid grid-cols-2 gap-3 border-b border-outline-variant/15">
+            <div className="p-3 grid grid-cols-1 sm:grid-cols-2 gap-3 border-b border-outline-variant/15">
               <div className="bg-surface-lowest border border-outline-variant/15 rounded p-3">
                 <div className="text-[10px] uppercase font-mono text-on-surface-variant">Scheduler</div>
                 <div className="text-[13px] font-mono font-bold text-white mt-1">{asText(workerStatus.current_phase)}</div>
@@ -124,8 +162,57 @@ export function TelemetryScreen({ live }: { live: LiveEventsState }) {
                 <div className="text-[13px] font-mono font-bold text-white mt-1">{asText(scanStatus?.status)}</div>
                 <div className="text-[10px] font-mono text-on-surface-variant mt-1">{formatIstTime(scanStatus?.completed_at)}</div>
               </div>
+              <div className="bg-surface-lowest border border-outline-variant/15 rounded p-3">
+                <div className="text-[10px] uppercase font-mono text-on-surface-variant">Slow Brain Run</div>
+                <div className="flex items-center justify-between gap-2 mt-1">
+                  <div className="text-[13px] font-mono font-bold text-white truncate">
+                    {asText(latestRun?.status, cognitionQuery.isLoading ? 'loading' : 'none')}
+                  </div>
+                  <span className={cn('px-2 py-0.5 rounded border text-[9px] font-mono uppercase shrink-0', statusClass(asText(latestRun?.status)))}>
+                    {latestRun?.phase ?? 'phase_13'}
+                  </span>
+                </div>
+                <div className="text-[10px] font-mono text-on-surface-variant mt-1 truncate">
+                  {latestRun ? `${latestRunDecisions.length} decisions / ${latestRunApprovalCount} approvals` : 'No cognition run stored yet.'}
+                </div>
+                <div className="text-[10px] font-mono text-on-surface-variant mt-1 truncate">
+                  {latestRun?.completed_at ? formatIstDateTime(latestRun.completed_at) : asText(latestRun?.run_id)}
+                </div>
+              </div>
+              <div className="bg-surface-lowest border border-outline-variant/15 rounded p-3">
+                <div className="text-[10px] uppercase font-mono text-on-surface-variant">Session Plan</div>
+                <div className="flex items-center justify-between gap-2 mt-1">
+                  <div className="text-[13px] font-mono font-bold text-white truncate">
+                    {asText(sessionPlan.status, sessionPlanQuery.isLoading ? 'loading' : 'none')}
+                  </div>
+                  <span className={cn('px-2 py-0.5 rounded border text-[9px] font-mono uppercase shrink-0', statusClass(asText(sessionPlan.status)))}>
+                    {sessionPlanItems.length} items
+                  </span>
+                </div>
+                <div className="text-[10px] font-mono text-on-surface-variant mt-1 truncate">
+                  {sessionPlanBlocks.length ? sessionPlanBlocks.join(', ') : 'No session blocks recorded.'}
+                </div>
+                <div className="text-[10px] font-mono text-on-surface-variant mt-1 truncate">
+                  {asText(sessionPlan.trading_date)}
+                </div>
+              </div>
             </div>
             <div className="overflow-auto p-2 space-y-1">
+              {latestRun && (
+                <div className="bg-surface-lowest/70 border border-tertiary/20 rounded px-3 py-2">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-[12px] font-mono font-bold text-white truncate">
+                      {latestRun.run_id}
+                    </span>
+                    <span className="text-[10px] font-mono text-tertiary shrink-0">
+                      {latestRunDecisions.length} decisions
+                    </span>
+                  </div>
+                  <div className="text-[10px] font-mono text-on-surface-variant mt-1 truncate">
+                    scan={asText(latestRunDiagnostics.scan_candidates)} funnel={asText(latestRunDiagnostics.funnel_candidates)} approvals={asText(latestRunDiagnostics.approval_candidates)}
+                  </div>
+                </div>
+              )}
               {observedSources.map((source) => (
                 <div key={source.agent_name} className="bg-surface-lowest/70 border border-outline-variant/10 rounded px-3 py-2">
                   <div className="flex items-center justify-between gap-3">

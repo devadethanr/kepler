@@ -223,4 +223,13 @@ class TestResearchPipeline:
     def test_pipeline_init(self):
         """Test pipeline initializes correctly."""
         assert research_pipeline is not None
-        assert len(research_pipeline.sub_agents) == 6
+        assert len(research_pipeline.sub_agents) == 7
+        assert [agent.name for agent in research_pipeline.sub_agents] == [
+            "RegimeAgent",
+            "FilterAgent",
+            "BatchScannerAgent",
+            "ScorerAgent",
+            "SlowBrainDeskAgent",
+            "ResultsSaverAgent",
+            "KnowledgeGraphAgent",
+        ]

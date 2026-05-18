@@ -12,6 +12,7 @@ Domain modules:
     order_intents — OrderIntentRow
     policy        — PolicyOverlayRow
     positions     — PositionRow
+    cognition     — CognitionRunRow, CognitionReportRow, SessionExecutionPlanRow
     reconciliation — ReconciliationRunRow
     trades        — TradeRow
 
@@ -22,6 +23,7 @@ All existing call sites import ``from memory.repository import MemoryRepository`
 from .account import AccountRepository
 from .approvals import ApprovalRepository
 from .broker import BrokerRepository
+from .cognition import CognitionRepository
 from .entry_intents import EntryIntentRepository
 from .events import EventRepository
 from .failure import FailureRepository
