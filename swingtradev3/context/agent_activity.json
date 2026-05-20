@@ -3,22 +3,22 @@
     "BatchScannerAgent": {
       "agent_name": "BatchScannerAgent",
       "completed_at": null,
-      "current_task": "Deep analysis completed for 1 stocks.",
+      "current_task": "Deep analysis completed for 0 stocks.",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-19T01:31:45.715541",
+      "started_at": "2026-05-20T18:00:32.346420",
       "status": "running"
     },
     "FilterAgent": {
       "agent_name": "FilterAgent",
-      "completed_at": "2026-05-19T01:32:55.682694",
-      "current_task": "Filtering stocks",
-      "last_error": "Connection timeout",
+      "completed_at": null,
+      "current_task": "Funnel completed: 0 stocks qualified for deep analysis.",
+      "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-19T01:32:55.680792",
-      "status": "error"
+      "started_at": "2026-05-20T18:00:32.344794",
+      "status": "running"
     },
     "FundamentalsAgent_ABB": {
       "agent_name": "FundamentalsAgent_ABB",
@@ -193,11 +193,11 @@
     "KnowledgeGraphAgent": {
       "agent_name": "KnowledgeGraphAgent",
       "completed_at": null,
-      "current_task": "Context graph checked: 1 stocks, 1 sectors.",
+      "current_task": "No scan results to update knowledge graph.",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-19T01:32:04.231573",
+      "started_at": "2026-05-20T18:00:32.395031",
       "status": "running"
     },
     "MarketDataAgent_ABB": {
@@ -557,17 +557,17 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-19T01:31:16.588923",
+      "started_at": "2026-05-20T18:00:30.699862",
       "status": "running"
     },
     "ResearchPipeline": {
       "agent_name": "ResearchPipeline",
-      "completed_at": "2026-05-18T18:00:32.710278",
+      "completed_at": "2026-05-20T18:00:32.396570",
       "current_task": "Full evening research scan",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-18T18:00:00.288261",
+      "started_at": "2026-05-20T18:00:00.081723",
       "status": "completed"
     },
     "ResultsSaverAgent": {
@@ -577,18 +577,18 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-19T01:32:04.222973",
+      "started_at": "2026-05-20T18:00:32.393471",
       "status": "running"
     },
     "ScorerAgent": {
       "agent_name": "ScorerAgent",
-      "completed_at": "2026-05-19T01:32:55.675485",
-      "current_task": "Scoring RELIANCE",
+      "completed_at": null,
+      "current_task": "No qualified stocks to score.",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-19T01:32:55.672983",
-      "status": "completed"
+      "started_at": "2026-05-20T18:00:32.347927",
+      "status": "running"
     },
     "SentimentAgent_ABB": {
       "agent_name": "SentimentAgent_ABB",
@@ -763,11 +763,11 @@
     "SlowBrainDeskAgent": {
       "agent_name": "SlowBrainDeskAgent",
       "completed_at": null,
-      "current_task": "Slow brain disabled; scorer shortlist unchanged.",
+      "current_task": "Slow brain completed: 0 actionable approval(s), 0 audited decision(s).",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-05-19T01:32:04.113888",
+      "started_at": "2026-05-20T18:00:32.367131",
       "status": "running"
     },
     "TimesfmAgent_ABB": {
@@ -942,17 +942,17 @@
     },
     "scheduler": {
       "agent_name": "scheduler",
-      "completed_at": "2026-05-19T02:03:03.941971",
+      "completed_at": "2026-05-20T23:52:38.402228",
       "current_task": "position_monitor",
       "last_error": null,
       "metadata": {
         "last_job": "position_monitor"
       },
       "progress": null,
-      "started_at": "2026-05-19T02:03:03.940472",
+      "started_at": "2026-05-20T23:52:38.400415",
       "status": "completed"
     }
   },
-  "last_updated": "2026-05-19T02:03:03.941976",
+  "last_updated": "2026-05-20T23:52:38.402233",
   "scheduler_phase": "overnight_monitoring"
 }

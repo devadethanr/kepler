@@ -28,6 +28,7 @@ from . import (
     PolicyRepository,
     PositionRepository,
     ReconciliationRepository,
+    ScanRepository,
     TradeRepository,
 )
 
@@ -56,6 +57,7 @@ class MemoryRepository:
         self._policy: PolicyRepository | None = None
         self._position: PositionRepository | None = None
         self._reconciliation: ReconciliationRepository | None = None
+        self._scan: ScanRepository | None = None
         self._trade: TradeRepository | None = None
 
     @property
@@ -141,6 +143,12 @@ class MemoryRepository:
         if self._trade is None:
             self._trade = TradeRepository(self._session)
         return self._trade
+
+    @property
+    def scan(self) -> ScanRepository:
+        if self._scan is None:
+            self._scan = ScanRepository(self._session)
+        return self._scan
 
     # ── delegate methods (backwards-compatible API) ─────────────────
 

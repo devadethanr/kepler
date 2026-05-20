@@ -129,6 +129,10 @@ class SlowBrainOrchestrator:
                 portfolio=portfolio,
             )
             decision.report_id = _report_id(run_id, candidate.ticker, "final_intent_judge")
+            # Ensure all source report IDs are populated (LLM may not return them)
+            decision.source_reports["thesis"] = thesis.report_id
+            decision.source_reports["skeptic"] = skeptic.report_id
+            decision.source_reports["portfolio"] = portfolio.report_id
             decision.source_reports["final"] = decision.report_id
             decisions.append(decision)
 

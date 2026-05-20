@@ -360,6 +360,25 @@
     "source": "yfinance",
     "ticker": "LICHSGFIN"
   },
+  "MANKIND": {
+    "as_of": "2026-05-20",
+    "debt_equity": 38.111,
+    "dii_holding_pct": null,
+    "dividend_yield": 0.04,
+    "eps_growth_3yr_pct": 0.317,
+    "fii_holding_pct": null,
+    "industry": "Drug Manufacturers - Specialty & Generic",
+    "is_stale": false,
+    "market_cap_cr": 106670.7058688,
+    "pe_ratio": 53.1,
+    "promoter_holding_pct": null,
+    "promoter_pledge_pct": null,
+    "revenue_growth_pct": null,
+    "roce": null,
+    "sector": "Healthcare",
+    "source": "yfinance",
+    "ticker": "MANKIND"
+  },
   "OIL": {
     "as_of": "2026-04-14",
     "debt_equity": 58.174,

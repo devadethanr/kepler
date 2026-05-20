@@ -33,6 +33,7 @@ from .order_intents import OrderIntentRepository
 from .policy import PolicyRepository
 from .positions import PositionRepository
 from .reconciliation import ReconciliationRepository
+from .scan import ScanRepository
 from .trades import TradeRepository
 
 # Re-export for backwards compatibility

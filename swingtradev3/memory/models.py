@@ -265,6 +265,17 @@ class SessionExecutionPlanRow(TimestampMixin, Base):
     payload: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict, nullable=False)
 
 
+class ScanRunRow(TimestampMixin, Base):
+    __tablename__ = "scan_runs"
+
+    run_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    status: Mapped[str] = mapped_column(String(32), default="idle", index=True, nullable=False)
+    started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    error: Mapped[str | None] = mapped_column(Text, nullable=True)
+    result_summary: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
+
+
 # ── Pydantic models (runtime state / API contracts) ────────────────
 
 

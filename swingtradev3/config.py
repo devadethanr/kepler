@@ -115,6 +115,7 @@ class ResearchConfig(BaseModel):
     debate_top_n: int = 3
     max_shortlist: int
     max_same_sector_positions: int
+    slow_brain_enabled: bool = False
     slow_brain_max_candidates: int = 6
     slow_brain_full_debate_candidates: int = 3
     slow_brain_lightweight_candidates: int = 3
@@ -641,7 +642,10 @@ class RuntimeFlags:
 
     @property
     def use_slow_brain(self) -> bool:
-        return _env_bool("USE_SLOW_BRAIN", False)
+        env = os.getenv("USE_SLOW_BRAIN")
+        if env is not None:
+            return _env_bool("USE_SLOW_BRAIN", False)
+        return cfg.research.slow_brain_enabled
 
     @property
     def use_exception_analyst(self) -> bool:

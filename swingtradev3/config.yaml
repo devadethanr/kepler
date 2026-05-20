@@ -13,6 +13,7 @@ research:
   debate_top_n: 3
   max_shortlist: 7
   max_same_sector_positions: 2
+  slow_brain_enabled: true
   slow_brain_max_candidates: 6
   slow_brain_full_debate_candidates: 3
   slow_brain_lightweight_candidates: 3
@@ -175,7 +176,7 @@ llm:
   timeout_seconds: 5.0
   max_tool_calls_per_stock: 8
   local:
-    enabled: false
+    enabled: true
     provider: llama_cpp
     model: "Qwen3-4B-Instruct-2507-Q4_K_M.gguf"
     base_url: "http://host.docker.internal:8080/v1"
