@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from datetime import datetime
 from typing import Any
 
 from sqlalchemy import select
@@ -44,7 +43,6 @@ class EventRepository:
         entity_id: str,
         source: str | None = None,
     ) -> bool:
-        import datetime as _dt
 
         query = select(models_module.ExecutionEventRow.event_id).where(
             models_module.ExecutionEventRow.event_type == event_type,
@@ -73,17 +71,15 @@ class EventRepository:
             rows = list(
                 reversed(
                     self.session.scalars(
-                        query.order_by(
-                            models_module.ExecutionEventRow.event_id.desc()
-                        ).limit(bounded_limit)
+                        query.order_by(models_module.ExecutionEventRow.event_id.desc()).limit(
+                            bounded_limit
+                        )
                     ).all()
                 )
             )
         else:
             rows = self.session.scalars(
-                query.order_by(
-                    models_module.ExecutionEventRow.event_id.asc()
-                ).limit(bounded_limit)
+                query.order_by(models_module.ExecutionEventRow.event_id.asc()).limit(bounded_limit)
             ).all()
         return [
             {
@@ -100,7 +96,7 @@ class EventRepository:
 
     def get_latest_execution_event_id(self) -> int | None:
         return self.session.scalar(
-            select(models_module.ExecutionEventRow.event_id).order_by(
-                models_module.ExecutionEventRow.event_id.desc()
-            ).limit(1)
+            select(models_module.ExecutionEventRow.event_id)
+            .order_by(models_module.ExecutionEventRow.event_id.desc())
+            .limit(1)
         )

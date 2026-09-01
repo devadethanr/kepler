@@ -553,7 +553,7 @@ Implemented:
   and trailing thresholds read the effective policy instead of only raw config.
 - The dashboard Risk panel shows effective policy values and active overlays.
 
-### Phase 11: Context Graph Memory
+### Phase 11 [X]: Context Graph Memory
 
 > Full design specification: [docs/features/postgress-memgraph.md](../features/postgress-memgraph.md)
 
@@ -677,6 +677,19 @@ Keep as file cache for now (not yet promoted to graph):
 - Memgraph downtime does not affect order placement, reconciliation, or kill switch operation
 - File-based memory stores (`context/knowledge/`, `context/research/`, observation caches) are no longer written by new code paths
 
+Implementation status:
+
+- Postgres remains the execution source of truth; scheduler, briefing, and coordinator hot paths read
+  account state and approvals directly through `MemoryRepository`.
+- `GraphProjector` projects execution events and seeds NIFTY 200/NIFTY 50 membership plus current
+  strategy versions into Memgraph with idempotent nodes and edges.
+- Research runs, candidates, market snapshots, news, trade memories, observations, lessons, and
+  failure patterns use `ContextGraphRepository`; the unused markdown wiki implementation was removed.
+- The dashboard knowledge routes read the live Memgraph graph and degrade to context-only unavailability
+  without affecting execution safety.
+- Verification: the Phase 11 contract tests, live graph API, Memgraph health query, and full Docker test
+  suite pass.
+
 ### Phase 12 [X]: Memory Views And Google MCP Toolbox
 
 Implementation:
@@ -755,7 +768,7 @@ Implementation status:
   latest session plan.
 - Verification: `make phase13-smoke` and `make test` pass in Docker.
 
-### Phase 14: Bounded Intraday Exception Reasoning And Learning
+### Phase 14 [X]: Bounded Intraday Exception Reasoning And Learning
 
 Implementation:
 
@@ -774,6 +787,21 @@ Definition of done:
 - market-hours execution still works if the LLM layer is unavailable
 - intraday reasoning exists only for bounded anomalies, not routine order routing
 - the system can learn and adapt without becoming an unbounded linear-bot-with-prompts
+
+Implementation status:
+
+- `cognition/intraday/ExceptionAnalyst` accepts only the four documented anomaly classes and persists
+  structured, advisory-only reports; it has no broker, position, kill-switch, or policy mutation path.
+- Explicit event-bus anomalies and bounded market-hours incident scans invoke the analyst; routine news
+  and order routing remain deterministic and bypass it.
+- The post-trade reviewer processes unreviewed closed trades idempotently and writes `Observation`,
+  `TradeMemory`, and bounded `SIMILAR_TO` context to Memgraph.
+- The monthly lesson agent requires repeated trade evidence, creates inactive policy overlay proposals,
+  and writes linked `Lesson` nodes. Operator approval remains mandatory for activation.
+- The Telemetry dashboard separates Phase 13 desk runs from Phase 14 exception advice and labels the
+  latter advisory-only.
+- Verification: `make phase14-smoke`, `make dashboard-test`, `make dashboard-lint`,
+  `make dashboard-build`, and `make test` pass in Docker with the host llama.cpp server available.
 
 ## Exact Repo Changes
 

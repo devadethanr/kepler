@@ -259,6 +259,35 @@ class ContextGraphRepository:
             {"id": props["id"], "props": props},
         )
 
+    def link_stock_to_index(
+        self,
+        ticker: str,
+        index_name: str,
+        *,
+        source: str = "context_graph",
+    ) -> None:
+        normalized_ticker = ticker.strip().upper()
+        normalized_index = index_name.strip().upper()
+        if not normalized_ticker or not normalized_index:
+            return
+        ingested_at = _now_ist().isoformat()
+        self._run(
+            """
+            MATCH (s:Stock {id: $stock_id}), (i:Index {id: $index_id})
+            MERGE (s)-[rel:MEMBER_OF]->(i)
+            SET rel.source = $source,
+                rel.ingested_at = $ingested_at,
+                rel.projection_version = $projection_version
+            """,
+            {
+                "stock_id": f"stock:{normalized_ticker}",
+                "index_id": f"index:{normalized_index}",
+                "source": source,
+                "ingested_at": ingested_at,
+                "projection_version": PROJECTION_VERSION,
+            },
+        )
+
     def upsert_research_run(
         self,
         *,

@@ -46,14 +46,15 @@ services:
         condition: service_started
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "curl -fsS -H \"X-API-Key: $$FASTAPI_API_KEY\" http://localhost:8000/health >/dev/null"]
+      test: ["CMD-SHELL", "curl --max-time 5 -fsS -H \"X-API-Key: $$FASTAPI_API_KEY\" http://localhost:8000/health >/dev/null"]
       interval: 30s
       timeout: 10s
       retries: 3
-    # Override CMD for dev: hot reload for FastAPI
+    # Native model/data libraries can prevent Uvicorn reload children from exiting cleanly.
+    # Keep the source mount and restart this service after backend edits.
     command: >
       sh -c "
-        uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+        exec uvicorn api.main:app --host 0.0.0.0 --port 8000
       "
 
   worker:

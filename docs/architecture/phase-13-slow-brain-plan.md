@@ -55,7 +55,7 @@ Current flow:
 - `llm/router.py` and `llm_bridge.py` have first-class `llama_cpp` provider support, with
   deterministic fail-closed fallbacks for normal tests.
 
-Local llama.cpp finding:
+Local llama.cpp finding at implementation time:
 
 - Host port `127.0.0.1:8080` is currently occupied by `llama-server`.
 - `GET http://127.0.0.1:8080/health` returns `{"status":"ok"}`.
@@ -275,8 +275,8 @@ schema smoke test. A strict local smoke must assert that `choices[0].message.con
 
 ### Host-Server Mode
 
-This is the best first integration because the host llama.cpp server is already running on port
-`8080` with GPU settings.
+This is the selected integration because it keeps CUDA/model tuning on the host and exposes the
+OpenAI-compatible endpoint to the containers on port `8080`.
 
 Modify `docker-compose.dev.yml`:
 
@@ -309,12 +309,31 @@ already-used host port `8080`.
 Add Makefile targets:
 
 ```text
+local-llm-start
+local-llm-stop
+local-llm-logs
 local-llm-health
 phase13-llm-smoke
 phase13-smoke
+phase14-smoke
 ```
 
 `make dev` should not start or depend on llama.cpp.
+
+Host operation:
+
+```bash
+cd swingtradev3
+make local-llm-start
+make local-llm-health
+make phase13-llm-smoke
+```
+
+`ops/start_local_llm.sh` defaults to the CUDA 13 build at
+`~/local-llm/llama.cpp/build-cuda13/bin/llama-server`, discovers the Qwen instruct GGUF, records its
+PID in `/tmp/swingtradev3-llama.pid`, and writes logs to `/tmp/swingtradev3-llama.log`. Override
+`LLAMA_CPP_MODEL`, `LLAMA_CPP_PORT`, or `LLAMA_CPP_GPU` when the host layout differs; matching
+`LLAMA_CPP_BASE_URL` and `LLAMA_CPP_HEALTH_URL` values must be set for a non-default port.
 
 ## Slow Brain Flow
 

@@ -142,6 +142,8 @@ class WorkerRuntime:
         # Phase 11: start graph projector (non-blocking, Memgraph optional)
         try:
             self._graph_projector.ensure_schema()
+            seeded = self._graph_projector.seed_static_context()
+            print(f"GraphProjector: static context seeded {seeded}")
         except GraphUnavailableError:
             print("GraphProjector: schema unavailable — will retry in loop")
         # Always start the loop — it handles Memgraph being down gracefully

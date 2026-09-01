@@ -337,10 +337,13 @@ async def get_execution_dashboard() -> dict[str, Any]:
 
 
 @router.get("/cognition/runs")
-async def get_cognition_runs(limit: int = 50) -> dict[str, Any]:
-    """Phase 13 slow-brain run list for dashboard audit views."""
+async def get_cognition_runs(
+    limit: int = 50,
+    phase: str | None = None,
+) -> dict[str, Any]:
+    """Cognition run list, optionally scoped to one implementation phase."""
     with session_scope() as session:
-        runs = MemoryRepository(session).list_cognition_runs(limit=limit)
+        runs = MemoryRepository(session).list_cognition_runs(limit=limit, phase=phase)
     return {"runs": runs, "count": len(runs)}
 
 

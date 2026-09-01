@@ -222,6 +222,17 @@ learning:
   min_trades_for_lesson: 8
   min_trades_for_kelly: 20
   max_lessons_per_month: 3
+  exception_reasoning:
+    enabled: true
+    scan_interval_minutes: 5
+    max_cases_per_cycle: 3
+    max_evidence_items: 12
+    max_prompt_chars: 12000
+    allowed_kinds:
+      - broker_inconsistency
+      - major_gap_or_shock
+      - corporate_action_surprise
+      - unexpected_regime_break
 
 schedule:
   auth_refresh: "08:50"
@@ -356,6 +367,7 @@ data:
   news_cache_ttl_minutes: 60
   fundamentals_cache_ttl_hours: 24
   macro_cache_ttl_hours: 4
+  model_warmup_enabled: false
 
 context_graph:
   enabled: true

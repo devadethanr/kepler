@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import time
 import urllib.request
 
 from fastapi import APIRouter
@@ -12,6 +13,7 @@ from ..schemas.health import HealthResponse
 from health_manager import get_all_statuses
 
 router = APIRouter()
+PROCESS_STARTED_AT = time.monotonic()
 
 PHASE12_MEMORY_VIEWS = {
     "portfolio_risk_view",
@@ -105,9 +107,15 @@ async def health_check():
     services.update(get_all_statuses())
     services.update(_phase12_statuses())
     services.update(_llm_statuses())
+    aggregate_status = (
+        "degraded"
+        if any(status in {"degraded", "unhealthy"} for status in services.values())
+        else "ok"
+    )
 
     return HealthResponse(
-        status="ok",
-        mode="paper",
+        status=aggregate_status,
+        mode=cfg.trading.mode.value,
+        uptime_seconds=round(time.monotonic() - PROCESS_STARTED_AT, 3),
         services=services,
     )

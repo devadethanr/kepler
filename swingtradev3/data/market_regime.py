@@ -13,7 +13,7 @@ Pure computation — no LLM, no decisions.
 """
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 from pathlib import Path
 from typing import Any
 
@@ -21,6 +21,7 @@ import pandas as pd
 
 from paths import CONTEXT_DIR
 from storage import read_json, write_json
+from time_utils import parse_datetime_utc, utc_now
 
 
 class MarketRegimeDetector:
@@ -36,7 +37,7 @@ class MarketRegimeDetector:
         if not fetched_at:
             return None
         try:
-            age = datetime.utcnow() - datetime.fromisoformat(str(fetched_at))
+            age = utc_now() - parse_datetime_utc(fetched_at)
         except ValueError:
             return None
         if age > timedelta(hours=self.ttl_hours):
@@ -44,7 +45,7 @@ class MarketRegimeDetector:
         return payload.get("data")
 
     def _store(self, payload: dict[str, Any]) -> dict[str, Any]:
-        write_json(self.cache_path, {"fetched_at": datetime.utcnow().isoformat(), "data": payload})
+        write_json(self.cache_path, {"fetched_at": utc_now().isoformat(), "data": payload})
         return payload
 
     def detect_regime(

@@ -103,8 +103,13 @@ export const api = {
       'GET',
       { signal },
     ),
-  cognitionRuns: (limit = 20, signal?: AbortSignal) =>
-    request(`/dashboard/cognition/runs?limit=${limit}`, CognitionRunsSchema, 'GET', { signal }),
+  cognitionRuns: (limit = 20, phase?: string, signal?: AbortSignal) => {
+    const params = new URLSearchParams({ limit: String(limit) });
+    if (phase) params.set('phase', phase);
+    return request(`/dashboard/cognition/runs?${params.toString()}`, CognitionRunsSchema, 'GET', {
+      signal,
+    });
+  },
   cognitionRun: (runId: string, signal?: AbortSignal) =>
     request(
       `/dashboard/cognition/runs/${encodeURIComponent(runId)}`,

@@ -3,7 +3,7 @@ ENV_FILE := .env
 DOCKER_COMPOSE := docker compose -f $(COMPOSE_FILE) --env-file $(ENV_FILE)
 DOCKER_COMPOSE_MEMORY := $(DOCKER_COMPOSE) --profile memory
 
-.PHONY: dev dev-detach worker-up worker-smoke test test-file lint format logs logs-app logs-worker logs-mcp logs-dashboard logs-memory logs-memgraph logs-memgraph-lab logs-toolbox toolbox-health local-llm-health phase12-smoke phase13-llm-smoke phase13-smoke memgraph-shell memgraph-snapshot stop clean shell health login phase0-check phase0-reconcile-state phase3-check phase6-check phase7-check db-upgrade
+.PHONY: dev dev-detach worker-up worker-smoke test test-file lint lint-fix format dashboard-test dashboard-lint dashboard-build logs logs-app logs-worker logs-mcp logs-dashboard logs-memory logs-memgraph logs-memgraph-lab logs-toolbox toolbox-health local-llm-start local-llm-stop local-llm-logs local-llm-health phase12-smoke phase13-llm-smoke phase13-smoke phase14-smoke memgraph-shell memgraph-snapshot stop clean shell health login phase0-check phase0-reconcile-state phase3-check phase6-check phase7-check db-upgrade
 
 define RUN_PYTEST_ISOLATED
 	@was_running=$$($(DOCKER_COMPOSE) ps --status running --services worker 2>/dev/null | grep -c '^worker$$' || true); \
@@ -66,8 +66,20 @@ test-memgraph:
 lint:
 	$(DOCKER_COMPOSE) exec app ruff check .
 
+lint-fix:
+	$(DOCKER_COMPOSE) exec app ruff check . --fix
+
 format:
 	$(DOCKER_COMPOSE) exec app ruff format .
+
+dashboard-test:
+	$(DOCKER_COMPOSE) exec -T dashboard npm test
+
+dashboard-lint:
+	$(DOCKER_COMPOSE) exec -T dashboard npm run lint
+
+dashboard-build:
+	$(DOCKER_COMPOSE) exec -T dashboard npm run build
 
 logs:
 	$(DOCKER_COMPOSE_MEMORY) logs -f
@@ -99,6 +111,15 @@ logs-toolbox:
 toolbox-health:
 	$(DOCKER_COMPOSE) exec -T app python -c "import urllib.request; urllib.request.urlopen('http://toolbox:5000/api/toolset', timeout=3).read()"
 
+local-llm-start:
+	bash ops/start_local_llm.sh
+
+local-llm-stop:
+	bash ops/stop_local_llm.sh
+
+local-llm-logs:
+	tail -f $${LLAMA_CPP_LOG_FILE:-/tmp/swingtradev3-llama.log}
+
 local-llm-health:
 	$(DOCKER_COMPOSE) exec -T app python -m ops.local_llm_smoke --health-only
 
@@ -111,6 +132,9 @@ phase13-llm-smoke:
 
 phase13-smoke:
 	$(DOCKER_COMPOSE) exec -T app python -m ops.phase13_smoke
+
+phase14-smoke:
+	$(DOCKER_COMPOSE) exec -T app python -m ops.phase14_smoke
 
 memgraph-shell:
 	$(DOCKER_COMPOSE_MEMORY) exec memgraph mgconsole
@@ -129,7 +153,7 @@ shell:
 	$(DOCKER_COMPOSE) exec app bash
 
 health:
-	$(DOCKER_COMPOSE) exec app sh -lc 'curl -s -H "X-API-Key: $$FASTAPI_API_KEY" http://localhost:8000/health | python3 -m json.tool'
+	$(DOCKER_COMPOSE) exec app sh -lc 'curl --max-time 5 -fsS -H "X-API-Key: $$FASTAPI_API_KEY" http://localhost:8000/health | python3 -m json.tool'
 
 phase0-check:
 	$(DOCKER_COMPOSE) exec app python -m ops.phase0_check

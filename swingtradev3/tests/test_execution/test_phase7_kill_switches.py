@@ -8,11 +8,11 @@ Covers the four new / newly wired auto kill switches:
 
 Plus P4 per-order auth preflight.
 """
+
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 from unittest.mock import AsyncMock, MagicMock, patch
-from uuid import uuid4
 
 import pytest
 
@@ -23,9 +23,7 @@ from execution.failure_tracker import FailureCounter
 from execution.operator_controls import (
     active_block_reasons,
     clear_block_new_entries,
-    is_block_new_entries_active,
     is_exit_only_mode,
-    read_block_new_entries,
     set_block_new_entries,
     set_exit_only_mode,
 )

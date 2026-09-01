@@ -3,6 +3,7 @@ import {
   type LiveEventsState,
   useAgentActivity,
   useCognitionRuns,
+  useExceptionRuns,
   useSessionPlan,
   useTelemetry,
 } from '@/hooks/useDashboardData';
@@ -62,6 +63,7 @@ export function TelemetryScreen({ live }: { live: LiveEventsState }) {
   const telemetryQuery = useTelemetry();
   const activityQuery = useAgentActivity();
   const cognitionQuery = useCognitionRuns(10);
+  const exceptionQuery = useExceptionRuns(10);
   const sessionPlanQuery = useSessionPlan();
   const [logsExpanded, setLogsExpanded] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
@@ -84,6 +86,9 @@ export function TelemetryScreen({ live }: { live: LiveEventsState }) {
   const latestRunDiagnostics = asRecord(latestRunPayload.diagnostics);
   const latestRunDecisions = asArray(latestRunPayload.decisions);
   const latestRunApprovalCount = asCount(latestRunDiagnostics.approval_candidates);
+  const latestException = exceptionQuery.data?.runs[0] ?? null;
+  const latestExceptionPayload = asRecord(latestException?.payload);
+  const latestAdvice = asRecord(latestExceptionPayload.advice);
   const sessionPlan = unwrapSessionPlan(sessionPlanQuery.data?.plan);
   const sessionPlanItems = asArray(sessionPlan.items);
   const sessionPlanBlocks = asArray(sessionPlan.blocked_reasons);
@@ -194,6 +199,23 @@ export function TelemetryScreen({ live }: { live: LiveEventsState }) {
                 </div>
                 <div className="text-[10px] font-mono text-on-surface-variant mt-1 truncate">
                   {asText(sessionPlan.trading_date)}
+                </div>
+              </div>
+              <div className="bg-surface-lowest border border-outline-variant/15 rounded p-3 sm:col-span-2">
+                <div className="text-[10px] uppercase font-mono text-on-surface-variant">Intraday Exception Analyst</div>
+                <div className="flex items-center justify-between gap-2 mt-1">
+                  <div className="text-[13px] font-mono font-bold text-white truncate">
+                    {asText(latestAdvice.advisory_action, exceptionQuery.isLoading ? 'loading' : 'no anomaly')}
+                  </div>
+                  <span className={cn('px-2 py-0.5 rounded border text-[9px] font-mono uppercase shrink-0', statusClass(asText(latestException?.status)))}>
+                    advisory only
+                  </span>
+                </div>
+                <div className="text-[10px] font-mono text-on-surface-variant mt-1 truncate">
+                  {asText(latestAdvice.kind ?? latestExceptionPayload.kind, 'No bounded exception report stored.')}
+                </div>
+                <div className="text-[10px] font-mono text-on-surface-variant mt-1 truncate">
+                  {latestException?.completed_at ? formatIstDateTime(latestException.completed_at) : asText(latestException?.run_id)}
                 </div>
               </div>
             </div>

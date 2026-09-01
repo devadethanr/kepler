@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import csv
 import io
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 from pathlib import Path
 from typing import Any
 from urllib.parse import urljoin
@@ -18,6 +18,7 @@ from bs4 import BeautifulSoup
 
 from paths import CONTEXT_DIR
 from storage import read_json, write_json
+from time_utils import parse_datetime_utc, utc_now
 
 
 class InstitutionalFlowsTool:
@@ -48,7 +49,7 @@ class InstitutionalFlowsTool:
         if not fetched_at:
             return None
         try:
-            age = datetime.utcnow() - datetime.fromisoformat(str(fetched_at))
+            age = utc_now() - parse_datetime_utc(fetched_at)
         except ValueError:
             return None
         if age > timedelta(hours=self.ttl_hours):
@@ -56,7 +57,7 @@ class InstitutionalFlowsTool:
         return payload.get("data")
 
     def _store(self, payload: dict[str, Any]) -> dict[str, Any]:
-        write_json(self.cache_path, {"fetched_at": datetime.utcnow().isoformat(), "data": payload})
+        write_json(self.cache_path, {"fetched_at": utc_now().isoformat(), "data": payload})
         return payload
 
     def _extract_csv_url(self, html: str, base_url: str) -> str:
@@ -146,7 +147,7 @@ class InstitutionalFlowsTool:
         # Update cache with new data
         full_cache = read_json(self.cache_path, {})
         full_cache.setdefault("data", {})["fii_dii"] = result
-        full_cache["fetched_at"] = datetime.utcnow().isoformat()
+        full_cache["fetched_at"] = utc_now().isoformat()
         write_json(self.cache_path, full_cache)
 
         return result
@@ -190,7 +191,7 @@ class InstitutionalFlowsTool:
         # Update full cache
         full_cache = read_json(self.cache_path, {})
         full_cache["data"] = result
-        full_cache["fetched_at"] = datetime.utcnow().isoformat()
+        full_cache["fetched_at"] = utc_now().isoformat()
         write_json(self.cache_path, full_cache)
 
         return result

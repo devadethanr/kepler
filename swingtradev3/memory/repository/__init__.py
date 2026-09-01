@@ -37,8 +37,27 @@ from .scan import ScanRepository
 from .trades import TradeRepository
 
 # Re-export for backwards compatibility
-from .memory_repository import MemoryRepository  # noqa: F401
-from .events import EventRepository  # noqa: F401
+from .memory_repository import MemoryRepository
 
 # Re-export models that old code imports from memory.repositories
-from ..models import StoredKiteSessionPayload  # noqa: F401
+from ..models import StoredKiteSessionPayload
+
+__all__ = [
+    "AccountRepository",
+    "ApprovalRepository",
+    "BrokerRepository",
+    "CognitionRepository",
+    "EntryIntentRepository",
+    "EventRepository",
+    "FailureRepository",
+    "MemoryRepository",
+    "NewsRepository",
+    "OperatorRepository",
+    "OrderIntentRepository",
+    "PolicyRepository",
+    "PositionRepository",
+    "ReconciliationRepository",
+    "ScanRepository",
+    "StoredKiteSessionPayload",
+    "TradeRepository",
+]

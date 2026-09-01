@@ -9,10 +9,8 @@ from data.market_regime import MarketRegimeDetector
 from memory.db import session_scope
 from memory.repository import MemoryRepository
 from models import AccountState, PositionState
-from paths import CONTEXT_DIR
 from policy.effective_policy import new_entries_block_reason
 from regime_adapter import RegimeAdaptiveConfig
-from storage import read_json, write_json
 from tools.execution.alerts import AlertsTool
 from tools.execution.gtt_manager import GTTManager
 from tools.execution.order_execution import OrderExecutionTool
@@ -55,7 +53,6 @@ OPEN_BROKER_ORDER_STATUSES = {
     "after_market_order_req_received",
     "validation_pending",
 }
-APPROVALS_PATH = CONTEXT_DIR / "pending_approvals.json"
 ENTRY_BLOCK_ALERT_COOLDOWN_SECONDS = 15 * 60
 SESSION_SCOPED_ENTRY_BLOCK_REASONS = {
     "broker_disconnected",
@@ -1079,27 +1076,36 @@ class ExecutionCoordinator:
             )
 
     def _clear_approval_execution_request(self, order_intent_id: str) -> None:
-        payload = read_json(APPROVALS_PATH, [])
-        changed = False
-        for item in payload:
-            if str(item.get("order_intent_id") or "").strip() != order_intent_id:
-                continue
-            if item.get("execution_requested") is not False:
+        with session_scope() as session:
+            repo = MemoryRepository(session)
+            payload = repo.get_pending_approvals_payload()
+            changed = False
+            for item in payload:
+                if str(item.get("order_intent_id") or "").strip() != order_intent_id:
+                    continue
                 item["execution_requested"] = False
-                changed = True
-            if item.get("execution_request_id") is not None:
                 item["execution_request_id"] = None
                 changed = True
-        if changed:
-            write_json(APPROVALS_PATH, payload)
+            if changed:
+                repo.replace_pending_approvals(
+                    payload,
+                    source="execution_coordinator_clear_request",
+                )
 
     def _remove_pending_approval(self, order_intent_id: str) -> None:
-        payload = read_json(APPROVALS_PATH, [])
-        next_payload = [
-            item for item in payload if str(item.get("order_intent_id") or "").strip() != order_intent_id
-        ]
-        if len(next_payload) != len(payload):
-            write_json(APPROVALS_PATH, next_payload)
+        with session_scope() as session:
+            repo = MemoryRepository(session)
+            payload = repo.get_pending_approvals_payload()
+            next_payload = [
+                item
+                for item in payload
+                if str(item.get("order_intent_id") or "").strip() != order_intent_id
+            ]
+            if len(next_payload) != len(payload):
+                repo.replace_pending_approvals(
+                    next_payload,
+                    source="execution_coordinator_remove_pending",
+                )
 
     def _derive_intent_status(
         self,

@@ -41,7 +41,7 @@ class PolicyProposalWriter:
             severity = pattern.get("severity", "")
 
             if "order_submission" in event_type.lower() and severity == "critical":
-                proposal = self._propose_overlay(
+                proposal = self.propose_overlay(
                     key="max_position_size_pct",
                     value=5.0,  # reduce risk
                     proposer=proposer,
@@ -51,7 +51,7 @@ class PolicyProposalWriter:
                     proposals.append(proposal)
 
             if "reconcile" in event_type.lower() or "connection" in event_type.lower():
-                proposal = self._propose_overlay(
+                proposal = self.propose_overlay(
                     key="new_entries_enabled",
                     value=False,
                     proposer=proposer,
@@ -81,7 +81,7 @@ class PolicyProposalWriter:
 
         for sector, count in sector_mentions.items():
             if count >= 3:
-                proposal = self._propose_overlay(
+                proposal = self.propose_overlay(
                     key="max_same_sector_positions",
                     value=max(1, 5 - count),
                     proposer=proposer,
@@ -108,7 +108,7 @@ class PolicyProposalWriter:
         proposals = []
         if len(losses) > len(wins) * 2 and len(trades) >= 8:
             # Many losses — tighten stop
-            proposal = self._propose_overlay(
+            proposal = self.propose_overlay(
                 key="trail_stop_at_pct",
                 value=3.0,
                 proposer=proposer,
@@ -146,7 +146,7 @@ class PolicyProposalWriter:
         except Exception:
             return []
 
-    def _propose_overlay(
+    def propose_overlay(
         self,
         *,
         key: str,

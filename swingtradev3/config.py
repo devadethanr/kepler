@@ -359,10 +359,29 @@ class LLMConfig(BaseModel):
 # LEARNING
 # ═══════════════════════════════════════════════════════════
 
+class ExceptionReasoningConfig(BaseModel):
+    enabled: bool = True
+    scan_interval_minutes: int = 5
+    max_cases_per_cycle: int = 3
+    max_evidence_items: int = 12
+    max_prompt_chars: int = 12000
+    allowed_kinds: list[str] = Field(
+        default_factory=lambda: [
+            "broker_inconsistency",
+            "major_gap_or_shock",
+            "corporate_action_surprise",
+            "unexpected_regime_break",
+        ]
+    )
+
+
 class LearningConfig(BaseModel):
     min_trades_for_lesson: int
     min_trades_for_kelly: int
     max_lessons_per_month: int
+    exception_reasoning: ExceptionReasoningConfig = Field(
+        default_factory=ExceptionReasoningConfig
+    )
 
 
 # ═══════════════════════════════════════════════════════════
@@ -553,6 +572,7 @@ class DataConfig(BaseModel):
     news_cache_ttl_minutes: int = 60
     fundamentals_cache_ttl_hours: int = 24
     macro_cache_ttl_hours: int = 4
+    model_warmup_enabled: bool = False
 
 
 class ContextGraphConfig(BaseModel):

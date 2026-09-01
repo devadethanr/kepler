@@ -46,6 +46,7 @@ def _approval_payload() -> list[dict[str, object]]:
         }
     ]
 
+
 @pytest.mark.asyncio
 async def test_live_order_blocked_when_live_guard_disabled(monkeypatch):
     monkeypatch.setattr(cfg.trading, "mode", TradingMode.LIVE)
@@ -200,6 +201,7 @@ def test_approval_route_respects_live_guardrails(monkeypatch, persist_approvals)
     monkeypatch.setenv("LIVE_TRADING_ENABLED", "false")
     monkeypatch.setenv("NEW_ENTRIES_ENABLED", "false")
     monkeypatch.setenv("EXIT_ONLY_MODE", "false")
+    monkeypatch.setenv("USE_SLOW_BRAIN", "false")
 
     payload = persist_approvals(_approval_payload())
     mock_broadcast = AsyncMock()
@@ -207,7 +209,9 @@ def test_approval_route_respects_live_guardrails(monkeypatch, persist_approvals)
     monkeypatch.setattr(approvals_route, "project_all_managed_files", lambda: None)
     monkeypatch.setattr(approvals_route.broadcaster, "broadcast", mock_broadcast)
 
-    response = client.post(f"/approvals/{PendingApproval.model_validate(payload[0]).approval_id}/yes")
+    response = client.post(
+        f"/approvals/{PendingApproval.model_validate(payload[0]).approval_id}/yes"
+    )
 
     assert response.status_code == 200
     body = response.json()
@@ -235,7 +239,9 @@ def test_approval_route_rejects_expired_payload(monkeypatch, persist_approvals):
     monkeypatch.setattr(approvals_route, "project_all_managed_files", lambda: None)
     monkeypatch.setattr(approvals_route.broadcaster, "broadcast", mock_broadcast)
 
-    response = client.post(f"/approvals/{PendingApproval.model_validate(expired[0]).approval_id}/yes")
+    response = client.post(
+        f"/approvals/{PendingApproval.model_validate(expired[0]).approval_id}/yes"
+    )
 
     assert response.status_code == 200
     body = response.json()
@@ -260,13 +266,17 @@ def test_approval_route_is_idempotent_for_already_queued_execution(monkeypatch, 
     monkeypatch.setattr(approvals_route, "project_all_managed_files", lambda: None)
     monkeypatch.setattr(approvals_route.broadcaster, "broadcast", mock_broadcast)
 
-    response = client.post(f"/approvals/{PendingApproval.model_validate(payload[0]).approval_id}/yes")
+    response = client.post(
+        f"/approvals/{PendingApproval.model_validate(payload[0]).approval_id}/yes"
+    )
 
     assert response.status_code == 200
     body = response.json()
     assert body["decision"] == "approved"
     assert "already queued" in body["message"].lower()
-    assert payload[0]["order_intent_id"] == PendingApproval.model_validate(payload[0]).order_intent_id
+    assert (
+        payload[0]["order_intent_id"] == PendingApproval.model_validate(payload[0]).order_intent_id
+    )
     with session_scope() as session:
         repo = MemoryRepository(session)
         order_intent = repo.get_order_intent(str(payload[0]["order_intent_id"]))
@@ -288,8 +298,13 @@ async def test_scheduler_position_monitor_requires_live_protection(monkeypatch):
     fake_now = datetime(2026, 4, 16, 10, 0)
 
     with patch("api.tasks.scheduler._now_ist", return_value=fake_now):
-        with patch("storage.read_json", return_value={"positions": [{"ticker": "RELIANCE"}]}):
-            with patch("execution.trailing_engine.TrailingEngine.run_once", new=AsyncMock()) as mock_run:
+        with patch(
+            "api.tasks.scheduler._load_account_state_payload",
+            return_value={"positions": [{"ticker": "RELIANCE"}]},
+        ):
+            with patch(
+                "execution.trailing_engine.TrailingEngine.run_once", new=AsyncMock()
+            ) as mock_run:
                 await scheduler._position_monitor()
 
     mock_run.assert_not_awaited()
@@ -308,8 +323,13 @@ async def test_scheduler_position_monitor_runs_in_live_mode(monkeypatch):
     fake_now = datetime(2026, 4, 16, 10, 0)
 
     with patch("api.tasks.scheduler._now_ist", return_value=fake_now):
-        with patch("storage.read_json", return_value={"positions": [{"ticker": "RELIANCE"}]}):
-            with patch("execution.trailing_engine.TrailingEngine.run_once", new=AsyncMock()) as mock_run:
+        with patch(
+            "api.tasks.scheduler._load_account_state_payload",
+            return_value={"positions": [{"ticker": "RELIANCE"}]},
+        ):
+            with patch(
+                "execution.trailing_engine.TrailingEngine.run_once", new=AsyncMock()
+            ) as mock_run:
                 await scheduler._position_monitor()
 
     mock_run.assert_awaited_once()

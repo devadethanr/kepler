@@ -3,8 +3,12 @@ from __future__ import annotations
 import pytest
 
 from cognition.slow_brain.evidence_assembler import EvidenceAssembler
+from cognition.slow_brain.final_intent_judge import FinalIntentJudge
 from cognition.slow_brain.orchestrator import SlowBrainOrchestrator
 from cognition.slow_brain.regime_synthesizer import RegimeSynthesizer
+from cognition.slow_brain.skeptic_agent import SkepticAgent
+from cognition.slow_brain.thesis_agent import ThesisAgent
+from cognition.llm_client import CognitionLLMClient
 
 
 class FakeMemoryViews:
@@ -45,13 +49,25 @@ def _state(target: float = 140.0) -> dict[str, object]:
     }
 
 
+def _orchestrator(memory_views: FakeMemoryViews) -> SlowBrainOrchestrator:
+    llm = CognitionLLMClient(enabled=False)
+    return SlowBrainOrchestrator(
+        regime_synthesizer=RegimeSynthesizer(memory_views=memory_views),
+        evidence_assembler=EvidenceAssembler(memory_views=memory_views),
+        thesis_agent=ThesisAgent(llm_client=llm),
+        skeptic_agent=SkepticAgent(llm_client=llm),
+        final_judge=FinalIntentJudge(llm_client=llm),
+    )
+
+
 @pytest.mark.asyncio
 async def test_slow_brain_orchestrator_produces_actionable_approval_candidate():
     memory_views = FakeMemoryViews()
-    result = await SlowBrainOrchestrator(
-        regime_synthesizer=RegimeSynthesizer(memory_views=memory_views),
-        evidence_assembler=EvidenceAssembler(memory_views=memory_views),
-    ).run(_state(), run_id="phase13-orchestrator-actionable", persist=False)
+    result = await _orchestrator(memory_views).run(
+        _state(),
+        run_id="phase13-orchestrator-actionable",
+        persist=False,
+    )
 
     assert result.status == "completed"
     assert result.decisions[0].decision == "BUY_ONLY_ABOVE_TRIGGER"
@@ -62,11 +78,11 @@ async def test_slow_brain_orchestrator_produces_actionable_approval_candidate():
 @pytest.mark.asyncio
 async def test_slow_brain_orchestrator_wait_for_pullback_has_no_approval_candidate():
     memory_views = FakeMemoryViews()
-    result = await SlowBrainOrchestrator(
-        regime_synthesizer=RegimeSynthesizer(memory_views=memory_views),
-        evidence_assembler=EvidenceAssembler(memory_views=memory_views),
-    ).run(_state(target=112.0), run_id="phase13-orchestrator-wait", persist=False)
+    result = await _orchestrator(memory_views).run(
+        _state(target=112.0),
+        run_id="phase13-orchestrator-wait",
+        persist=False,
+    )
 
     assert result.decisions[0].decision == "WAIT_FOR_PULLBACK"
     assert result.approval_candidates == []
-

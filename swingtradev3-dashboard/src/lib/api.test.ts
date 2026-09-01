@@ -282,10 +282,10 @@ test('api client fetches Phase 13 cognition runs and reports', async () => {
     });
   });
 
-  const runs = await api.cognitionRuns(5);
+  const runs = await api.cognitionRuns(5, 'phase_13');
   const run = await api.cognitionRun('phase13:run');
 
-  assert.equal(calls[0]?.input, '/api/dashboard/cognition/runs?limit=5');
+  assert.equal(calls[0]?.input, '/api/dashboard/cognition/runs?limit=5&phase=phase_13');
   assert.equal(calls[1]?.input, '/api/dashboard/cognition/runs/phase13%3Arun');
   assert.deepEqual(runs.runs[0]?.payload.diagnostics, {
     scan_candidates: 4,

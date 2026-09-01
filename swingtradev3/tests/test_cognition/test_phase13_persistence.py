@@ -6,8 +6,12 @@ from zoneinfo import ZoneInfo
 import pytest
 
 from cognition.slow_brain.evidence_assembler import EvidenceAssembler
+from cognition.slow_brain.final_intent_judge import FinalIntentJudge
 from cognition.slow_brain.orchestrator import SlowBrainOrchestrator
 from cognition.slow_brain.regime_synthesizer import RegimeSynthesizer
+from cognition.slow_brain.skeptic_agent import SkepticAgent
+from cognition.slow_brain.thesis_agent import ThesisAgent
+from cognition.llm_client import CognitionLLMClient
 from memory.db import session_scope
 from memory.repository import MemoryRepository
 
@@ -53,10 +57,14 @@ async def test_phase13_wait_decision_persists_entry_intent_without_approval():
         "stock_data": {},
     }
     memory_views = FakeMemoryViews()
+    llm = CognitionLLMClient(enabled=False)
 
     result = await SlowBrainOrchestrator(
         regime_synthesizer=RegimeSynthesizer(memory_views=memory_views),
         evidence_assembler=EvidenceAssembler(memory_views=memory_views),
+        thesis_agent=ThesisAgent(llm_client=llm),
+        skeptic_agent=SkepticAgent(llm_client=llm),
+        final_judge=FinalIntentJudge(llm_client=llm),
     ).run(state, run_id=run_id, persist=True)
 
     assert result.approval_candidates == []
@@ -107,4 +115,3 @@ def test_phase13_repository_persists_session_plan():
     assert latest is not None
     assert latest["plan_id"] == plan_id
     assert latest["status"] == "ready"
-

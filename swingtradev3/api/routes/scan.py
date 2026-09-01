@@ -13,9 +13,11 @@ from api.tasks.activity_manager import activity_manager
 
 router = APIRouter()
 
+
 class ScanResponse(BaseModel):
     status: str
     message: str
+
 
 # Concurrency guard — prevents parallel scan corruption
 _scan_lock = asyncio.Lock()
@@ -28,9 +30,11 @@ _DEFAULT_STATUS = {
     "completed_at": None,
 }
 
+
 def _load_status() -> dict:
     """Load scan status from disk (survives restarts)."""
     return read_json(_STATUS_FILE, _DEFAULT_STATUS.copy())
+
 
 def _save_status(status: dict) -> None:
     """Persist scan status to disk."""
@@ -52,27 +56,29 @@ async def run_research_pipeline_bg():
             from google.adk import Runner
             from google.adk.sessions import InMemorySessionService
             from google.genai import types
-            
+
             # Unique session ID per scan to prevent state contamination
             session_id = f"scan_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-            
+
             runner = Runner(
                 app_name="swingtradev3",
                 agent=research_pipeline,
                 session_service=InMemorySessionService(),
-                auto_create_session=True
+                auto_create_session=True,
             )
-            
+
             async for event in runner.run_async(
-                user_id="system", 
+                user_id="system",
                 session_id=session_id,
-                new_message=types.Content(role="user", parts=[types.Part(text="Run research pipeline")])
+                new_message=types.Content(
+                    role="user", parts=[types.Part(text="Run research pipeline")]
+                ),
             ):
                 if hasattr(event, "author") and hasattr(event, "content") and event.content.parts:
                     text = event.content.parts[0].text
                     await activity_manager.start_activity(event.author, text)
                     print(f"[{event.author}] {text}")
-                
+
             status["status"] = "completed"
         except Exception as e:
             status["status"] = "failed"
@@ -83,6 +89,7 @@ async def run_research_pipeline_bg():
             _save_status(status)
             await broadcaster.broadcast("scan_update", status)
 
+
 @router.post("", response_model=ScanResponse)
 async def trigger_scan(background_tasks: BackgroundTasks):
     """Trigger the research scan pipeline."""
@@ -92,9 +99,10 @@ async def trigger_scan(background_tasks: BackgroundTasks):
 
     if _scan_lock.locked():
         return ScanResponse(status="rejected", message="Scan already running (locked)")
-        
+
     background_tasks.add_task(run_research_pipeline_bg)
     return ScanResponse(status="accepted", message="Scan triggered in background")
+
 
 @router.get("/status", response_model=ScanStatusResponse)
 async def scan_status():
@@ -103,7 +111,6 @@ async def scan_status():
     result = None
     if status["status"] == "completed":
         try:
-            import os
             research_dir = CONTEXT_DIR / "research"
             if research_dir.exists():
                 # Find most recent date dir
@@ -119,5 +126,5 @@ async def scan_status():
         status=status["status"],
         started_at=status.get("started_at"),
         completed_at=status.get("completed_at"),
-        result=result
+        result=result,
     )

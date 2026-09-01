@@ -32,16 +32,15 @@ class FinalIntentJudge:
         skeptic: SkepticReport,
         portfolio: PortfolioFitReport,
     ) -> FinalIntentDecision:
-        def fallback() -> FinalIntentDecision:
-            return self._fallback(
-                context=context,
-                regime=regime,
-                thesis=thesis,
-                skeptic=skeptic,
-                portfolio=portfolio,
-            )
+        baseline = self._fallback(
+            context=context,
+            regime=regime,
+            thesis=thesis,
+            skeptic=skeptic,
+            portfolio=portfolio,
+        )
 
-        return await self._llm.generate_structured(
+        proposed = await self._llm.generate_structured(
             prompt=json.dumps(
                 {
                     "candidate": context.candidate.model_dump(mode="json"),
@@ -58,7 +57,44 @@ class FinalIntentJudge:
                 "Return a FinalIntentDecision JSON object. Do not size positions."
             ),
             response_model=FinalIntentDecision,
-            fallback_factory=fallback,
+            fallback_factory=lambda: baseline,
+        )
+        return self._apply_deterministic_boundary(
+            proposed=proposed,
+            baseline=baseline,
+        )
+
+    @staticmethod
+    def _apply_deterministic_boundary(
+        *,
+        proposed: FinalIntentDecision,
+        baseline: FinalIntentDecision,
+    ) -> FinalIntentDecision:
+        """Allow a model to be more conservative, never more permissive than code."""
+        rank = {
+            "AVOID_NO_TRADE": 0,
+            "WAIT_FOR_PULLBACK": 1,
+            "BUY_ONLY_ABOVE_TRIGGER": 2,
+            "BUY_NOW": 3,
+        }
+        model_is_no_more_aggressive = rank[proposed.decision] <= rank[baseline.decision]
+        decision = proposed.decision if model_is_no_more_aggressive else baseline.decision
+        bias = proposed.bias if model_is_no_more_aggressive else baseline.bias
+        reason = proposed.confidence_reasoning.strip() or baseline.confidence_reasoning
+        if not model_is_no_more_aggressive:
+            reason = f"Deterministic gate: {baseline.confidence_reasoning}"
+
+        return baseline.model_copy(
+            update={
+                "decision": decision,
+                "bias": bias,
+                "confidence_score": min(
+                    proposed.confidence_score,
+                    baseline.confidence_score,
+                ),
+                "confidence_reasoning": reason,
+                "risk_flags": sorted(set([*baseline.risk_flags, *proposed.risk_flags])),
+            }
         )
 
     def _fallback(

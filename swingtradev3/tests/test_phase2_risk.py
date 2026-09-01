@@ -1,5 +1,5 @@
 """Tests for Phase 2.4: Risk Enhancement"""
-import pytest
+
 import pandas as pd
 import numpy as np
 
@@ -7,6 +7,10 @@ from risk.correlation_checker import CorrelationChecker
 
 
 class TestCorrelationChecker:
+    @staticmethod
+    def _candles(returns: pd.Series) -> pd.DataFrame:
+        return pd.DataFrame({"close": 100 * (1 + returns).cumprod()})
+
     def test_single_position_no_risk(self):
         checker = CorrelationChecker()
         result = checker.check([{"ticker": "RELIANCE", "quantity": 10, "entry_price": 2850}])
@@ -15,10 +19,12 @@ class TestCorrelationChecker:
 
     def test_insufficient_data(self):
         checker = CorrelationChecker()
-        result = checker.check([
-            {"ticker": "RELIANCE", "quantity": 10, "entry_price": 2850},
-            {"ticker": "TCS", "quantity": 5, "entry_price": 3800},
-        ])
+        result = checker.check(
+            [
+                {"ticker": "RELIANCE", "quantity": 10, "entry_price": 2850},
+                {"ticker": "TCS", "quantity": 5, "entry_price": 3800},
+            ]
+        )
         # Without Kite session, returns None for correlation
         assert result["approved"] is True
 
@@ -31,6 +37,7 @@ class TestCorrelationChecker:
             "TCS": pd.Series(np.random.randn(60) * 0.015, index=dates),
             "HDFCBANK": pd.Series(np.random.randn(60) * 0.018, index=dates),
         }
+        checker.fetcher.fetch = lambda ticker, interval: self._candles(returns_data[ticker])
         result = checker.check(
             [
                 {"ticker": "RELIANCE", "quantity": 10, "entry_price": 2850},
@@ -38,15 +45,9 @@ class TestCorrelationChecker:
                 {"ticker": "HDFCBANK", "quantity": 8, "entry_price": 1650},
             ],
         )
-        # With mock data injected via returns_data parameter
-        result_with_data = checker.check(
-            [
-                {"ticker": "RELIANCE", "quantity": 10, "entry_price": 2850},
-                {"ticker": "TCS", "quantity": 5, "entry_price": 3800},
-            ],
-        )
-        # Should return approved with None correlation (no live data)
-        assert result_with_data["approved"] is True
+        assert result["approved"] is True
+        assert result["data_points"] >= 20
+        assert result["max_correlation"] is not None
 
     def test_new_ticker_rejected_on_high_correlation(self):
         """If new ticker would exceed correlation threshold, should be rejected."""
@@ -59,11 +60,11 @@ class TestCorrelationChecker:
             "RELIANCE": pd.Series(base, index=dates),
             "TCS": pd.Series(base * 0.9 + np.random.randn(60) * 0.001, index=dates),
         }
-        # This test would need to inject returns_data into the checker
-        # For now, just verify the structure works
+        checker.fetcher.fetch = lambda ticker, interval: self._candles(returns_data[ticker])
         result = checker.check(
             [{"ticker": "RELIANCE", "quantity": 10, "entry_price": 2850}],
             new_ticker="TCS",
         )
-        assert "approved" in result
-        assert "correlation_matrix" in result
+        assert result["approved"] is False
+        assert result["max_correlation"] > checker.max_correlation
+        assert result["max_correlation_pair"] == ("RELIANCE", "TCS")

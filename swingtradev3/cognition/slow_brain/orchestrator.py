@@ -114,7 +114,9 @@ class SlowBrainOrchestrator:
                 regime=regime,
             )
             thesis = await self._thesis_agent.analyze(context=context, regime=regime)
+            thesis = thesis.model_copy(update={"ticker": context.ticker})
             skeptic = await self._skeptic_agent.analyze(context=context, thesis=thesis)
+            skeptic = skeptic.model_copy(update={"ticker": context.ticker})
             portfolio = self._portfolio_judge.judge(
                 context=context,
                 thesis=thesis,
@@ -128,7 +130,13 @@ class SlowBrainOrchestrator:
                 skeptic=skeptic,
                 portfolio=portfolio,
             )
-            decision.report_id = _report_id(run_id, candidate.ticker, "final_intent_judge")
+            decision = decision.model_copy(
+                update={
+                    "ticker": context.ticker,
+                    "run_id": run_id,
+                    "report_id": _report_id(run_id, candidate.ticker, "final_intent_judge"),
+                }
+            )
             # Ensure all source report IDs are populated (LLM may not return them)
             decision.source_reports["thesis"] = thesis.report_id
             decision.source_reports["skeptic"] = skeptic.report_id

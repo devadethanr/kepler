@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import asyncio
 from datetime import datetime, time as dt_time
+from unittest.mock import AsyncMock
 from zoneinfo import ZoneInfo
 
 import pytest
@@ -271,6 +272,43 @@ class TestSchedulerPhases:
         assert len(published) == 1
         assert published[0].type == EventType.MARKET_NEWS_DIGEST
         assert published[0].payload["item_count"] == 1
+
+    @pytest.mark.asyncio
+    async def test_observation_logging_runs_pending_trade_reviews(self, monkeypatch):
+        from agents.learning.reviewer import TradeReviewerAgent
+        from api.tasks.scheduler import TradingScheduler
+
+        review_pending = AsyncMock(return_value={"status": "completed", "reviewed": 2})
+        monkeypatch.setattr(TradeReviewerAgent, "review_pending", review_pending)
+
+        await TradingScheduler()._observation_logging()
+
+        review_pending.assert_awaited_once_with()
+
+    @pytest.mark.asyncio
+    async def test_monthly_policy_analysis_only_runs_on_configured_day(self, monkeypatch):
+        from agents.learning.lesson_agent import LessonAgent
+        from api.tasks import scheduler as scheduler_module
+        from api.tasks.scheduler import TradingScheduler
+
+        propose = AsyncMock(return_value={"status": "completed", "proposal_count": 0})
+        monkeypatch.setattr(LessonAgent, "propose_monthly_overlays", propose)
+        monkeypatch.setattr(
+            scheduler_module,
+            "_now_ist",
+            lambda: datetime(
+                2026,
+                6,
+                scheduler_module.cfg.research.analyst_loop.day_of_month,
+                18,
+                0,
+                tzinfo=ZoneInfo("Asia/Kolkata"),
+            ),
+        )
+
+        await TradingScheduler()._monthly_policy_analysis()
+
+        propose.assert_awaited_once_with()
 
     def test_morning_briefing_filters_to_pending_latest_approvals(self):
         from api.tasks.morning_briefing import _is_actionable_latest_approval

@@ -119,11 +119,18 @@ class CognitionRepository:
             return None
         return self._run_payload(row)
 
-    def list_cognition_runs(self, *, limit: int = 50) -> list[dict[str, Any]]:
+    def list_cognition_runs(
+        self,
+        *,
+        limit: int = 50,
+        phase: str | None = None,
+    ) -> list[dict[str, Any]]:
         bounded = max(1, min(int(limit), 200))
+        statement = select(models_module.CognitionRunRow)
+        if phase:
+            statement = statement.where(models_module.CognitionRunRow.phase == phase)
         rows = self.session.scalars(
-            select(models_module.CognitionRunRow)
-            .order_by(
+            statement.order_by(
                 models_module.CognitionRunRow.started_at.desc(),
                 models_module.CognitionRunRow.run_id.asc(),
             )
@@ -251,4 +258,3 @@ class CognitionRepository:
             .limit(bounded)
         ).all()
         return [self._plan_payload(row) for row in rows]
-

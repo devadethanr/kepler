@@ -62,6 +62,10 @@ def test_phase13_cognition_dashboard_endpoints_show_run_reports_and_plan():
     assert runs.status_code == 200
     assert any(item["run_id"] == run_id for item in runs.json()["runs"])
 
+    phase_runs = client.get("/dashboard/cognition/runs?limit=20&phase=phase_13")
+    assert phase_runs.status_code == 200
+    assert all(item["phase"] == "phase_13" for item in phase_runs.json()["runs"])
+
     run = client.get(f"/dashboard/cognition/runs/{run_id}")
     assert run.status_code == 200
     assert run.json()["run"]["run_id"] == run_id
@@ -74,4 +78,3 @@ def test_phase13_cognition_dashboard_endpoints_show_run_reports_and_plan():
     plan = client.get("/dashboard/session-plan?trading_date=2026-05-17")
     assert plan.status_code == 200
     assert plan.json()["plan"]["plan_id"] == plan_id
-

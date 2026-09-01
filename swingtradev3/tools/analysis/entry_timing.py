@@ -12,6 +12,7 @@ Checks:
   - Lunch-time volume drop
   - Late-day square-off volatility
 """
+
 from __future__ import annotations
 
 from datetime import datetime, time
@@ -48,7 +49,6 @@ def check_entry_timing(
     now = current_time or datetime.now()
     current_time_obj = now.time()
     risk_factors: list[str] = []
-    wait_minutes: int | None = None
 
     # Check 1: Market open noise (first 30 min: 9:15-9:45)
     market_open = time(9, 15)

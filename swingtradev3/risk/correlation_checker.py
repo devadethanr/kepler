@@ -5,6 +5,7 @@ Checks pairwise correlation between open positions.
 Computes portfolio beta, VaR, and enforces concentration limits.
 Pure validation — says YES/NO, does NOT execute.
 """
+
 from __future__ import annotations
 
 from typing import Any
@@ -12,7 +13,6 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from config import cfg
 from data.kite_fetcher import KiteFetcher
 
 
@@ -22,7 +22,7 @@ class CorrelationChecker:
     MAX_CORRELATION = 0.7  # Default threshold
 
     def __init__(self, max_correlation: float | None = None) -> None:
-        self.max_correlation = max_correlation or self.MAX_CORRELATION
+        self.max_correlation = self.MAX_CORRELATION if max_correlation is None else max_correlation
         self.fetcher = KiteFetcher()
 
     def check(
@@ -123,7 +123,9 @@ class CorrelationChecker:
             if nifty is not None and len(nifty) >= 60:
                 nifty_returns = nifty["close"].pct_change().dropna()
                 portfolio_returns = df.mean(axis=1)
-                aligned = pd.DataFrame({"portfolio": portfolio_returns, "nifty": nifty_returns}).dropna()
+                aligned = pd.DataFrame(
+                    {"portfolio": portfolio_returns, "nifty": nifty_returns}
+                ).dropna()
                 if len(aligned) >= 20:
                     cov = aligned["portfolio"].cov(aligned["nifty"])
                     var = aligned["nifty"].var()

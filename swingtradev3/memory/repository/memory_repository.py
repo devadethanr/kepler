@@ -236,8 +236,13 @@ class MemoryRepository:
     def get_cognition_run(self, run_id: str) -> dict[str, Any] | None:
         return self.cognition.get_cognition_run(run_id)
 
-    def list_cognition_runs(self, *, limit: int = 50) -> list[dict[str, Any]]:
-        return self.cognition.list_cognition_runs(limit=limit)
+    def list_cognition_runs(
+        self,
+        *,
+        limit: int = 50,
+        phase: str | None = None,
+    ) -> list[dict[str, Any]]:
+        return self.cognition.list_cognition_runs(limit=limit, phase=phase)
 
     def upsert_cognition_report(
         self,

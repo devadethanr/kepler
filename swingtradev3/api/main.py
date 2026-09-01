@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import time
+from threading import Thread
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request, Depends
+from fastapi import Depends, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
@@ -24,13 +25,16 @@ from .routes import (
     ws,
 )
 from .middleware.auth import get_api_key
+from config import cfg
 
 START_TIME = time.time()
 
-def load_models():
+def load_models() -> None:
     import logging
+
     try:
         from tools.analysis.sentiment_analysis import _get_finbert
+
         logging.getLogger("swingtradev3").info("Warming up FinBERT model...")
         _get_finbert()
         logging.getLogger("swingtradev3").info("FinBERT warmed up.")
@@ -39,6 +43,7 @@ def load_models():
 
     try:
         from data.timesfm_forecaster import _get_timesfm_model
+
         logging.getLogger("swingtradev3").info("Warming up TimesFM model...")
         _get_timesfm_model()
         logging.getLogger("swingtradev3").info("TimesFM warmed up.")
@@ -49,16 +54,18 @@ def load_models():
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Startup and shutdown events."""
-    # Startup
+    import asyncio
+
     from paths import ensure_runtime_dirs
     from memory.bootstrap import initialize_memory_layer
-    import asyncio
+
     ensure_runtime_dirs()
     await asyncio.to_thread(initialize_memory_layer)
-    
-    # Warm up large models in the background so slow agent execution is purely inference
-    asyncio.create_task(asyncio.to_thread(load_models))
-    
+
+    # A daemon avoids blocking Uvicorn reload/shutdown while preserving opt-in warmup.
+    if cfg.data.model_warmup_enabled:
+        Thread(target=load_models, name="model-warmup", daemon=True).start()
+
     yield
 
 
@@ -67,8 +74,9 @@ app = FastAPI(
     description="Autonomous Swing Trading System API",
     version="2.0.0",
     lifespan=lifespan,
-    dependencies=[Depends(get_api_key)]
+    dependencies=[Depends(get_api_key)],
 )
+
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):

@@ -47,9 +47,7 @@ class QuantStatsMetrics:
 
     def __init__(self) -> None:
         if not QUANTSTATS_AVAILABLE:
-            raise RuntimeError(
-                "quantstats package required. Install: pip install quantstats"
-            )
+            raise RuntimeError("quantstats package required. Install: pip install quantstats")
 
     def from_backtest_result(
         self,
@@ -92,9 +90,7 @@ class QuantStatsMetrics:
             }
 
             report["passed"] = self._check_thresholds(report)
-            report["quantstats_metrics"] = (
-                metrics.to_dict() if hasattr(metrics, "to_dict") else {}
-            )
+            report["quantstats_metrics"] = metrics.to_dict() if hasattr(metrics, "to_dict") else {}
 
             return report
         except Exception as e:
@@ -139,8 +135,7 @@ class QuantStatsMetrics:
         """Check if metrics meet minimum thresholds."""
         return (
             report.get("win_rate", 0) >= cfg.backtest.thresholds.min_win_rate
-            and report.get("profit_factor", 0)
-            >= cfg.backtest.thresholds.min_profit_factor
+            and report.get("profit_factor", 0) >= cfg.backtest.thresholds.min_profit_factor
             and report.get("sharpe", 0) >= cfg.backtest.thresholds.min_sharpe
             and report.get("max_drawdown", 1) <= cfg.backtest.thresholds.max_drawdown
         )
@@ -179,7 +174,6 @@ class QuantStatsMetrics:
 def generate_simple_report(result: Any) -> dict[str, Any]:
     """Generate simple metrics report without QuantStats."""
     trades = result.trades if hasattr(result, "trades") else []
-    equity = result.equity_curve if hasattr(result, "equity_curve") else []
     final = result.final_capital if hasattr(result, "final_capital") else 0
     initial = cfg.backtest.initial_capital
 

@@ -280,6 +280,23 @@ async def handle_regime_change(event: BusEvent) -> None:
         print(f"handle_regime_change: Telegram failed: {e}")
 
 
+async def handle_bounded_exception(event: BusEvent) -> None:
+    """Run Phase 14 advisory analysis only when the deterministic classifier opts in."""
+    if not cfg.learning.exception_reasoning.enabled:
+        return
+    from cognition.intraday import ExceptionAnalyst
+
+    analyst = ExceptionAnalyst()
+    case = analyst.classify_event(event)
+    if case is None:
+        return
+    advice = await analyst.analyze(case)
+    print(
+        f"[EVENT] Exception advice: {case.kind} {case.ticker or 'MARKET'} "
+        f"-> {advice.advisory_action} (advisory_only={advice.advisory_only})"
+    )
+
+
 # ─────────────────────────────────────────────────────────────
 # Registration
 # ─────────────────────────────────────────────────────────────
@@ -295,4 +312,11 @@ def register_all_handlers(bus=None) -> None:
     target_bus.subscribe(EventType.TARGET_HIT, handle_target_hit)
     target_bus.subscribe(EventType.AUTH_EXPIRING, handle_auth_expiring)
     target_bus.subscribe(EventType.REGIME_CHANGE, handle_regime_change)
-    print("EventHandlers: registered 7 handlers")
+    for event_type in (
+        EventType.ERROR,
+        EventType.NEWS_BREAK,
+        EventType.REGIME_CHANGE,
+        EventType.VIX_SPIKE,
+    ):
+        target_bus.subscribe(event_type, handle_bounded_exception)
+    print("EventHandlers: registered 11 handlers")

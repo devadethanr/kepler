@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 from context_graph.projector import GraphProjector
@@ -191,3 +192,44 @@ def test_projector_materializes_position_for_order_intent_event_type() -> None:
     assert any("MERGE (p:Position {id: $position_id})" in query for query, _ in graph.cypher_calls)
     assert any(params.get("position_id") == "position:pos-1" for _, params in graph.cypher_calls)
     assert any("MERGE (oi:OrderIntent {id: $intent_id})" in query for query, _ in graph.cypher_calls)
+
+
+def test_static_context_seed_projects_universes_and_strategy_versions(
+    monkeypatch, tmp_path: Path
+) -> None:
+    class StaticGraph:
+        def __init__(self) -> None:
+            self.indexes: list[str] = []
+            self.stocks: list[str] = []
+            self.memberships: list[tuple[str, str]] = []
+            self.skills: list[dict[str, Any]] = []
+
+        def upsert_index(self, name: str, **kwargs: Any) -> None:
+            self.indexes.append(name)
+
+        def upsert_stock(self, ticker: str, **kwargs: Any) -> None:
+            self.stocks.append(ticker)
+
+        def link_stock_to_index(self, ticker: str, index_name: str, **kwargs: Any) -> None:
+            self.memberships.append((ticker, index_name))
+
+        def upsert_skill_version(self, **kwargs: Any) -> None:
+            self.skills.append(kwargs)
+
+    (tmp_path / "SKILL.md").write_text("# Risk policy\n", encoding="utf-8")
+    (tmp_path / "SKILL.md.staging").write_text("ignore", encoding="utf-8")
+    graph = StaticGraph()
+    projector = GraphProjector(graph_repo=graph)  # type: ignore[arg-type]
+    monkeypatch.setattr(
+        "context_graph.projector.Nifty200Loader.load_entries",
+        lambda self: [{"ticker": "SBIN", "name": "State Bank of India"}],
+    )
+    monkeypatch.setattr("context_graph.projector.read_json", lambda path, default: ["RELIANCE"])
+    monkeypatch.setattr("context_graph.projector.STRATEGY_DIR", tmp_path)
+
+    counts = projector.seed_static_context()
+
+    assert graph.indexes == ["NIFTY 200", "NIFTY 50"]
+    assert graph.memberships == [("SBIN", "NIFTY 200"), ("RELIANCE", "NIFTY 50")]
+    assert counts == {"stocks": 2, "memberships": 2, "skills": 1}
+    assert graph.skills[0]["payload"]["content"] == "# Risk policy\n"

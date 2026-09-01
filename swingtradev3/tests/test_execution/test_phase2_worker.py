@@ -49,13 +49,16 @@ def _approval_payload() -> list[dict[str, object]]:
 
 
 def test_approval_route_queues_worker_execution(monkeypatch, persist_approvals):
+    monkeypatch.setenv("USE_SLOW_BRAIN", "false")
     payload = persist_approvals(_approval_payload())
     mock_broadcast = AsyncMock()
 
     monkeypatch.setattr(approvals_route, "project_all_managed_files", lambda: None)
     monkeypatch.setattr(approvals_route.broadcaster, "broadcast", mock_broadcast)
 
-    response = client.post(f"/approvals/{PendingApproval.model_validate(payload[0]).approval_id}/yes")
+    response = client.post(
+        f"/approvals/{PendingApproval.model_validate(payload[0]).approval_id}/yes"
+    )
 
     assert response.status_code == 200
     body = response.json()
@@ -102,7 +105,12 @@ async def test_worker_state_machine_advances_active_executions(monkeypatch):
 
 
 @pytest.mark.asyncio
-async def test_worker_expiry_check_handles_ist_aware_approval_timestamps(persist_approvals):
+async def test_worker_expiry_check_handles_ist_aware_approval_timestamps(
+    persist_approvals, monkeypatch
+):
+    monkeypatch.setattr("execution.coordinator.is_trading_enabled", lambda: True)
+    monkeypatch.setattr("execution.coordinator.new_entries_block_reason", lambda: None)
+    monkeypatch.setattr("execution.coordinator.is_exit_only_mode", lambda: False)
     now = datetime.now(ZoneInfo("Asia/Kolkata"))
     payload = _approval_payload()[0]
     payload.update(
@@ -214,7 +222,9 @@ async def test_worker_runs_quote_loop_but_skips_live_broker_reconcile_tasks_in_p
 
     monkeypatch.setattr(cfg.trading, "mode", TradingMode.PAPER)
     monkeypatch.setattr("execution.bootstrap.initialize_memory_layer", MagicMock())
-    monkeypatch.setattr("execution.bootstrap.WorkerLease.acquire", MagicMock(return_value=fake_lease))
+    monkeypatch.setattr(
+        "execution.bootstrap.WorkerLease.acquire", MagicMock(return_value=fake_lease)
+    )
     monkeypatch.setattr("execution.bootstrap.scheduler.start", AsyncMock())
     monkeypatch.setattr("execution.bootstrap.scheduler.stop", AsyncMock())
     monkeypatch.setattr(runtime, "_maintain_broker_stream", AsyncMock())

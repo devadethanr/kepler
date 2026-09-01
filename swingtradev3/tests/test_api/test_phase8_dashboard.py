@@ -354,10 +354,14 @@ def test_health_endpoint_exposes_phase12_memory_status(monkeypatch):
     response = client.get("/health")
 
     assert response.status_code == 200
-    services = response.json()["services"]
+    payload = response.json()
+    services = payload["services"]
     assert services["postgres_memory_views"] == "healthy"
     assert services["memgraph_context_graph"] == "degraded"
     assert services["toolbox"] == "healthy"
+    assert payload["mode"] == cfg.trading.mode.value
+    assert payload["uptime_seconds"] >= 0
+    assert payload["status"] == "degraded"
     assert "local_llm" in services
 
 

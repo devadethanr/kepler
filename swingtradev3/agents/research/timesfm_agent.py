@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, AsyncGenerator
+from typing import AsyncGenerator
 
 from google.adk.agents import BaseAgent
 from google.adk.events import Event
@@ -15,6 +15,7 @@ class TimesfmAgent(BaseAgent):
     """
     TimesFM forecast integration agent.
     """
+
     def __init__(self, ticker: str) -> None:
         super().__init__(name=f"TimesfmAgent_{ticker}")
 
@@ -22,19 +23,23 @@ class TimesfmAgent(BaseAgent):
         ticker = self.name.split("_")[-1]
         tool = TimesFMForecaster()
         kite_fetcher = KiteFetcher()
-        
+
         data = {}
         try:
             candles = await kite_fetcher.fetch_async(ticker, interval="day")
             if candles is not None and not candles.empty:
-                data = await asyncio.to_thread(tool.forecast_price_range, ticker, candles["close"], horizon=20)
+                data = await asyncio.to_thread(
+                    tool.forecast_price_range, ticker, candles["close"], horizon=20
+                )
             else:
                 data = {"error": "insufficient_data"}
-        except Exception as e:
+        except Exception:
             try:
                 candles = await asyncio.to_thread(kite_fetcher.fetch, ticker, interval="day")
                 if candles is not None and not candles.empty:
-                    data = await asyncio.to_thread(tool.forecast_price_range, ticker, candles["close"], horizon=20)
+                    data = await asyncio.to_thread(
+                        tool.forecast_price_range, ticker, candles["close"], horizon=20
+                    )
                 else:
                     data = {"error": "insufficient_data"}
             except Exception as inner_e:
@@ -51,6 +56,6 @@ class TimesfmAgent(BaseAgent):
             author=self.name,
             content=types.Content(
                 role="assistant",
-                parts=[types.Part(text=f"TimesFM forecast generated for {ticker}")]
+                parts=[types.Part(text=f"TimesFM forecast generated for {ticker}")],
             ),
         )

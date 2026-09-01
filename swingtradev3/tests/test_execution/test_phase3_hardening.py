@@ -62,6 +62,7 @@ def _stored_session() -> KiteSessionPayload:
 
 
 def test_approval_route_persists_order_intent_for_worker_queue(monkeypatch, persist_approvals):
+    monkeypatch.setenv("USE_SLOW_BRAIN", "false")
     ticker = f"REL{uuid4().hex[:6]}".upper()
     payload = persist_approvals(_approval_payload(ticker))
     mock_broadcast = AsyncMock()
@@ -69,7 +70,9 @@ def test_approval_route_persists_order_intent_for_worker_queue(monkeypatch, pers
     monkeypatch.setattr(approvals_route, "project_all_managed_files", lambda: None)
     monkeypatch.setattr(approvals_route.broadcaster, "broadcast", mock_broadcast)
 
-    response = client.post(f"/approvals/{PendingApproval.model_validate(payload[0]).approval_id}/yes")
+    response = client.post(
+        f"/approvals/{PendingApproval.model_validate(payload[0]).approval_id}/yes"
+    )
 
     assert response.status_code == 200
     with session_scope() as session:

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import sys
 
 from ops.phase0_check import format_reconcile_report, reconcile_local_state
 

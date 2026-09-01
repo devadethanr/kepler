@@ -2,10 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-import pandas as pd
 
-from agents.research_agent import ResearchAgent
-from backtest.data_fetcher import BacktestDataFetcher
 from backtest.engine import BacktestEngine
 from config import cfg
 from models import TradeRecord, TradingMode

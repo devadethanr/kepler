@@ -5,17 +5,17 @@ Fetches and analyzes options chain data from NSE/Kite.
 Computes: PCR, max pain, IV rank, OI changes, unusual activity.
 Pure computation — no LLM, no decisions.
 """
+
 from __future__ import annotations
 
-from datetime import date, datetime, timedelta
+from datetime import timedelta
 from pathlib import Path
 from typing import Any
 
-import numpy as np
-import pandas as pd
 
 from paths import CONTEXT_DIR
 from storage import read_json, write_json
+from time_utils import parse_datetime_utc, utc_now
 
 
 class OptionsAnalyzer:
@@ -34,7 +34,7 @@ class OptionsAnalyzer:
         if not fetched_at:
             return None
         try:
-            age = datetime.utcnow() - datetime.fromisoformat(str(fetched_at))
+            age = utc_now() - parse_datetime_utc(fetched_at)
         except ValueError:
             return None
         if age > timedelta(minutes=self.ttl_minutes):
@@ -43,7 +43,7 @@ class OptionsAnalyzer:
 
     def _store(self, ticker: str, data: dict[str, Any]) -> dict[str, Any]:
         cache = read_json(self.cache_path, {})
-        cache[ticker] = {"fetched_at": datetime.utcnow().isoformat(), "data": data}
+        cache[ticker] = {"fetched_at": utc_now().isoformat(), "data": data}
         write_json(self.cache_path, cache)
         return data
 
@@ -150,7 +150,7 @@ class OptionsAnalyzer:
             result["vix_regime"] = None
 
         result["source"] = "provided"
-        result["as_of"] = datetime.utcnow().isoformat()
+        result["as_of"] = utc_now().isoformat()
 
         return self._store(ticker, result)
 
