@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 from datetime import date, datetime
 from dataclasses import dataclass, field
 from typing import Any
@@ -10,7 +9,6 @@ import pandas as pd
 from backtest.data_fetcher import BacktestDataFetcher
 from config import cfg
 from models import (
-    AccountState,
     EntryZone,
     PositionState,
     ResearchDecision,
@@ -45,21 +43,6 @@ def add_indicators(df: pd.DataFrame) -> pd.DataFrame:
     true_range = ranges.max(axis=1)
     df["atr_14"] = true_range.rolling(14).mean()
 
-    df["volume_ratio"] = df["volume"] / df["volume"].rolling(20).mean()
-
-    return df
-
-    df = df.copy()
-    df["close"] = pd.to_numeric(df["close"], errors="coerce")
-    df["high"] = pd.to_numeric(df["high"], errors="coerce")
-    df["low"] = pd.to_numeric(df["low"], errors="coerce")
-    df["open"] = pd.to_numeric(df["open"], errors="coerce")
-    df["volume"] = pd.to_numeric(df["volume"], errors="coerce")
-
-    df["rsi_14"] = ta.rsi(df["close"], length=14)
-    df["ema_50"] = ta.ema(df["close"], length=50)
-    df["ema_200"] = ta.ema(df["close"], length=200)
-    df["atr_14"] = ta.atr(df["high"], df["low"], df["close"], length=14)
     df["volume_ratio"] = df["volume"] / df["volume"].rolling(20).mean()
 
     return df
@@ -111,8 +94,6 @@ class BacktestEngine:
             return signals
 
         row = df.iloc[day_idx]
-        prev_row = df.iloc[day_idx - 1]
-
         rsi = row.get("rsi_14")
         ema_50 = row.get("ema_50")
         ema_200 = row.get("ema_200")
@@ -374,9 +355,7 @@ class BacktestEngine:
 
         avg_return = sum(returns) / len(returns) if returns else 0
         std_return = (
-            (sum((r - avg_return) ** 2 for r in returns) / len(returns)) ** 0.5
-            if returns
-            else 1
+            (sum((r - avg_return) ** 2 for r in returns) / len(returns)) ** 0.5 if returns else 1
         )
         sharpe = (avg_return / std_return * (252**0.5)) if std_return > 0 else 0
 

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from datetime import datetime
 from typing import Any
 from zoneinfo import ZoneInfo
 
@@ -40,7 +39,9 @@ class BrokerRepository:
 
     def list_broker_orders(self) -> list[dict[str, Any]]:
         rows = self.session.scalars(
-            select(models_module.BrokerOrderRow).order_by(models_module.BrokerOrderRow.updated_at.desc())
+            select(models_module.BrokerOrderRow).order_by(
+                models_module.BrokerOrderRow.updated_at.desc()
+            )
         ).all()
         return [
             {
@@ -62,7 +63,10 @@ class BrokerRepository:
         rows = self.session.scalars(
             select(models_module.BrokerOrderRow)
             .where(models_module.BrokerOrderRow.broker_tag == normalized)
-            .order_by(models_module.BrokerOrderRow.updated_at.desc(), models_module.BrokerOrderRow.created_at.desc())
+            .order_by(
+                models_module.BrokerOrderRow.updated_at.desc(),
+                models_module.BrokerOrderRow.created_at.desc(),
+            )
         ).all()
         return [
             {

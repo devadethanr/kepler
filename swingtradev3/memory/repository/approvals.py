@@ -2,15 +2,14 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Any
 from zoneinfo import ZoneInfo
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from ..models import ApprovalRow, EntryIntentRow, OrderIntentRow, PendingApproval
-from .. import models as models_module
+from ..models import ApprovalRow, PendingApproval
 from .entry_intents import EntryIntentRepository
 
 
@@ -332,33 +331,37 @@ class ApprovalRepository:
             normalized_payload.append(normalized)
             seen_approval_ids.add(approval_id)
 
+        order_repo = OrderIntentRepository(self.session)
+        entry_repo = EntryIntentRepository(self.session)
+
         for approval_id, row in existing.items():
             if approval_id in seen_approval_ids:
                 continue
-            if row.status in {"pending", "approved"} and not row.execution_requested:
-                row.status = "superseded"
-                row.execution_requested = False
-                row.execution_request_id = None
-                next_payload = dict(row.payload)
-                next_payload["status"] = "superseded"
-                next_payload["execution_requested"] = False
-                next_payload["execution_request_id"] = None
-                row.payload = next_payload
-                continue
             order_intent = (
-                OrderIntentRepository(self.session).get_order_intent(str(row.order_intent_id))
+                order_repo.get_order_intent(str(row.order_intent_id))
                 if row.order_intent_id
                 else None
+            )
+            order_intent_status = (
+                str(order_intent["status"]).strip().lower()
+                if order_intent is not None and order_intent.get("status") not in (None, "")
+                else None
+            )
+            is_unsubmitted_visible_approval = (
+                row.status in VISIBLE_APPROVAL_STATUSES
+                and (
+                    order_intent_status is None
+                    or order_intent_status in ACTIVE_APPROVAL_ORDER_STATUSES
+                )
             )
             next_status = _approval_status(
                 approved=row.approved,
                 execution_requested=False,
-                order_intent_status=(
-                    str(order_intent["status"])
-                    if order_intent is not None
-                    else None
-                ),
+                order_intent_status=order_intent_status,
             )
+            if is_unsubmitted_visible_approval:
+                next_status = "superseded"
+
             row.status = next_status
             row.execution_requested = False
             row.execution_request_id = None
@@ -367,6 +370,45 @@ class ApprovalRepository:
             next_payload["execution_requested"] = False
             next_payload["execution_request_id"] = None
             row.payload = next_payload
+            if not is_unsubmitted_visible_approval:
+                continue
+
+            if row.entry_intent_id:
+                entry_repo.upsert_entry_intent(
+                    entry_intent_id=str(row.entry_intent_id),
+                    ticker=row.ticker,
+                    status="superseded",
+                    approval_id=approval_id,
+                    order_intent_id=str(row.order_intent_id) if row.order_intent_id else None,
+                    payload=next_payload,
+                    source=source,
+                )
+            if row.order_intent_id and (
+                order_intent_status is None
+                or order_intent_status in ACTIVE_APPROVAL_ORDER_STATUSES
+            ):
+                order_payload = dict(order_intent.get("payload") or {}) if order_intent else {}
+                order_payload.update(next_payload)
+                order_repo.upsert_order_intent(
+                    order_intent_id=str(row.order_intent_id),
+                    ticker=row.ticker,
+                    status="superseded",
+                    approval_id=approval_id,
+                    entry_intent_id=str(row.entry_intent_id) if row.entry_intent_id else None,
+                    broker_order_id=(
+                        str(order_intent.get("broker_order_id"))
+                        if order_intent
+                        and order_intent.get("broker_order_id") not in (None, "")
+                        else None
+                    ),
+                    broker_tag=(
+                        str(order_intent.get("broker_tag"))
+                        if order_intent and order_intent.get("broker_tag") not in (None, "")
+                        else None
+                    ),
+                    payload=order_payload,
+                    source=source,
+                )
 
         EventRepository(self.session).append_execution_event(
             event_type="approvals_replaced",
@@ -375,4 +417,5 @@ class ApprovalRepository:
             source=source,
             payload={"count": len(normalized_payload)},
         )
+        self.session.flush()
         return self.get_pending_approvals_payload()

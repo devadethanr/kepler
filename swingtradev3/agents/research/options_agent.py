@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, AsyncGenerator
+from typing import AsyncGenerator
 
 from google.adk.agents import BaseAgent
 from google.adk.events import Event
@@ -14,13 +14,14 @@ class OptionsAgent(BaseAgent):
     """
     Options chain analysis agent.
     """
+
     def __init__(self, ticker: str) -> None:
         super().__init__(name=f"OptionsAgent_{ticker}")
 
     async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, None]:
         ticker = self.name.split("_")[-1]
         tool = OptionsDataTool()
-        
+
         try:
             data = await asyncio.to_thread(tool.get_options_data, ticker)
         except Exception as e:
@@ -36,7 +37,6 @@ class OptionsAgent(BaseAgent):
         yield Event(
             author=self.name,
             content=types.Content(
-                role="assistant",
-                parts=[types.Part(text=f"Options data analyzed for {ticker}")]
+                role="assistant", parts=[types.Part(text=f"Options data analyzed for {ticker}")]
             ),
         )

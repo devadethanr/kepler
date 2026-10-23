@@ -2,15 +2,12 @@
 
 from __future__ import annotations
 
-from datetime import datetime
 from typing import Any
 from zoneinfo import ZoneInfo
 
-from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from paths import CONTEXT_DIR
 
 from ..models import AccountState, PositionState
 from .. import models as models_module
@@ -97,6 +94,7 @@ class AccountRepository:
                 self.session.delete(row_position)
 
         from .events import EventRepository
+
         EventRepository(self.session).append_execution_event(
             event_type="account_state_replaced",
             entity_type="account_state",

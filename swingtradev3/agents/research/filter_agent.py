@@ -30,6 +30,18 @@ FALSE_POSITIVE_TICKER_CONTEXT = {
     "LT": {"larsen", "toubro", "l&t"},
     "OIL": {"oil india", "oil stock", "oil ltd", "oil limited"},
 }
+LEGAL_SUFFIX_WORDS = {
+    "LTD",
+    "LIMITED",
+    "INDIA",
+    "CO",
+    "COMPANY",
+    "CORP",
+    "CORPORATION",
+    "PVT",
+    "PRIVATE",
+    "PLC",
+}
 
 
 class FilterAgent(BaseAgent):
@@ -151,7 +163,7 @@ class FilterAgent(BaseAgent):
                 ticker = entry["ticker"]
                 if self._mentions_stock(text, ticker, entry.get("name") or ticker):
                     mentioned.add(ticker)
-        return list(mentioned)
+        return [entry["ticker"] for entry in entries if entry["ticker"] in mentioned]
 
     @staticmethod
     def _normalize_universe_entries(
@@ -172,16 +184,19 @@ class FilterAgent(BaseAgent):
     @staticmethod
     def _company_aliases(ticker: str, company_name: str) -> set[str]:
         cleaned = re.sub(
-            r"\b(LTD|LIMITED|INDIA|CO|COMPANY|CORP|CORPORATION|PVT|PRIVATE)\b",
+            rf"\b({'|'.join(sorted(LEGAL_SUFFIX_WORDS))})\b",
             " ",
             company_name.upper(),
         )
         words = [word for word in re.split(r"[^A-Z0-9&]+", cleaned) if len(word) >= 3]
         aliases = {ticker.upper()}
-        if words:
+        if len(words) == 1 or (words and words[0] == ticker.upper()):
             aliases.add(words[0])
         if len(words) >= 2:
+            aliases.add(" ".join(words))
             aliases.add(" ".join(words[:2]))
+        if len(words) >= 3:
+            aliases.add(" ".join(words[:3]))
         if "&" in cleaned:
             aliases.add(cleaned.replace("&", "AND"))
         return {alias.strip() for alias in aliases if alias.strip()}
@@ -218,7 +233,9 @@ class FilterAgent(BaseAgent):
         """Detect stocks with unusual options activity."""
         unusual = []
         threshold = filter_cfg.options_pcr_threshold
-        for ticker in universe[:50]:  # Check top 50 for performance
+        scan_limit = int(getattr(filter_cfg, "options_scan_limit", 0) or 0)
+        tickers_to_scan = universe[:scan_limit] if scan_limit > 0 else universe
+        for ticker in tickers_to_scan:
             cached = options_analyzer.get_cached(ticker)
             if (
                 cached

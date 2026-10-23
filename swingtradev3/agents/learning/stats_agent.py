@@ -1,15 +1,14 @@
 from __future__ import annotations
 
-import json
-from typing import Any, AsyncGenerator
+from typing import AsyncGenerator
 
 from google.adk.agents import BaseAgent
 from google.adk.events import Event
 from google.genai import types
 
-from config import cfg
 from paths import CONTEXT_DIR
-from storage import read_json, write_json
+from storage import write_json
+from memory_views import MemoryViewClient
 from models import TradeRecord, StatsSnapshot
 
 
@@ -21,7 +20,10 @@ class StatsAgent(BaseAgent):
         super().__init__(name=name)
 
     async def _run_async_impl(self, ctx) -> AsyncGenerator[Event, None]:
-        trades_payload = read_json(CONTEXT_DIR / "trades.json", [])
+        trades_payload = [
+            dict(item.get("payload") or item)
+            for item in MemoryViewClient().recent_trades(limit=1000)
+        ]
         if not trades_payload:
             yield Event(author=self.name, content=types.Content(role="assistant", parts=[types.Part(text="No closed trades to analyze.")]))
             return

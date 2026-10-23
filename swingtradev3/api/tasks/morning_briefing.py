@@ -3,8 +3,9 @@ from __future__ import annotations
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
 
+from memory.db import session_scope
+from memory.repository import MemoryRepository
 from paths import CONTEXT_DIR
-from storage import read_json
 from models import PendingApproval
 
 
@@ -16,17 +17,9 @@ async def _get_ngrok_url() -> str:
     return "http://localhost:8502"
 
 
-def _latest_research_date() -> date | None:
-    research_dir = CONTEXT_DIR / "research"
-    if not research_dir.exists():
-        return None
-    dated_dirs = sorted([path for path in research_dir.iterdir() if path.is_dir()], reverse=True)
-    for path in dated_dirs:
-        try:
-            return date.fromisoformat(path.name)
-        except ValueError:
-            continue
-    return None
+def _latest_research_date(approvals: list[PendingApproval]) -> date | None:
+    dates = [approval.research_date for approval in approvals]
+    return max(dates) if dates else None
 
 
 def _is_actionable_latest_approval(approval: PendingApproval, latest_research_date: date | None) -> bool:
@@ -55,11 +48,13 @@ async def generate_morning_briefing():
     dashboard_url = await _get_ngrok_url()
 
     # 1. Load pending approvals
-    payload = read_json(CONTEXT_DIR / "pending_approvals.json", [])
-    latest_research_date = _latest_research_date()
+    with session_scope() as session:
+        payload = MemoryRepository(session).get_pending_approvals_payload()
+    parsed_approvals = [PendingApproval.model_validate(item) for item in payload]
+    latest_research_date = _latest_research_date(parsed_approvals)
     approvals = [
         approval
-        for approval in (PendingApproval.model_validate(p) for p in payload)
+        for approval in parsed_approvals
         if _is_actionable_latest_approval(approval, latest_research_date)
     ]
 

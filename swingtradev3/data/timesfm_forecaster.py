@@ -8,7 +8,7 @@ Pure computation — no LLM, no decisions.
 """
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 from pathlib import Path
 from typing import Any
 
@@ -17,6 +17,7 @@ import pandas as pd
 
 from paths import CONTEXT_DIR
 from storage import read_json, write_json
+from time_utils import parse_datetime_utc, utc_now
 
 # TimesFM model loaded lazily — stays loaded after first call
 _TIMESFM_MODEL = None
@@ -52,7 +53,7 @@ class TimesFMForecaster:
         if not fetched_at:
             return None
         try:
-            age = datetime.utcnow() - datetime.fromisoformat(str(fetched_at))
+            age = utc_now() - parse_datetime_utc(fetched_at)
         except ValueError:
             return None
         if age > timedelta(hours=self.ttl_hours):
@@ -62,7 +63,7 @@ class TimesFMForecaster:
     def _store(self, ticker: str, horizon: int, data: dict[str, Any]) -> dict[str, Any]:
         cache = read_json(self.cache_path, {})
         key = f"{ticker}_{horizon}"
-        cache[key] = {"fetched_at": datetime.utcnow().isoformat(), "data": data}
+        cache[key] = {"fetched_at": utc_now().isoformat(), "data": data}
         write_json(self.cache_path, cache)
         return data
 
@@ -152,7 +153,7 @@ class TimesFMForecaster:
             "forecast_pct_change": round(pct_change, 2),
             "horizon": horizon,
             "source": "timesfm",
-            "as_of": datetime.utcnow().isoformat(),
+            "as_of": utc_now().isoformat(),
         }
 
         return self._store(ticker, horizon, result)

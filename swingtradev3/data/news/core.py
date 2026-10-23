@@ -26,6 +26,7 @@ from data.news.constants import (
 from data.news.parsers import extract_tickers_from_text, infer_category
 from data.nifty200_loader import Nifty200Loader
 from storage import read_json, write_json
+from time_utils import parse_datetime_utc, utc_now
 
 
 class NewsCoreMixin:
@@ -531,7 +532,7 @@ class NewsCoreMixin:
         if not fetched_at:
             return None
         try:
-            age = datetime.utcnow() - datetime.fromisoformat(str(fetched_at))
+            age = utc_now() - parse_datetime_utc(fetched_at)
         except ValueError:
             return None
         if age > timedelta(minutes=self.ttl_minutes):
@@ -540,7 +541,7 @@ class NewsCoreMixin:
 
     def _store(self, query: str, payload: dict[str, Any]) -> dict[str, Any]:
         cache = self._load_cache()
-        cache[query] = {"fetched_at": datetime.utcnow().isoformat(), "payload": payload}
+        cache[query] = {"fetched_at": utc_now().isoformat(), "payload": payload}
         self._write_cache(cache)
         return payload
 
@@ -705,7 +706,7 @@ class NewsCoreMixin:
         cooldown_hours: int | None = None,
     ) -> tuple[list[dict[str, Any]], dict[str, str], datetime]:
         cooldown = cooldown_hours or int(cfg.research.filter.news_alert_cooldown_hours)
-        now = datetime.utcnow()
+        now = utc_now()
         if self.persist_files:
             try:
                 history = read_json(self.alert_history_path, {})
@@ -719,7 +720,7 @@ class NewsCoreMixin:
         pruned: dict[str, str] = {}
         for key, value in history.items():
             try:
-                seen_at = datetime.fromisoformat(str(value))
+                seen_at = parse_datetime_utc(value)
             except ValueError:
                 continue
             if seen_at >= cutoff:
@@ -833,7 +834,7 @@ class NewsCoreMixin:
         company_name: str | None = None,
     ) -> list[dict[str, Any]]:
         cooldown = cooldown_hours or int(cfg.research.filter.news_alert_cooldown_hours)
-        now = datetime.utcnow()
+        now = utc_now()
         if self.persist_files:
             try:
                 history = read_json(self.alert_history_path, {})
@@ -847,7 +848,7 @@ class NewsCoreMixin:
         pruned: dict[str, str] = {}
         for key, value in history.items():
             try:
-                seen_at = datetime.fromisoformat(str(value))
+                seen_at = parse_datetime_utc(value)
             except ValueError:
                 continue
             if seen_at >= cutoff:

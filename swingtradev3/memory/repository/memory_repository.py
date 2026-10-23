@@ -7,7 +7,7 @@ because ``../repositories.py`` re-exports from this module.
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 from typing import Any
 
 from sqlalchemy.orm import Session
@@ -18,6 +18,7 @@ from . import (
     AccountRepository,
     ApprovalRepository,
     BrokerRepository,
+    CognitionRepository,
     EntryIntentRepository,
     EventRepository,
     FailureRepository,
@@ -27,6 +28,7 @@ from . import (
     PolicyRepository,
     PositionRepository,
     ReconciliationRepository,
+    ScanRepository,
     TradeRepository,
 )
 
@@ -45,6 +47,7 @@ class MemoryRepository:
         self._account: AccountRepository | None = None
         self._approval: ApprovalRepository | None = None
         self._broker: BrokerRepository | None = None
+        self._cognition: CognitionRepository | None = None
         self._entry_intent: EntryIntentRepository | None = None
         self._event: EventRepository | None = None
         self._failure: FailureRepository | None = None
@@ -54,6 +57,7 @@ class MemoryRepository:
         self._policy: PolicyRepository | None = None
         self._position: PositionRepository | None = None
         self._reconciliation: ReconciliationRepository | None = None
+        self._scan: ScanRepository | None = None
         self._trade: TradeRepository | None = None
 
     @property
@@ -73,6 +77,12 @@ class MemoryRepository:
         if self._broker is None:
             self._broker = BrokerRepository(self._session)
         return self._broker
+
+    @property
+    def cognition(self) -> CognitionRepository:
+        if self._cognition is None:
+            self._cognition = CognitionRepository(self._session)
+        return self._cognition
 
     @property
     def entry_intents(self) -> EntryIntentRepository:
@@ -134,6 +144,12 @@ class MemoryRepository:
             self._trade = TradeRepository(self._session)
         return self._trade
 
+    @property
+    def scan(self) -> ScanRepository:
+        if self._scan is None:
+            self._scan = ScanRepository(self._session)
+        return self._scan
+
     # ── delegate methods (backwards-compatible API) ─────────────────
 
     def _sync_account_state_position_payload(
@@ -193,6 +209,103 @@ class MemoryRepository:
 
     def get_latest_execution_event_id(self) -> int | None:
         return self.events.get_latest_execution_event_id()
+
+    # ── cognition audit ────────────────────────────────────────────
+
+    def upsert_cognition_run(
+        self,
+        *,
+        run_id: str,
+        phase: str,
+        status: str,
+        started_at: datetime | None = None,
+        completed_at: datetime | None = None,
+        payload: dict[str, Any] | None = None,
+        source: str,
+    ) -> dict[str, Any]:
+        return self.cognition.upsert_cognition_run(
+            run_id=run_id,
+            phase=phase,
+            status=status,
+            started_at=started_at,
+            completed_at=completed_at,
+            payload=payload,
+            source=source,
+        )
+
+    def get_cognition_run(self, run_id: str) -> dict[str, Any] | None:
+        return self.cognition.get_cognition_run(run_id)
+
+    def list_cognition_runs(
+        self,
+        *,
+        limit: int = 50,
+        phase: str | None = None,
+    ) -> list[dict[str, Any]]:
+        return self.cognition.list_cognition_runs(limit=limit, phase=phase)
+
+    def upsert_cognition_report(
+        self,
+        *,
+        report_id: str,
+        run_id: str,
+        ticker: str | None,
+        agent_name: str,
+        schema_version: str,
+        status: str,
+        payload: dict[str, Any],
+        source: str,
+    ) -> dict[str, Any]:
+        return self.cognition.upsert_cognition_report(
+            report_id=report_id,
+            run_id=run_id,
+            ticker=ticker,
+            agent_name=agent_name,
+            schema_version=schema_version,
+            status=status,
+            payload=payload,
+            source=source,
+        )
+
+    def list_cognition_reports(
+        self,
+        *,
+        run_id: str | None = None,
+        ticker: str | None = None,
+        limit: int = 100,
+    ) -> list[dict[str, Any]]:
+        return self.cognition.list_cognition_reports(
+            run_id=run_id,
+            ticker=ticker,
+            limit=limit,
+        )
+
+    def upsert_session_execution_plan(
+        self,
+        *,
+        plan_id: str,
+        trading_date: date | str,
+        status: str,
+        payload: dict[str, Any],
+        source: str,
+    ) -> dict[str, Any]:
+        return self.cognition.upsert_session_execution_plan(
+            plan_id=plan_id,
+            trading_date=trading_date,
+            status=status,
+            payload=payload,
+            source=source,
+        )
+
+    def latest_session_execution_plan(
+        self,
+        *,
+        trading_date: date | str | None = None,
+    ) -> dict[str, Any] | None:
+        return self.cognition.latest_session_execution_plan(trading_date=trading_date)
+
+    def list_session_execution_plans(self, *, limit: int = 20) -> list[dict[str, Any]]:
+        return self.cognition.list_session_execution_plans(limit=limit)
 
     # ── news ────────────────────────────────────────────────────────
 

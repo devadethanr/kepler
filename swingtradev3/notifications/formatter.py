@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Any
-
 
 class NotificationFormatter:
     @staticmethod
@@ -35,7 +33,7 @@ class NotificationFormatter:
         exit_reason: str,
     ) -> str:
         emoji = "💚" if pnl_amount >= 0 else "❤️"
-        
+
         reason_map = {
             "target": "🎯 Target Hit",
             "stop": "🛡️ Stop Loss",
@@ -116,8 +114,8 @@ class NotificationFormatter:
     @staticmethod
     def no_setup_alert() -> str:
         return (
-            f"📭 No Trade Setups Today\n"
-            f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-            f"No stocks met the criteria today.\n"
-            f"Will scan again tomorrow."
+            "📭 No Trade Setups Today\n"
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            "No stocks met the criteria today.\n"
+            "Will scan again tomorrow."
         )

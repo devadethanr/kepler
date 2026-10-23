@@ -46,6 +46,30 @@ def _ist_time(time_str: str) -> str:
     return time_str
 
 
+def _load_account_state_payload() -> dict[str, object]:
+    from memory.db import session_scope
+    from memory.repository import MemoryRepository
+
+    with session_scope() as session:
+        return MemoryRepository(session).get_account_state_payload()
+
+
+def _load_pending_approvals() -> list[dict[str, object]]:
+    from memory.db import session_scope
+    from memory.repository import MemoryRepository
+
+    with session_scope() as session:
+        return MemoryRepository(session).get_pending_approvals_payload()
+
+
+def _store_account_state_payload(payload: dict[str, object], *, source: str) -> None:
+    from memory.db import session_scope
+    from memory.repository import MemoryRepository
+
+    with session_scope() as session:
+        MemoryRepository(session).replace_account_state(payload, source=source)
+
+
 class TradingScheduler:
     """
     24-hour autonomous trading scheduler.
@@ -118,6 +142,14 @@ class TradingScheduler:
         schedule.every(mh.intraday_news_minutes).minutes.do(
             self._job, "intraday_news_sweep", self._intraday_news_sweep
         )
+        if cfg.learning.exception_reasoning.enabled:
+            schedule.every(
+                int(cfg.learning.exception_reasoning.scan_interval_minutes)
+            ).minutes.do(
+                self._job,
+                "intraday_exception_scan",
+                self._intraday_exception_scan,
+            )
 
         # ── Phase 4: Post-Market (15:30 → 18:00) ──
         pm = cfg.scheduler.post_market
@@ -133,6 +165,14 @@ class TradingScheduler:
         schedule.every().day.at(_ist_time(pm.observation_logging), IST_ZONE).do(
             self._job, "observation_logging", self._observation_logging
         )
+
+        analyst_loop = cfg.research.analyst_loop
+        if analyst_loop.enabled:
+            schedule.every().day.at(_ist_time(analyst_loop.time), IST_ZONE).do(
+                self._job,
+                "monthly_policy_analysis",
+                self._monthly_policy_analysis,
+            )
 
         # ── Phase 5: Evening Research (18:00 → 21:00) ──
         er = cfg.scheduler.evening_research
@@ -251,14 +291,13 @@ class TradingScheduler:
         """Sweep global news for holdings-relevant events."""
         from data.news import NewsAggregator
         from data.nifty200_loader import Nifty200Loader
-        from storage import read_json
         from models import AccountState
 
         now = _now_ist().time()
         if dt_time(6, 0) <= now < dt_time(22, 0):
             return
 
-        state_data = read_json(CONTEXT_DIR / "state.json", {})
+        state_data = _load_account_state_payload()
         if not state_data or not state_data.get("positions"):
             return
 
@@ -345,9 +384,7 @@ class TradingScheduler:
 
     async def _approval_reminder(self) -> None:
         """08:45 — Remind about pending approvals."""
-        from storage import read_json
-
-        approvals = read_json(CONTEXT_DIR / "pending_approvals.json", [])
+        approvals = _load_pending_approvals()
         pending = [a for a in approvals if a.get("approved") is None]
         if pending:
             print(f"[{_now_ist().isoformat()}] {len(pending)} pending approval(s)")
@@ -364,9 +401,7 @@ class TradingScheduler:
     async def _premarket_setup(self) -> None:
         """09:00 — Prepare approved orders for market open."""
         print(f"[{_now_ist().isoformat()}] Pre-market setup: checking approved orders...")
-        from storage import read_json
-
-        approvals = read_json(CONTEXT_DIR / "pending_approvals.json", [])
+        approvals = _load_pending_approvals()
         approved = [a for a in approvals if a.get("approved") is True]
         if approved:
             print(f"  → {len(approved)} approved orders ready for placement")
@@ -447,11 +482,10 @@ class TradingScheduler:
         if not self._live_protection_enabled():
             return
 
-        from storage import read_json
         from execution.runtime_context import get_broker_stream, get_mutation_lock
         from execution.trailing_engine import TrailingEngine
 
-        state_data = read_json(CONTEXT_DIR / "state.json", {})
+        state_data = _load_account_state_payload()
         if not state_data or not state_data.get("positions"):
             return
 
@@ -474,10 +508,9 @@ class TradingScheduler:
 
         from data.news import NewsAggregator
         from data.nifty200_loader import Nifty200Loader
-        from storage import read_json
         from models import AccountState
 
-        state_data = read_json(CONTEXT_DIR / "state.json", {})
+        state_data = _load_account_state_payload()
         if not state_data or not state_data.get("positions"):
             return
 
@@ -507,6 +540,17 @@ class TradingScheduler:
                     )
                 )
 
+    async def _intraday_exception_scan(self) -> None:
+        """Scan open incidents without entering the deterministic execution path."""
+        now = _now_ist().time()
+        if not is_trading_day(_now_ist()) or not (dt_time(9, 15) <= now <= dt_time(15, 30)):
+            return
+        from cognition.intraday import ExceptionAnalyst
+
+        advice = await ExceptionAnalyst().scan_open_incidents()
+        if advice:
+            print(f"[{_now_ist().isoformat()}] Phase 14 produced {len(advice)} advisory report(s)")
+
     # ─────────────────────────────────────────────────────────────
     # Phase 4: Post-Market
     # ─────────────────────────────────────────────────────────────
@@ -525,11 +569,9 @@ class TradingScheduler:
 
     async def _pnl_calculation(self) -> None:
         """15:45 — Calculate daily PnL."""
-        from storage import read_json, write_json
-        from paths import CONTEXT_DIR
         from models import AccountState
 
-        state_data = read_json(CONTEXT_DIR / "state.json", {})
+        state_data = _load_account_state_payload()
         if not state_data:
             return
 
@@ -539,7 +581,10 @@ class TradingScheduler:
             for pos in state.positions
         )
         state.unrealized_pnl = total_unrealized
-        write_json(CONTEXT_DIR / "state.json", state.model_dump(mode="json"))
+        _store_account_state_payload(
+            state.model_dump(mode="json"),
+            source="scheduler_pnl_calculation",
+        )
         print(f"[{_now_ist().isoformat()}] PnL: unrealized ₹{total_unrealized:.2f}")
 
     async def _fii_dii_final(self) -> None:
@@ -551,8 +596,21 @@ class TradingScheduler:
         print(f"[{_now_ist().isoformat()}] Position reconciliation")
 
     async def _observation_logging(self) -> None:
-        """17:00 — Log trade observations for the learning loop."""
-        print(f"[{_now_ist().isoformat()}] Observation logging completed")
+        """17:00 — Review newly closed trades and write graph observations."""
+        from agents.learning.reviewer import learning_reviewer
+
+        result = await learning_reviewer.review_pending()
+        print(f"[{_now_ist().isoformat()}] Observation logging: {result}")
+
+    async def _monthly_policy_analysis(self) -> None:
+        """Run the bounded lesson agent once on the configured day each month."""
+        analyst_loop = cfg.research.analyst_loop
+        if _now_ist().day != int(analyst_loop.day_of_month):
+            return
+        from agents.learning.lesson_agent import lesson_agent
+
+        result = await lesson_agent.propose_monthly_overlays()
+        print(f"[{_now_ist().isoformat()}] Monthly policy analysis: {result}")
 
     # ─────────────────────────────────────────────────────────────
     # Phase 5: Evening Research
@@ -644,10 +702,9 @@ class TradingScheduler:
 
     async def _daily_summary(self) -> None:
         """21:00 — Send daily summary to Telegram."""
-        from storage import read_json
         from models import AccountState
 
-        state_data = read_json(CONTEXT_DIR / "state.json", {})
+        state_data = _load_account_state_payload()
         pnl = 0.0
         positions_count = 0
         if state_data:

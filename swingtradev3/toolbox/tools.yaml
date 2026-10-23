@@ -1,0 +1,247 @@
+kind: source
+name: swingtrade-postgres
+type: postgres
+host: db
+port: 5432
+database: ${POSTGRES_DB:swingtradev3}
+user: ${POSTGRES_USER:postgres}
+password: ${POSTGRES_PASSWORD:postgres}
+queryParams:
+  options: "-c default_transaction_read_only=on"
+---
+kind: source
+name: swingtrade-memgraph
+type: neo4j
+uri: ${MEMGRAPH_URI:bolt://memgraph:7687}
+user: ${MEMGRAPH_USER:memgraph}
+password: ${MEMGRAPH_PASSWORD:memgraph}
+database: ${MEMGRAPH_DATABASE:memgraph}
+---
+kind: tool
+name: portfolio_risk_snapshot
+type: postgres-sql
+source: swingtrade-postgres
+description: Read the compact portfolio risk snapshot. Read-only; never use for writes.
+statement: |
+  SELECT * FROM portfolio_risk_view LIMIT 1;
+---
+kind: tool
+name: open_positions
+type: postgres-sql
+source: swingtrade-postgres
+description: Read broker-confirmed open position context from the curated view.
+statement: |
+  SELECT * FROM open_positions_view ORDER BY ticker ASC LIMIT 50;
+---
+kind: tool
+name: execution_incidents
+type: postgres-sql
+source: swingtrade-postgres
+description: Read recent execution incidents and failure state from the curated view.
+parameters:
+  - name: limit
+    type: integer
+    description: Maximum rows to return, capped by the caller.
+statement: |
+  SELECT * FROM execution_incidents_view LIMIT $1;
+---
+kind: tool
+name: session_readiness
+type: postgres-sql
+source: swingtrade-postgres
+description: Read operator controls, worker status, and reconciliation readiness.
+statement: |
+  SELECT * FROM session_readiness_view LIMIT 1;
+---
+kind: tool
+name: policy_candidates
+type: postgres-sql
+source: swingtrade-postgres
+description: Read active/proposed policy overlay candidates from the curated policy view.
+statement: |
+  SELECT * FROM policy_effective_view LIMIT 100;
+---
+kind: tool
+name: recent_trades
+type: postgres-sql
+source: swingtrade-postgres
+description: Read recent closed trades from the curated post-trade view.
+parameters:
+  - name: limit
+    type: integer
+    description: Maximum rows to return, capped by the caller.
+statement: |
+  SELECT * FROM recent_trades_view LIMIT $1;
+---
+kind: tool
+name: reconciliation_runs
+type: postgres-sql
+source: swingtrade-postgres
+description: Read recent reconciliation run summaries.
+parameters:
+  - name: limit
+    type: integer
+    description: Maximum rows to return, capped by the caller.
+statement: |
+  SELECT * FROM reconciliation_readiness_view LIMIT $1;
+---
+kind: tool
+name: operator_controls
+type: postgres-sql
+source: swingtrade-postgres
+description: Read current operator controls. Read-only; never mutate controls.
+statement: |
+  SELECT * FROM operator_controls_view LIMIT 100;
+---
+kind: tool
+name: regime_snapshot_context
+type: neo4j-cypher
+source: swingtrade-memgraph
+description: Read recent RegimeSnapshot nodes and linked research run ids.
+parameters:
+  - name: limit
+    type: integer
+    description: Maximum snapshots to return.
+statement: |
+  MATCH (r:RegimeSnapshot)
+  OPTIONAL MATCH (run:ResearchRun)-[:UNDER_REGIME]->(r)
+  RETURN r.id AS id,
+         r.regime AS regime,
+         r.observed_at AS observed_at,
+         r.confidence AS confidence,
+         r.payload_json AS payload,
+         collect(run.id)[..5] AS research_runs
+  ORDER BY coalesce(r.observed_at, r.ingested_at, "") DESC
+  LIMIT $limit
+---
+kind: tool
+name: candidate_memory_context
+type: neo4j-cypher
+source: swingtrade-memgraph
+description: Read prior candidate, run, and signal memory for a ticker.
+parameters:
+  - name: stock_id
+    type: string
+    description: Stock node id, for example stock:RELIANCE.
+  - name: limit
+    type: integer
+    description: Maximum candidate rows to return.
+statement: |
+  MATCH (c:ResearchCandidate)-[:CANDIDATE_FOR]->(s:Stock {id: $stock_id})
+  OPTIONAL MATCH (c)-[:ANALYZED_IN]->(r:ResearchRun)
+  OPTIONAL MATCH (s)-[:HAS_SIGNAL]->(sig:SignalSnapshot)
+  WITH c, r, sig ORDER BY coalesce(sig.observed_at, sig.ingested_at, "") DESC
+  RETURN c.id AS candidate_id,
+         c.ticker AS ticker,
+         c.score AS score,
+         c.setup_type AS setup_type,
+         c.shortlisted AS shortlisted,
+         c.observed_at AS observed_at,
+         c.payload_json AS payload,
+         r.id AS run_id,
+         r.scan_date AS scan_date,
+         collect({id: sig.id, signal_type: sig.signal_type, observed_at: sig.observed_at})[..5] AS signals
+  ORDER BY coalesce(c.observed_at, "") DESC
+  LIMIT $limit
+---
+kind: tool
+name: graph_neighbors
+type: neo4j-cypher
+source: swingtrade-memgraph
+description: Bounded read-only one-hop traversal for research. Relationships and labels are supplied by trusted application code from allow-lists.
+parameters:
+  - name: node_id
+    type: string
+    description: Starting node id.
+  - name: labels
+    type: array
+    items:
+      name: label
+      type: string
+      description: Target node label.
+    description: Allowed target labels.
+  - name: relationships
+    type: array
+    items:
+      name: relationship
+      type: string
+      description: Relationship type.
+    description: Allowed relationship names.
+  - name: limit
+    type: integer
+    description: Maximum rows to return.
+statement: |
+  MATCH (n {id: $node_id})-[r]-(m)
+  WHERE type(r) IN $relationships
+    AND any(label IN labels(m) WHERE label IN $labels)
+  RETURN n.id AS source,
+         m.id AS target,
+         labels(m) AS labels,
+         type(r) AS relationship,
+         properties(m) AS properties,
+         properties(r) AS relationship_properties
+  ORDER BY coalesce(m.observed_at, m.ingested_at, m.updated_at, "") DESC
+  LIMIT $limit
+---
+kind: tool
+name: similar_trades_context
+type: neo4j-cypher
+source: swingtrade-memgraph
+description: Read similar TradeMemory nodes and SIMILAR_TO edges for a ticker.
+parameters:
+  - name: stock_id
+    type: string
+    description: Stock node id, for example stock:RELIANCE.
+  - name: setup_type
+    type: string
+    description: Optional setup type, empty string for all setups.
+  - name: limit
+    type: integer
+    description: Maximum rows to return.
+statement: |
+  MATCH (base:TradeMemory)-[:ABOUT_STOCK]->(:Stock {id: $stock_id})
+  OPTIONAL MATCH (base)-[rel:SIMILAR_TO]->(other:TradeMemory)
+  WITH base, rel, other
+  WHERE $setup_type = "" OR base.setup_type = $setup_type OR other.setup_type = $setup_type
+  RETURN base.id AS base_id,
+         base.ticker AS base_ticker,
+         base.setup_type AS base_setup_type,
+         base.pnl_pct AS base_pnl_pct,
+         other.id AS similar_id,
+         other.ticker AS similar_ticker,
+         other.setup_type AS similar_setup_type,
+         other.pnl_pct AS similar_pnl_pct,
+         other.observed_at AS observed_at,
+         properties(rel) AS relationship
+  ORDER BY coalesce(other.observed_at, base.observed_at, "") DESC
+  LIMIT $limit
+---
+kind: toolset
+name: research_readonly
+tools:
+  - regime_snapshot_context
+  - candidate_memory_context
+  - graph_neighbors
+  - similar_trades_context
+---
+kind: toolset
+name: allocator_readonly
+tools:
+  - portfolio_risk_snapshot
+  - open_positions
+  - policy_candidates
+---
+kind: toolset
+name: posttrade_readonly
+tools:
+  - recent_trades
+  - similar_trades_context
+  - graph_neighbors
+---
+kind: toolset
+name: ops_readonly
+tools:
+  - execution_incidents
+  - session_readiness
+  - reconciliation_runs
+  - operator_controls

@@ -13,6 +13,12 @@ research:
   debate_top_n: 3
   max_shortlist: 7
   max_same_sector_positions: 2
+  slow_brain_enabled: true
+  slow_brain_max_candidates: 6
+  slow_brain_full_debate_candidates: 3
+  slow_brain_lightweight_candidates: 3
+  slow_brain_min_score: 7.0
+  slow_brain_min_confidence_score: 6
   exclude_earnings_within_days: 7
   exclude_corporate_actions_within_days: 5
   async_scan: true
@@ -58,6 +64,7 @@ research:
     market_news_digest_max_items_per_ticker: 2
     market_news_digest_max_general_items: 4
     options_pcr_threshold: 1.2
+    options_scan_limit: 0
     options_oi_spike_pct: 20
     trend_filter_ema: 200
     min_volume_ratio: 1.0
@@ -168,6 +175,17 @@ indicators:
 llm:
   timeout_seconds: 5.0
   max_tool_calls_per_stock: 8
+  local:
+    enabled: true
+    provider: llama_cpp
+    model: "Qwen3-4B-Instruct-2507-Q4_K_M.gguf"
+    base_url: "http://host.docker.internal:8080/v1"
+    health_url: "http://host.docker.internal:8080/health"
+    api_key: "not-needed"
+    timeout_seconds: 30.0
+    max_retries: 1
+    max_tokens: 1200
+    structured_output: true
   roles:
     research:
       provider: nim
@@ -204,6 +222,17 @@ learning:
   min_trades_for_lesson: 8
   min_trades_for_kelly: 20
   max_lessons_per_month: 3
+  exception_reasoning:
+    enabled: true
+    scan_interval_minutes: 5
+    max_cases_per_cycle: 3
+    max_evidence_items: 12
+    max_prompt_chars: 12000
+    allowed_kinds:
+      - broker_inconsistency
+      - major_gap_or_shock
+      - corporate_action_surprise
+      - unexpected_regime_break
 
 schedule:
   auth_refresh: "08:50"
@@ -338,6 +367,7 @@ data:
   news_cache_ttl_minutes: 60
   fundamentals_cache_ttl_hours: 24
   macro_cache_ttl_hours: 4
+  model_warmup_enabled: false
 
 context_graph:
   enabled: true
@@ -350,3 +380,8 @@ context_graph:
   projection_interval_seconds: 30.0
   dashboard_node_limit: 150
   dashboard_edge_limit: 300
+
+toolbox:
+  enabled: true
+  url: "http://toolbox:5000"
+  timeout_seconds: 2.0

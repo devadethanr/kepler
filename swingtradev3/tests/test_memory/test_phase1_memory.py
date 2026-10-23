@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from copy import deepcopy
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 from memory.db import session_scope
 from memory.models import (
@@ -22,6 +24,19 @@ STATE_PATH = CONTEXT_DIR / "state.json"
 TRADES_PATH = CONTEXT_DIR / "trades.json"
 APPROVALS_PATH = CONTEXT_DIR / "pending_approvals.json"
 KITE_SESSION_PATH = CONTEXT_DIR / "auth" / "kite_session.json"
+
+
+def _delete_approval_graph(approval: PendingApproval) -> None:
+    with session_scope() as session:
+        approval_row = session.get(ApprovalRow, approval.approval_id)
+        if approval_row is not None:
+            session.delete(approval_row)
+        entry_row = session.get(EntryIntentRow, approval.entry_intent_id)
+        if entry_row is not None:
+            session.delete(entry_row)
+        order_row = session.get(OrderIntentRow, approval.order_intent_id)
+        if order_row is not None:
+            session.delete(order_row)
 
 
 def test_managed_state_round_trips_through_postgres():
@@ -126,10 +141,73 @@ def test_managed_approvals_and_auth_session_project_from_postgres():
             assert auth_row.access_token == "phase1-access-token"
     finally:
         write_json(APPROVALS_PATH, original_approvals)
+        with session_scope() as session:
+            MemoryRepository(session).replace_pending_approvals(
+                original_approvals,
+                source="test_memory_restore",
+            )
         if original_session:
             write_json(KITE_SESSION_PATH, original_session)
         else:
             write_json(KITE_SESSION_PATH, {})
+
+
+def test_replaced_queued_approval_is_not_left_executable():
+    original_approvals = deepcopy(read_json(APPROVALS_PATH, []))
+    now = datetime.now(ZoneInfo("Asia/Kolkata"))
+    approval_payload = {
+        "ticker": "ZZZTEST",
+        "score": 8.4,
+        "setup_type": "breakout",
+        "entry_zone": {"low": 4000.0, "high": 4010.0},
+        "stop_price": 3920.0,
+        "target_price": 4200.0,
+        "holding_days_expected": 8,
+        "confidence_reasoning": "Replace lifecycle regression",
+        "risk_flags": [],
+        "approved": True,
+        "execution_requested": True,
+        "execution_request_id": "req-replace-lifecycle",
+        "created_at": now.isoformat(),
+        "expires_at": (now + timedelta(hours=4)).isoformat(),
+        "research_date": "2026-05-14",
+        "skill_version": "replace-lifecycle-test",
+    }
+    approval = PendingApproval.model_validate(approval_payload)
+
+    try:
+        with session_scope() as session:
+            repo = MemoryRepository(session)
+            repo.replace_pending_approvals([approval_payload], source="test_memory")
+            session.flush()
+            queued_intent = repo.get_order_intent(str(approval.order_intent_id))
+            assert queued_intent is not None
+            assert queued_intent["status"] == "queued"
+
+            repo.replace_pending_approvals([], source="test_memory_restore")
+
+            approval_row = session.get(ApprovalRow, approval.approval_id)
+            entry_row = session.get(EntryIntentRow, approval.entry_intent_id)
+            order_row = session.get(OrderIntentRow, approval.order_intent_id)
+            assert approval_row is not None
+            assert entry_row is not None
+            assert order_row is not None
+            assert approval_row.status == "superseded"
+            assert entry_row.status == "superseded"
+            assert order_row.status == "superseded"
+            assert repo.get_pending_approvals_payload() == []
+            queued_ids = {
+                str(item["order_intent_id"])
+                for item in repo.list_order_intents_by_status({"queued"})
+            }
+            assert approval.order_intent_id not in queued_ids
+    finally:
+        with session_scope() as session:
+            MemoryRepository(session).replace_pending_approvals(
+                original_approvals,
+                source="test_memory_restore",
+            )
+        _delete_approval_graph(approval)
 
 
 def test_expired_approvals_stay_in_audit_but_not_active_queue():

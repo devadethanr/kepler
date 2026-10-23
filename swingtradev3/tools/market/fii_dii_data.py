@@ -2,9 +2,8 @@ from __future__ import annotations
 
 import csv
 import io
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 from pathlib import Path
-from typing import Any
 from urllib.parse import urljoin
 
 import requests
@@ -12,6 +11,7 @@ from bs4 import BeautifulSoup
 
 from paths import CONTEXT_DIR
 from storage import read_json, write_json
+from time_utils import parse_datetime_utc, utc_now
 
 
 class FiiDiiDataTool:
@@ -36,7 +36,7 @@ class FiiDiiDataTool:
         if not fetched_at:
             return None
         try:
-            age = datetime.utcnow() - datetime.fromisoformat(str(fetched_at))
+            age = utc_now() - parse_datetime_utc(fetched_at)
         except ValueError:
             return None
         if age > timedelta(hours=self.ttl_hours):
@@ -44,7 +44,7 @@ class FiiDiiDataTool:
         return payload.get("data")
 
     def _store(self, payload: dict[str, object]) -> dict[str, object]:
-        write_json(self.cache_path, {"fetched_at": datetime.utcnow().isoformat(), "data": payload})
+        write_json(self.cache_path, {"fetched_at": utc_now().isoformat(), "data": payload})
         return payload
 
     @staticmethod
@@ -74,9 +74,18 @@ class FiiDiiDataTool:
             ).strip()
             if not category:
                 continue
-            buy_value = float(str(row.get("Buy Value") or row.get("Buy") or 0).replace(",", "") or 0)
-            sell_value = float(str(row.get("Sell Value") or row.get("Sell") or 0).replace(",", "") or 0)
-            net_value = float(str(row.get("Net Value") or row.get("Net") or (buy_value - sell_value)).replace(",", "") or 0)
+            buy_value = float(
+                str(row.get("Buy Value") or row.get("Buy") or 0).replace(",", "") or 0
+            )
+            sell_value = float(
+                str(row.get("Sell Value") or row.get("Sell") or 0).replace(",", "") or 0
+            )
+            net_value = float(
+                str(row.get("Net Value") or row.get("Net") or (buy_value - sell_value)).replace(
+                    ",", ""
+                )
+                or 0
+            )
             rows.append(
                 {
                     "category": category,

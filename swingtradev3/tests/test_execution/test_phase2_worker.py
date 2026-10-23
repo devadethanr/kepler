@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta
 from unittest.mock import AsyncMock, MagicMock, patch
+from zoneinfo import ZoneInfo
 
 import pytest
 from fastapi.testclient import TestClient
@@ -10,6 +11,7 @@ from api.main import app
 from api.routes import approvals as approvals_route
 from config import cfg
 from execution.bootstrap import WorkerRuntime
+from execution.coordinator import ExecutionCoordinator
 from execution.operator_controls import read_worker_status, write_worker_status
 from execution.state_machine import WorkerExecutionStateMachine
 from memory.db import session_scope
@@ -47,13 +49,16 @@ def _approval_payload() -> list[dict[str, object]]:
 
 
 def test_approval_route_queues_worker_execution(monkeypatch, persist_approvals):
+    monkeypatch.setenv("USE_SLOW_BRAIN", "false")
     payload = persist_approvals(_approval_payload())
     mock_broadcast = AsyncMock()
 
     monkeypatch.setattr(approvals_route, "project_all_managed_files", lambda: None)
     monkeypatch.setattr(approvals_route.broadcaster, "broadcast", mock_broadcast)
 
-    response = client.post(f"/approvals/{PendingApproval.model_validate(payload[0]).approval_id}/yes")
+    response = client.post(
+        f"/approvals/{PendingApproval.model_validate(payload[0]).approval_id}/yes"
+    )
 
     assert response.status_code == 200
     body = response.json()
@@ -97,6 +102,37 @@ async def test_worker_state_machine_advances_active_executions(monkeypatch):
 
     assert advanced == 2
     advance_mock.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_worker_expiry_check_handles_ist_aware_approval_timestamps(
+    persist_approvals, monkeypatch
+):
+    monkeypatch.setattr("execution.coordinator.is_trading_enabled", lambda: True)
+    monkeypatch.setattr("execution.coordinator.new_entries_block_reason", lambda: None)
+    monkeypatch.setattr("execution.coordinator.is_exit_only_mode", lambda: False)
+    now = datetime.now(ZoneInfo("Asia/Kolkata"))
+    payload = _approval_payload()[0]
+    payload.update(
+        {
+            "approved": True,
+            "execution_requested": True,
+            "execution_request_id": "req-aware-expired",
+            "created_at": (now - timedelta(hours=5)).isoformat(),
+            "expires_at": (now - timedelta(minutes=5)).isoformat(),
+        }
+    )
+    seeded = persist_approvals([payload])
+    order_intent_id = str(seeded[0]["order_intent_id"])
+
+    result = await ExecutionCoordinator().submit_order_intent(order_intent_id)
+
+    assert result == "expired"
+    with session_scope() as session:
+        repo = MemoryRepository(session)
+        order_intent = repo.get_order_intent(order_intent_id)
+    assert order_intent is not None
+    assert order_intent["status"] == "expired"
 
 
 def test_dashboard_scheduler_reads_worker_status():
@@ -186,7 +222,9 @@ async def test_worker_runs_quote_loop_but_skips_live_broker_reconcile_tasks_in_p
 
     monkeypatch.setattr(cfg.trading, "mode", TradingMode.PAPER)
     monkeypatch.setattr("execution.bootstrap.initialize_memory_layer", MagicMock())
-    monkeypatch.setattr("execution.bootstrap.WorkerLease.acquire", MagicMock(return_value=fake_lease))
+    monkeypatch.setattr(
+        "execution.bootstrap.WorkerLease.acquire", MagicMock(return_value=fake_lease)
+    )
     monkeypatch.setattr("execution.bootstrap.scheduler.start", AsyncMock())
     monkeypatch.setattr("execution.bootstrap.scheduler.stop", AsyncMock())
     monkeypatch.setattr(runtime, "_maintain_broker_stream", AsyncMock())

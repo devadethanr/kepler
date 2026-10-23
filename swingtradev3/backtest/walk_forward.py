@@ -4,10 +4,8 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Any
 
-import pandas as pd
 
-from backtest.data_fetcher import BacktestDataFetcher
-from backtest.engine import BacktestEngine, BacktestResult
+from backtest.engine import BacktestEngine
 from config import cfg
 
 
@@ -55,9 +53,7 @@ class WalkForwardValidator:
             if out_sample_end > end:
                 break
 
-            print(
-                f"Window {i + 1}: {in_sample_start.date()} to {out_sample_end.date()}"
-            )
+            print(f"Window {i + 1}: {in_sample_start.date()} to {out_sample_end.date()}")
 
             in_result = self.engine.run(
                 tickers,

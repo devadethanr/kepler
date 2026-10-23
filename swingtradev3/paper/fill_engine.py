@@ -5,6 +5,7 @@ from datetime import datetime
 
 from config import cfg
 from paper.slippage_model import apply_slippage
+from time_utils import utc_now
 
 
 @dataclass
@@ -35,5 +36,5 @@ class FillEngine:
             average_price=price,
             quantity=quantity,
             brokerage=cfg.backtest.brokerage_per_order if brokerage is None else brokerage,
-            filled_at=datetime.utcnow(),
+            filled_at=utc_now(),
         )

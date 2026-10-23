@@ -1,5 +1,5 @@
 """Tests for Phase 2.2: Signal Engine"""
-import pytest
+
 from datetime import datetime
 
 from tools.analysis.sentiment_analysis import SentimentAnalyzer
@@ -54,6 +54,7 @@ class TestCorrelationCheck:
     def test_check_correlation_with_mock_data(self):
         import pandas as pd
         import numpy as np
+
         np.random.seed(42)
         dates = pd.date_range("2025-01-01", periods=60, freq="B")
         returns_data = {

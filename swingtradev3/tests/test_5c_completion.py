@@ -286,10 +286,13 @@ class TestEventHandlers:
         bus = EventBus()
         register_all_handlers(bus)
         
-        # VIX_SPIKE has no handler by design (Phase 5 cleanup: broker-bypassing mutator removed).
+        # VIX_SPIKE only reaches the Phase 14 advisory analyst; it has no broker mutator.
         registered_types = [et for et in EventType if et in bus._handlers and bus._handlers[et]]
         assert len(registered_types) >= 6
-        assert EventType.VIX_SPIKE not in registered_types
+        assert EventType.VIX_SPIKE in registered_types
+        assert [handler.__name__ for handler in bus._handlers[EventType.VIX_SPIKE]] == [
+            "handle_bounded_exception"
+        ]
 
     @pytest.mark.asyncio
     async def test_handle_gtt_triggered(self):

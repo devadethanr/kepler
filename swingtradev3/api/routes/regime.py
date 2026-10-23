@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 from fastapi import APIRouter
-from typing import Any
 
 from tools.analysis.regime_detection import detect_regime
 from models import RegimeState
 
 router = APIRouter()
+
 
 @router.get("", response_model=RegimeState)
 async def get_regime():

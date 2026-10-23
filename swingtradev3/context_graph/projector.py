@@ -10,10 +10,14 @@ Direction: Postgres → Memgraph (one-way, async)
 from __future__ import annotations
 
 import asyncio
+from hashlib import sha256
 from typing import Any
 
 from context_graph.models import ProjectionResult
 from context_graph.repository import ContextGraphRepository, GraphUnavailableError, PROJECTION_VERSION
+from data.nifty200_loader import Nifty200Loader
+from paths import CONTEXT_DIR, STRATEGY_DIR
+from storage import read_json
 
 from memory.db import session_scope
 from memory.repository import MemoryRepository
@@ -47,6 +51,61 @@ class GraphProjector:
     def ensure_schema(self) -> None:
         """Ensure Memgraph schema (constraints, indexes)."""
         self._graph.ensure_schema()
+
+    def seed_static_context(self) -> dict[str, int]:
+        """Idempotently project configured universes and strategy documents."""
+        counts = {"stocks": 0, "memberships": 0, "skills": 0}
+        universes: dict[str, list[dict[str, str]]] = {
+            "NIFTY 200": Nifty200Loader().load_entries(),
+            "NIFTY 50": [
+                {"ticker": str(item), "name": str(item)}
+                for item in read_json(CONTEXT_DIR / "nifty50.json", [])
+                if str(item).strip()
+            ],
+        }
+        for index_name, entries in universes.items():
+            self._graph.upsert_index(
+                index_name,
+                index_type="equity_universe",
+                payload={"member_count": len(entries)},
+                source="static_context_seed",
+            )
+            for item in entries:
+                ticker = str(item.get("ticker") or "").strip().upper()
+                if not ticker:
+                    continue
+                self._graph.upsert_stock(
+                    ticker,
+                    payload={"company_name": item.get("name") or ticker},
+                    source="static_context_seed",
+                )
+                self._graph.link_stock_to_index(
+                    ticker,
+                    index_name,
+                    source="static_context_seed",
+                )
+                counts["stocks"] += 1
+                counts["memberships"] += 1
+
+        for path in sorted(STRATEGY_DIR.glob("*.md")):
+            if path.name.endswith(".staging"):
+                continue
+            content = path.read_text(encoding="utf-8")
+            digest = sha256(content.encode("utf-8")).hexdigest()
+            self._graph.upsert_skill_version(
+                version_id=f"{path.name}:{digest[:16]}",
+                name=path.name,
+                content=content,
+                payload={
+                    "path": str(path.relative_to(STRATEGY_DIR.parent)),
+                    "sha256": digest,
+                    "content": content,
+                },
+                observed_at=path.stat().st_mtime,
+                source="static_context_seed",
+            )
+            counts["skills"] += 1
+        return counts
 
     async def start(self) -> None:
         """Begin the projection loop as a background task."""

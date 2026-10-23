@@ -12,6 +12,7 @@ Domain modules:
     order_intents — OrderIntentRow
     policy        — PolicyOverlayRow
     positions     — PositionRow
+    cognition     — CognitionRunRow, CognitionReportRow, SessionExecutionPlanRow
     reconciliation — ReconciliationRunRow
     trades        — TradeRow
 
@@ -22,6 +23,7 @@ All existing call sites import ``from memory.repository import MemoryRepository`
 from .account import AccountRepository
 from .approvals import ApprovalRepository
 from .broker import BrokerRepository
+from .cognition import CognitionRepository
 from .entry_intents import EntryIntentRepository
 from .events import EventRepository
 from .failure import FailureRepository
@@ -31,11 +33,31 @@ from .order_intents import OrderIntentRepository
 from .policy import PolicyRepository
 from .positions import PositionRepository
 from .reconciliation import ReconciliationRepository
+from .scan import ScanRepository
 from .trades import TradeRepository
 
 # Re-export for backwards compatibility
-from .memory_repository import MemoryRepository  # noqa: F401
-from .events import EventRepository  # noqa: F401
+from .memory_repository import MemoryRepository
 
 # Re-export models that old code imports from memory.repositories
-from ..models import StoredKiteSessionPayload  # noqa: F401
+from ..models import StoredKiteSessionPayload
+
+__all__ = [
+    "AccountRepository",
+    "ApprovalRepository",
+    "BrokerRepository",
+    "CognitionRepository",
+    "EntryIntentRepository",
+    "EventRepository",
+    "FailureRepository",
+    "MemoryRepository",
+    "NewsRepository",
+    "OperatorRepository",
+    "OrderIntentRepository",
+    "PolicyRepository",
+    "PositionRepository",
+    "ReconciliationRepository",
+    "ScanRepository",
+    "StoredKiteSessionPayload",
+    "TradeRepository",
+]

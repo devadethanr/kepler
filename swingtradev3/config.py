@@ -36,6 +36,13 @@ from models import TradingMode
 from paths import PROJECT_ROOT
 
 
+def _env_bool(name: str, default: bool = False) -> bool:
+    raw = os.getenv(name)
+    if raw is None:
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
+
+
 # ═══════════════════════════════════════════════════════════
 # TRADING
 # ═══════════════════════════════════════════════════════════
@@ -93,6 +100,7 @@ class ResearchFilterConfig(BaseModel):
     market_news_digest_max_items_per_ticker: int = 2
     market_news_digest_max_general_items: int = 4
     options_pcr_threshold: float = 1.2
+    options_scan_limit: int = 0
     options_oi_spike_pct: float = 20
     trend_filter_ema: int = 200
     min_volume_ratio: float = 1.0
@@ -107,6 +115,12 @@ class ResearchConfig(BaseModel):
     debate_top_n: int = 3
     max_shortlist: int
     max_same_sector_positions: int
+    slow_brain_enabled: bool = False
+    slow_brain_max_candidates: int = 6
+    slow_brain_full_debate_candidates: int = 3
+    slow_brain_lightweight_candidates: int = 3
+    slow_brain_min_score: float = 7.0
+    slow_brain_min_confidence_score: int = 6
     exclude_earnings_within_days: int = 7
     exclude_corporate_actions_within_days: int = 5
     async_scan: bool = True
@@ -293,9 +307,49 @@ class LlmAdkConfig(BaseModel):
     judge_model: str = "openai/meta/llama-3.1-70b-instruct"
 
 
+class LocalLLMConfig(BaseModel):
+    """Host-running llama.cpp OpenAI-compatible server for slow-brain agents."""
+
+    enabled: bool = False
+    provider: str = "llama_cpp"
+    model: str = "Qwen3-4B-Instruct-2507-Q4_K_M.gguf"
+    base_url: str = "http://host.docker.internal:8080/v1"
+    health_url: str = "http://host.docker.internal:8080/health"
+    api_key: str = "not-needed"
+    timeout_seconds: float = 30.0
+    max_retries: int = 1
+    max_tokens: int = 1200
+    structured_output: bool = True
+
+    @model_validator(mode="before")
+    @classmethod
+    def apply_env_overrides(cls, value: Any) -> Any:
+        payload = dict(value or {})
+        if os.getenv("LOCAL_LLM_ENABLED") is not None:
+            payload["enabled"] = _env_bool("LOCAL_LLM_ENABLED", False)
+        env_map = {
+            "LLAMA_CPP_PROVIDER": "provider",
+            "LLAMA_CPP_MODEL": "model",
+            "LLAMA_CPP_BASE_URL": "base_url",
+            "LLAMA_CPP_HEALTH_URL": "health_url",
+            "LLAMA_CPP_API_KEY": "api_key",
+            "LLAMA_CPP_TIMEOUT_SECONDS": "timeout_seconds",
+            "LLAMA_CPP_MAX_RETRIES": "max_retries",
+            "LLAMA_CPP_MAX_TOKENS": "max_tokens",
+        }
+        for env_name, field_name in env_map.items():
+            raw = os.getenv(env_name)
+            if raw not in (None, ""):
+                payload[field_name] = raw
+        if os.getenv("LLAMA_CPP_STRUCTURED_OUTPUT") is not None:
+            payload["structured_output"] = _env_bool("LLAMA_CPP_STRUCTURED_OUTPUT", True)
+        return payload
+
+
 class LLMConfig(BaseModel):
     timeout_seconds: float
     max_tool_calls_per_stock: int
+    local: LocalLLMConfig = Field(default_factory=LocalLLMConfig)
     roles: LLMRolesConfig
     fallback_chain: list[LLMFallbackConfig] = Field(default_factory=list)
     adk: LlmAdkConfig = Field(default_factory=LlmAdkConfig)
@@ -305,10 +359,29 @@ class LLMConfig(BaseModel):
 # LEARNING
 # ═══════════════════════════════════════════════════════════
 
+class ExceptionReasoningConfig(BaseModel):
+    enabled: bool = True
+    scan_interval_minutes: int = 5
+    max_cases_per_cycle: int = 3
+    max_evidence_items: int = 12
+    max_prompt_chars: int = 12000
+    allowed_kinds: list[str] = Field(
+        default_factory=lambda: [
+            "broker_inconsistency",
+            "major_gap_or_shock",
+            "corporate_action_surprise",
+            "unexpected_regime_break",
+        ]
+    )
+
+
 class LearningConfig(BaseModel):
     min_trades_for_lesson: int
     min_trades_for_kelly: int
     max_lessons_per_month: int
+    exception_reasoning: ExceptionReasoningConfig = Field(
+        default_factory=ExceptionReasoningConfig
+    )
 
 
 # ═══════════════════════════════════════════════════════════
@@ -499,6 +572,7 @@ class DataConfig(BaseModel):
     news_cache_ttl_minutes: int = 60
     fundamentals_cache_ttl_hours: int = 24
     macro_cache_ttl_hours: int = 4
+    model_warmup_enabled: bool = False
 
 
 class ContextGraphConfig(BaseModel):
@@ -514,6 +588,14 @@ class ContextGraphConfig(BaseModel):
     projection_interval_seconds: float = 30.0
     dashboard_node_limit: int = 150
     dashboard_edge_limit: int = 300
+
+
+class ToolboxConfig(BaseModel):
+    """Phase 12: read-only Google MCP Toolbox access for agent memory views."""
+
+    enabled: bool = Field(default_factory=lambda: _env_bool("TOOLBOX_ENABLED", True))
+    url: str = Field(default_factory=lambda: os.getenv("TOOLBOX_URL", "http://toolbox:5000"))
+    timeout_seconds: float = 2.0
 
 
 # ═══════════════════════════════════════════════════════════
@@ -539,6 +621,7 @@ class AppConfig(BaseModel):
     scheduler: SchedulerConfig = Field(default_factory=SchedulerConfig)
     data: DataConfig = Field(default_factory=DataConfig)
     context_graph: ContextGraphConfig = Field(default_factory=ContextGraphConfig)
+    toolbox: ToolboxConfig = Field(default_factory=ToolboxConfig)
 
     @model_validator(mode="after")
     def validate_thresholds(self) -> "AppConfig":
@@ -562,13 +645,6 @@ def load_config(config_path: Path | None = None) -> AppConfig:
 cfg = load_config()
 
 
-def _env_bool(name: str, default: bool = False) -> bool:
-    raw = os.getenv(name)
-    if raw is None:
-        return default
-    return raw.strip().lower() in {"1", "true", "yes", "on"}
-
-
 class RuntimeFlags:
     """Environment-controlled safety gates for the live runtime."""
 
@@ -586,7 +662,10 @@ class RuntimeFlags:
 
     @property
     def use_slow_brain(self) -> bool:
-        return _env_bool("USE_SLOW_BRAIN", False)
+        env = os.getenv("USE_SLOW_BRAIN")
+        if env is not None:
+            return _env_bool("USE_SLOW_BRAIN", False)
+        return cfg.research.slow_brain_enabled
 
     @property
     def use_exception_analyst(self) -> bool:

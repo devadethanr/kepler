@@ -142,14 +142,15 @@ async def approve_trade(approval_id: str):
             message="Already approved. Execution is already queued.",
         )
 
+    queue_execution_now = live_entry_block_reason is None and not runtime_flags.use_slow_brain
     approval_payload["approved"] = True
-    approval_payload["execution_requested"] = live_entry_block_reason is None
+    approval_payload["execution_requested"] = queue_execution_now
     approval_payload["execution_request_id"] = (
         str(approval.order_intent_id).rsplit(":", 1)[-1]
-        if live_entry_block_reason is None
+        if queue_execution_now
         else None
     )
-    approval_payload["status"] = "queued" if live_entry_block_reason is None else "approved"
+    approval_payload["status"] = "queued" if queue_execution_now else "approved"
 
     with session_scope() as session:
         repo = MemoryRepository(session)
@@ -160,7 +161,9 @@ async def approve_trade(approval_id: str):
         )
     project_all_managed_files()
 
-    if live_entry_block_reason is None:
+    if runtime_flags.use_slow_brain:
+        message = "Approved. Phase 13 SessionPlanner will decide session activation."
+    elif live_entry_block_reason is None:
         message = "Approved. Queued for worker execution."
     else:
         message = (

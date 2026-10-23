@@ -11,7 +11,8 @@ from google.genai import types
 from pydantic import PrivateAttr
 
 from config import cfg
-from context_graph.context_builder import ContextBuilder, format_context_for_llm
+from context_graph.context_builder import format_context_for_llm
+from memory_views import MemoryViewClient
 from models import StockScore
 from paths import STRATEGY_DIR
 from llm_bridge import SmartRouter
@@ -26,12 +27,12 @@ class ScorerAgent(LlmAgent):
     """
 
     _router: SmartRouter = PrivateAttr()
-    _context_builder: ContextBuilder = PrivateAttr()
+    _memory_views: MemoryViewClient = PrivateAttr()
 
     def __init__(self, name: str = "ScorerAgent") -> None:
         super().__init__(name=name, model=cfg.llm.adk.research_model)
         self._router = SmartRouter(role="research")
-        self._context_builder = ContextBuilder()
+        self._memory_views = MemoryViewClient()
 
     async def _run_async_impl(self, ctx: InvocationContext) -> AsyncGenerator[Event, None]:
         qualified_stocks = ctx.session.state.get("qualified_stocks", [])
@@ -60,10 +61,15 @@ class ScorerAgent(LlmAgent):
             if not data:
                 continue
 
-            prompt = f"Analyze and score this stock setup: {json.dumps(data, default=str)}"
+            memory_packet = self._memory_views.research_context_packet(ticker)
+            prompt = (
+                f"Analyze and score this stock setup: {json.dumps(data, default=str)}\n\n"
+                "Phase 12 curated memory packet:\n"
+                f"{json.dumps(memory_packet, default=str)}"
+            )
 
-            # Inline context graph read: get historical context for comparative scoring.
-            kg_context = self._context_builder.get_stock_context(ticker)
+            # Phase 12 memory views: bounded graph traversal + Postgres execution context.
+            kg_context = self._memory_views.get_stock_context(ticker)
             system_instruction = self._build_system_instruction(
                 ticker, kg_context, regime_str, min_score
             )
