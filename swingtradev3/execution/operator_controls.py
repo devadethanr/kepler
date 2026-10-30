@@ -35,6 +35,7 @@ def write_worker_status(status: dict[str, Any]) -> dict[str, Any]:
             value=normalized,
             payload={"owner": "worker"},
             source="worker",
+            record_event=False,
         )
 
 
@@ -188,6 +189,12 @@ def set_block_new_entries(
         }
         was_blocked = bool(existing_value.get("blocked"))
         new_reason = normalized_reason not in active_reasons
+        if not new_reason:
+            return existing or {
+                "control_key": BLOCK_NEW_ENTRIES_KEY,
+                "value": existing_value,
+                "payload": {"type": "kill_switch"},
+            }
         active_reasons.add(normalized_reason)
 
         history = list(existing_value.get("history", []))
@@ -245,6 +252,15 @@ def clear_block_new_entries(
             for item in existing_value.get("active_reasons", [])
             if str(item).strip()
         }
+
+        if not active_reasons or (reason is not None and str(reason).strip() not in active_reasons):
+            if existing is not None:
+                return existing
+            return {
+                "control_key": BLOCK_NEW_ENTRIES_KEY,
+                "value": {"blocked": False, "active_reasons": [], "history": []},
+                "payload": {"type": "kill_switch"},
+            }
 
         if reason is None:
             cleared_reasons = sorted(active_reasons)
@@ -327,6 +343,7 @@ def write_reconciliation_status(payload: dict[str, Any], *, source: str) -> dict
             value=normalized,
             payload={"owner": "reconciler"},
             source=source,
+            record_event=False,
         )
 
 

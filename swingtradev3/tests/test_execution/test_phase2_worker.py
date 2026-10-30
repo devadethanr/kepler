@@ -6,6 +6,7 @@ from zoneinfo import ZoneInfo
 
 import pytest
 from fastapi.testclient import TestClient
+from sqlalchemy import func, select
 
 from api.main import app
 from api.routes import approvals as approvals_route
@@ -15,6 +16,7 @@ from execution.coordinator import ExecutionCoordinator
 from execution.operator_controls import read_worker_status, write_worker_status
 from execution.state_machine import WorkerExecutionStateMachine
 from memory.db import session_scope
+from memory.models import ExecutionEventRow
 from memory.repository import MemoryRepository
 from models import PendingApproval, TradingMode
 
@@ -157,6 +159,35 @@ def test_dashboard_scheduler_reads_worker_status():
     finally:
         if original_status:
             write_worker_status(original_status)
+
+
+def test_worker_heartbeat_status_does_not_append_audit_events():
+    source = "worker"
+    with session_scope() as session:
+        before = session.scalar(
+            select(func.count())
+            .select_from(ExecutionEventRow)
+            .where(
+                ExecutionEventRow.event_type == "operator_control_updated",
+                ExecutionEventRow.entity_id == "worker_status",
+                ExecutionEventRow.source == source,
+            )
+        )
+
+    write_worker_status({"is_running": True, "heartbeat": "alive"})
+    write_worker_status({"is_running": True, "heartbeat": "alive"})
+
+    with session_scope() as session:
+        after = session.scalar(
+            select(func.count())
+            .select_from(ExecutionEventRow)
+            .where(
+                ExecutionEventRow.event_type == "operator_control_updated",
+                ExecutionEventRow.entity_id == "worker_status",
+                ExecutionEventRow.source == source,
+            )
+        )
+    assert after == before
 
 
 def test_failed_event_retry_is_queued_for_worker():

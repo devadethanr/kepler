@@ -2,12 +2,14 @@ COMPOSE_FILE := ../docker-compose.dev.yml
 ENV_FILE := .env
 DOCKER_COMPOSE := docker compose -f $(COMPOSE_FILE) --env-file $(ENV_FILE)
 DOCKER_COMPOSE_MEMORY := $(DOCKER_COMPOSE) --profile memory
+DOCKER_COMPOSE_TEST := $(DOCKER_COMPOSE) --profile test
 
-.PHONY: dev dev-detach worker-up worker-smoke test test-file lint lint-fix format dashboard-test dashboard-lint dashboard-build logs logs-app logs-worker logs-mcp logs-dashboard logs-memory logs-memgraph logs-memgraph-lab logs-toolbox toolbox-health local-llm-start local-llm-stop local-llm-logs local-llm-health phase12-smoke phase13-llm-smoke phase13-smoke phase14-smoke memgraph-shell memgraph-snapshot stop clean shell health login phase0-check phase0-reconcile-state phase3-check phase6-check phase7-check db-upgrade
+.PHONY: dev dev-detach worker-up worker-smoke test test-file test-memgraph lint lint-fix format dashboard-test dashboard-lint dashboard-build logs logs-app logs-worker logs-mcp logs-dashboard logs-memory logs-memgraph logs-memgraph-lab logs-toolbox toolbox-health local-llm-install local-llm-uninstall local-llm-start local-llm-stop local-llm-logs local-llm-health phase12-smoke phase13-llm-smoke phase13-smoke phase14-smoke memgraph-shell memgraph-snapshot pre-soak-audit pre-soak-backup pre-soak-reset stop clean shell health login phase0-check phase0-reconcile-state phase3-check phase6-check phase7-check db-upgrade
 
 define RUN_PYTEST_ISOLATED
 	@was_running=$$($(DOCKER_COMPOSE) ps --status running --services worker 2>/dev/null | grep -c '^worker$$' || true); \
 	restore_worker() { \
+		$(DOCKER_COMPOSE_TEST) rm -sf app-test memgraph-test db-test >/dev/null 2>&1 || true; \
 		if [ "$$was_running" -gt 0 ]; then \
 			$(DOCKER_COMPOSE) up -d worker >/dev/null; \
 		fi; \
@@ -16,8 +18,11 @@ define RUN_PYTEST_ISOLATED
 	if [ "$$was_running" -gt 0 ]; then \
 		$(DOCKER_COMPOSE) stop worker; \
 	fi; \
+	$(DOCKER_COMPOSE_TEST) up -d db-test memgraph-test app-test; \
+	$(DOCKER_COMPOSE_TEST) exec -T app-test python -c \
+		'from memory.db import ensure_database_ready; ensure_database_ready()'; \
 	status=0; \
-	$(DOCKER_COMPOSE) exec -T app pytest $(1) -v || status=$$?; \
+	$(DOCKER_COMPOSE_TEST) exec -T app-test pytest $(1) -v || status=$$?; \
 	exit $$status
 endef
 
@@ -37,31 +42,14 @@ login:
 	$(DOCKER_COMPOSE) exec -it app python -m auth.kite.login
 
 test:
-	$(call RUN_PYTEST_ISOLATED,tests/ -m "not memgraph_destructive")
+	$(call RUN_PYTEST_ISOLATED,tests/)
 
 test-file:
 	$(call RUN_PYTEST_ISOLATED,$(file))
 
 .PHONY: test-memgraph
 test-memgraph:
-	@echo "Starting Memgraph for integration tests..."
-	$(DOCKER_COMPOSE) --profile memory up -d memgraph
-	@echo "Waiting for Memgraph..."
-	@for i in $$(seq 1 30); do \
-		if $(DOCKER_COMPOSE) exec -T app python3 -c "from context_graph.repository import ContextGraphRepository; r = ContextGraphRepository(); r.health()" 2>/dev/null; then \
-			echo "Memgraph ready."; \
-			break; \
-		fi; \
-		if [ $$i -eq 30 ]; then echo "Memgraph not ready after 30s."; exit 1; fi; \
-		sleep 1; \
-	done
-	$(call RUN_PYTEST_ISOLATED,tests/test_context_graph/test_repository.py -m memgraph_destructive -v)
-	@echo "Cleaning Memgraph test data..."
-	$(DOCKER_COMPOSE) exec -T app \
-		python3 -c 'from context_graph.repository import ContextGraphRepository; r = ContextGraphRepository(); r._client(); s = r._driver.session(); s.run("MATCH (n) DETACH DELETE n"); s.close(); r.close(); print("Memgraph cleaned.")' \
-		2>/dev/null || echo "(Memgraph cleanup skipped - not running)"
-	@echo "Stopping Memgraph..."
-	$(DOCKER_COMPOSE) --profile memory stop memgraph
+	$(call RUN_PYTEST_ISOLATED,tests/test_context_graph/test_repository.py -m memgraph_destructive)
 
 lint:
 	$(DOCKER_COMPOSE) exec app ruff check .
@@ -112,13 +100,37 @@ toolbox-health:
 	$(DOCKER_COMPOSE) exec -T app python -c "import urllib.request; urllib.request.urlopen('http://toolbox:5000/api/toolset', timeout=3).read()"
 
 local-llm-start:
-	bash ops/start_local_llm.sh
+	@if systemctl --user cat swingtradev3-llama.service >/dev/null 2>&1; then \
+		systemctl --user start swingtradev3-llama.service; \
+	else \
+		bash ops/start_local_llm.sh; \
+	fi
 
 local-llm-stop:
-	bash ops/stop_local_llm.sh
+	@if systemctl --user cat swingtradev3-llama.service >/dev/null 2>&1; then \
+		systemctl --user stop swingtradev3-llama.service; \
+	else \
+		bash ops/stop_local_llm.sh; \
+	fi
 
 local-llm-logs:
-	tail -f $${LLAMA_CPP_LOG_FILE:-/tmp/swingtradev3-llama.log}
+	@if systemctl --user cat swingtradev3-llama.service >/dev/null 2>&1; then \
+		journalctl --user -u swingtradev3-llama.service -f; \
+	else \
+		tail -f $${LLAMA_CPP_LOG_FILE:-/tmp/swingtradev3-llama.log}; \
+	fi
+
+local-llm-install:
+	bash ops/stop_local_llm.sh
+	install -Dm644 ops/systemd/swingtradev3-llama.service \
+		$${HOME}/.config/systemd/user/swingtradev3-llama.service
+	systemctl --user daemon-reload
+	systemctl --user enable --now swingtradev3-llama.service
+
+local-llm-uninstall:
+	-systemctl --user disable --now swingtradev3-llama.service
+	rm -f $${HOME}/.config/systemd/user/swingtradev3-llama.service
+	systemctl --user daemon-reload
 
 local-llm-health:
 	$(DOCKER_COMPOSE) exec -T app python -m ops.local_llm_smoke --health-only
@@ -141,6 +153,36 @@ memgraph-shell:
 
 memgraph-snapshot:
 	printf 'CREATE SNAPSHOT;\n' | $(DOCKER_COMPOSE_MEMORY) exec -T memgraph mgconsole
+
+pre-soak-audit:
+	$(DOCKER_COMPOSE) exec -T app python -m ops.pre_soak_cleanup
+
+pre-soak-backup:
+	@stamp=$$(date +%Y%m%d_%H%M%S); \
+	backup_dir="reports/backups/pre_soak_$$stamp"; \
+	mkdir -p "$$backup_dir"; \
+	$(DOCKER_COMPOSE) exec -T db pg_dump \
+		-U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-swingtradev3} -Fc \
+		> "$$backup_dir/postgres.dump"; \
+	printf 'CREATE SNAPSHOT;\n' | $(DOCKER_COMPOSE_MEMORY) exec -T memgraph mgconsole >/dev/null; \
+	snapshot=$$($(DOCKER_COMPOSE_MEMORY) exec -T memgraph sh -lc \
+		"find /var/lib/memgraph/snapshots -maxdepth 1 -type f | sort | tail -n 1"); \
+	docker cp "swingtradev3-memgraph:$$snapshot" "$$backup_dir/memgraph.snapshot" >/dev/null; \
+	echo "Backup written to $$backup_dir"
+
+pre-soak-reset: pre-soak-backup
+	@if [ "$(confirm)" != "RESET-PRE-SOAK" ]; then \
+		echo "Refusing reset. Run: make pre-soak-reset confirm=RESET-PRE-SOAK"; \
+		exit 1; \
+	fi
+	@was_running=$$($(DOCKER_COMPOSE) ps --status running --services worker | grep -c '^worker$$' || true); \
+	if [ "$$was_running" -gt 0 ]; then $(DOCKER_COMPOSE) stop worker; fi; \
+	restore_worker() { \
+		if [ "$$was_running" -gt 0 ]; then $(DOCKER_COMPOSE) up -d worker >/dev/null; fi; \
+	}; \
+	trap restore_worker EXIT; \
+	$(DOCKER_COMPOSE) exec -T app python -m ops.pre_soak_cleanup \
+		--apply --confirm RESET-PRE-SOAK
 
 stop:
 	$(DOCKER_COMPOSE_MEMORY) down

@@ -1,0 +1,14 @@
+[Unit]
+Description=SwingTradeV3 llama.cpp slow-brain server
+After=graphical-session.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/projects/kepler/swingtradev3
+ExecStart=%h/projects/kepler/swingtradev3/ops/run_local_llm.sh
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=20
+
+[Install]
+WantedBy=default.target

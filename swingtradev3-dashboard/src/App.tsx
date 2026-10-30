@@ -3,21 +3,44 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { lazy, Suspense, useState } from 'react';
 import { Sidebar } from './components/layout/Sidebar';
 import { TopBar } from './components/layout/TopBar';
-import { DashboardScreen } from './screens/DashboardScreen';
-import { ExecutionScreen } from './screens/ExecutionScreen';
-import { OrdersScreen } from './screens/OrdersScreen';
-import { TickersScreen } from './screens/TickersScreen';
-import { BrokersScreen } from './screens/BrokersScreen';
-import { IncidentsScreen } from './screens/IncidentsScreen';
-import { RiskScreen } from './screens/RiskScreen';
-import { KnowledgeScreen } from './screens/KnowledgeScreen';
-import { ControlPaneScreen } from './screens/ControlPaneScreen';
-import { TelemetryScreen } from './screens/TelemetryScreen';
-import { NewsScreen } from './screens/NewsScreen';
 import { useLiveEvents } from './hooks/useDashboardData';
+
+const DashboardScreen = lazy(() =>
+  import('./screens/DashboardScreen').then((module) => ({ default: module.DashboardScreen })),
+);
+const ExecutionScreen = lazy(() =>
+  import('./screens/ExecutionScreen').then((module) => ({ default: module.ExecutionScreen })),
+);
+const OrdersScreen = lazy(() =>
+  import('./screens/OrdersScreen').then((module) => ({ default: module.OrdersScreen })),
+);
+const TickersScreen = lazy(() =>
+  import('./screens/TickersScreen').then((module) => ({ default: module.TickersScreen })),
+);
+const BrokersScreen = lazy(() =>
+  import('./screens/BrokersScreen').then((module) => ({ default: module.BrokersScreen })),
+);
+const IncidentsScreen = lazy(() =>
+  import('./screens/IncidentsScreen').then((module) => ({ default: module.IncidentsScreen })),
+);
+const RiskScreen = lazy(() =>
+  import('./screens/RiskScreen').then((module) => ({ default: module.RiskScreen })),
+);
+const KnowledgeScreen = lazy(() =>
+  import('./screens/KnowledgeScreen').then((module) => ({ default: module.KnowledgeScreen })),
+);
+const ControlPaneScreen = lazy(() =>
+  import('./screens/ControlPaneScreen').then((module) => ({ default: module.ControlPaneScreen })),
+);
+const TelemetryScreen = lazy(() =>
+  import('./screens/TelemetryScreen').then((module) => ({ default: module.TelemetryScreen })),
+);
+const NewsScreen = lazy(() =>
+  import('./screens/NewsScreen').then((module) => ({ default: module.NewsScreen })),
+);
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState('dashboard');
@@ -34,17 +57,19 @@ export default function App() {
       />
       <div className="flex flex-col flex-1 h-full overflow-hidden">
         <TopBar onToggleSidebar={() => setSidebarOpen(!isSidebarOpen)} live={live} />
-        {currentTab === 'dashboard' && <DashboardScreen />}
-        {currentTab === 'telemetry' && <TelemetryScreen live={live} />}
-        {currentTab === 'news' && <NewsScreen />}
-        {currentTab === 'knowledge' && <KnowledgeScreen />}
-        {currentTab === 'control_pane' && <ControlPaneScreen />}
-        {currentTab === 'execution' && <ExecutionScreen />}
-        {currentTab === 'orders' && <OrdersScreen />}
-        {currentTab === 'tickers' && <TickersScreen />}
-        {currentTab === 'brokers' && <BrokersScreen />}
-        {currentTab === 'incidents' && <IncidentsScreen />}
-        {currentTab === 'risk' && <RiskScreen />}
+        <Suspense fallback={<div className="flex-1 bg-surface" aria-label="Loading view" />}>
+          {currentTab === 'dashboard' && <DashboardScreen />}
+          {currentTab === 'telemetry' && <TelemetryScreen live={live} />}
+          {currentTab === 'news' && <NewsScreen />}
+          {currentTab === 'knowledge' && <KnowledgeScreen />}
+          {currentTab === 'control_pane' && <ControlPaneScreen />}
+          {currentTab === 'execution' && <ExecutionScreen />}
+          {currentTab === 'orders' && <OrdersScreen />}
+          {currentTab === 'tickers' && <TickersScreen />}
+          {currentTab === 'brokers' && <BrokersScreen />}
+          {currentTab === 'incidents' && <IncidentsScreen />}
+          {currentTab === 'risk' && <RiskScreen />}
+        </Suspense>
       </div>
     </div>
   );

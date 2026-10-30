@@ -721,9 +721,14 @@ class MemoryRepository:
         value: dict[str, Any],
         payload: dict[str, Any] | None = None,
         source: str = "system",
+        record_event: bool = True,
     ) -> dict[str, Any]:
         return self.operator.upsert_operator_control(
-            control_key=control_key, value=value, payload=payload, source=source
+            control_key=control_key,
+            value=value,
+            payload=payload,
+            source=source,
+            record_event=record_event,
         )
 
     # ── auth session ────────────────────────────────────────────────
@@ -737,6 +742,19 @@ class MemoryRepository:
 
     def replace_auth_session(self, payload: dict[str, Any], *, source: str) -> dict[str, Any]:
         from ..models import StoredKiteSessionPayload
+
+        if not payload:
+            row = self._session.get(models_module.AuthSessionRow, "kite")
+            if row is not None:
+                self._session.delete(row)
+                self.append_execution_event(
+                    event_type="auth_session_cleared",
+                    entity_type="auth_session",
+                    entity_id="kite",
+                    source=source,
+                    payload={"provider": "kite"},
+                )
+            return {}
 
         session_payload = StoredKiteSessionPayload.model_validate(payload)
         normalized = session_payload.model_dump(mode="json")

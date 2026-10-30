@@ -47,17 +47,18 @@ def initialize_memory_layer(force: bool = False) -> None:
 
         with session_scope() as session:
             repo = MemoryRepository(session)
-            if force or not repo.account_state_exists():
+            bootstrap_required = force or not repo.account_state_exists()
+            if bootstrap_required:
                 repo.replace_account_state(
                     _read_raw_json(STATE_PATH, {}),
                     source="bootstrap_import",
                 )
-            if force or not repo.approvals_exist():
+            if bootstrap_required:
                 repo.replace_pending_approvals(
                     _read_raw_json(APPROVALS_PATH, []),
                     source="bootstrap_import",
                 )
-            if force or not repo.trades_exist():
+            if bootstrap_required:
                 repo.replace_trades(
                     _read_raw_json(TRADES_PATH, []),
                     source="bootstrap_import",

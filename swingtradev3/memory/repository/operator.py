@@ -50,6 +50,7 @@ class OperatorRepository:
         value: dict[str, Any],
         payload: dict[str, Any] | None = None,
         source: str = "system",
+        record_event: bool = True,
     ) -> dict[str, Any]:
         row = self.session.get(models_module.OperatorControlRow, control_key)
         if row is None:
@@ -59,13 +60,14 @@ class OperatorRepository:
         row.value = dict(value)
         row.payload = dict(payload or row.payload or {})
 
-        EventRepository(self.session).append_execution_event(
-            event_type="operator_control_updated",
-            entity_type="operator_control",
-            entity_id=control_key,
-            source=source,
-            payload={"value": row.value, "payload": row.payload},
-        )
+        if record_event:
+            EventRepository(self.session).append_execution_event(
+                event_type="operator_control_updated",
+                entity_type="operator_control",
+                entity_id=control_key,
+                source=source,
+                payload={"value": row.value, "payload": row.payload},
+            )
         return {
             "control_key": row.control_key,
             "value": dict(row.value),

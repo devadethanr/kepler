@@ -16,8 +16,8 @@
       "source": "missing",
       "status": "neutral_default"
     },
-    "vix": null,
+    "vix": 15.12,
     "volatility_state": "normal"
   },
-  "fetched_at": "2026-09-01T03:27:38.515077+00:00"
+  "fetched_at": "2026-10-29T12:30:02.002227+00:00"
 }
