@@ -1,0 +1,152 @@
+{
+  "researched_at": "2026-10-31",
+  "baseline_commit": "8fb50888c47a8b4f62e0917dd0475ee5dfaa6fb0",
+  "status": "Preferred heterogeneous pair selected for local evaluation; no GPU/model benchmark or application deployment performed.",
+  "hardware": {
+    "confirmed": "RTX 5070 Ti and RTX 3060 in the same PC",
+    "unverified": [
+      "OS/WSL",
+      "GPU UUIDs",
+      "physical/free VRAM",
+      "system RAM",
+      "driver/toolchain"
+    ],
+    "preflight": "Capture local nvidia-smi inventory and OS/RAM before selecting memory profiles. Do not infer total capacity from active MoE parameters."
+  },
+  "runtime": {
+    "candidate": "llama.cpp",
+    "tag": "v0.8.0",
+    "commit": "8642541b255bfb5dc39cd351a178be09013a55d6",
+    "deployment": "One process per GPU UUID, one request slot per process; no default tensor parallelism."
+  },
+  "candidates": [
+    {
+      "id": "existing-baseline",
+      "role": "baseline",
+      "model": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+      "revision": "Resolve and record the existing local file SHA256; do not replace before baseline evaluation.",
+      "license": "Verify existing artifact provenance"
+    },
+    {
+      "id": "fast-gemma4-e4b",
+      "role": "preferred-fast",
+      "upstream": "google/gemma-4-E4B-it",
+      "upstream_revision": "ee0ef6023621cff504d758262d4e04895a5af4a2",
+      "artifact": "google/gemma-4-E4B-it-qat-q4_0-gguf",
+      "revision": "4b4a2c1d584be7264f87aac328a1bc739ce81b6c",
+      "filename": "gemma-4-E4B_q4_0-it.gguf",
+      "bytes": 5154941280,
+      "sha256": "676c35070db6dbe52f93e9c864ee0fba4eddea94b9c875d9cb10daff453fbaee",
+      "license": "Apache-2.0",
+      "quantization_source": "Official Google QAT",
+      "total_parameters": 7996156490,
+      "effective_parameters_approx": 4500000000,
+      "preferred_gpu": "RTX 3060",
+      "context_start": 4096,
+      "max_final_tokens": 256,
+      "thinking": "off; use matched Gemma template, not Qwen tokens",
+      "caveat": "Omit vision projector for text-only. 6GB VRAM can be tight; measure actual buffers/KV/display headroom and concurrent latency before promotion."
+    },
+    {
+      "id": "fast-qwen35",
+      "role": "fast-fallback",
+      "upstream": "Qwen/Qwen3.5-4B",
+      "upstream_revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "artifact": "unsloth/Qwen3.5-4B-GGUF",
+      "revision": "e87f176479d0855a907a41277aca2f8ee7a09523",
+      "filename": "Qwen3.5-4B-Q4_K_M.gguf",
+      "bytes": 2740937888,
+      "sha256": "00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4",
+      "license": "Apache-2.0",
+      "quantization_source": "Community Unsloth",
+      "preferred_gpu": "RTX 3060",
+      "context_start": 4096,
+      "max_final_tokens": 256,
+      "thinking": "off"
+    },
+    {
+      "id": "slow-qwen35",
+      "role": "preferred-slow",
+      "upstream": "Qwen/Qwen3.5-9B",
+      "upstream_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+      "artifact": "unsloth/Qwen3.5-9B-GGUF",
+      "revision": "3885219b6810b007914f3a7950a8d1b469d598a5",
+      "filename": "Qwen3.5-9B-Q5_K_M.gguf",
+      "bytes": 6577841376,
+      "sha256": "dc2a39aef291f91a9116ad214058da0d86eb648743a124bd8c333787c4b9c91c",
+      "license": "Apache-2.0",
+      "quantization_source": "Community Unsloth",
+      "preferred_gpu": "RTX 5070 Ti",
+      "context_start": 8192,
+      "max_final_tokens": 1200,
+      "thinking": "bounded; measure combined reasoning/final budget separately"
+    },
+    {
+      "id": "fast-liquid-challenger",
+      "role": "fast-experiment",
+      "artifact": "LiquidAI/LFM3-1.7B-GGUF",
+      "revision": "bad5729bba61d076fff20d2548e62526665af215",
+      "quantization": "Q8_0",
+      "bytes": 1846238496,
+      "license": "LFM Open License v1.0; custom commercial revenue condition",
+      "caveat": "Not a complex multi-step reasoner; thinking-off consistency requires validation."
+    },
+    {
+      "id": "slow-gemma-challenger",
+      "role": "slow-experiment",
+      "artifact": "google/gemma-4-12B-it-qat-q4_0-gguf",
+      "revision": "29d097773436b69ff9feafd636ab4cf873786537",
+      "bytes": 6975879296,
+      "license": "Apache-2.0",
+      "caveat": "Text-only deployment, no vision projector. Actual peak memory and JSON support must be measured."
+    },
+    {
+      "id": "flint-official",
+      "role": "offline-coding-research-experiment",
+      "upstream": "RecursiveSI/flint",
+      "revision": "2a247be0c0aec895ccb0ac7ca92229ec6df37288",
+      "total_parameters": 39785287456,
+      "active_parameters_approx": 2500000000,
+      "license": "Apache-2.0",
+      "artifact": "RecursiveSI/flint-nvfp4-gguf",
+      "artifact_revision": "6ec43e19b565fc8d560e2d04985d7724f20673bf",
+      "bytes": 22863084160,
+      "caveat": "Not a single 16GB resident fit; reasoning/tools/parser and hardware support differ from existing endpoint. Coding scores are not trading evidence."
+    },
+    {
+      "id": "flint-lowbit-experiment",
+      "role": "optional-offline-experiment",
+      "artifact": "unsloth/flint-GGUF",
+      "revision": "20468edfc38ab43d6914cc88b08cbecb05d0fc62",
+      "quantization": "UD-IQ3_XXS",
+      "bytes": 14535427520,
+      "caveat": "Community aggressive quantization; possible 16GB short-context fit remains unmeasured. Do not inherit official benchmark quality. Stop if it cannot coexist with the fast model or leaves insufficient runtime/display headroom."
+    },
+    {
+      "id": "timesfm-25-tool-cpu",
+      "role": "shared-forecast-tool",
+      "model": "google/timesfm-2.5-200m-pytorch",
+      "revision": "Pin model and compatible library commit during local preflight; current requirements uses unpinned Git HEAD",
+      "device": "CPU first; bounded shared process, explicit GPU opt-in only after measurement",
+      "context_start": 512,
+      "max_horizon": 128,
+      "default_horizon": 20,
+      "caveat": "Typed point-in-time bars and input-hash cache required. No invented stop/target, no calibrated-interval claim without evaluation."
+    },
+    {
+      "id": "d1-decision-experiment",
+      "role": "optional-offline-policy-ranking-experiment",
+      "model": "LiquidAI/d1-2B",
+      "api": "system_one(state, questions), not chat generation",
+      "license": "LFM Open License v1.0; inspect terms",
+      "caveat": "Not a third required resident model. Pin/review code and calibrate own outcomes; no zero-shot trading authority or production promotion from model probabilities."
+    }
+  ],
+  "plan_revision": 2,
+  "default_profiles": {
+    "fast": "fast-gemma4-e4b",
+    "slow": "slow-qwen35",
+    "fast_fallback": "fast-qwen35",
+    "forecast": "timesfm-25-tool-cpu"
+  }
+}

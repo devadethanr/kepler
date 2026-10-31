@@ -15,6 +15,11 @@ This directory now separates current source-of-truth docs from historical planni
 - `progress/plan-progress-phase.md` — phase-by-phase implementation status without environment-specific secrets.
 - `runbooks/kite-mcp-setup.md` — local Kite MCP and auth workflow.
 
+## Proposed Collaborative Research Revamp
+
+- [Research handoff and read order](plans/kepler-research-revamp/README.md) — revision 2, researched against `main` at `8fb5088`; covers collaborative research rooms, local models, context/browser skills, TimesFM and live discussion UI. This is a proposed implementation, not deployed behavior.
+- [Pre-implementation configuration audit](plans/kepler-research-revamp/PRE_IMPLEMENTATION_AUDIT.md) — required reading before tests or implementation; includes a confirmed destructive graph-test target risk and the configuration migration inventory.
+
 ## Historical References
 
 These files are kept under `docs/old/` for context, not as active specifications:
