@@ -165,3 +165,22 @@ Read the specialist reports for exact capability and licensing boundaries. Codex
 The old fixed-order debate proposal is replaced by an adaptive room. Harness² is now an agent-invoked research improvement workflow with isolated probes and manual version promotion. Scrapling is an approved required adapter, not a proposal to install an unrestricted crawler.
 
 Static pre-implementation audit confirmed a destructive graph-test target risk and corrected earlier leads: LOCAL_LLM_ENABLED overrides YAML correctly; model role behavior differs by router; the legacy tool cap counts iterations, not a global tool budget. See PRE_IMPLEMENTATION_AUDIT.md before any tests.
+
+## Initial spike update — 1 November 2026
+
+The user supplied local GPU/toolkit output: RTX 5070 Ti 16,303 MiB (display-active, 568 MiB used in snapshot), RTX 3060 12,288 MiB (2 MiB used), driver 610.43.02, CUDA UMD 13.3 and nvcc 13.3/V13.3.73. This is user-reported capacity evidence, not a serving/model benchmark.
+
+Runtime research used these primary sources:
+- vLLM architecture list: https://github.com/vllm-project/vllm/blob/main/docs/models/supported_models.md
+- vLLM GGUF support/plugin caveats: https://github.com/vllm-project/vllm/blob/main/docs/features/quantization/gguf.md
+- vLLM prefix caching: https://github.com/vllm-project/vllm/blob/main/docs/features/automatic_prefix_caching.md
+- vLLM CUDA/wheel installation: https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/gpu.cuda.inc.md
+- vLLM tool parsing: https://github.com/vllm-project/vllm/blob/main/docs/features/tool_calling.md
+- SGLang Gemma4 cookbook: https://github.com/sgl-project/sglang/blob/main/docs/cookbook/autoregressive/Google/Gemma4.mdx
+- SGLang installation: https://github.com/sgl-project/sglang/blob/main/docs/docs/get-started/install.mdx
+- SGLang quantization/backends: https://github.com/sgl-project/sglang/blob/main/docs/docs/advanced_features/quantization.mdx
+- Codex App Server: https://developers.openai.com/codex/app-server/
+
+Current main-branch support does not prove a stable release/checkpoint/kernel combination. GGUF, AWQ/GPTQ and BF16 QAT-unquantized are different artifacts. The spike must freeze actual engine and model revisions, test compatible formats and compare quality as well as speed. No local-engine compatibility or performance result was produced by the documentation task.
+
+The spike includes vLLM first, SGLang comparison and retained llama.cpp baseline. Native isolated environments/start scripts are explicitly accepted. Local Codex must populate SPIKE_FINDINGS.md, return a copyable handback to the user and stop before product implementation.

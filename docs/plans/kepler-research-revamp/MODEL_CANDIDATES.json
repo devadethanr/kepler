@@ -1,23 +1,53 @@
 {
   "researched_at": "2026-10-31",
   "baseline_commit": "8fb50888c47a8b4f62e0917dd0475ee5dfaa6fb0",
-  "status": "Preferred heterogeneous pair selected for local evaluation; no GPU/model benchmark or application deployment performed.",
+  "status": "Initial local spike required before product implementation. Model metadata researched; local performance, serving-engine compatibility and Codex compatibility NOT_RUN.",
   "hardware": {
-    "confirmed": "RTX 5070 Ti and RTX 3060 in the same PC",
-    "unverified": [
-      "OS/WSL",
-      "GPU UUIDs",
-      "physical/free VRAM",
-      "system RAM",
-      "driver/toolchain"
+    "source": "User-provided local nvcc and nvidia-smi output, received 2026-11-01; not measured in this cloud task.",
+    "confirmed": "Both GPUs are in the same PC.",
+    "driver_version": "610.43.02",
+    "reported_cuda_umd": "13.3",
+    "nvcc_toolkit": "13.3, V13.3.73",
+    "gpus": [
+      {
+        "snapshot_index": 0,
+        "name": "NVIDIA GeForce RTX 5070 Ti",
+        "memory_total_mib": 16303,
+        "memory_used_mib": 568,
+        "display_active": true,
+        "planned_role": "slow"
+      },
+      {
+        "snapshot_index": 1,
+        "name": "NVIDIA GeForce RTX 3060",
+        "memory_total_mib": 12288,
+        "memory_used_mib": 2,
+        "display_active": false,
+        "planned_role": "fast"
+      }
     ],
-    "preflight": "Capture local nvidia-smi inventory and OS/RAM before selecting memory profiles. Do not infer total capacity from active MoE parameters."
+    "still_to_verify_locally": [
+      "GPU UUIDs and current free memory",
+      "OS distribution/kernel and native versus WSL",
+      "CPU/system RAM and free disk",
+      "actual PyTorch/framework bundled CUDA and architecture kernels",
+      "current display/browser GPU use and all running model services"
+    ],
+    "preflight": "Refresh inventory and bind by UUID; preserve the working driver/toolkit. Host nvcc version is not the CUDA runtime bundled in each framework."
   },
   "runtime": {
-    "candidate": "llama.cpp",
-    "tag": "v0.8.0",
-    "commit": "8642541b255bfb5dc39cd351a178be09013a55d6",
-    "deployment": "One process per GPU UUID, one request slot per process; no default tensor parallelism."
+    "selection": "Pending INITIAL_SPIKE_PLAN.md and SPIKE_FINDINGS.md",
+    "first_candidate": "vLLM",
+    "mandatory_comparison": "SGLang, if a compatible pinned model/runtime configuration is available; record unsupported or blocked combinations explicitly.",
+    "baseline": {
+      "name": "llama.cpp",
+      "researched_tag": "v0.8.0",
+      "researched_commit": "8642541b255bfb5dc39cd351a178be09013a55d6",
+      "note": "Preserve existing working local binary/model and record its actual version; researched tag is not a local benchmark."
+    },
+    "deployment": "Native isolated virtual environments and start scripts are accepted, with Docker optional. One process per GPU UUID, one request slot initially, TP=1, loopback-only spike endpoints.",
+    "quantization_gate": "Existing GGUF artifacts remain baseline pins. vLLM/SGLang need separately verified architecture/quantization/parser support; do not reinterpret Q4_0 or Q5_K_M as AWQ/GPTQ or assume a QAT-unquantized checkpoint is packed 4-bit.",
+    "optimized_checkpoint_status": "UNRESOLVED: record source/revision/tokenizer/template/license/quantization/checksum before each optimized-engine arm. No model substitutions without disclosure."
   },
   "candidates": [
     {
@@ -142,11 +172,12 @@
       "caveat": "Not a third required resident model. Pin/review code and calibrate own outcomes; no zero-shot trading authority or production promotion from model probabilities."
     }
   ],
-  "plan_revision": 2,
+  "plan_revision": 3,
   "default_profiles": {
     "fast": "fast-gemma4-e4b",
     "slow": "slow-qwen35",
     "fast_fallback": "fast-qwen35",
     "forecast": "timesfm-25-tool-cpu"
-  }
+  },
+  "updated_at": "2026-11-01"
 }

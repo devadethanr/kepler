@@ -1,6 +1,12 @@
 # Kepler collaborative-research revamp — revised handoff
 
-Revision 2, 31 October 2026. This replaces the original fixed-pipeline and two-Qwen default plan. Read PRE_IMPLEMENTATION_AUDIT.md BEFORE implementation or tests.
+Revision 3, 1 November 2026. This replaces the original fixed-pipeline and two-Qwen default plan. Read PRE_IMPLEMENTATION_AUDIT.md BEFORE tests. The mandatory INITIAL_SPIKE_PLAN.md now precedes product implementation; populate SPIKE_FINDINGS.md and STOP for user review before starting P0–P6.
+
+## Mandatory stage before product implementation
+
+The local spike must test actual model/runtime fit and quality, concurrent vLLM/SGLang/cache/context performance, Codex Responses and collaboration, safe tools/skills and relevant read-only probes. Isolated start scripts, virtual environments and minimal disposable spike runners are permitted; Docker is optional. Product logic, schemas, risk and live services remain unchanged. Use fixtures instead of the unsafe graph deletion tests.
+
+The known-format llama.cpp/GGUF pair is the baseline, not a predetermined serving-engine decision. vLLM is the first optimized candidate; SGLang is the comparison. Compatible checkpoint formats and model parsers are a gate. Do not silently treat existing GGUF files as AWQ/GPTQ or load BF16 weights that cannot fit. All runtime decisions remain provisional until measured findings are returned to the user.
 
 ## 1. User decisions and scope
 
@@ -10,7 +16,7 @@ Keep Zerodha, existing broker reconciliation, protective orders, operator contro
 
 Baseline inspected: origin/main at 8fb50888c47a8b4f62e0917dd0475ee5dfaa6fb0. Planning work did not switch or edit the application checkout. The actual implementation must inspect latest local/main, preserve operator changes and retain the pushed hardening fixes.
 
-Both GPUs are in the same PC: RTX 5070 Ti and RTX 3060. Detect OS/WSL, actual/free VRAM, GPU UUIDs, driver and RAM locally; prior chat does not establish those values. Do not ask the user for secret values.
+The user's local output confirms an RTX 5070 Ti with 16,303 MiB and an RTX 3060 with 12,288 MiB in the same PC, driver 610.43.02, CUDA UMD 13.3 and nvcc 13.3/V13.3.73. The display GPU had 568 MiB in use in that snapshot. Refresh GPU UUIDs/current free memory and record OS/WSL/RAM locally. These are user-reported capacity observations, not model benchmarks. Do not ask the user for secret values or replace a working driver.
 
 ## 2. Read-first blocker: destructive graph test isolation
 
@@ -18,7 +24,7 @@ Confirmed static defect: app-test environment MEMGRAPH_URI can be shadowed by ex
 
 DO NOT run destructive graph tests, broad make test or arbitrary test-file collection until isolation is fixed and refusal is proved. Do not rely solely on a hostname containing 'test'.
 
-First slice must:
+The first product safety slice, after spike findings review, must:
 - Define effective configuration precedence using dummy-value unit tests and redacted diagnostics.
 - Configure an exclusive disposable graph service/database and isolated test identity/network.
 - Add a fail-closed guard checking the actual expected test target/database before any destructive operation, including fixture driver sessions.
@@ -139,6 +145,8 @@ Current graph methods provide useful traversal but not historical time travel. R
 See SKILLS_AND_CONTEXT_TOOLS.md for actual repository gaps, capability contracts and official skill pin.
 
 ## 8. Heterogeneous two-model deployment
+
+Serving-engine selection is pending the mandatory initial spike. Existing artifact pins below are GGUF baseline profiles; optimized vLLM/SGLang checkpoint formats must be verified and separately recorded. Native launch scripts are a first-class option, not a failed-Docker workaround. Consult MODEL_CANDIDATES.json and INITIAL_SPIKE_PLAN.md for the confirmed hardware and unresolved runtime gates.
 
 Preferred pair:
 - RTX 3060: official Google Gemma 4 E4B QAT Q4_0, text only, file5.15GB/4.80GiB; no multimodal projector.
@@ -275,4 +283,4 @@ No new benchmark/test/inference outcome is claimed by these docs. Record passed/
 
 ## 16. Local Codex starter
 
-Read README.md, PRE_IMPLEMENTATION_AUDIT.md, this revised plan and the linked specialist audits. Preserve all local work and inspectlatest main before changing anything. StartP0only: fix and prove test isolation/configprecedence without touchingproduction graph. Then follow reviewableslices. Keep Zerodha and manual LIVE-entry approval. Build collaborative agents, not a fixed speaking pipeline; wire actual graph/file/web/browser/forecast capabilities withenforcement. Do not installall models/frameworks, bypass access controls, expose credentials, enableautolive, orrun destructive fixtures before the guard. Update verified facts when actual local hardware/upstream versions differ.
+Read README.md, PRE_IMPLEMENTATION_AUDIT.md and INITIAL_SPIKE_PLAN.md. Preserve local work and inspect the current branch before changing anything. Execute the isolated spike only, populate SPIKE_FINDINGS.md with measured evidence and blockers, return its copyable handback to the user, and STOP before product P0–P6. Native start scripts are accepted; Docker is optional. Keep Zerodha and manual LIVE-entry approval. Do not run destructive graph fixtures, alter product agents or schemas, bypass access controls, expose credentials, install every optional model/framework or silently call hosted inference. The user will bring findings back for planning review; subsequent product work starts only after that review.

@@ -1,8 +1,8 @@
 # Kepler collaborative research revamp
 
-Research and planning handoff, revision 2 — 31 October 2026.
+Research and planning handoff, revision 3 — 1 November 2026.
 
-**Status:** research and static code audits complete; application implementation, local GPU benchmarks and authenticated feed tests have not been performed. No live-trading permission is added.
+**Status:** research and static code audits complete. A mandatory local spike now precedes product implementation; GPU/runtime/model/Codex compatibility and authenticated feed results are still unmeasured. No live-trading permission is added.
 
 **Inspected application baseline:** main commit `8fb50888c47a8b4f62e0917dd0475ee5dfaa6fb0`. Recheck current code before implementing; line references in the audits refer to that revision.
 
@@ -13,15 +13,22 @@ Research and planning handoff, revision 2 — 31 October 2026.
 Read in this order:
 
 1. [Pre-implementation audit](PRE_IMPLEMENTATION_AUDIT.md): stale/shadowed keys, effective behavior, replacements and the graph-test blocker.
-2. [Implementation plan](IMPLEMENTATION_PLAN.md): authoritative scope, decisions, sequencing and gates.
-3. [Collaborative harness](COLLABORATIVE_HARNESS_RESEARCH.md): adaptive discussion, Codex feasibility, budgets and Harness².
-4. [Skills and context tools](SKILLS_AND_CONTEXT_TOOLS.md): graph, files, search, browser and extraction capabilities.
-5. [Models and fast brain](MODELS_AND_FAST_BRAIN.md), with [artifact pins](MODEL_CANDIDATES.json).
-6. [TimesFM audit and reuse](TIMESFM_AUDIT_AND_REUSE.md).
-7. [Live discussion UI](LIVE_DISCUSSION_UI_RESEARCH.md).
-8. [Research sources](RESEARCH_SOURCES.md).
+2. [Mandatory initial spike](INITIAL_SPIKE_PLAN.md), [Codex conformance matrix](CODEX_CONFORMANCE_SPIKE.md), then [findings page](SPIKE_FINDINGS.md): test the real local models and serving engines, write measured findings and **stop for user review before product implementation**. The findings page starts NOT_RUN; do not mistake a template for evidence.
+3. [Implementation plan](IMPLEMENTATION_PLAN.md): authoritative product scope, decisions, sequencing and gates, to revisit after the spike.
+4. [Collaborative harness](COLLABORATIVE_HARNESS_RESEARCH.md): adaptive discussion, Codex feasibility, budgets and Harness².
+5. [Skills and context tools](SKILLS_AND_CONTEXT_TOOLS.md): graph, files, search, browser and extraction capabilities.
+6. [Models and fast brain](MODELS_AND_FAST_BRAIN.md), with [artifact pins](MODEL_CANDIDATES.json).
+7. [TimesFM audit and reuse](TIMESFM_AUDIT_AND_REUSE.md).
+8. [Live discussion UI](LIVE_DISCUSSION_UI_RESEARCH.md).
+9. [Research sources](RESEARCH_SOURCES.md).
 
-The implementation plan is authoritative if a supporting note describes an earlier proposal.
+The initial spike and findings stop rule take precedence until the user reviews local results. The implementation plan is authoritative for subsequent product work if a supporting note describes an earlier proposal.
+
+## Hardware and runtime update
+
+The user supplied a 16,303 MiB RTX 5070 Ti and 12,288 MiB RTX 3060, driver 610.43.02 and CUDA toolkit 13.3/V13.3.73. Refresh UUIDs/current memory/OS/RAM locally. Evaluate vLLM first, compare SGLang, and retain llama.cpp as the known-format baseline. Do not declare a winner before measuring concurrent latency, quality, cache/context behavior and tool/Responses compatibility.
+
+Existing GGUF pins are not automatically optimized vLLM/SGLang artifacts. Record any separately reviewed checkpoint/format change. Native isolated environments and start scripts are accepted; Docker is optional. Preserve the working driver and existing services.
 
 ## Agreed product behavior
 
@@ -55,6 +62,6 @@ CPU-first and explicit resource allocation preserve the two LLM GPU budgets. No 
 
 ## Start instructions for local Codex
 
-Read the audit and plan before changing anything. Preserve local work and the pushed operator-control fixes. Start with P0 only: configuration precedence, test target guards and local hardware/runtime inventory. Use dummy values and safe unit checks first; do not expose or rotate actual secrets.
+Read the audit and INITIAL_SPIKE_PLAN.md before changing anything. Preserve local work and the pushed operator-control fixes. Execute the spike only: isolated pinned environments, minimal experimental runners and fixtures, real local model/runtime measurements and Codex/tool checks. Use dummy data and safe fixtures; do not expose or rotate actual secrets or run the destructive graph fixtures.
 
-Do not run graph deletion fixtures, migrate brokers, enable autonomous live entries, install every model/framework or rewrite the application at once. Work through the plan's reviewable slices with evidence, tests and rollback. Report passed, failed, skipped and unrun checks distinctly.
+Populate SPIKE_FINDINGS.md, return its copyable handback to the user with evidence and blockers, and STOP before product P0–P6 implementation. The user will bring the findings back for planning review. Report PASS, FAIL, BLOCKED, NOT_RUN and unavailable metrics distinctly. Do not migrate brokers, enable autonomous live entries, install every optional model/framework or rewrite the application during the spike.
