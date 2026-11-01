@@ -25,6 +25,7 @@ from memory.models import CognitionReportRow, CognitionRunRow
 from .adapter import Bridge
 from .codex import INSTRUCTIONS
 from .grounding import packet
+from .prompt_candidates import VARIANTS, evaluation_prompts
 from .settings import load_settings
 from .store import Budget, Store
 from .tools import Gateway, TOOLS
@@ -82,7 +83,8 @@ def score(case, args, output, events, evidence):
     }
 
 
-def evaluate_case(case, role, profile, settings, directory):
+def evaluate_case(case, role, profile, settings, directory, prompt_variant="baseline",
+                  rubric="legacy", packet_style="full", prepared_evidence=None):
     directory.mkdir(parents=True, exist_ok=True, mode=0o700)
     engine = create_engine("sqlite:///" + str(directory / "room.db"))
     CognitionRunRow.__table__.create(engine)
@@ -100,31 +102,50 @@ def evaluate_case(case, role, profile, settings, directory):
     store.claim(owner, 120)
     budget = Budget(store, room["id"], owner)
     gateway = Gateway(settings, store, room, owner, budget)
-    for source in case["sources"]:
+    for source in ([] if prepared_evidence is not None else case["sources"]):
         item = packet(source["target_entity"], source["source"], source["text"],
                       record_id=source["record_id"], event_id=source.get("event_id"),
                       published_at=source.get("published_at"), event_at=source.get("event_at"),
                       decision_cutoff=case["decision_cutoff"], status=source.get("status", "ok"),
+                      stale_after_days=case.get("stale_after_days", 30),
                       retrieval=source.get("retrieval", {"completeness": "complete for this supplied excerpt only"}))
         gateway.evidence[item["id"]] = item
+    if prepared_evidence is not None:
+        gateway.evidence.update(prepared_evidence)
     bridge = Bridge({}, budget)
     bridge.allowed = TOOLS
     bridge.tool_policy = lambda _: {"room_message"}
     bridge.tool_constraints = lambda _: {"room_message": {"event_id": ["", *sorted({
         e["event_id"] for e in gateway.evidence.values() if e.get("event_id")})]}}
+    evidence_input = list(gateway.evidence.values())
+    if packet_style == "compact":
+        from .iteration_inputs import compact_evidence
+        compact = compact_evidence(gateway.evidence, room["target"])
+        evidence_input = compact
+        bridge.tool_constraints = lambda _: {"room_message": {
+            "quote_id": compact["allowed_quote_ids"],
+            "event_id": ["", *sorted({e["event_id"] for e in gateway.evidence.values()
+                                     if e.get("event_id")})]}}
+    elif packet_style != "full":
+        raise ValueError("Unknown evidence representation")
     desc, props = TOOLS["room_message"]
     tool = {"type": "function", "name": "room_message", "description": desc,
             "parameters": {"type": "object", "properties": props,
                            "required": list(props), "additionalProperties": False}}
     port = bridge.start(0, profile.model, urlsplit(profile.endpoint).port)
-    payload = {"model": profile.model, "instructions": INSTRUCTIONS + "\n" + TASK,
+    instructions, task = evaluation_prompts(prompt_variant, INSTRUCTIONS, TASK)
+    payload = {"model": profile.model, "instructions": instructions + "\n" + task,
                "input": [{"role": "user", "content": json.dumps({
                    "target_entity": case["target_entity"], "event_id": case["event_id"],
                    "question": case["question"], "claim_text": case["claim_text"],
                    "decision_cutoff": case["decision_cutoff"],
-                   "evidence": list(gateway.evidence.values())})}],
+                   "evidence_policy": {"stale_after_days": case.get("stale_after_days", 30)},
+                   "evidence": evidence_input})}],
                "tools": [tool], "stream": True, "max_output_tokens": 512}
-    row = {"case_id": case["id"], "role": role, "transport": "Responses bridge + real Gateway.execute; supplied evidence"}
+    row = {"case_id": case["id"], "role": role, "prompt_variant": prompt_variant,
+           "rubric": rubric,
+           "packet_style": packet_style,
+           "transport": "Responses bridge + real Gateway.execute; supplied evidence"}
     args, output = {}, {}
     try:
         request = Request(f"http://127.0.0.1:{port}/v1/responses", json.dumps(payload).encode(),
@@ -136,7 +157,16 @@ def evaluate_case(case, role, profile, settings, directory):
                     event = json.loads(line[6:])
                     if event["type"] in {"response.completed", "response.incomplete", "response.failed"}:
                         final = event["response"]
+        row.update(response_status=(final or {}).get("status"),
+                   response_error=(final or {}).get("error"),
+                   incomplete_details=(final or {}).get("incomplete_details"))
+        row["output_shapes"] = [
+            {"type": item["type"], "text_characters": sum(len(part.get("text", ""))
+             for part in item.get("content", []))}
+            for item in (final or {}).get("output", [])
+        ]
         calls = [item for item in (final or {}).get("output", []) if item["type"] == "function_call"]
+        row["proposed_tool_count"] = len(calls)
         if len(calls) != 1:
             raise ValueError("Expected exactly one published tool proposal")
         args = json.loads(calls[0]["arguments"])
@@ -149,10 +179,31 @@ def evaluate_case(case, role, profile, settings, directory):
         bridge.close()
         gateway.close()
     state = store.get(room["id"])
+    events = store.events(room["id"])
+    scorer = score
+    if rubric == "span-v2":
+        from .iteration_scoring import score_v2
+        scorer = score_v2
     row.update(proposal=args, gate=output, counts=state["counts"],
-               score=score(case, args, output, store.events(room["id"]), gateway.evidence))
+               score=scorer(case, args, output, events, gateway.evidence))
     engine.dispose()
     return row
+
+
+def check_allocation(run, phase, case_count):
+    """All variants share the declared run allocation, regardless of case naming."""
+    previous = [(path.parent.name, json.loads(line))
+                for path in run.glob("*/results.jsonl")
+                for line in path.read_text().splitlines()]
+    prior_calls = sum(row["counts"]["model"] for _, row in previous)
+    group = "development" if phase.startswith("development") else "heldout"
+    phase_calls = sum(row["counts"]["model"] for name, row in previous
+                      if name.startswith(group))
+    if prior_calls + case_count * 2 > 120:
+        raise ValueError("Declared total inference ceiling")
+    limit = 20 if group == "development" else 60
+    if phase_calls + case_count * 2 > limit:
+        raise ValueError(group.capitalize() + " allocation exhausted")
 
 
 def main():
@@ -160,25 +211,21 @@ def main():
     parser.add_argument("cases", type=Path)
     parser.add_argument("run", type=Path)
     parser.add_argument("--phase", choices=["development", "development-confirm", "heldout"], required=True)
+    parser.add_argument("--prompt-variant", choices=VARIANTS, default="baseline")
     args = parser.parse_args()
     settings = load_settings()
     cases = json.loads(args.cases.read_text())
     assert len(cases) <= (10 if args.phase.startswith("development") else 30)
-    previous = [json.loads(line) for path in args.run.glob("*/results.jsonl")
-                for line in path.read_text().splitlines()]
-    prior_calls = sum(row["counts"]["model"] for row in previous)
-    phase_calls = sum(row["counts"]["model"] for row in previous
-                      if row.get("case_id", "").startswith("dev-"))
-    assert prior_calls + len(cases) * 2 <= 120, "Declared total inference ceiling"
-    if args.phase.startswith("development"):
-        assert phase_calls + len(cases) * 2 <= 20, "Development allocation exhausted"
-    else:
-        assert len(cases) * 2 <= 60, "Contract allocation exhausted"
-    destination = args.run / args.phase
+    check_allocation(args.run, args.phase, len(cases))
+    name = args.phase if args.prompt_variant == "baseline" else args.phase + "-" + args.prompt_variant
+    destination = args.run / name
     destination.mkdir(mode=0o700)
+    instructions, task = evaluation_prompts(args.prompt_variant, INSTRUCTIONS, TASK)
     freeze = {"case_sha256": hashlib.sha256(args.cases.read_bytes()).hexdigest(),
               "evaluator_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-              "prompt_sha256": hashlib.sha256((INSTRUCTIONS + TASK).encode()).hexdigest(),
+              "prompt_variant": args.prompt_variant,
+              "prompt_sha256": hashlib.sha256((instructions + "\n" + task).encode()).hexdigest(),
+              "prompt_hash_basis": "exact system instructions, newline, assessment task",
               "unique_cases_per_model": len(cases), "expected_model_requests": len(cases) * 2,
               "fully_correct": "gate accepts; exact supplied claim/kind/support, relevant citation and source event identity",
               "target": "27/30 per model for heldout n30; new limited functional objective, not financial validation",
@@ -191,7 +238,8 @@ def main():
         role, profile = pair
         ordered = cases if role == "analyst" else list(reversed(cases))
         for case in ordered:
-            row = evaluate_case(case, role, profile, settings, destination / role / case["id"])
+            row = evaluate_case(case, role, profile, settings, destination / role / case["id"],
+                                prompt_variant=args.prompt_variant)
             with lock, (destination / "results.jsonl").open("a") as stream:
                 stream.write(json.dumps(row) + "\n")
             print(json.dumps({"role": role, "case": case["id"], "accepted": row["score"]["accepted"], "correct": row["score"]["fully_correct"]}), flush=True)
