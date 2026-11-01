@@ -6,7 +6,15 @@ Prepared 1 November 2026 for `feat-generic-broker@aebd42d`. Read [ROOM_REVIEW.md
 
 The first milestone delivered a working local room. This phase makes its discussion, terminal state and evidence handling more useful and dependable. It does not rebuild the harness, repeat the framework matrix or wait for a new generic deployment approval. Existing broker services and manual live-entry approval retain their authority.
 
-Work in three small slices. A and offline B can proceed independently; run integrated model checks after their relevant paths are connected. Preserve the user's five uncommitted runtime-state files and any newer local work. Commit source/docs, not changing account/runtime state.
+Restore the reported UI loading failure first, then work in three small slices. A and offline B can proceed independently; run integrated model checks after their relevant paths are connected. Preserve the user's five uncommitted runtime-state files and any newer local work. Commit source/docs, not changing account/runtime state.
+
+## 0 — restore the intended Research Desk screen first
+
+After the `aebd42d` review, the user reported that Research Desk is not loading. This screen is intended to work now at :8502, with question entry, saved rooms, actual conversation and evidence/tool events. The optional office/animation view is later work. Treat the current loading problem as an implementation issue, not a deferred UI feature.
+
+Reproduce the user's actual browser origin and identify the first render/network error. Check lazy-chunk/tab loading, initial `crypto.randomUUID()` calls, secure-context support, the dashboard `/api/research` proxy, API/socket/service readiness, authentication status and response-schema parsing. The unguarded UUID initialization in ResearchDeskScreen can fail on some non-localhost HTTP origins; there is not yet evidence that this is the user's cause. Preserve valid UUID/idempotency semantics when handling feature availability.
+
+The component must still render its title/form and clear loading/empty/error or unavailable states when APIs/models are unavailable; a blank screen is not acceptable. Add a suitable error boundary/retry path and focused mount/interaction coverage for the demonstrated failure. Keep authentication server-side and use a temporary test browser profile. Verify the real browser view, including the actual origin and localhost, history reload and unavailable-backend recovery. Passing TypeScript/build alone does not establish this behavior. Diagnose/start only needed research services through the existing runbook; leave broker services alone.
 
 ## A — conversation and lifecycle correctness
 

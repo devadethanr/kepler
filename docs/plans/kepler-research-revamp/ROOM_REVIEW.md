@@ -29,6 +29,10 @@ The local report's **89 backend/graph tests and actual UI/model/browser/cancel/A
 
 Recovery is **saved-history replay plus a linked fresh attempt after worker interruption**, not continuation of the same live Codex threads after a worker crash. The normal activation restarted the host API, not the mid-turn worker. Browser reading currently fetches approved public HTML and inspects it in a networkless DOM; interactive authenticated navigation, external page resources and general web search are not delivered by that reader. TimesFM, Scrapling, GIFT/STI and scheduled research-room triggers are not in the current room tool registry.
 
+## User follow-up: Research Desk is not loading
+
+The user subsequently reported that the Research Desk view is not loading. It is an intended current feature, not a future UI milestone. The exact failing origin, console error and API response have not been observed in cloud. Add local diagnosis/restoration as task 0 in the next phase. Inspect the first render failure as well as the proxy/services; `crypto.randomUUID()` is called unguarded on mount and can be unavailable on some non-localhost HTTP origins. That is one candidate to check, not a confirmed root cause. Existing compile/API/event tests do not cover this actual browser failure.
+
 ## Findings to fix next
 
 P1 means work to do first in the next personal-workspace iteration, not a separate commercial deployment process.

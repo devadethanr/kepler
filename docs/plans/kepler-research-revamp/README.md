@@ -4,6 +4,8 @@ Implementation handoff, revision 6 — review of `aebd42d`, 1 November 2026.
 
 **Current state:** the first local Codex research room is implemented and activated in the user's normal app at **http://localhost:8502 → Research Desk**, as recorded in [LOCAL_ACTIVATION.md](LOCAL_ACTIVATION.md). **Codex App Server + the tested local adapter remains the chosen runtime.** No framework-selection gate is reopened.
 
+**Reported current issue:** the user says Research Desk is not loading. It is intended to work now; local Codex must diagnose and restore it first, using the actual browser origin and API/service responses. See task 0 in NEXT_PHASE_IMPLEMENTATION.md.
+
 **Next:** fix the concrete conversation/lifecycle/tool gaps and improve grounded claims on that installed room. Read [ROOM_REVIEW.md](ROOM_REVIEW.md), then [NEXT_PHASE_IMPLEMENTATION.md](NEXT_PHASE_IMPLEMENTATION.md). Use [NEXT_PHASE_HANDOFF.md](NEXT_PHASE_HANDOFF.md) for local Codex.
 
 The cloud review repeated 22 backend tests, 16 frontend tests, typecheck/build and Ruff; eight backend checks needing disposable Postgres/graph infrastructure were skipped. It checked committed evidence hashes and reproduced specific defects using temporary SQLite/dummy files. The local report's 89 backend/graph tests and UI/GPU observations were not rerun on the user's PC. Review evidence and exact limits are linked in ROOM_REVIEW.md.

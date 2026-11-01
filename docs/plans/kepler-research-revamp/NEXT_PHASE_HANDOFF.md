@@ -12,7 +12,30 @@ NEXT_PHASE_IMPLEMENTATION.md, LOCAL_ACTIVATION.md and RESEARCH_ROOM_RUNBOOK.md.
 Implement the next phase on the existing Codex App Server/local-adapter room.
 Do not rebuild the framework or repeat the completed model/engine spike.
 
-First fix the concrete review findings:
+FIRST restore the existing Research Desk UI. It is intended to load now at
+http://localhost:8502 -> Research Desk; the user reports it is not loading.
+Reproduce on the actual URL they use, with an isolated test browser/profile.
+Capture the first console error, failed network request and status without secrets.
+Distinguish a blank/render failure from unavailable API, saved history or models.
+Check:
+- App.tsx lazy import/tab wiring, browser console and failed/stale JS chunks.
+- window.isSecureContext and crypto.randomUUID availability: the current screen
+  calls it unguarded during mount, and research.ts calls it for retry. This can
+  throw on some non-localhost HTTP origins; it is a hypothesis, not a diagnosis.
+- /api/research/health and /api/research/rooms through the dashboard proxy;
+  FASTAPI_URL/optional RESEARCH_API_URL, server-side auth, the normal API's Unix
+  socket path, host research API and make research-status from swingtradev3/.
+- Actual response bodies versus Zod schemas and terminal SSE lifecycle.
+
+Fix the demonstrated cause, preserve valid UUID/idempotency behavior, and add a
+focused render/interaction regression. The view must render a useful loading,
+empty or unavailable/error state even when services/models are down. Add a local
+error boundary/retry surface if appropriate; do not hide the exception or expose
+API keys in JavaScript. Verify the user's actual origin as well as localhost,
+saved-room selection/reload and error recovery. Do not just rerun the build and
+claim the screen loads. The optional Gather-like office view can wait.
+
+Then fix the concrete review findings:
 - Deliver and give a bounded response opportunity to the latest objection before
   terminating a room; persist the causal state needed for this decision.
 - Make queued cancellation atomically terminal, with completion time and one
@@ -72,6 +95,7 @@ Continue reversible work within scope; do not stop merely to select Codex again.
 ```text
 KEPLER NEXT-PHASE FINDINGS
 Branch / starting and final source commit:
+Research Desk load failure root cause, actual URL/origin and browser verification:
 Review finding IDs fixed / remaining:
 Conversation: latest objection and final-message-limit behavior:
 Queued/active/browser cancellation and terminal events:
