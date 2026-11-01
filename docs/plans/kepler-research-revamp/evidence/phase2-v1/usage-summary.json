@@ -1,0 +1,16 @@
+{
+  "total": {
+    "model": 112,
+    "tool": 101,
+    "reserved_tokens": 3670016,
+    "input_tokens": 356585,
+    "output_tokens": 10593,
+    "unknown_usage_calls": 3
+  },
+  "ceiling": 120,
+  "development_calls": 20,
+  "heldout_calls": 60,
+  "native_room_calls": 32,
+  "remaining_unspent": 8,
+  "note": "Reserved contexts are cumulative admissions, not actual token use. Killed-worker two calls have unknown usage; no invented zero consumption."
+}

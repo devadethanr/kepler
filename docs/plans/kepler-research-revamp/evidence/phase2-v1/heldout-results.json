@@ -1,0 +1,2998 @@
+[
+  {
+    "case_id": "heldout-01",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "",
+      "position": "question",
+      "quote_id": "q:2bfe35bdae79",
+      "recipient": "room",
+      "support_assessment": "supported",
+      "text": "The activation report says manual approval remains required for live entries."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:dea7a959-ffdc-4b42-8bbd-8a123447a79b:7cb1cf8316a1e5b9771a4dfc168e6346",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1508,
+      "output_tokens": 80,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-30",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Umber Robotics filed exactly two patents in 2026.",
+      "quote_id": "q:6516ce1618e0",
+      "claim_kind": "observation",
+      "support_assessment": "insufficient",
+      "event_id": "patent-count",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:179f6dde-b56f-4c3c-aa81-96313f3290ea:0c2c3ca4ac5e8f730226658ccc6ae82e",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1758,
+      "output_tokens": 130,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-29",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Saffron Media had 2 million subscribers at Q3 end.",
+      "quote_id": "q:b02e5c5a0f69",
+      "claim_kind": "observation",
+      "support_assessment": "contradicted",
+      "event_id": "subscribers-q3",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:e6a06a24-0f57-4a9d-b12e-dee28d2c53fc:39c6aa6b7960726b487fbdc83955580a",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 2171,
+      "output_tokens": 132,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": false,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-02",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "",
+      "position": "question",
+      "quote_id": "q:c35958766041",
+      "recipient": "room",
+      "support_assessment": "supported",
+      "text": "The runbook says history and SSE share one committed sequence."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:71f98e81-8a07-4228-b0ba-447440d667ce:9b4bb7354350686e03763113e65c2d1e",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1520,
+      "output_tokens": 82,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-28",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Reed Steel had no accidents at any plant in 2026.",
+      "quote_id": "q:518b6c141aed",
+      "claim_kind": "observation",
+      "support_assessment": "insufficient",
+      "event_id": "safety-2026",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:91048a7b-1a88-4f98-87c0-50fb9d9d8731:bc2c03027859b58c27dbcb75977e1dd2",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1748,
+      "output_tokens": 135,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-03",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "",
+      "position": "question",
+      "quote_id": "q:f55c66fd5f63",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "The review says model health is shown on the screen."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:56caf433-644c-4f7a-8755-75ef50326e85:fdbbea101401cdcc5f35b0c6fbd5c85c",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1517,
+      "output_tokens": 81,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": false,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": true,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-04",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "annual-2026",
+      "position": "question",
+      "quote_id": "q:d766600c7dab",
+      "recipient": "room",
+      "support_assessment": "supported",
+      "text": "Arbor Foods declared a final dividend of 4 rupees per share for 2026."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:9fad3c8b-f4e7-4ac7-b84d-1462e8c95731:7c367db7eafafefc5e9caf9dd7880275",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1580,
+      "output_tokens": 94,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-27",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Quartz Labs scheduled device Z for 10 November 2026, which is after the 2026-11-01 cutoff. The claim that it launched before the cutoff is contradicted by this evidence.",
+      "quote_id": "q:11d2d28586f3",
+      "claim_kind": "observation",
+      "support_assessment": "contradicted",
+      "event_id": "launch-2026",
+      "position": "conclude"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:30ce80f0-451f-42e1-87d3-fa3f0298b2d1:3b8228c48a0bea9046d848dc1ccab6e0",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1759,
+      "output_tokens": 171,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": false,
+        "claim_kind": true,
+        "support_assessment": false,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-05",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "rights-2026",
+      "position": "question",
+      "quote_id": "q:15b9bd50bd25",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "Cedar Labs approved a rights issue."
+    },
+    "gate": {
+      "status": "denied",
+      "error": "Unknown/cross-target citation or unsupported quote",
+      "instruction": "Copy a quote_spans q:id into quote_id. If evidence is insufficient use position abstain and empty quote_id.",
+      "available_citations": [
+        {
+          "evidence_id": "ev:6d3da6dd8e7af663aa707371",
+          "quote_spans": [
+            {
+              "id": "q:15b9bd50bd25",
+              "text": "Cedar Textiles approved a rights issue."
+            }
+          ]
+        }
+      ]
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1533,
+      "output_tokens": 82,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": false,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": false,
+      "valid_quote": false,
+      "wrong_entity_citation": true,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": true,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-26",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Prairie Mining reserves increased in 2026.",
+      "quote_id": "q:aa1c7d90657e",
+      "claim_kind": "observation",
+      "support_assessment": "contradicted",
+      "event_id": "reserve-2026",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:6ed8990f-70fb-4ae9-a02c-2f6e0798d3bd:33476274e67dfeabe994898146473af1",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1751,
+      "output_tokens": 132,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": false,
+        "relevant_citation": false,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": true,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-06",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "plant-b",
+      "position": "question",
+      "quote_id": "q:fcac7ea418fe",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "Mica Motors opened plant B."
+    },
+    "gate": {
+      "status": "denied",
+      "error": "Event identity is not established by this evidence",
+      "instruction": "Copy a quote_spans q:id into quote_id. If evidence is insufficient use position abstain and empty quote_id.",
+      "available_citations": [
+        {
+          "evidence_id": "ev:d9a79ce5269ed1e48da9f926",
+          "quote_spans": [
+            {
+              "id": "q:fcac7ea418fe",
+              "text": "Mica Motors opened plant A."
+            }
+          ]
+        }
+      ]
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1525,
+      "output_tokens": 77,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": false,
+        "event_identity": false
+      },
+      "fully_correct": false,
+      "accepted": false,
+      "valid_quote": false,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": true,
+      "nonexistent_citation": false,
+      "irrelevant_citation": true,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-25",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Orchid Foods completed its merger in 2026.",
+      "quote_id": "q:8cd6b12a3311",
+      "claim_kind": "observation",
+      "support_assessment": "insufficient",
+      "event_id": "merger-2026",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:5a4e51e3-47be-4155-a0bf-b9623954065d:ee1b277fa5c669fdbc25e4caf009490e",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1743,
+      "output_tokens": 134,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-07",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "route-7",
+      "position": "question",
+      "quote_id": "q:dd7eeed3dbb6",
+      "recipient": "room",
+      "support_assessment": "contradicted",
+      "text": "Harbor Air cancelled route 7."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:1dcffd8a-6891-452f-8460-ae66eaf48e23:1434e443667811c03cbe11f3d3ee95a8",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1541,
+      "output_tokens": 78,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-24",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Maple Ports workers voted to strike in 2026.",
+      "quote_id": "q:57970da4d9a9",
+      "claim_kind": "observation",
+      "support_assessment": "insufficient",
+      "event_id": "strike-2026",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:5d186e28-02fc-4892-a1c4-90a513ecf163:577b462b7739e816c8d9a8b99f64fde2",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 2126,
+      "output_tokens": 133,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-08",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "permit-3",
+      "position": "question",
+      "quote_id": "q:0aab5e015aa2",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "Olive Energy received permit 3."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:0b9b9660-867b-4e53-aa8a-b58f53687c07:688de556998d19c9b717624e11936bcd",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1962,
+      "output_tokens": 79,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-23",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Lumen Glass debt rose by 5 percent in Q2.",
+      "quote_id": "q:de72db26303d",
+      "claim_kind": "observation",
+      "support_assessment": "contradicted",
+      "event_id": "debt-q2",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:f9bef3d8-20a0-460b-998f-61ec43bc59a8:515f13549f317b6c5f5d900005850fd1",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1723,
+      "output_tokens": 130,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-09",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "ceo-now",
+      "position": "question",
+      "quote_id": "q:c14bd1421749",
+      "recipient": "room",
+      "support_assessment": "supported",
+      "text": "Birch Bank currently has Priya as CEO."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:5cc77fbc-9354-46ef-baea-39d3670a7426:ec34321f8477f6fe296db616af8c9c2d",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1503,
+      "output_tokens": 81,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": false,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": true,
+      "correct_uncertainty": false,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-22",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Kite Textiles exported 800 rolls in Q1.",
+      "quote_id": "q:b8adca2151c9",
+      "claim_kind": "observation",
+      "support_assessment": "supported",
+      "event_id": "exports-q1",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:7af2334a-e422-4968-863e-f08e05f7a102:9f809b573946301d3baa57a31e0d1028",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1727,
+      "output_tokens": 127,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-10",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "charter-1901",
+      "position": "question",
+      "quote_id": "q:d6febfd52a9a",
+      "recipient": "room",
+      "support_assessment": "supported",
+      "text": "The Granite Museum charter was signed in 1901."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:60b42fd2-6c55-4771-9b6d-8bbb7bfc671c:a655d22ac6109554a616bb5ba144e052",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1558,
+      "output_tokens": 87,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-21",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Juniper Health did not receive license 8.",
+      "quote_id": "q:1376f7357bc9",
+      "claim_kind": "observation",
+      "support_assessment": "contradicted",
+      "event_id": "license-8",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:45952e03-f114-4526-9e0a-359a89991c7d:7a3a316695e9f51695b9e0ecae119a2a",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1706,
+      "output_tokens": 127,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": false,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-11",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "network-now",
+      "position": "question",
+      "quote_id": "q:464dcac37526",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "River Telecom currently has 300 towers."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:ceae8505-22a1-4ffd-8d20-4c925537399b:beada4da46145a1e566082b3f3b342e7",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1554,
+      "output_tokens": 82,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-20",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Will Iris Paper renew its supply contract?",
+      "quote_id": "q:90b507b4cd0e",
+      "claim_kind": "question",
+      "support_assessment": "insufficient",
+      "event_id": "supply-2026",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:2a2db4d9-728e-4e09-b41f-9fedcfa9dadf:6c10716dfd18d6c9ec518cb251c19c70",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1723,
+      "output_tokens": 127,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": false,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-12",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "trial-x",
+      "position": "question",
+      "quote_id": "q:f00e55387e98",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "Nimbus Pharma trial X met its primary endpoint."
+    },
+    "gate": {
+      "status": "denied",
+      "error": "Unusable publication time or decision cutoff",
+      "instruction": "Copy a quote_spans q:id into quote_id. If evidence is insufficient use position abstain and empty quote_id.",
+      "available_citations": [
+        {
+          "evidence_id": "ev:f0d4ee0a731717dbdfb7c662",
+          "quote_spans": [
+            {
+              "id": "q:f00e55387e98",
+              "text": "Nimbus Pharma trial X met its primary endpoint."
+            }
+          ]
+        }
+      ]
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1531,
+      "output_tokens": 83,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": false,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": false,
+      "valid_quote": false,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": true,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-19",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Haven Cement will increase its dividend because its Q2 margin rose.",
+      "quote_id": "q:45d1aca9743c",
+      "claim_kind": "inference",
+      "support_assessment": "insufficient",
+      "event_id": "margin-q2",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:32240cf5-7017-4451-8c79-0ad44ea87960:b0a20b3fee6fe200e847e1ea05153006",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1730,
+      "output_tokens": 130,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": false,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-13",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "station-opening",
+      "position": "question",
+      "quote_id": "q:173727986a96",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "Pine Rail opened its new station before the cutoff."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:81722667-b596-420a-934f-cacdec0a9c5e:440331cea97abc72a132c6fa1564d0a5",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1581,
+      "output_tokens": 84,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-18",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Grove Retail opened 12 stores in 2025 and 7 stores in 2026.",
+      "quote_id": "q:1367489b1bce",
+      "claim_kind": "observation",
+      "support_assessment": "contradicted",
+      "event_id": "stores-2026",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:374f541a-3d71-4bbe-88fd-f366dc022ea2:32757bbed35574af365db7f868ffd882",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1760,
+      "output_tokens": 145,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": false,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-14",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "freight-q3",
+      "position": "question",
+      "quote_id": "q:d435fa737d71",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "Acorn Shipping freight revenue rose in Q3."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:dff82b63-9d48-4788-a4c6-23ba498be960:cbfd6af6ceea872de0581ab5a3c258e1",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1547,
+      "output_tokens": 85,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": false,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": true,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-17",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Fjord Metals produced 50 tonnes in 2026.",
+      "quote_id": "q:ed4c716e7328",
+      "claim_kind": "observation",
+      "support_assessment": "contradicted",
+      "event_id": "output-2026",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:fce2ca82-9ea0-4a0e-a954-e0e0faf85f40:e80060fa13ecc4983f53794434a16425",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1779,
+      "output_tokens": 135,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-15",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "audit-2026",
+      "position": "question",
+      "quote_id": "",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "Delta Water passed its 2026 audit."
+    },
+    "gate": {
+      "status": "denied",
+      "error": "Event identity is not established by this evidence",
+      "instruction": "Copy a quote_spans q:id into quote_id. If evidence is insufficient use position abstain and empty quote_id.",
+      "available_citations": [
+        {
+          "evidence_id": "ev:93c6c300baad8d0049a576f9",
+          "quote_spans": []
+        }
+      ]
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1508,
+      "output_tokens": 74,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": false
+      },
+      "fully_correct": false,
+      "accepted": false,
+      "valid_quote": false,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-16",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Claim: No security incidents were reported for Elm Software in 2026. Assessment: insufficient. Evidence only covers January 2026 and is truncated. No data for the rest of 2026.",
+      "quote_id": "q:d4c33c0349f1",
+      "claim_kind": "observation",
+      "support_assessment": "insufficient",
+      "event_id": "breach-2026",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:e27ae8ca-532c-4458-9ffb-4591ffc378c3:26b394e4d75eec8c6c6b2844ac9c5334",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1736,
+      "output_tokens": 166,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": false,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-16",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "breach-2026",
+      "position": "question",
+      "quote_id": "q:d4c33c0349f1",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "No security incidents were reported for Elm Software in 2026."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:41eb749d-167d-4b3e-afbb-775249766731:6aed6aaf38df2aea6f3c7681dac3695e",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1562,
+      "output_tokens": 93,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-15",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Delta Water passed its 2026 audit.",
+      "quote_id": "",
+      "claim_kind": "observation",
+      "support_assessment": "insufficient",
+      "event_id": "audit-2026",
+      "position": "question"
+    },
+    "gate": {
+      "status": "denied",
+      "error": "Event identity is not established by this evidence",
+      "instruction": "Copy a quote_spans q:id into quote_id. If evidence is insufficient use position abstain and empty quote_id.",
+      "available_citations": [
+        {
+          "evidence_id": "ev:93c6c300baad8d0049a576f9",
+          "quote_spans": []
+        }
+      ]
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1682,
+      "output_tokens": 116,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": false
+      },
+      "fully_correct": false,
+      "accepted": false,
+      "valid_quote": false,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-17",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "output-2026",
+      "position": "question",
+      "quote_id": "q:ed4c716e7328",
+      "recipient": "room",
+      "support_assessment": "contradicted",
+      "text": "Fjord Metals produced 50 tonnes in 2026."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:cfe8caf3-224a-4cbb-9ae7-029b11332b6b:0ac081f08b8e95f24115fce4680f1523",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1605,
+      "output_tokens": 91,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-14",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Acorn Shipping freight revenue rose in Q3.",
+      "quote_id": "q:d435fa737d71",
+      "claim_kind": "observation",
+      "support_assessment": "insufficient",
+      "event_id": "freight-q3",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:ad007b67-597a-4544-9ec9-c0678a74163b:7c7b41f97eaa0fc259bce47d57a13e26",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1714,
+      "output_tokens": 126,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": false,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": true,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-18",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "stores-2026",
+      "position": "question",
+      "quote_id": "q:1367489b1bce",
+      "recipient": "room",
+      "support_assessment": "contradicted",
+      "text": "Grove Retail opened 12 stores in 2026."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:fb450ff7-908a-4be4-9604-d6bc99727e2a:755d4b696e5e00aed7188861f01293eb",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1583,
+      "output_tokens": 90,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-13",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Pine Rail opened its new station before the cutoff.",
+      "quote_id": "q:173727986a96",
+      "claim_kind": "observation",
+      "support_assessment": "contradicted",
+      "event_id": "station-opening",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:042a21bc-4c6d-4edd-9eea-c84e62045292:cc1b0287b6aa959e5b52524b9d645631",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1756,
+      "output_tokens": 128,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": false,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-19",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "inference",
+      "event_id": "margin-q2",
+      "position": "question",
+      "quote_id": "q:45d1aca9743c",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "Haven Cement will increase its dividend because its Q2 margin rose."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:5525bffb-a437-4550-aa3c-d65a4dbcfd5b:aeca77052388945d437fea82e44259c4",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1554,
+      "output_tokens": 86,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": false,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-12",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Nimbus Pharma trial X met its primary endpoint.",
+      "quote_id": "q:f00e55387e98",
+      "claim_kind": "observation",
+      "support_assessment": "insufficient",
+      "event_id": "trial-x",
+      "position": "question"
+    },
+    "gate": {
+      "status": "denied",
+      "error": "Unusable publication time or decision cutoff",
+      "instruction": "Copy a quote_spans q:id into quote_id. If evidence is insufficient use position abstain and empty quote_id.",
+      "available_citations": [
+        {
+          "evidence_id": "ev:f0d4ee0a731717dbdfb7c662",
+          "quote_spans": [
+            {
+              "id": "q:f00e55387e98",
+              "text": "Nimbus Pharma trial X met its primary endpoint."
+            }
+          ]
+        }
+      ]
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1705,
+      "output_tokens": 125,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": false,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": false,
+      "valid_quote": false,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": true,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-20",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "question",
+      "event_id": "supply-2026",
+      "position": "question",
+      "quote_id": "q:90b507b4cd0e",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "Will Iris Paper renew its supply contract? The contract expires in December 2026, but no information on renewal is present."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:9e02f4f9-8a87-4443-8297-53499a1bed49:10999c64eee55c0c401208199c1b2c63",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1547,
+      "output_tokens": 103,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": false,
+        "claim_kind": true,
+        "support_assessment": false,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-11",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Claim: River Telecom currently has 300 towers. Assessment: insufficient. Source q:464dcac37526 states 300 towers in January 2025, but \"currently\" implies 2026-11-01. No evidence covers the current count.",
+      "quote_id": "q:464dcac37526",
+      "claim_kind": "observation",
+      "support_assessment": "insufficient",
+      "event_id": "network-now",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:d4dbc95e-40e1-47b4-b7bd-fc892f302922:a0b6fffcbd3c17abe5987e46ed73f565",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1721,
+      "output_tokens": 181,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": false,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-21",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "license-8",
+      "position": "question",
+      "quote_id": "q:1376f7357bc9",
+      "recipient": "room",
+      "support_assessment": "contradicted",
+      "text": "Juniper Health received license 8."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:d5472fe0-4aa7-44c5-9b7c-e3adef3347cf:ab31a318fe77bc6674a75d0c76895f5b",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1533,
+      "output_tokens": 81,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-10",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "The Granite Museum charter was signed in 1901.",
+      "quote_id": "q:d6febfd52a9a",
+      "claim_kind": "observation",
+      "support_assessment": "supported",
+      "event_id": "charter-1901",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:2fded4b5-9815-449f-bf9a-674bffebb582:04ed2583bc0fc8015a52cd3d2919f9b9",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1728,
+      "output_tokens": 129,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-22",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "exports-q1",
+      "position": "question",
+      "quote_id": "q:b8adca2151c9",
+      "recipient": "room",
+      "support_assessment": "supported",
+      "text": "Kite Textiles exported 800 rolls in Q1."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:d07e2d13-55ec-4a57-b71a-7b4af499fb3b:d2ed4cb64a65b9de57caafd03df34506",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1550,
+      "output_tokens": 85,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-09",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Birch Bank currently has Priya as CEO.",
+      "quote_id": "q:c14bd1421749",
+      "claim_kind": "observation",
+      "support_assessment": "supported",
+      "event_id": "ceo-now",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:fa355f9a-5a48-4747-9eb1-9b1d15dc8c6c:4b8c68334e5872bca63d8b36fdc5e322",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1676,
+      "output_tokens": 123,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": false,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": true,
+      "correct_uncertainty": false,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-23",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "debt-q2",
+      "position": "question",
+      "quote_id": "q:de72db26303d",
+      "recipient": "room",
+      "support_assessment": "contradicted",
+      "text": "Lumen Glass debt rose by 5 percent in Q2."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:36761df4-16a5-41bb-8fda-ffaf6759adb5:e84c7d115eaa2ee3caa09b1a907aa5c8",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1548,
+      "output_tokens": 86,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-08",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Olive Energy received permit 3.",
+      "quote_id": "q:0aab5e015aa2",
+      "claim_kind": "observation",
+      "support_assessment": "contradicted",
+      "event_id": "permit-3",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:e174a64a-ae65-4b2f-be66-0c353b5bb79f:a787e2e40829ae05e6f36fb0b1a3bec0",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 2127,
+      "output_tokens": 123,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": false,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-24",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "strike-2026",
+      "position": "question",
+      "quote_id": "q:57970da4d9a9",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "Maple Ports workers voted to strike in 2026."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:53648948-6377-4924-bfe1-0e3d73a2d84f:9de462793e100238fc5a4b70b022031b",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1958,
+      "output_tokens": 89,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-07",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Harbor Air cancelled route 7.",
+      "quote_id": "q:dd7eeed3dbb6",
+      "claim_kind": "observation",
+      "support_assessment": "contradicted",
+      "event_id": "route-7",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:68219d10-f083-4a4d-b0be-712509ea3b32:22ce38b0be9d4d9e58b3fb4df5878744",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1714,
+      "output_tokens": 122,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-25",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "merger-2026",
+      "position": "question",
+      "quote_id": "q:8cd6b12a3311",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "Orchid Foods completed its merger in 2026."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:0df33011-cb6b-49b3-8391-8c4d559b0620:785ce0adf58c7e391cf78a810eb153d0",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1564,
+      "output_tokens": 90,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-06",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Mica Motors opened plant B.",
+      "quote_id": "",
+      "claim_kind": "observation",
+      "support_assessment": "insufficient",
+      "event_id": "",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:62aed43a-8492-4892-8578-12d5630ef1d3:56cb06562f2e927f66e0e2596cf04ac2",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1693,
+      "output_tokens": 105,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": false,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-26",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "reserve-2026",
+      "position": "question",
+      "quote_id": "q:aa1c7d90657e",
+      "recipient": "room",
+      "support_assessment": "contradicted",
+      "text": "Prairie Mining reserves increased in 2026."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:29603e3e-b8a7-4181-841b-a298a19e2f1b:ab65d5d5ca102277782f660bdc555b94",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1572,
+      "output_tokens": 87,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": false,
+        "relevant_citation": false,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": true,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-05",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Cedar Labs approved a rights issue.",
+      "quote_id": "",
+      "claim_kind": "observation",
+      "support_assessment": "insufficient",
+      "event_id": "",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:3cbc1d15-e6d2-4ffb-8ba8-47afce048521:7a2695d616c9a22568c32b999e98b6fb",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1716,
+      "output_tokens": 106,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": false,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-27",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "launch-2026",
+      "position": "question",
+      "quote_id": "q:11d2d28586f3",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "Quartz Labs launched device Z before the cutoff."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:f5c5851f-bdea-4c87-8445-48195804d7bc:1613143aaf8ae04801f89753a2d2e346",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1582,
+      "output_tokens": 86,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-04",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Arbor Foods declared a final dividend of 4 rupees per share for 2026.",
+      "quote_id": "q:d766600c7dab",
+      "claim_kind": "observation",
+      "support_assessment": "supported",
+      "event_id": "annual-2026",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:e2877561-744b-4923-bd17-de24d8466bdb:8c5a12be024a6a4e30ad5b0350e64c54",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1760,
+      "output_tokens": 138,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-28",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "safety-2026",
+      "position": "question",
+      "quote_id": "q:518b6c141aed",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "Reed Steel had no accidents at any plant in 2026."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:9a7149b8-3011-429e-a4d9-e6c7c674fd34:9ee7db391fa1ca0143a7e095631d11e3",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1568,
+      "output_tokens": 91,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-03",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "The review says model health is shown on the screen.",
+      "quote_id": "q:f55c66fd5f63",
+      "claim_kind": "observation",
+      "support_assessment": "insufficient",
+      "event_id": "",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:6cdbec9b-9da1-43a0-a8b0-e90cdb0f1175:58a6dbd3207d7bb9ab3eb00b15c63de3",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1688,
+      "output_tokens": 122,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": false,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": true,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-29",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "subscribers-q3",
+      "position": "question",
+      "quote_id": "q:b02e5c5a0f69",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "Saffron Media had 2 million subscribers at Q3 end."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:8c49e40e-8539-40c3-8bce-015a954cbefa:7acdf930a53c16d06794bf452eede0a3",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 2010,
+      "output_tokens": 89,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-02",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "The runbook says history and SSE share one committed sequence.",
+      "quote_id": "q:c35958766041",
+      "claim_kind": "observation",
+      "support_assessment": "supported",
+      "event_id": "",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:32985d58-d541-45c4-a400-ff191ebb65c1:89ca825f1b146aedb152dc2f33cc70ed",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1691,
+      "output_tokens": 123,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-30",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "patent-count",
+      "position": "question",
+      "quote_id": "q:f6eb66fa565c",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "Umber Robotics filed exactly two patents in 2026."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:f17d9616-e775-4c88-bdf7-523f3019ad66:3d0b40ca37c1533bc7a5e8a7624cb5d6",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1584,
+      "output_tokens": 86,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "heldout-01",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "The activation report says manual approval remains required for live entries.",
+      "quote_id": "q:2bfe35bdae79",
+      "claim_kind": "observation",
+      "support_assessment": "supported",
+      "event_id": "",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:0fb6bd62-5054-41b3-b5c5-11c1e2f66659:92b5528d5339e9bc29cdc51f62431c27",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1681,
+      "output_tokens": 121,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  }
+]

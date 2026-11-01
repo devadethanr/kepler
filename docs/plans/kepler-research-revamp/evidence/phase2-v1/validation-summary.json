@@ -1,0 +1,20 @@
+{
+  "backend": "verified disposable network/address then pytest -q -p no:cacheprovider tests/test_research_room tests/test_context_graph/test_repository.py",
+  "backend_passed": 112,
+  "backend_skipped": 0,
+  "frontend": "npm test; npm run lint; npx vite build --outDir /tmp/kepler-ui-phase2-final-build --emptyOutDir",
+  "frontend_passed": 21,
+  "typescript": "passed",
+  "build": "passed to temporary output; existing root-owned dist was preserved",
+  "warnings": [
+    "two existing uvicorn/websockets deprecations",
+    "existing KnowledgeScreen chunk size warning"
+  ],
+  "ruff": "passed",
+  "whitespace": "passed",
+  "inference_ceiling": 120,
+  "fresh_model_requests": 112,
+  "broker_actions": 0,
+  "model_downloads": 0,
+  "notes": "Completed graph tests target independently verified disposable service. Original operator graph never wiped."
+}

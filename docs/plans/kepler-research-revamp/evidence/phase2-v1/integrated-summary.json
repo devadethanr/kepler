@@ -1,0 +1,260 @@
+[
+  {
+    "check": "evidence-discussion",
+    "room_id": "room:3d02d834-20fc-46c3-8636-5d066e5800e1",
+    "status": "abstention",
+    "termination_reason": "call_limit",
+    "counts": {
+      "model": 12,
+      "tool": 12,
+      "reserved_tokens": 393216,
+      "input_tokens": 124659,
+      "output_tokens": 754,
+      "unknown_usage_calls": 0
+    },
+    "active": {
+      "model": 0,
+      "tool": 0
+    },
+    "activity_state": null,
+    "unresolved_activity": null,
+    "public_messages": 3,
+    "terminal_events": 1,
+    "tools": [
+      {
+        "role": "skeptic",
+        "name": "artifact_read",
+        "status": "ok"
+      },
+      {
+        "role": "analyst",
+        "name": "artifact_search",
+        "status": "ok"
+      },
+      {
+        "role": "skeptic",
+        "name": "artifact_read",
+        "status": "ok"
+      },
+      {
+        "role": "analyst",
+        "name": "artifact_search",
+        "status": "ok"
+      },
+      {
+        "role": "skeptic",
+        "name": "artifact_read",
+        "status": "ok"
+      },
+      {
+        "role": "skeptic",
+        "name": "graph_lookup",
+        "status": "empty"
+      },
+      {
+        "role": "analyst",
+        "name": "graph_lookup",
+        "status": "empty"
+      },
+      {
+        "role": "skeptic",
+        "name": "room_message",
+        "status": "ok"
+      },
+      {
+        "role": "analyst",
+        "name": "room_message",
+        "status": "ok"
+      },
+      {
+        "role": "analyst",
+        "name": "artifact_search",
+        "status": "ok"
+      },
+      {
+        "role": "analyst",
+        "name": "room_message",
+        "status": "ok"
+      },
+      {
+        "role": "skeptic",
+        "name": "artifact_search",
+        "status": "ok"
+      }
+    ],
+    "live_ui_message_observed": true,
+    "reload_history_preserved": true
+  },
+  {
+    "check": "unresolved-discussion",
+    "room_id": "room:e01582bd-7050-4779-82dd-eba9c3f4aef1",
+    "status": "abstention",
+    "termination_reason": "message_limit",
+    "counts": {
+      "model": 10,
+      "tool": 10,
+      "reserved_tokens": 327680,
+      "input_tokens": 78447,
+      "output_tokens": 1061,
+      "unknown_usage_calls": 0
+    },
+    "active": {
+      "model": 0,
+      "tool": 0
+    },
+    "activity_state": null,
+    "unresolved_activity": null,
+    "public_messages": 6,
+    "terminal_events": 1,
+    "tools": [
+      {
+        "role": "skeptic",
+        "name": "artifact_read",
+        "status": "ok"
+      },
+      {
+        "role": "analyst",
+        "name": "artifact_read",
+        "status": "ok"
+      },
+      {
+        "role": "skeptic",
+        "name": "artifact_read",
+        "status": "ok"
+      },
+      {
+        "role": "analyst",
+        "name": "artifact_read",
+        "status": "ok"
+      },
+      {
+        "role": "skeptic",
+        "name": "room_message",
+        "status": "ok"
+      },
+      {
+        "role": "analyst",
+        "name": "room_message",
+        "status": "ok"
+      },
+      {
+        "role": "analyst",
+        "name": "room_message",
+        "status": "ok"
+      },
+      {
+        "role": "skeptic",
+        "name": "room_message",
+        "status": "ok"
+      },
+      {
+        "role": "analyst",
+        "name": "room_message",
+        "status": "ok"
+      },
+      {
+        "role": "skeptic",
+        "name": "room_message",
+        "status": "ok"
+      }
+    ],
+    "live_ui_message_observed": true,
+    "reload_history_preserved": true
+  },
+  {
+    "check": "active-cancel",
+    "room_id": "room:baddefce-66c0-448a-8586-b781fdc0f902",
+    "status": "cancelled",
+    "termination_reason": "cancelled",
+    "counts": {
+      "model": 2,
+      "tool": 0,
+      "reserved_tokens": 65536,
+      "input_tokens": 2334,
+      "output_tokens": 16,
+      "unknown_usage_calls": 1
+    },
+    "active": {
+      "model": 0,
+      "tool": 0
+    },
+    "activity_state": null,
+    "unresolved_activity": null,
+    "public_messages": 0,
+    "terminal_events": 1,
+    "tools": [],
+    "elapsed_s": 4.279987606001669
+  },
+  {
+    "check": "worker-interruption",
+    "room_id": "room:917e46e5-e233-4614-8b9f-b572f7dfb307",
+    "status": "interrupted",
+    "termination_reason": "lease_expired",
+    "counts": {
+      "model": 2,
+      "tool": 0,
+      "reserved_tokens": 65536,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "unknown_usage_calls": 2
+    },
+    "active": {
+      "model": 0,
+      "tool": 0
+    },
+    "activity_state": "unknown",
+    "unresolved_activity": {
+      "model": 2,
+      "tool": 0
+    },
+    "public_messages": 0,
+    "terminal_events": 1,
+    "tools": []
+  },
+  {
+    "check": "browser-cancel",
+    "room_id": "room:a4088c3e-f62a-44ab-abe9-6a69c9d6f99f",
+    "status": "cancelled",
+    "termination_reason": "cancelled",
+    "counts": {
+      "model": 6,
+      "tool": 5,
+      "reserved_tokens": 196608,
+      "input_tokens": 19260,
+      "output_tokens": 127,
+      "unknown_usage_calls": 0
+    },
+    "active": {
+      "model": 0,
+      "tool": 0
+    },
+    "activity_state": null,
+    "unresolved_activity": null,
+    "public_messages": 0,
+    "terminal_events": 1,
+    "tools": [
+      {
+        "role": "analyst",
+        "name": "skills_discover",
+        "status": "ok"
+      },
+      {
+        "role": "skeptic",
+        "name": "skills_discover",
+        "status": "ok"
+      },
+      {
+        "role": "analyst",
+        "name": "skills_load",
+        "status": "ok"
+      },
+      {
+        "role": "skeptic",
+        "name": "skills_load",
+        "status": "ok"
+      }
+    ],
+    "browser_was_pending": true,
+    "elapsed_s": 3.9941349500004435
+  }
+]

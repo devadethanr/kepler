@@ -1,3 +1,5 @@
+Current installed follow-up: [NEXT_PHASE_FINDINGS.md](NEXT_PHASE_FINDINGS.md) records the LAN loading fix, R1–R8 changes, bounded evaluation and remaining quality failures.
+
 # Kepler collaborative research revamp
 
 Implementation handoff, revision 6 — review of `aebd42d`, 1 November 2026.

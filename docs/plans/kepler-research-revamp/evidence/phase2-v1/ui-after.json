@@ -1,0 +1,66 @@
+{
+  "localhost": {
+    "context": {
+      "code": 0,
+      "output": "\"{\\\"secure\\\":true,\\\"randomUUID\\\":\\\"function\\\",\\\"failure\\\":\\\"\\\",\\\"health\\\":200,\\\"rooms\\\":200}\"\n",
+      "error": ""
+    },
+    "click": {
+      "code": 0,
+      "output": "\u2713 Done\n",
+      "error": ""
+    },
+    "errors": {
+      "code": 0,
+      "output": "",
+      "error": ""
+    },
+    "console": {
+      "code": 0,
+      "output": "[debug] [vite] connecting...\n[debug] [vite] connected.\n[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold\n",
+      "error": ""
+    },
+    "network": {
+      "code": 0,
+      "output": "[303.48] GET http://localhost:8502/api/research/health (Fetch) 200\n[303.49] GET http://localhost:8502/api/research/rooms (Fetch) 200\n[303.52] GET http://localhost:8502/api/research/rooms (Fetch) 200\n[303.53] GET http://localhost:8502/api/research/health (Fetch) 200\n[303.54] GET http://localhost:8502/api/research/rooms (Fetch) 200\n[303.55] GET http://localhost:8502/api/research/health (Fetch) 200\n",
+      "error": ""
+    },
+    "visible": {
+      "code": 0,
+      "output": "\"{\\\"desk\\\":true,\\\"bodyLength\\\":1174}\"\n",
+      "error": ""
+    }
+  },
+  "192.168.1.33": {
+    "context": {
+      "code": 0,
+      "output": "\"{\\\"secure\\\":false,\\\"randomUUID\\\":\\\"undefined\\\",\\\"failure\\\":\\\"TypeError: crypto.randomUUID is not a function\\\",\\\"health\\\":200,\\\"rooms\\\":200}\"\n",
+      "error": ""
+    },
+    "click": {
+      "code": 0,
+      "output": "\u2713 Done\n",
+      "error": ""
+    },
+    "errors": {
+      "code": 0,
+      "output": "",
+      "error": ""
+    },
+    "console": {
+      "code": 0,
+      "output": "[debug] [vite] connecting...\n[debug] [vite] connected.\n[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold\n",
+      "error": ""
+    },
+    "network": {
+      "code": 0,
+      "output": "[519.48] GET http://192.168.1.33:8502/api/research/health (Fetch) 200\n[519.49] GET http://192.168.1.33:8502/api/research/rooms (Fetch) 200\n[519.52] GET http://192.168.1.33:8502/api/research/rooms (Fetch) 200\n[519.53] GET http://192.168.1.33:8502/api/research/health (Fetch) 200\n[519.54] GET http://192.168.1.33:8502/api/research/rooms (Fetch) 200\n[519.55] GET http://192.168.1.33:8502/api/research/health (Fetch) 200\n",
+      "error": ""
+    },
+    "visible": {
+      "code": 0,
+      "output": "\"{\\\"desk\\\":true,\\\"bodyLength\\\":1174}\"\n",
+      "error": ""
+    }
+  }
+}

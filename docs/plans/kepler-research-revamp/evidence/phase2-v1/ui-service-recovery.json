@@ -1,0 +1,28 @@
+{
+  "initial": {
+    "desk": true,
+    "secure": false
+  },
+  "stopped": {
+    "status": 503,
+    "desk": true,
+    "unavailable": true
+  },
+  "recovered": {
+    "status": 200,
+    "desk": true,
+    "roomsUnavailable": false
+  },
+  "room": {
+    "status": "abstention",
+    "messages": 3,
+    "messagesDisplayed": 3,
+    "claims": 3,
+    "claimsVisible": true,
+    "saved": true
+  },
+  "stream_requests": "No requests captured\n",
+  "errors": "",
+  "socket_mode": "0o600",
+  "service_active": "active"
+}

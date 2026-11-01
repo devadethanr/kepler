@@ -1,3 +1,5 @@
+Execution follow-up: [NEXT_PHASE_FINDINGS.md](NEXT_PHASE_FINDINGS.md) records source `921088c`, completed correctness/UI changes and the still-failed grounding objective. The original handoff/plan/review below is preserved.
+
 # Next phase: useful, grounded research on the installed room
 
 Prepared 1 November 2026 for `feat-generic-broker@aebd42d`. Read [ROOM_REVIEW.md](ROOM_REVIEW.md) for findings and independently repeated checks. This plan extends the user's installed personal workspace. Codex App Server + the tested local adapter is selected and stays in place.

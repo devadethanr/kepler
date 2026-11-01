@@ -1,3 +1,5 @@
+Execution follow-up: [NEXT_PHASE_FINDINGS.md](NEXT_PHASE_FINDINGS.md) records source `921088c`, completed correctness/UI changes and the still-failed grounding objective. The original handoff/plan/review below is preserved.
+
 # Review of the activated local research room
 
 Reviewed 1 November 2026 at `aebd42d164e48882284c30e3d995eb562d212162`, using three Terra reviews for lifecycle/storage, grounding/evaluation, and tools/UI, followed by independent cloud checks and targeted reproductions.

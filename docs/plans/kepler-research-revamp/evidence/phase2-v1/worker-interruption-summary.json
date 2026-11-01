@@ -1,0 +1,21 @@
+{
+  "room_id": "room:917e46e5-e233-4614-8b9f-b572f7dfb307",
+  "status": "interrupted",
+  "termination_reason": "lease_expired",
+  "counts": {
+    "model": 2,
+    "tool": 0,
+    "reserved_tokens": 65536,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "unknown_usage_calls": 2
+  },
+  "terminal_events": 1,
+  "linked_retry_parent": "room:917e46e5-e233-4614-8b9f-b572f7dfb307",
+  "retry_replay_same": true,
+  "unresolved_activity": {
+    "model": 2,
+    "tool": 0
+  },
+  "activity_state": "unknown"
+}

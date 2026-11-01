@@ -1,0 +1,66 @@
+{
+  "localhost": {
+    "context": {
+      "code": 0,
+      "output": "\"{\\\"secure\\\":true,\\\"randomUUID\\\":\\\"function\\\",\\\"failure\\\":\\\"\\\",\\\"health\\\":200,\\\"rooms\\\":200}\"\n",
+      "error": ""
+    },
+    "click": {
+      "code": 0,
+      "output": "\u2713 Done\n",
+      "error": ""
+    },
+    "errors": {
+      "code": 0,
+      "output": "",
+      "error": ""
+    },
+    "console": {
+      "code": 0,
+      "output": "[debug] [vite] connecting...\n[debug] [vite] connected.\n[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold\n",
+      "error": ""
+    },
+    "network": {
+      "code": 0,
+      "output": "[301.48] GET http://localhost:8502/api/research/health (Fetch) 200\n[301.49] GET http://localhost:8502/api/research/rooms (Fetch) 200\n[301.52] GET http://localhost:8502/api/research/rooms (Fetch) 200\n[301.53] GET http://localhost:8502/api/research/health (Fetch) 200\n[301.54] GET http://localhost:8502/api/research/rooms (Fetch) 200\n[301.55] GET http://localhost:8502/api/research/health (Fetch) 200\n",
+      "error": ""
+    },
+    "visible": {
+      "code": 0,
+      "output": "\"{\\\"desk\\\":true,\\\"bodyLength\\\":1095}\"\n",
+      "error": ""
+    }
+  },
+  "192.168.1.33": {
+    "context": {
+      "code": 0,
+      "output": "\"{\\\"secure\\\":false,\\\"randomUUID\\\":\\\"undefined\\\",\\\"failure\\\":\\\"TypeError: crypto.randomUUID is not a function\\\",\\\"health\\\":200,\\\"rooms\\\":200}\"\n",
+      "error": ""
+    },
+    "click": {
+      "code": 0,
+      "output": "\u2713 Done\n",
+      "error": ""
+    },
+    "errors": {
+      "code": 0,
+      "output": "\u2717 \n",
+      "error": ""
+    },
+    "console": {
+      "code": 0,
+      "output": "[debug] [vite] connecting...\n[debug] [vite] connected.\n[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold\n[warning] %s\n\n%s\n An error occurred in the <ResearchDeskScreen> component. Consider adding an error boundary to your tree to customize error handling behavior.\nVisit https://react.dev/link/error-boundaries to learn more about error boundaries.\n",
+      "error": ""
+    },
+    "network": {
+      "code": 0,
+      "output": "[526.48] GET http://192.168.1.33:8502/api/research/health (Fetch) 200\n[526.49] GET http://192.168.1.33:8502/api/research/rooms (Fetch) 200\n",
+      "error": ""
+    },
+    "visible": {
+      "code": 0,
+      "output": "\"{\\\"desk\\\":false,\\\"bodyLength\\\":0}\"\n",
+      "error": ""
+    }
+  }
+}

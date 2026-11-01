@@ -1,0 +1,872 @@
+[
+  {
+    "case_id": "dev-01",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": null,
+      "position": "conclude",
+      "quote_id": "q:99a3d3a42d77",
+      "recipient": "room",
+      "support_assessment": "supported",
+      "text": "Aster Ltd opened the west depot."
+    },
+    "gate": {
+      "status": "denied",
+      "error": "Invalid or ungranted tool arguments",
+      "expected_arguments": {
+        "recipient": {
+          "type": "string",
+          "enum": [
+            "analyst",
+            "skeptic",
+            "room"
+          ]
+        },
+        "text": {
+          "type": "string"
+        },
+        "quote_id": {
+          "type": "string"
+        },
+        "claim_kind": {
+          "type": "string",
+          "enum": [
+            "observation",
+            "inference",
+            "question"
+          ]
+        },
+        "support_assessment": {
+          "type": "string",
+          "enum": [
+            "unassessed",
+            "supported",
+            "contradicted",
+            "insufficient"
+          ]
+        },
+        "event_id": {
+          "type": "string"
+        },
+        "position": {
+          "type": "string",
+          "enum": [
+            "question",
+            "challenge",
+            "conclude",
+            "agree",
+            "disagree",
+            "abstain",
+            "revise"
+          ]
+        }
+      }
+    },
+    "counts": {
+      "model": 1,
+      "tool": 0,
+      "reserved_tokens": 32768,
+      "input_tokens": 1429,
+      "output_tokens": 77,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": false
+      },
+      "fully_correct": false,
+      "accepted": false,
+      "valid_quote": false,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": true,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "dev-06",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Claim: Did Gale Ltd renew its lease? Assessment: insufficient. Evidence only states a lease review was announced, not the outcome. No confirmation of renewal.",
+      "quote_id": "q:7bf2b4da217d",
+      "claim_kind": "question",
+      "support_assessment": "insufficient",
+      "event_id": "",
+      "position": "abstain"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:a45fe3fb-a0ba-4253-bf2f-3a6fd4024dde:32fdd5c814b0c7b49ffb53dc8e25224e",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1608,
+      "output_tokens": 144,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": false,
+        "claim_kind": true,
+        "support_assessment": false,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "dev-02",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": null,
+      "position": "question",
+      "quote_id": "q:399566b480cd",
+      "recipient": "room",
+      "support_assessment": "contradicted",
+      "text": "Beacon Ltd approved a bond issue."
+    },
+    "gate": {
+      "status": "denied",
+      "error": "Invalid or ungranted tool arguments",
+      "expected_arguments": {
+        "recipient": {
+          "type": "string",
+          "enum": [
+            "analyst",
+            "skeptic",
+            "room"
+          ]
+        },
+        "text": {
+          "type": "string"
+        },
+        "quote_id": {
+          "type": "string"
+        },
+        "claim_kind": {
+          "type": "string",
+          "enum": [
+            "observation",
+            "inference",
+            "question"
+          ]
+        },
+        "support_assessment": {
+          "type": "string",
+          "enum": [
+            "unassessed",
+            "supported",
+            "contradicted",
+            "insufficient"
+          ]
+        },
+        "event_id": {
+          "type": "string"
+        },
+        "position": {
+          "type": "string",
+          "enum": [
+            "question",
+            "challenge",
+            "conclude",
+            "agree",
+            "disagree",
+            "abstain",
+            "revise"
+          ]
+        }
+      }
+    },
+    "counts": {
+      "model": 1,
+      "tool": 0,
+      "reserved_tokens": 32768,
+      "input_tokens": 1431,
+      "output_tokens": 76,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": false
+      },
+      "fully_correct": false,
+      "accepted": false,
+      "valid_quote": false,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "dev-05",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Flint Ltd currently has 80 stores.",
+      "quote_id": "q:0089784be34b",
+      "claim_kind": "observation",
+      "support_assessment": "insufficient",
+      "event_id": "",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:39b548a0-62cf-4b89-92dc-64e1fe45cc10:86f35242b009b3eabd0f16fc669493e7",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1635,
+      "output_tokens": 122,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": false,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": true,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "dev-03",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": null,
+      "position": "question",
+      "quote_id": "q:8473aecc81e6",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "The evidence states \"Delta Ltd completed an audit,\" but the claim is about Coral Ltd. I cannot assess the claim."
+    },
+    "gate": {
+      "status": "denied",
+      "error": "Invalid or ungranted tool arguments",
+      "expected_arguments": {
+        "recipient": {
+          "type": "string",
+          "enum": [
+            "analyst",
+            "skeptic",
+            "room"
+          ]
+        },
+        "text": {
+          "type": "string"
+        },
+        "quote_id": {
+          "type": "string"
+        },
+        "claim_kind": {
+          "type": "string",
+          "enum": [
+            "observation",
+            "inference",
+            "question"
+          ]
+        },
+        "support_assessment": {
+          "type": "string",
+          "enum": [
+            "unassessed",
+            "supported",
+            "contradicted",
+            "insufficient"
+          ]
+        },
+        "event_id": {
+          "type": "string"
+        },
+        "position": {
+          "type": "string",
+          "enum": [
+            "question",
+            "challenge",
+            "conclude",
+            "agree",
+            "disagree",
+            "abstain",
+            "revise"
+          ]
+        }
+      }
+    },
+    "counts": {
+      "model": 1,
+      "tool": 0,
+      "reserved_tokens": 32768,
+      "input_tokens": 1426,
+      "output_tokens": 92,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": false,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": false,
+        "event_identity": false
+      },
+      "fully_correct": false,
+      "accepted": false,
+      "valid_quote": false,
+      "wrong_entity_citation": true,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": true,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "dev-04",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Claim: Ember Ltd will grow because its margin increased. Assessment: insufficient. Evidence confirms margin increased but provides no link to growth. Causal claim unsupported.",
+      "quote_id": "q:2bcd9a7004fa",
+      "claim_kind": "inference",
+      "support_assessment": "insufficient",
+      "event_id": "",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:89bf4504-4a2b-4e9a-8403-0552c771351d:215103ba2efce8fffa45472a520d0307",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1614,
+      "output_tokens": 142,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": false,
+        "claim_kind": true,
+        "support_assessment": false,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "dev-04",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "inference",
+      "event_id": null,
+      "position": "question",
+      "quote_id": "q:2bcd9a7004fa",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "Ember Ltd will grow because its margin increased. The evidence only confirms the margin increased, not the causal link to growth."
+    },
+    "gate": {
+      "status": "denied",
+      "error": "Invalid or ungranted tool arguments",
+      "expected_arguments": {
+        "recipient": {
+          "type": "string",
+          "enum": [
+            "analyst",
+            "skeptic",
+            "room"
+          ]
+        },
+        "text": {
+          "type": "string"
+        },
+        "quote_id": {
+          "type": "string"
+        },
+        "claim_kind": {
+          "type": "string",
+          "enum": [
+            "observation",
+            "inference",
+            "question"
+          ]
+        },
+        "support_assessment": {
+          "type": "string",
+          "enum": [
+            "unassessed",
+            "supported",
+            "contradicted",
+            "insufficient"
+          ]
+        },
+        "event_id": {
+          "type": "string"
+        },
+        "position": {
+          "type": "string",
+          "enum": [
+            "question",
+            "challenge",
+            "conclude",
+            "agree",
+            "disagree",
+            "abstain",
+            "revise"
+          ]
+        }
+      }
+    },
+    "counts": {
+      "model": 1,
+      "tool": 0,
+      "reserved_tokens": 32768,
+      "input_tokens": 1440,
+      "output_tokens": 92,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": false,
+        "claim_kind": true,
+        "support_assessment": false,
+        "relevant_citation": true,
+        "event_identity": false
+      },
+      "fully_correct": false,
+      "accepted": false,
+      "valid_quote": false,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "dev-03",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "The claim \"Coral Ltd completed an audit\" is insufficient. The only evidence provided concerns Delta Ltd, not Coral Ltd. No sources directly address Coral Ltd's audit status.",
+      "quote_id": "",
+      "claim_kind": "observation",
+      "support_assessment": "insufficient",
+      "event_id": "",
+      "position": "abstain"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:63e63e3c-a999-49dd-8a5d-f8aa4a7e48c1:6431c268491adf5229e41a78f5512b34",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1602,
+      "output_tokens": 135,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": false,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": false,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "dev-05",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": null,
+      "position": "question",
+      "quote_id": "q:0089784be34b",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "The claim states Flint Ltd currently has 80 stores. The only evidence found states Flint Ltd had 80 stores in 2023, which is not current as of the decision cutoff."
+    },
+    "gate": {
+      "status": "denied",
+      "error": "Invalid or ungranted tool arguments",
+      "expected_arguments": {
+        "recipient": {
+          "type": "string",
+          "enum": [
+            "analyst",
+            "skeptic",
+            "room"
+          ]
+        },
+        "text": {
+          "type": "string"
+        },
+        "quote_id": {
+          "type": "string"
+        },
+        "claim_kind": {
+          "type": "string",
+          "enum": [
+            "observation",
+            "inference",
+            "question"
+          ]
+        },
+        "support_assessment": {
+          "type": "string",
+          "enum": [
+            "unassessed",
+            "supported",
+            "contradicted",
+            "insufficient"
+          ]
+        },
+        "event_id": {
+          "type": "string"
+        },
+        "position": {
+          "type": "string",
+          "enum": [
+            "question",
+            "challenge",
+            "conclude",
+            "agree",
+            "disagree",
+            "abstain",
+            "revise"
+          ]
+        }
+      }
+    },
+    "counts": {
+      "model": 1,
+      "tool": 0,
+      "reserved_tokens": 32768,
+      "input_tokens": 1461,
+      "output_tokens": 110,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": false,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": false,
+        "event_identity": false
+      },
+      "fully_correct": false,
+      "accepted": false,
+      "valid_quote": false,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": true,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "dev-02",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Beacon Ltd approved a bond issue.",
+      "quote_id": "q:399566b480cd",
+      "claim_kind": "observation",
+      "support_assessment": "contradicted",
+      "event_id": "",
+      "position": "conclude"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:56e26740-9039-4d23-8be5-17d11a79a773:a81082e7ce4fda8bfeb5ce2e164f7d05",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1611,
+      "output_tokens": 122,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "dev-06",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "question",
+      "event_id": null,
+      "position": "question",
+      "quote_id": "q:7bf2b4da217d",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "Did Gale Ltd renew its lease? The only evidence shows Gale Ltd announced a lease review, not a renewal."
+    },
+    "gate": {
+      "status": "denied",
+      "error": "Invalid or ungranted tool arguments",
+      "expected_arguments": {
+        "recipient": {
+          "type": "string",
+          "enum": [
+            "analyst",
+            "skeptic",
+            "room"
+          ]
+        },
+        "text": {
+          "type": "string"
+        },
+        "quote_id": {
+          "type": "string"
+        },
+        "claim_kind": {
+          "type": "string",
+          "enum": [
+            "observation",
+            "inference",
+            "question"
+          ]
+        },
+        "support_assessment": {
+          "type": "string",
+          "enum": [
+            "unassessed",
+            "supported",
+            "contradicted",
+            "insufficient"
+          ]
+        },
+        "event_id": {
+          "type": "string"
+        },
+        "position": {
+          "type": "string",
+          "enum": [
+            "question",
+            "challenge",
+            "conclude",
+            "agree",
+            "disagree",
+            "abstain",
+            "revise"
+          ]
+        }
+      }
+    },
+    "counts": {
+      "model": 1,
+      "tool": 0,
+      "reserved_tokens": 32768,
+      "input_tokens": 1435,
+      "output_tokens": 90,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": false,
+        "claim_kind": true,
+        "support_assessment": false,
+        "relevant_citation": true,
+        "event_identity": false
+      },
+      "fully_correct": false,
+      "accepted": false,
+      "valid_quote": false,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "dev-01",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Claim: Aster Ltd opened the west depot. Assessment: supported. Source q:99a3d3a42d77 directly states the claim. Source relevance unverified but claim matches exactly.",
+      "quote_id": "q:99a3d3a42d77",
+      "claim_kind": "observation",
+      "support_assessment": "supported",
+      "event_id": "",
+      "position": "conclude"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:032220c1-39a4-4655-b096-1ae7a1053db1:f2115259d9e73cbd916582dcc065032b",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1608,
+      "output_tokens": 155,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": false,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  }
+]

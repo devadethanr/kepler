@@ -1,0 +1,124 @@
+[
+  {
+    "id": "dev-01",
+    "target_entity": "Aster Ltd",
+    "event_id": null,
+    "question": "Assess only the supplied atomic claim: Aster Ltd opened the west depot.",
+    "claim_text": "Aster Ltd opened the west depot.",
+    "sources": [
+      {
+        "record_id": "dev-01-source",
+        "source": "synthetic:dev-01",
+        "text": "Aster Ltd opened the west depot.",
+        "target_entity": "Aster Ltd",
+        "event_id": null,
+        "event_at": null,
+        "published_at": "2026-10-29T00:00:00+00:00",
+        "status": "ok"
+      }
+    ],
+    "decision_cutoff": "2026-11-01T00:00:00+00:00",
+    "expected": {
+      "support_assessment": "supported",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "synthetic:dev-01"
+      ],
+      "uncertainty_required": false
+    },
+    "category": "development",
+    "synthetic": true,
+    "rationale": "Development fixture separate from independently authored heldout."
+  },
+  {
+    "id": "dev-02",
+    "target_entity": "Beacon Ltd",
+    "event_id": null,
+    "question": "Assess only the supplied atomic claim: Beacon Ltd approved a bond issue.",
+    "claim_text": "Beacon Ltd approved a bond issue.",
+    "sources": [
+      {
+        "record_id": "dev-02-source",
+        "source": "synthetic:dev-02",
+        "text": "Beacon Ltd rejected its bond issue.",
+        "target_entity": "Beacon Ltd",
+        "event_id": null,
+        "event_at": null,
+        "published_at": "2026-10-29T00:00:00+00:00",
+        "status": "ok"
+      }
+    ],
+    "decision_cutoff": "2026-11-01T00:00:00+00:00",
+    "expected": {
+      "support_assessment": "contradicted",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "synthetic:dev-02"
+      ],
+      "uncertainty_required": false
+    },
+    "category": "development",
+    "synthetic": true,
+    "rationale": "Development fixture separate from independently authored heldout."
+  },
+  {
+    "id": "dev-03",
+    "target_entity": "Coral Ltd",
+    "event_id": null,
+    "question": "Assess only the supplied atomic claim: Coral Ltd completed an audit.",
+    "claim_text": "Coral Ltd completed an audit.",
+    "sources": [
+      {
+        "record_id": "dev-03-source",
+        "source": "synthetic:dev-03",
+        "text": "Delta Ltd completed an audit.",
+        "target_entity": "Delta Ltd",
+        "event_id": null,
+        "event_at": null,
+        "published_at": "2026-10-29T00:00:00+00:00",
+        "status": "ok"
+      }
+    ],
+    "decision_cutoff": "2026-11-01T00:00:00+00:00",
+    "expected": {
+      "support_assessment": "insufficient",
+      "claim_kind": "observation",
+      "relevant_sources": [],
+      "uncertainty_required": true
+    },
+    "category": "development",
+    "synthetic": true,
+    "rationale": "Development fixture separate from independently authored heldout."
+  },
+  {
+    "id": "dev-04",
+    "target_entity": "Ember Ltd",
+    "event_id": null,
+    "question": "Assess only the supplied atomic claim: Ember Ltd will grow because its margin increased.",
+    "claim_text": "Ember Ltd will grow because its margin increased.",
+    "sources": [
+      {
+        "record_id": "dev-04-source",
+        "source": "synthetic:dev-04",
+        "text": "Ember Ltd reported a higher margin.",
+        "target_entity": "Ember Ltd",
+        "event_id": null,
+        "event_at": null,
+        "published_at": "2026-10-29T00:00:00+00:00",
+        "status": "ok"
+      }
+    ],
+    "decision_cutoff": "2026-11-01T00:00:00+00:00",
+    "expected": {
+      "support_assessment": "unassessed",
+      "claim_kind": "inference",
+      "relevant_sources": [
+        "synthetic:dev-04"
+      ],
+      "uncertainty_required": true
+    },
+    "category": "development",
+    "synthetic": true,
+    "rationale": "Development fixture separate from independently authored heldout."
+  }
+]

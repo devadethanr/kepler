@@ -1,0 +1,405 @@
+[
+  {
+    "case_id": "dev-04",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Ember Ltd will grow because its margin increased.",
+      "quote_id": "q:2bcd9a7004fa",
+      "claim_kind": "inference",
+      "support_assessment": "insufficient",
+      "event_id": "",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:cf5d826b-bef4-4b56-9bbb-15348cbfba56:51a05560b43220baddbc6bc5c477f66f",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1694,
+      "output_tokens": 121,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": false,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "dev-01",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "",
+      "position": "question",
+      "quote_id": "q:99a3d3a42d77",
+      "recipient": "room",
+      "support_assessment": "supported",
+      "text": "Aster Ltd opened the west depot."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:9bfe101c-7c95-4c5b-95e1-13b67ff923b6:1661b9e6c966d7a1ba86e3885d50898f",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1510,
+      "output_tokens": 77,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "dev-03",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Coral Ltd completed an audit.",
+      "quote_id": "",
+      "claim_kind": "observation",
+      "support_assessment": "insufficient",
+      "event_id": "",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:6dd4047d-4203-4bfb-92bb-bac4c76137f5:9369f50b82678d79490d0886b0b4b565",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1682,
+      "output_tokens": 105,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": false,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "dev-02",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "",
+      "position": "question",
+      "quote_id": "q:399566b480cd",
+      "recipient": "room",
+      "support_assessment": "contradicted",
+      "text": "Beacon Ltd approved a bond issue."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:2485fc5f-5e14-4002-9446-8144a932b09b:64ee9e65b6f256c6f331541f0b662e8c",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1512,
+      "output_tokens": 77,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "dev-02",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Beacon Ltd approved a bond issue.",
+      "quote_id": "q:399566b480cd",
+      "claim_kind": "observation",
+      "support_assessment": "contradicted",
+      "event_id": "",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:01393a92-137d-44a6-8b82-261d8ab2fb90:7e01f00b0ede25df240c491e23427e77",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1691,
+      "output_tokens": 121,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "dev-03",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "observation",
+      "event_id": "",
+      "position": "question",
+      "quote_id": "q:8473aecc81e6",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "Coral Ltd completed an audit."
+    },
+    "gate": {
+      "status": "denied",
+      "error": "Unknown/cross-target citation or unsupported quote",
+      "instruction": "Copy a quote_spans q:id into quote_id. If evidence is insufficient use position abstain and empty quote_id.",
+      "available_citations": [
+        {
+          "evidence_id": "ev:415e2d06d84ed7fd20111b6d",
+          "quote_spans": [
+            {
+              "id": "q:8473aecc81e6",
+              "text": "Delta Ltd completed an audit."
+            }
+          ]
+        }
+      ]
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1507,
+      "output_tokens": 75,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": false,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": false,
+      "valid_quote": false,
+      "wrong_entity_citation": true,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": true,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": true,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "dev-01",
+    "role": "skeptic",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "recipient": "room",
+      "text": "Aster Ltd opened the west depot.",
+      "quote_id": "q:99a3d3a42d77",
+      "claim_kind": "observation",
+      "support_assessment": "supported",
+      "event_id": "",
+      "position": "question"
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:6876f830-162e-42bd-b571-8884b41f7add:0468b6e2a738e7d61a88fbf048ce6eed",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1688,
+      "output_tokens": 120,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": true,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": true,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": false,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  },
+  {
+    "case_id": "dev-04",
+    "role": "analyst",
+    "transport": "Responses bridge + real Gateway.execute; supplied evidence",
+    "response_status": "completed",
+    "proposal": {
+      "claim_kind": "inference",
+      "event_id": "",
+      "position": "question",
+      "quote_id": "q:2bcd9a7004fa",
+      "recipient": "room",
+      "support_assessment": "insufficient",
+      "text": "Ember Ltd will grow because its margin increased."
+    },
+    "gate": {
+      "status": "ok",
+      "message_id": "room:fbc944e9-e54c-4ce2-84fd-5fa540812a1a:deb2fd17a41a5e7d141e1cf19babad26",
+      "seq": 6
+    },
+    "counts": {
+      "model": 1,
+      "tool": 1,
+      "reserved_tokens": 32768,
+      "input_tokens": 1521,
+      "output_tokens": 78,
+      "unknown_usage_calls": 0
+    },
+    "score": {
+      "fields": {
+        "claim_text": true,
+        "claim_kind": true,
+        "support_assessment": false,
+        "relevant_citation": true,
+        "event_identity": true
+      },
+      "fully_correct": false,
+      "accepted": true,
+      "valid_quote": true,
+      "wrong_entity_citation": false,
+      "wrong_event_citation": false,
+      "nonexistent_citation": false,
+      "irrelevant_citation": false,
+      "unsupported_supported_proposal_accepted": false,
+      "correct_uncertainty": false,
+      "uncertainty_case": true,
+      "incorrect_rejection": false,
+      "ui_truth_verified": false
+    }
+  }
+]

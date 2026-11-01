@@ -1,3 +1,5 @@
+Execution follow-up: [NEXT_PHASE_FINDINGS.md](NEXT_PHASE_FINDINGS.md) records source `921088c`, completed correctness/UI changes and the still-failed grounding objective. The original handoff/plan/review below is preserved.
+
 # Local Codex handoff — next research-room phase
 
 Start from `feat-generic-broker` containing `aebd42d` and the subsequent review-doc commit. Preserve the five changing runtime-state files and any newer local changes. This is the user's personal, already activated Kepler at :8502; keep Codex selected.

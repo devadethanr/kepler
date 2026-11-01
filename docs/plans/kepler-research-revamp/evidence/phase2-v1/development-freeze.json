@@ -1,0 +1,11 @@
+{
+  "case_sha256": "780d0b2b36d36d57068f6ec8ce0154c6a84852d28d484a440eb5b2cc995120c0",
+  "evaluator_sha256": "4bfa62634d50f1b3547c17f99aae6cfa85bcc9647529dc8f7279af9b8d1976f7",
+  "prompt_sha256": "7446afeea70f3d0ffdba9a2fb21a666b891781329e29c1e26965e587530ed1d5",
+  "unique_cases_per_model": 6,
+  "expected_model_requests": 12,
+  "fully_correct": "gate accepts; exact supplied claim/kind/support, relevant citation and source event identity",
+  "target": "27/30 per model for heldout n30; new limited functional objective, not financial validation",
+  "source_retrieval": "fixture packets; separate native rooms exercise actual retrieval",
+  "request_retries": 0
+}

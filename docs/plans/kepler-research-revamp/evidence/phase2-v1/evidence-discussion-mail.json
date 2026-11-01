@@ -1,0 +1,59 @@
+[
+  {
+    "id": "room:3d02d834-20fc-46c3-8636-5d066e5800e1:420f7630586154fe44d5ece6e67458fd",
+    "room_id": "room:3d02d834-20fc-46c3-8636-5d066e5800e1",
+    "seq": 47,
+    "kind": "mail.delivery_attempted",
+    "agent": "manager",
+    "at": "2026-11-01T14:46:02.502116+00:00",
+    "data": {
+      "recipient": "analyst",
+      "message_ids": [
+        "room:3d02d834-20fc-46c3-8636-5d066e5800e1:5df3bd4db45553657a245cdc808ba774"
+      ]
+    }
+  },
+  {
+    "id": "room:3d02d834-20fc-46c3-8636-5d066e5800e1:1d38b15c6baef2a2b68054bf61757eaf",
+    "room_id": "room:3d02d834-20fc-46c3-8636-5d066e5800e1",
+    "seq": 59,
+    "kind": "mail.response_opportunity",
+    "agent": "manager",
+    "at": "2026-11-01T14:46:07.629314+00:00",
+    "data": {
+      "recipient": "analyst",
+      "message_ids": [
+        "room:3d02d834-20fc-46c3-8636-5d066e5800e1:5df3bd4db45553657a245cdc808ba774"
+      ],
+      "response_id": "room:3d02d834-20fc-46c3-8636-5d066e5800e1:03d3468f58172c967421244371b21a28"
+    }
+  },
+  {
+    "id": "room:3d02d834-20fc-46c3-8636-5d066e5800e1:37ead7f7b69b6c167c12ad0af96493b1",
+    "room_id": "room:3d02d834-20fc-46c3-8636-5d066e5800e1",
+    "seq": 60,
+    "kind": "mail.delivery_attempted",
+    "agent": "manager",
+    "at": "2026-11-01T14:46:07.633939+00:00",
+    "data": {
+      "recipient": "skeptic",
+      "message_ids": [
+        "room:3d02d834-20fc-46c3-8636-5d066e5800e1:239cd2d1b5a536a59189f5c4ca54397f",
+        "room:3d02d834-20fc-46c3-8636-5d066e5800e1:03d3468f58172c967421244371b21a28"
+      ]
+    }
+  },
+  {
+    "id": "room:3d02d834-20fc-46c3-8636-5d066e5800e1:05343e9845302eb730fa9d18ac7b28d5",
+    "room_id": "room:3d02d834-20fc-46c3-8636-5d066e5800e1",
+    "seq": 67,
+    "kind": "room.finished",
+    "agent": "manager",
+    "at": "2026-11-01T14:46:15.400961+00:00",
+    "data": {
+      "status": "abstention",
+      "reason": "Shared room call/concurrency budget exhausted",
+      "reason_code": "call_limit"
+    }
+  }
+]

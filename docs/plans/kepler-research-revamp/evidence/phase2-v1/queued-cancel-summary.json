@@ -1,0 +1,14 @@
+{
+  "room_id": "room:b10b4808-f03b-46ee-9306-f973a67f5589",
+  "status": "cancelled",
+  "termination_reason": "queued_cancel",
+  "counts": {
+    "model": 0,
+    "tool": 0,
+    "reserved_tokens": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "unknown_usage_calls": 0
+  },
+  "terminal_events": 1
+}

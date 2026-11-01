@@ -1,0 +1,52 @@
+{
+  "analyst": {
+    "fully_correct": 20,
+    "accepted": 26,
+    "valid_quote": 26,
+    "wrong_entity_citation": 1,
+    "wrong_event_citation": 1,
+    "nonexistent_citation": 0,
+    "irrelevant_citation": 6,
+    "unsupported_supported_proposal_accepted": 1,
+    "correct_uncertainty": 16,
+    "uncertainty_case": 20,
+    "incorrect_rejection": 0,
+    "ui_truth_verified": 0,
+    "denominator": 30,
+    "field_accuracy": {
+      "claim_text": 29,
+      "claim_kind": 30,
+      "support_assessment": 26,
+      "relevant_citation": 24,
+      "event_identity": 28
+    },
+    "supported_gold_cases": 5,
+    "accepted_wrong_entity_citations": 0,
+    "accepted_wrong_event_citations": 0
+  },
+  "skeptic": {
+    "fully_correct": 14,
+    "accepted": 28,
+    "valid_quote": 26,
+    "wrong_entity_citation": 0,
+    "wrong_event_citation": 0,
+    "nonexistent_citation": 0,
+    "irrelevant_citation": 4,
+    "unsupported_supported_proposal_accepted": 1,
+    "correct_uncertainty": 12,
+    "uncertainty_case": 20,
+    "incorrect_rejection": 0,
+    "ui_truth_verified": 0,
+    "denominator": 30,
+    "field_accuracy": {
+      "claim_text": 25,
+      "claim_kind": 30,
+      "support_assessment": 22,
+      "relevant_citation": 26,
+      "event_identity": 29
+    },
+    "supported_gold_cases": 5,
+    "accepted_wrong_entity_citations": 0,
+    "accepted_wrong_event_citations": 0
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "existing_container_identities_and_start_times_unchanged": true,
+  "controls_unchanged": {
+    "operator_controls": true,
+    "block_new_entries": true,
+    "kill_switches": true,
+    "ddpi_poa": true,
+    "open_incidents": true
+  },
+  "host_mem_available_kib": 7285064,
+  "models_and_weights_unchanged": true,
+  "original_private_config_restored": true,
+  "socket_mode": "0o600",
+  "retained_stash": "b69b0eb87c9b8f52cecd7dcf595a8f970f04f491"
+}

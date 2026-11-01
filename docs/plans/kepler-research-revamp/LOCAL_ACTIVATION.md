@@ -1,3 +1,5 @@
+Follow-up: [NEXT_PHASE_FINDINGS.md](NEXT_PHASE_FINDINGS.md) supersedes the original UI/lifecycle limits below and records the current source and checks. Serving profiles remain unchanged.
+
 # Normal personal Kepler app: research room activated
 
 1 November 2026, follow-up to the first-room implementation. “Production API” in the earlier report meant the user's normally running Kepler backend; it was not a separate commercial deployment or an approval requirement. The user authorized activating and testing the normal personal setup.

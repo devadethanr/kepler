@@ -1,0 +1,133 @@
+[
+  {
+    "id": "room:e01582bd-7050-4779-82dd-eba9c3f4aef1:420f7630586154fe44d5ece6e67458fd",
+    "room_id": "room:e01582bd-7050-4779-82dd-eba9c3f4aef1",
+    "seq": 35,
+    "kind": "mail.delivery_attempted",
+    "agent": "manager",
+    "at": "2026-11-01T14:47:12.339345+00:00",
+    "data": {
+      "recipient": "analyst",
+      "message_ids": [
+        "room:e01582bd-7050-4779-82dd-eba9c3f4aef1:6b24230941bc3e9d9a2cef612bc9d276"
+      ]
+    }
+  },
+  {
+    "id": "room:e01582bd-7050-4779-82dd-eba9c3f4aef1:1d38b15c6baef2a2b68054bf61757eaf",
+    "room_id": "room:e01582bd-7050-4779-82dd-eba9c3f4aef1",
+    "seq": 43,
+    "kind": "mail.response_opportunity",
+    "agent": "manager",
+    "at": "2026-11-01T14:47:14.837107+00:00",
+    "data": {
+      "recipient": "analyst",
+      "message_ids": [
+        "room:e01582bd-7050-4779-82dd-eba9c3f4aef1:6b24230941bc3e9d9a2cef612bc9d276"
+      ],
+      "response_id": "room:e01582bd-7050-4779-82dd-eba9c3f4aef1:ab4fb4e0eba503d04935ad48197ff76c"
+    }
+  },
+  {
+    "id": "room:e01582bd-7050-4779-82dd-eba9c3f4aef1:37ead7f7b69b6c167c12ad0af96493b1",
+    "room_id": "room:e01582bd-7050-4779-82dd-eba9c3f4aef1",
+    "seq": 44,
+    "kind": "mail.delivery_attempted",
+    "agent": "manager",
+    "at": "2026-11-01T14:47:14.846375+00:00",
+    "data": {
+      "recipient": "skeptic",
+      "message_ids": [
+        "room:e01582bd-7050-4779-82dd-eba9c3f4aef1:19d039bab94d984f3b8d4a7cc8bfb7c8",
+        "room:e01582bd-7050-4779-82dd-eba9c3f4aef1:ab4fb4e0eba503d04935ad48197ff76c"
+      ]
+    }
+  },
+  {
+    "id": "room:e01582bd-7050-4779-82dd-eba9c3f4aef1:e08629436970ae0ef1d7a39e875ae491",
+    "room_id": "room:e01582bd-7050-4779-82dd-eba9c3f4aef1",
+    "seq": 52,
+    "kind": "mail.response_opportunity",
+    "agent": "manager",
+    "at": "2026-11-01T14:47:19.277378+00:00",
+    "data": {
+      "recipient": "skeptic",
+      "message_ids": [
+        "room:e01582bd-7050-4779-82dd-eba9c3f4aef1:19d039bab94d984f3b8d4a7cc8bfb7c8",
+        "room:e01582bd-7050-4779-82dd-eba9c3f4aef1:ab4fb4e0eba503d04935ad48197ff76c"
+      ],
+      "response_id": "room:e01582bd-7050-4779-82dd-eba9c3f4aef1:e21c76329f963389a48ec5ebeb375ebe"
+    }
+  },
+  {
+    "id": "room:e01582bd-7050-4779-82dd-eba9c3f4aef1:52ebf9f08b1c599786d73bbf79296cdf",
+    "room_id": "room:e01582bd-7050-4779-82dd-eba9c3f4aef1",
+    "seq": 53,
+    "kind": "mail.delivery_attempted",
+    "agent": "manager",
+    "at": "2026-11-01T14:47:19.282479+00:00",
+    "data": {
+      "recipient": "analyst",
+      "message_ids": [
+        "room:e01582bd-7050-4779-82dd-eba9c3f4aef1:e21c76329f963389a48ec5ebeb375ebe"
+      ]
+    }
+  },
+  {
+    "id": "room:e01582bd-7050-4779-82dd-eba9c3f4aef1:df02becac60c5eed0ee91aadbd734451",
+    "room_id": "room:e01582bd-7050-4779-82dd-eba9c3f4aef1",
+    "seq": 61,
+    "kind": "mail.response_opportunity",
+    "agent": "manager",
+    "at": "2026-11-01T14:47:21.714917+00:00",
+    "data": {
+      "recipient": "analyst",
+      "message_ids": [
+        "room:e01582bd-7050-4779-82dd-eba9c3f4aef1:e21c76329f963389a48ec5ebeb375ebe"
+      ],
+      "response_id": "room:e01582bd-7050-4779-82dd-eba9c3f4aef1:31d017f061b1b60b0aa0fc8c96780db8"
+    }
+  },
+  {
+    "id": "room:e01582bd-7050-4779-82dd-eba9c3f4aef1:603ebef10a5fc6a1df7aafbcbdd09b42",
+    "room_id": "room:e01582bd-7050-4779-82dd-eba9c3f4aef1",
+    "seq": 62,
+    "kind": "mail.delivery_attempted",
+    "agent": "manager",
+    "at": "2026-11-01T14:47:21.719696+00:00",
+    "data": {
+      "recipient": "skeptic",
+      "message_ids": [
+        "room:e01582bd-7050-4779-82dd-eba9c3f4aef1:31d017f061b1b60b0aa0fc8c96780db8"
+      ]
+    }
+  },
+  {
+    "id": "room:e01582bd-7050-4779-82dd-eba9c3f4aef1:7a49c79a60cdfa47697ff3b559c3b7ff",
+    "room_id": "room:e01582bd-7050-4779-82dd-eba9c3f4aef1",
+    "seq": 70,
+    "kind": "mail.response_opportunity",
+    "agent": "manager",
+    "at": "2026-11-01T14:47:24.022368+00:00",
+    "data": {
+      "recipient": "skeptic",
+      "message_ids": [
+        "room:e01582bd-7050-4779-82dd-eba9c3f4aef1:31d017f061b1b60b0aa0fc8c96780db8"
+      ],
+      "response_id": "room:e01582bd-7050-4779-82dd-eba9c3f4aef1:50f4b06e06ca8bdda4af034df83cd620"
+    }
+  },
+  {
+    "id": "room:e01582bd-7050-4779-82dd-eba9c3f4aef1:05343e9845302eb730fa9d18ac7b28d5",
+    "room_id": "room:e01582bd-7050-4779-82dd-eba9c3f4aef1",
+    "seq": 71,
+    "kind": "room.finished",
+    "agent": "manager",
+    "at": "2026-11-01T14:47:30.740831+00:00",
+    "data": {
+      "status": "abstention",
+      "reason": "Public message limit reached with unresolved mail or positions",
+      "reason_code": "message_limit"
+    }
+  }
+]

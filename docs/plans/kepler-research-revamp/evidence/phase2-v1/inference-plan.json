@@ -1,0 +1,27 @@
+{
+  "run_id": "next-phase-20261101T200149",
+  "starting_commit": "3bc68763139134787bee160baf1ace103f186aff",
+  "total_model_request_ceiling": 120,
+  "allocations": {
+    "development": 20,
+    "heldout_contract": 60,
+    "integrated_rooms": 40
+  },
+  "planned": {
+    "development_unique_per_model": 6,
+    "development_requests": 12,
+    "heldout_unique_per_model": 30,
+    "heldout_requests": 60,
+    "integrated_at_most": 40
+  },
+  "model_downloads": 0,
+  "serving_changes": false,
+  "heldout_author": "Terra UI agent independent from evaluator author; no inference or output tuning",
+  "request_retries": 0,
+  "case_hashes": {
+    "heldout-cases.json": "69f4683aee439ee435bee291ea53e56dcd72106006bf1a26caa69639c2bad912",
+    "development-cases.json": "780d0b2b36d36d57068f6ec8ce0154c6a84852d28d484a440eb5b2cc995120c0"
+  },
+  "fully_correct": "accepted actual Gateway message; exact claim text/kind/support, relevant citation and cited source event identity",
+  "functional_objective": "27/30 per model; distinct from old failed extraction gate; no financial authority"
+}
