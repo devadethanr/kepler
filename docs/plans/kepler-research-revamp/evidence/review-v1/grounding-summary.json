@@ -1,0 +1,53 @@
+{
+  "analyst:A": {
+    "n": 30,
+    "schema": 30,
+    "exact": 5,
+    "rejected": 25,
+    "field_errors": {
+      "status": 25,
+      "entity": 2
+    },
+    "citation_fp": 0,
+    "citation_fn": 0
+  },
+  "analyst:B": {
+    "n": 30,
+    "schema": 30,
+    "exact": 4,
+    "rejected": 26,
+    "field_errors": {
+      "entity": 22,
+      "status": 25
+    },
+    "citation_fp": 5,
+    "citation_fn": 0
+  },
+  "skeptic:A": {
+    "n": 30,
+    "schema": 30,
+    "exact": 5,
+    "rejected": 25,
+    "field_errors": {
+      "status": 25,
+      "event_type": 1,
+      "date": 5,
+      "entity": 1
+    },
+    "citation_fp": 9,
+    "citation_fn": 0
+  },
+  "skeptic:B": {
+    "n": 30,
+    "schema": 30,
+    "exact": 9,
+    "rejected": 21,
+    "field_errors": {
+      "status": 19,
+      "entity": 11,
+      "date": 1
+    },
+    "citation_fp": 0,
+    "citation_fn": 0
+  }
+}

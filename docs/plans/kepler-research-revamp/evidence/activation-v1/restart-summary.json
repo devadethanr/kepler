@@ -1,0 +1,9 @@
+{
+  "room_id": "room:a8e4f66c-88c1-4a91-badf-afde3ef778fd",
+  "history_identical_after_host_api_restart": true,
+  "cursor_replay_identical": true,
+  "cursor": 33,
+  "replayed_events": 32,
+  "socket_mode": "0600",
+  "normal_dashboard_url": "http://localhost:8502"
+}

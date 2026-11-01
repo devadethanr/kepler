@@ -1,0 +1,65 @@
+{
+  "dashboard_url": "http://localhost:8502",
+  "services": [
+    {
+      "name": "swingtradev3-app",
+      "identity_changed": true,
+      "running": true,
+      "started_at": "2026-11-01T12:41:46.380437957Z"
+    },
+    {
+      "name": "swingtradev3-dashboard",
+      "identity_changed": false,
+      "running": true,
+      "started_at": "2026-10-31T07:21:23.557145053Z"
+    },
+    {
+      "name": "kepler-worker-1",
+      "identity_changed": false,
+      "running": true,
+      "started_at": "2026-10-31T07:21:23.367884046Z"
+    },
+    {
+      "name": "swingtradev3-db",
+      "identity_changed": false,
+      "running": true,
+      "started_at": "2026-10-31T06:52:22.214264314Z"
+    },
+    {
+      "name": "swingtradev3-memgraph",
+      "identity_changed": false,
+      "running": true,
+      "started_at": "2026-10-31T06:52:22.189867278Z"
+    },
+    {
+      "name": "swingtradev3-kite-mcp",
+      "identity_changed": false,
+      "running": true,
+      "started_at": "2026-10-31T07:21:22.861505049Z"
+    }
+  ],
+  "health": {
+    "status": "ready",
+    "models": {
+      "analyst": {
+        "model": "gemma-e4b-followup",
+        "status": "ready"
+      },
+      "skeptic": {
+        "model": "qwen35-9b-followup",
+        "status": "ready"
+      }
+    }
+  },
+  "operator_controls_unchanged": true,
+  "event_log_prefix_preserved": true,
+  "normal_database_room_count": 4,
+  "admitted_model_calls": 30,
+  "research_service_units": [
+    "kepler-research-api.service",
+    "kepler-research-models.service",
+    "kepler-research-worker.scope"
+  ],
+  "socket_mode": "0o600",
+  "queued_or_running": 0
+}

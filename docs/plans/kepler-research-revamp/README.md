@@ -1,5 +1,9 @@
 # Kepler collaborative research revamp
 
+Research Desk is now active in the normal app at **http://localhost:8502**, backed by the regular database and running local research services. Read [LOCAL_ACTIVATION.md](LOCAL_ACTIVATION.md) for the tested activation and start/stop commands.
+
+The first usable local research-room slice is implemented from `beaa5df`. Read [RESEARCH_ROOM_IMPLEMENTATION.md](RESEARCH_ROOM_IMPLEMENTATION.md) for verified behavior and remaining grounding limitations, then [RESEARCH_ROOM_RUNBOOK.md](RESEARCH_ROOM_RUNBOOK.md) for the native host/API/dashboard path. Existing trading services and manual live-entry approval were preserved.
+
 Personal Kepler implementation handoff, revision 5 — Codex selected, 1 November 2026.
 
 **Decision:** use **Codex App Server with the tested local Responses-to-Chat adapter** for Kepler’s research agents. The user selected this implementation path for their own workspace after the completed browser/tool/adapter follow-ups. It is not parked as an experiment or awaiting another framework-selection gate. Read [CODEX_IMPLEMENTATION.md](CODEX_IMPLEMENTATION.md) for the concrete architecture and work order. Grounding improvements remain implementation work; live entries still require manual approval.

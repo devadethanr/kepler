@@ -1,0 +1,7 @@
+{
+  "url": "https://www.sebi.gov.in/",
+  "bytes": 12000,
+  "SEBI_present": true,
+  "tool": "agent-browser 0.41.0",
+  "network": "validated public fetch, isolated networkless DOM extraction"
+}

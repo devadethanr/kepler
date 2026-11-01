@@ -1,0 +1,5505 @@
+[
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-01",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "current",
+      "citations": [
+        "h1"
+      ]
+    },
+    "actual": {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h1"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 70,
+      "prompt_tokens": 1165,
+      "total_tokens": 1235,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-02",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "current",
+      "citations": [
+        "h2"
+      ]
+    },
+    "actual": {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h2"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 68,
+      "prompt_tokens": 1165,
+      "total_tokens": 1233,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-03",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "current",
+      "citations": [
+        "h3"
+      ]
+    },
+    "actual": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h3"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 68,
+      "prompt_tokens": 1165,
+      "total_tokens": 1233,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-04",
+    "expected": {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "current",
+      "citations": [
+        "h4"
+      ]
+    },
+    "actual": {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h4"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 70,
+      "prompt_tokens": 1165,
+      "total_tokens": 1235,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-05",
+    "expected": {
+      "entity": "ECHO",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "current",
+      "citations": [
+        "h5"
+      ]
+    },
+    "actual": {
+      "entity": "ECHO",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h5"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 68,
+      "prompt_tokens": 1165,
+      "total_tokens": 1233,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-06",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "2026-07-13",
+      "event_type": "policy",
+      "status": "stale",
+      "citations": [
+        "h6"
+      ]
+    },
+    "actual": {
+      "entity": "ALPHA",
+      "date": "2026-07-13",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h6"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 68,
+      "prompt_tokens": 1165,
+      "total_tokens": 1233,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-07",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "2026-07-13",
+      "event_type": "supply_disruption",
+      "status": "stale",
+      "citations": [
+        "h7"
+      ]
+    },
+    "actual": {
+      "entity": "BRAVO",
+      "date": "2026-07-13",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h7"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 71,
+      "prompt_tokens": 1165,
+      "total_tokens": 1236,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-08",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "2026-07-13",
+      "event_type": "earnings",
+      "status": "stale",
+      "citations": [
+        "h8"
+      ]
+    },
+    "actual": {
+      "entity": "CHARLIE",
+      "date": "2026-07-13",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h8"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 68,
+      "prompt_tokens": 1165,
+      "total_tokens": 1233,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-09",
+    "expected": {
+      "entity": "DELTA",
+      "date": "2026-07-13",
+      "event_type": "policy",
+      "status": "stale",
+      "citations": [
+        "h9"
+      ]
+    },
+    "actual": {
+      "entity": "DELTA",
+      "date": "2026-07-13",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h9"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 67,
+      "prompt_tokens": 1165,
+      "total_tokens": 1232,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-10",
+    "expected": {
+      "entity": "ECHO",
+      "date": "2026-07-13",
+      "event_type": "supply_disruption",
+      "status": "stale",
+      "citations": [
+        "h10"
+      ]
+    },
+    "actual": {
+      "entity": "ECHO",
+      "date": "2026-07-13",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h10"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 72,
+      "prompt_tokens": 1165,
+      "total_tokens": 1237,
+      "prompt_tokens_details": {
+        "cached_tokens": 1149
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-11",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "2026-11-06",
+      "event_type": "earnings",
+      "status": "future",
+      "citations": [
+        "h11"
+      ]
+    },
+    "actual": {
+      "entity": "ALPHA",
+      "date": "2026-11-06",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h11"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 68,
+      "prompt_tokens": 1165,
+      "total_tokens": 1233,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-12",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "2026-11-06",
+      "event_type": "policy",
+      "status": "future",
+      "citations": [
+        "h12"
+      ]
+    },
+    "actual": {
+      "entity": "BRAVO",
+      "date": "2026-11-06",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h12"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 69,
+      "prompt_tokens": 1165,
+      "total_tokens": 1234,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-13",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "2026-11-06",
+      "event_type": "supply_disruption",
+      "status": "future",
+      "citations": [
+        "h13"
+      ]
+    },
+    "actual": {
+      "entity": "CHARLIE",
+      "date": "2026-11-06",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h13"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 72,
+      "prompt_tokens": 1165,
+      "total_tokens": 1237,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-14",
+    "expected": {
+      "entity": "DELTA",
+      "date": "2026-11-06",
+      "event_type": "earnings",
+      "status": "future",
+      "citations": [
+        "h14"
+      ]
+    },
+    "actual": {
+      "entity": "DELTA",
+      "date": "2026-11-06",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h14"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 68,
+      "prompt_tokens": 1165,
+      "total_tokens": 1233,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-15",
+    "expected": {
+      "entity": "ECHO",
+      "date": "2026-11-06",
+      "event_type": "policy",
+      "status": "future",
+      "citations": [
+        "h15"
+      ]
+    },
+    "actual": {
+      "entity": "ECHO",
+      "date": "2026-11-06",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h15"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 69,
+      "prompt_tokens": 1165,
+      "total_tokens": 1234,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-16",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    "actual": {
+      "entity": "ALPHA",
+      "date": "",
+      "event_type": "unknown",
+      "status": "conflict",
+      "citations": []
+    },
+    "usage": {
+      "completion_tokens": 47,
+      "prompt_tokens": 1165,
+      "total_tokens": 1212,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 0,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-17",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    "actual": {
+      "entity": "BRAVO",
+      "date": "",
+      "event_type": "unknown",
+      "status": "conflict",
+      "citations": []
+    },
+    "usage": {
+      "completion_tokens": 48,
+      "prompt_tokens": 1165,
+      "total_tokens": 1213,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 0,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-18",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    "actual": {
+      "entity": "ECHO",
+      "date": "",
+      "event_type": "unknown",
+      "status": "conflict",
+      "citations": []
+    },
+    "usage": {
+      "completion_tokens": 48,
+      "prompt_tokens": 1165,
+      "total_tokens": 1213,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 0,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-19",
+    "expected": {
+      "entity": "DELTA",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    "actual": {
+      "entity": "ECHO",
+      "date": "",
+      "event_type": "unknown",
+      "status": "conflict",
+      "citations": []
+    },
+    "usage": {
+      "completion_tokens": 48,
+      "prompt_tokens": 1165,
+      "total_tokens": 1213,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 0,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-20",
+    "expected": {
+      "entity": "ECHO",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    "actual": {
+      "entity": "ECHO",
+      "date": "",
+      "event_type": "unknown",
+      "status": "conflict",
+      "citations": []
+    },
+    "usage": {
+      "completion_tokens": 48,
+      "prompt_tokens": 1165,
+      "total_tokens": 1213,
+      "prompt_tokens_details": {
+        "cached_tokens": 1149
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 0,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-21",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h21",
+        "z21"
+      ]
+    },
+    "actual": {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h21",
+        "z21"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 75,
+      "prompt_tokens": 1165,
+      "total_tokens": 1240,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": true,
+      "accepted": true,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 2,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-22",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h22",
+        "z22"
+      ]
+    },
+    "actual": {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h22",
+        "z22"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 79,
+      "prompt_tokens": 1165,
+      "total_tokens": 1244,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": true,
+      "accepted": true,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 2,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-23",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h23",
+        "z23"
+      ]
+    },
+    "actual": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h23",
+        "z23"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 76,
+      "prompt_tokens": 1165,
+      "total_tokens": 1241,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": true,
+      "accepted": true,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 2,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-24",
+    "expected": {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h24",
+        "z24"
+      ]
+    },
+    "actual": {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h24",
+        "z24"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 75,
+      "prompt_tokens": 1165,
+      "total_tokens": 1240,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": true,
+      "accepted": true,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 2,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-25",
+    "expected": {
+      "entity": "ECHO",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h25",
+        "z25"
+      ]
+    },
+    "actual": {
+      "entity": "ECHO",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h25",
+        "z25"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 79,
+      "prompt_tokens": 1165,
+      "total_tokens": 1244,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": true,
+      "accepted": true,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 2,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-26",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "current",
+      "citations": [
+        "h26"
+      ]
+    },
+    "actual": {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h26"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 68,
+      "prompt_tokens": 1165,
+      "total_tokens": 1233,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-27",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "current",
+      "citations": [
+        "h27"
+      ]
+    },
+    "actual": {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h27"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 69,
+      "prompt_tokens": 1165,
+      "total_tokens": 1234,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-28",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "current",
+      "citations": [
+        "h28"
+      ]
+    },
+    "actual": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h28"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 72,
+      "prompt_tokens": 1165,
+      "total_tokens": 1237,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-29",
+    "expected": {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "current",
+      "citations": [
+        "h29"
+      ]
+    },
+    "actual": {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h29"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 68,
+      "prompt_tokens": 1165,
+      "total_tokens": 1233,
+      "prompt_tokens_details": {
+        "cached_tokens": 1150
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "A",
+    "case_id": "check-30",
+    "expected": {
+      "entity": "ECHO",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "current",
+      "citations": [
+        "h30"
+      ]
+    },
+    "actual": {
+      "entity": "ECHO",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h30"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 69,
+      "prompt_tokens": 1165,
+      "total_tokens": 1234,
+      "prompt_tokens_details": {
+        "cached_tokens": 1149
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-01",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "current",
+      "citations": [
+        "h1"
+      ]
+    },
+    "actual": {
+      "entity": "check-01",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h1"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 74,
+      "prompt_tokens": 191,
+      "total_tokens": 265,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-02",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "current",
+      "citations": [
+        "h2"
+      ]
+    },
+    "actual": {
+      "entity": "check-02",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h2"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 71,
+      "prompt_tokens": 189,
+      "total_tokens": 260,
+      "prompt_tokens_details": {
+        "cached_tokens": 134
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-03",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "current",
+      "citations": [
+        "h3"
+      ]
+    },
+    "actual": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h3"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 69,
+      "prompt_tokens": 189,
+      "total_tokens": 258,
+      "prompt_tokens_details": {
+        "cached_tokens": 133
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-04",
+    "expected": {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "current",
+      "citations": [
+        "h4"
+      ]
+    },
+    "actual": {
+      "entity": "check-04",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h4"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 74,
+      "prompt_tokens": 192,
+      "total_tokens": 266,
+      "prompt_tokens_details": {
+        "cached_tokens": 133
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-05",
+    "expected": {
+      "entity": "ECHO",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "current",
+      "citations": [
+        "h5"
+      ]
+    },
+    "actual": {
+      "entity": "check-05",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h5"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 71,
+      "prompt_tokens": 188,
+      "total_tokens": 259,
+      "prompt_tokens_details": {
+        "cached_tokens": 133
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-06",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "2026-07-13",
+      "event_type": "policy",
+      "status": "stale",
+      "citations": [
+        "h6"
+      ]
+    },
+    "actual": {
+      "entity": "check-06",
+      "date": "2026-07-13",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h6"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 71,
+      "prompt_tokens": 188,
+      "total_tokens": 259,
+      "prompt_tokens_details": {
+        "cached_tokens": 133
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-07",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "2026-07-13",
+      "event_type": "supply_disruption",
+      "status": "stale",
+      "citations": [
+        "h7"
+      ]
+    },
+    "actual": {
+      "entity": "check-07",
+      "date": "2026-07-13",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h7"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 74,
+      "prompt_tokens": 192,
+      "total_tokens": 266,
+      "prompt_tokens_details": {
+        "cached_tokens": 133
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-08",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "2026-07-13",
+      "event_type": "earnings",
+      "status": "stale",
+      "citations": [
+        "h8"
+      ]
+    },
+    "actual": {
+      "entity": "CHARLIE",
+      "date": "2026-07-13",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h8"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 69,
+      "prompt_tokens": 189,
+      "total_tokens": 258,
+      "prompt_tokens_details": {
+        "cached_tokens": 133
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-09",
+    "expected": {
+      "entity": "DELTA",
+      "date": "2026-07-13",
+      "event_type": "policy",
+      "status": "stale",
+      "citations": [
+        "h9"
+      ]
+    },
+    "actual": {
+      "entity": "check-09",
+      "date": "2026-07-13",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h9"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 71,
+      "prompt_tokens": 189,
+      "total_tokens": 260,
+      "prompt_tokens_details": {
+        "cached_tokens": 133
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-10",
+    "expected": {
+      "entity": "ECHO",
+      "date": "2026-07-13",
+      "event_type": "supply_disruption",
+      "status": "stale",
+      "citations": [
+        "h10"
+      ]
+    },
+    "actual": {
+      "entity": "check-10",
+      "date": "2026-07-13",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h10"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 75,
+      "prompt_tokens": 192,
+      "total_tokens": 267,
+      "prompt_tokens_details": {
+        "cached_tokens": 133
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-11",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "2026-11-06",
+      "event_type": "earnings",
+      "status": "future",
+      "citations": [
+        "h11"
+      ]
+    },
+    "actual": {
+      "entity": "check-11",
+      "date": "2026-11-06",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h11"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 72,
+      "prompt_tokens": 189,
+      "total_tokens": 261,
+      "prompt_tokens_details": {
+        "cached_tokens": 133
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-12",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "2026-11-06",
+      "event_type": "policy",
+      "status": "future",
+      "citations": [
+        "h12"
+      ]
+    },
+    "actual": {
+      "entity": "check-12",
+      "date": "2026-11-06",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h12"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 72,
+      "prompt_tokens": 190,
+      "total_tokens": 262,
+      "prompt_tokens_details": {
+        "cached_tokens": 133
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-13",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "2026-11-06",
+      "event_type": "supply_disruption",
+      "status": "future",
+      "citations": [
+        "h13"
+      ]
+    },
+    "actual": {
+      "entity": "check-13",
+      "date": "2026-11-06",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h13"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 75,
+      "prompt_tokens": 193,
+      "total_tokens": 268,
+      "prompt_tokens_details": {
+        "cached_tokens": 133
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-14",
+    "expected": {
+      "entity": "DELTA",
+      "date": "2026-11-06",
+      "event_type": "earnings",
+      "status": "future",
+      "citations": [
+        "h14"
+      ]
+    },
+    "actual": {
+      "entity": "DELTA",
+      "date": "2026-11-06",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h14"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 69,
+      "prompt_tokens": 190,
+      "total_tokens": 259,
+      "prompt_tokens_details": {
+        "cached_tokens": 133
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-15",
+    "expected": {
+      "entity": "ECHO",
+      "date": "2026-11-06",
+      "event_type": "policy",
+      "status": "future",
+      "citations": [
+        "h15"
+      ]
+    },
+    "actual": {
+      "entity": "check-15",
+      "date": "2026-11-06",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h15"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 72,
+      "prompt_tokens": 189,
+      "total_tokens": 261,
+      "prompt_tokens_details": {
+        "cached_tokens": 133
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-16",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    "actual": {
+      "entity": "check-16",
+      "date": "",
+      "event_type": "unknown",
+      "status": "conflict",
+      "citations": [
+        "check-16"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 62,
+      "prompt_tokens": 180,
+      "total_tokens": 242,
+      "prompt_tokens_details": {
+        "cached_tokens": 133
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 0,
+      "citation_fp": 1,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-17",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    "actual": {
+      "entity": "check-17",
+      "date": "",
+      "event_type": "unknown",
+      "status": "conflict",
+      "citations": [
+        "check-17"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 62,
+      "prompt_tokens": 181,
+      "total_tokens": 243,
+      "prompt_tokens_details": {
+        "cached_tokens": 133
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 0,
+      "citation_fp": 1,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-18",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    "actual": {
+      "entity": "CHARLIE",
+      "date": "",
+      "event_type": "unknown",
+      "status": "conflict",
+      "citations": [
+        "check-18"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 60,
+      "prompt_tokens": 181,
+      "total_tokens": 241,
+      "prompt_tokens_details": {
+        "cached_tokens": 133
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 0,
+      "citation_fp": 1,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-19",
+    "expected": {
+      "entity": "DELTA",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    "actual": {
+      "entity": "check-19",
+      "date": "",
+      "event_type": "unknown",
+      "status": "conflict",
+      "citations": [
+        "check-19"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 62,
+      "prompt_tokens": 181,
+      "total_tokens": 243,
+      "prompt_tokens_details": {
+        "cached_tokens": 133
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 0,
+      "citation_fp": 1,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-20",
+    "expected": {
+      "entity": "ECHO",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    "actual": {
+      "entity": "check-20",
+      "date": "",
+      "event_type": "unknown",
+      "status": "conflict",
+      "citations": [
+        "check-20"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 63,
+      "prompt_tokens": 180,
+      "total_tokens": 243,
+      "prompt_tokens_details": {
+        "cached_tokens": 133
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 0,
+      "citation_fp": 1,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-21",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h21",
+        "z21"
+      ]
+    },
+    "actual": {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h21",
+        "z21"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 75,
+      "prompt_tokens": 212,
+      "total_tokens": 287,
+      "prompt_tokens_details": {
+        "cached_tokens": 133
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": true,
+      "accepted": true,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 2,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-22",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h22",
+        "z22"
+      ]
+    },
+    "actual": {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h22",
+        "z22"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 79,
+      "prompt_tokens": 220,
+      "total_tokens": 299,
+      "prompt_tokens_details": {
+        "cached_tokens": 134
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": true,
+      "accepted": true,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 2,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-23",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h23",
+        "z23"
+      ]
+    },
+    "actual": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h23",
+        "z23"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 76,
+      "prompt_tokens": 214,
+      "total_tokens": 290,
+      "prompt_tokens_details": {
+        "cached_tokens": 134
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": true,
+      "accepted": true,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 2,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-24",
+    "expected": {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h24",
+        "z24"
+      ]
+    },
+    "actual": {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h24",
+        "z24"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 75,
+      "prompt_tokens": 214,
+      "total_tokens": 289,
+      "prompt_tokens_details": {
+        "cached_tokens": 134
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": true,
+      "accepted": true,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 2,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-25",
+    "expected": {
+      "entity": "ECHO",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h25",
+        "z25"
+      ]
+    },
+    "actual": {
+      "entity": "check-25",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h25",
+        "z25"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 81,
+      "prompt_tokens": 218,
+      "total_tokens": 299,
+      "prompt_tokens_details": {
+        "cached_tokens": 134
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 2,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-26",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "current",
+      "citations": [
+        "h26"
+      ]
+    },
+    "actual": {
+      "entity": "check-26",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h26"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 71,
+      "prompt_tokens": 208,
+      "total_tokens": 279,
+      "prompt_tokens_details": {
+        "cached_tokens": 134
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-27",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "current",
+      "citations": [
+        "h27"
+      ]
+    },
+    "actual": {
+      "entity": "check-27",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h27"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 72,
+      "prompt_tokens": 209,
+      "total_tokens": 281,
+      "prompt_tokens_details": {
+        "cached_tokens": 134
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-28",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "current",
+      "citations": [
+        "h28"
+      ]
+    },
+    "actual": {
+      "entity": "check-28",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h28"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 75,
+      "prompt_tokens": 212,
+      "total_tokens": 287,
+      "prompt_tokens_details": {
+        "cached_tokens": 134
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-29",
+    "expected": {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "current",
+      "citations": [
+        "h29"
+      ]
+    },
+    "actual": {
+      "entity": "check-29",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h29"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 72,
+      "prompt_tokens": 209,
+      "total_tokens": 281,
+      "prompt_tokens_details": {
+        "cached_tokens": 134
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "analyst",
+    "arm": "B",
+    "case_id": "check-30",
+    "expected": {
+      "entity": "ECHO",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "current",
+      "citations": [
+        "h30"
+      ]
+    },
+    "actual": {
+      "entity": "check-30",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h30"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 72,
+      "prompt_tokens": 208,
+      "total_tokens": 280,
+      "prompt_tokens_details": {
+        "cached_tokens": 133
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-01",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "current",
+      "citations": [
+        "h1"
+      ]
+    },
+    "actual": {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h1"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 66,
+      "prompt_tokens": 1172,
+      "total_tokens": 1238,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-02",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "current",
+      "citations": [
+        "h2"
+      ]
+    },
+    "actual": {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h2"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 65,
+      "prompt_tokens": 1172,
+      "total_tokens": 1237,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-03",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "current",
+      "citations": [
+        "h3"
+      ]
+    },
+    "actual": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h3",
+        "z23"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 73,
+      "prompt_tokens": 1172,
+      "total_tokens": 1245,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": false,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 1,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-04",
+    "expected": {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "current",
+      "citations": [
+        "h4"
+      ]
+    },
+    "actual": {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h4",
+        "z24"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 73,
+      "prompt_tokens": 1172,
+      "total_tokens": 1245,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 1,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-05",
+    "expected": {
+      "entity": "ECHO",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "current",
+      "citations": [
+        "h5"
+      ]
+    },
+    "actual": {
+      "entity": "ECHO",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h5",
+        "z5"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 71,
+      "prompt_tokens": 1172,
+      "total_tokens": 1243,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 1,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-06",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "2026-07-13",
+      "event_type": "policy",
+      "status": "stale",
+      "citations": [
+        "h6"
+      ]
+    },
+    "actual": {
+      "entity": "ALPHA",
+      "date": "2026-07-13",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h6"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 64,
+      "prompt_tokens": 1172,
+      "total_tokens": 1236,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-07",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "2026-07-13",
+      "event_type": "supply_disruption",
+      "status": "stale",
+      "citations": [
+        "h7"
+      ]
+    },
+    "actual": {
+      "entity": "BRAVO",
+      "date": "2026-07-13",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h7"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 66,
+      "prompt_tokens": 1172,
+      "total_tokens": 1238,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-08",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "2026-07-13",
+      "event_type": "earnings",
+      "status": "stale",
+      "citations": [
+        "h8"
+      ]
+    },
+    "actual": {
+      "entity": "CHARLIE",
+      "date": "2026-07-13",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h8"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 66,
+      "prompt_tokens": 1172,
+      "total_tokens": 1238,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-09",
+    "expected": {
+      "entity": "DELTA",
+      "date": "2026-07-13",
+      "event_type": "policy",
+      "status": "stale",
+      "citations": [
+        "h9"
+      ]
+    },
+    "actual": {
+      "entity": "DELTA",
+      "date": "2026-07-13",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h9"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 64,
+      "prompt_tokens": 1172,
+      "total_tokens": 1236,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-10",
+    "expected": {
+      "entity": "ECHO",
+      "date": "2026-07-13",
+      "event_type": "supply_disruption",
+      "status": "stale",
+      "citations": [
+        "h10"
+      ]
+    },
+    "actual": {
+      "entity": "ECHO",
+      "date": "2026-07-13",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h10"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 67,
+      "prompt_tokens": 1172,
+      "total_tokens": 1239,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-11",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "2026-11-06",
+      "event_type": "earnings",
+      "status": "future",
+      "citations": [
+        "h11"
+      ]
+    },
+    "actual": {
+      "entity": "ALPHA",
+      "date": "2026-11-06",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h11"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 66,
+      "prompt_tokens": 1172,
+      "total_tokens": 1238,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-12",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "2026-11-06",
+      "event_type": "policy",
+      "status": "future",
+      "citations": [
+        "h12"
+      ]
+    },
+    "actual": {
+      "entity": "BRAVO",
+      "date": "2026-11-06",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h12"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 65,
+      "prompt_tokens": 1172,
+      "total_tokens": 1237,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-13",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "2026-11-06",
+      "event_type": "supply_disruption",
+      "status": "future",
+      "citations": [
+        "h13"
+      ]
+    },
+    "actual": {
+      "entity": "CHARLIE",
+      "date": "2026-11-06",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h13"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 68,
+      "prompt_tokens": 1172,
+      "total_tokens": 1240,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-14",
+    "expected": {
+      "entity": "DELTA",
+      "date": "2026-11-06",
+      "event_type": "earnings",
+      "status": "future",
+      "citations": [
+        "h14"
+      ]
+    },
+    "actual": {
+      "entity": "DELTA",
+      "date": "2026-11-06",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h14"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 66,
+      "prompt_tokens": 1172,
+      "total_tokens": 1238,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-15",
+    "expected": {
+      "entity": "ECHO",
+      "date": "2026-11-06",
+      "event_type": "policy",
+      "status": "future",
+      "citations": [
+        "h15"
+      ]
+    },
+    "actual": {
+      "entity": "ECHO",
+      "date": "2026-11-06",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h15"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 65,
+      "prompt_tokens": 1172,
+      "total_tokens": 1237,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-16",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    "actual": {
+      "entity": "ALPHA",
+      "date": "2026-11-06",
+      "event_type": "unknown",
+      "status": "conflict",
+      "citations": [
+        "h16"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 65,
+      "prompt_tokens": 1172,
+      "total_tokens": 1237,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": false,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 0,
+      "citation_fp": 1,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-17",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    "actual": {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "unknown",
+      "status": "conflict",
+      "citations": [
+        "check-17"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 66,
+      "prompt_tokens": 1172,
+      "total_tokens": 1238,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": false,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 0,
+      "citation_fp": 1,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-18",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    "actual": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "unknown",
+      "status": "conflict",
+      "citations": []
+    },
+    "usage": {
+      "completion_tokens": 56,
+      "prompt_tokens": 1172,
+      "total_tokens": 1228,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": false,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 0,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-19",
+    "expected": {
+      "entity": "DELTA",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    "actual": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "unknown",
+      "status": "conflict",
+      "citations": [
+        "check-19"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 67,
+      "prompt_tokens": 1172,
+      "total_tokens": 1239,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": false,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 0,
+      "citation_fp": 1,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-20",
+    "expected": {
+      "entity": "ECHO",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    "actual": {
+      "entity": "ECHO",
+      "date": "2026-10-28",
+      "event_type": "unknown",
+      "status": "conflict",
+      "citations": [
+        "check-20"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 66,
+      "prompt_tokens": 1172,
+      "total_tokens": 1238,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": false,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 0,
+      "citation_fp": 1,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-21",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h21",
+        "z21"
+      ]
+    },
+    "actual": {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h21",
+        "z21"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 72,
+      "prompt_tokens": 1172,
+      "total_tokens": 1244,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": true,
+      "accepted": true,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 2,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-22",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h22",
+        "z22"
+      ]
+    },
+    "actual": {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h22",
+        "z22"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 74,
+      "prompt_tokens": 1172,
+      "total_tokens": 1246,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": true,
+      "accepted": true,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 2,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-23",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h23",
+        "z23"
+      ]
+    },
+    "actual": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h23",
+        "z23"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 74,
+      "prompt_tokens": 1172,
+      "total_tokens": 1246,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": true,
+      "accepted": true,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 2,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-24",
+    "expected": {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h24",
+        "z24"
+      ]
+    },
+    "actual": {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h24",
+        "z24"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 72,
+      "prompt_tokens": 1172,
+      "total_tokens": 1244,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": true,
+      "accepted": true,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 2,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-25",
+    "expected": {
+      "entity": "ECHO",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h25",
+        "z25"
+      ]
+    },
+    "actual": {
+      "entity": "ECHO",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h25",
+        "z25"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 74,
+      "prompt_tokens": 1172,
+      "total_tokens": 1246,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": true,
+      "accepted": true,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 2,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-26",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "current",
+      "citations": [
+        "h26"
+      ]
+    },
+    "actual": {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "future",
+      "citations": [
+        "h26"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 65,
+      "prompt_tokens": 1172,
+      "total_tokens": 1237,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-27",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "current",
+      "citations": [
+        "h27"
+      ]
+    },
+    "actual": {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h27",
+        "z27"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 72,
+      "prompt_tokens": 1172,
+      "total_tokens": 1244,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 1,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-28",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "current",
+      "citations": [
+        "h28"
+      ]
+    },
+    "actual": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h28",
+        "z28"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 75,
+      "prompt_tokens": 1172,
+      "total_tokens": 1247,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 1,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-29",
+    "expected": {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "current",
+      "citations": [
+        "h29"
+      ]
+    },
+    "actual": {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "future",
+      "citations": [
+        "h29"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 65,
+      "prompt_tokens": 1172,
+      "total_tokens": 1237,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "A",
+    "case_id": "check-30",
+    "expected": {
+      "entity": "ECHO",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "current",
+      "citations": [
+        "h30"
+      ]
+    },
+    "actual": {
+      "entity": "ECHO",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "future",
+      "citations": [
+        "h30"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 64,
+      "prompt_tokens": 1172,
+      "total_tokens": 1236,
+      "prompt_tokens_details": {
+        "cached_tokens": 1040
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-01",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "current",
+      "citations": [
+        "h1"
+      ]
+    },
+    "actual": {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "current",
+      "citations": [
+        "h1"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 65,
+      "prompt_tokens": 193,
+      "total_tokens": 258,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": true,
+      "accepted": true,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-02",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "current",
+      "citations": [
+        "h2"
+      ]
+    },
+    "actual": {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "future",
+      "citations": [
+        "h2"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 64,
+      "prompt_tokens": 192,
+      "total_tokens": 256,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-03",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "current",
+      "citations": [
+        "h3"
+      ]
+    },
+    "actual": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "future",
+      "citations": [
+        "h3"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 65,
+      "prompt_tokens": 193,
+      "total_tokens": 258,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-04",
+    "expected": {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "current",
+      "citations": [
+        "h4"
+      ]
+    },
+    "actual": {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "future",
+      "citations": [
+        "h4"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 65,
+      "prompt_tokens": 194,
+      "total_tokens": 259,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-05",
+    "expected": {
+      "entity": "ECHO",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "current",
+      "citations": [
+        "h5"
+      ]
+    },
+    "actual": {
+      "entity": "",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "future",
+      "citations": [
+        "h5"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 61,
+      "prompt_tokens": 192,
+      "total_tokens": 253,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-06",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "2026-07-13",
+      "event_type": "policy",
+      "status": "stale",
+      "citations": [
+        "h6"
+      ]
+    },
+    "actual": {
+      "entity": "",
+      "date": "2026-07-13",
+      "event_type": "policy",
+      "status": "future",
+      "citations": [
+        "h6"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 61,
+      "prompt_tokens": 191,
+      "total_tokens": 252,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-07",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "2026-07-13",
+      "event_type": "supply_disruption",
+      "status": "stale",
+      "citations": [
+        "h7"
+      ]
+    },
+    "actual": {
+      "entity": "BRAVO",
+      "date": "2026-07-13",
+      "event_type": "supply_disruption",
+      "status": "future",
+      "citations": [
+        "h7"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 65,
+      "prompt_tokens": 194,
+      "total_tokens": 259,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-08",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "2026-07-13",
+      "event_type": "earnings",
+      "status": "stale",
+      "citations": [
+        "h8"
+      ]
+    },
+    "actual": {
+      "entity": "CHARLIE",
+      "date": "2026-07-13",
+      "event_type": "earnings",
+      "status": "future",
+      "citations": [
+        "h8"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 65,
+      "prompt_tokens": 193,
+      "total_tokens": 258,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-09",
+    "expected": {
+      "entity": "DELTA",
+      "date": "2026-07-13",
+      "event_type": "policy",
+      "status": "stale",
+      "citations": [
+        "h9"
+      ]
+    },
+    "actual": {
+      "entity": "",
+      "date": "2026-07-13",
+      "event_type": "policy",
+      "status": "future",
+      "citations": [
+        "h9"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 61,
+      "prompt_tokens": 192,
+      "total_tokens": 253,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-10",
+    "expected": {
+      "entity": "ECHO",
+      "date": "2026-07-13",
+      "event_type": "supply_disruption",
+      "status": "stale",
+      "citations": [
+        "h10"
+      ]
+    },
+    "actual": {
+      "entity": "ECHO",
+      "date": "2026-10-30",
+      "event_type": "supply_disruption",
+      "status": "future",
+      "citations": [
+        "h10"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 67,
+      "prompt_tokens": 195,
+      "total_tokens": 262,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": false,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-11",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "2026-11-06",
+      "event_type": "earnings",
+      "status": "future",
+      "citations": [
+        "h11"
+      ]
+    },
+    "actual": {
+      "entity": "ALPHA",
+      "date": "2026-11-06",
+      "event_type": "earnings",
+      "status": "future",
+      "citations": [
+        "h11"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 66,
+      "prompt_tokens": 192,
+      "total_tokens": 258,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": true,
+      "accepted": true,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-12",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "2026-11-06",
+      "event_type": "policy",
+      "status": "future",
+      "citations": [
+        "h12"
+      ]
+    },
+    "actual": {
+      "entity": "",
+      "date": "2026-11-06",
+      "event_type": "policy",
+      "status": "future",
+      "citations": [
+        "h12"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 62,
+      "prompt_tokens": 193,
+      "total_tokens": 255,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-13",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "2026-11-06",
+      "event_type": "supply_disruption",
+      "status": "future",
+      "citations": [
+        "h13"
+      ]
+    },
+    "actual": {
+      "entity": "CHARLIE",
+      "date": "2026-11-06",
+      "event_type": "supply_disruption",
+      "status": "future",
+      "citations": [
+        "h13"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 67,
+      "prompt_tokens": 196,
+      "total_tokens": 263,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": true,
+      "accepted": true,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-14",
+    "expected": {
+      "entity": "DELTA",
+      "date": "2026-11-06",
+      "event_type": "earnings",
+      "status": "future",
+      "citations": [
+        "h14"
+      ]
+    },
+    "actual": {
+      "entity": "DELTA",
+      "date": "2026-11-06",
+      "event_type": "earnings",
+      "status": "future",
+      "citations": [
+        "h14"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 65,
+      "prompt_tokens": 193,
+      "total_tokens": 258,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": true,
+      "accepted": true,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-15",
+    "expected": {
+      "entity": "ECHO",
+      "date": "2026-11-06",
+      "event_type": "policy",
+      "status": "future",
+      "citations": [
+        "h15"
+      ]
+    },
+    "actual": {
+      "entity": "",
+      "date": "2026-11-06",
+      "event_type": "policy",
+      "status": "future",
+      "citations": [
+        "h15"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 62,
+      "prompt_tokens": 193,
+      "total_tokens": 255,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-16",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    "actual": {
+      "entity": "",
+      "date": "",
+      "event_type": "unknown",
+      "status": "conflict",
+      "citations": []
+    },
+    "usage": {
+      "completion_tokens": 41,
+      "prompt_tokens": 183,
+      "total_tokens": 224,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 0,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-17",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    "actual": {
+      "entity": "",
+      "date": "",
+      "event_type": "unknown",
+      "status": "conflict",
+      "citations": []
+    },
+    "usage": {
+      "completion_tokens": 42,
+      "prompt_tokens": 184,
+      "total_tokens": 226,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 0,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-18",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    "actual": {
+      "entity": "",
+      "date": "",
+      "event_type": "unknown",
+      "status": "conflict",
+      "citations": []
+    },
+    "usage": {
+      "completion_tokens": 41,
+      "prompt_tokens": 185,
+      "total_tokens": 226,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 0,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-19",
+    "expected": {
+      "entity": "DELTA",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    "actual": {
+      "entity": "",
+      "date": "",
+      "event_type": "unknown",
+      "status": "conflict",
+      "citations": []
+    },
+    "usage": {
+      "completion_tokens": 42,
+      "prompt_tokens": 184,
+      "total_tokens": 226,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 0,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-20",
+    "expected": {
+      "entity": "ECHO",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    "actual": {
+      "entity": "",
+      "date": "",
+      "event_type": "unknown",
+      "status": "conflict",
+      "citations": []
+    },
+    "usage": {
+      "completion_tokens": 42,
+      "prompt_tokens": 184,
+      "total_tokens": 226,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 0,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-21",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h21",
+        "z21"
+      ]
+    },
+    "actual": {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h21",
+        "z21"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 72,
+      "prompt_tokens": 215,
+      "total_tokens": 287,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": true,
+      "accepted": true,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 2,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-22",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h22",
+        "z22"
+      ]
+    },
+    "actual": {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h22",
+        "z22"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 74,
+      "prompt_tokens": 221,
+      "total_tokens": 295,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": true,
+      "accepted": true,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 2,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-23",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h23",
+        "z23"
+      ]
+    },
+    "actual": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h23",
+        "z23"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 74,
+      "prompt_tokens": 219,
+      "total_tokens": 293,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": true,
+      "accepted": true,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 2,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-24",
+    "expected": {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h24",
+        "z24"
+      ]
+    },
+    "actual": {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h24",
+        "z24"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 72,
+      "prompt_tokens": 217,
+      "total_tokens": 289,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": true,
+      "accepted": true,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 2,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-25",
+    "expected": {
+      "entity": "ECHO",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h25",
+        "z25"
+      ]
+    },
+    "actual": {
+      "entity": "ECHO",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h25",
+        "z25"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 74,
+      "prompt_tokens": 221,
+      "total_tokens": 295,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": true,
+      "accepted": true,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": true
+      },
+      "citation_tp": 2,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-26",
+    "expected": {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "current",
+      "citations": [
+        "h26"
+      ]
+    },
+    "actual": {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h26"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 66,
+      "prompt_tokens": 211,
+      "total_tokens": 277,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-27",
+    "expected": {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "current",
+      "citations": [
+        "h27"
+      ]
+    },
+    "actual": {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h27"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 66,
+      "prompt_tokens": 212,
+      "total_tokens": 278,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-28",
+    "expected": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "current",
+      "citations": [
+        "h28"
+      ]
+    },
+    "actual": {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h28"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 68,
+      "prompt_tokens": 215,
+      "total_tokens": 283,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-29",
+    "expected": {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "current",
+      "citations": [
+        "h29"
+      ]
+    },
+    "actual": {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h29"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 66,
+      "prompt_tokens": 212,
+      "total_tokens": 278,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": true,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  },
+  {
+    "role": "skeptic",
+    "arm": "B",
+    "case_id": "check-30",
+    "expected": {
+      "entity": "ECHO",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "current",
+      "citations": [
+        "h30"
+      ]
+    },
+    "actual": {
+      "entity": "",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h30"
+      ]
+    },
+    "usage": {
+      "completion_tokens": 63,
+      "prompt_tokens": 212,
+      "total_tokens": 275,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      }
+    },
+    "score": {
+      "schema": true,
+      "exact": false,
+      "accepted": false,
+      "fields": {
+        "entity": false,
+        "date": true,
+        "event_type": true,
+        "status": false
+      },
+      "citation_tp": 1,
+      "citation_fp": 0,
+      "citation_fn": 0,
+      "valid_abstention": false
+    }
+  }
+]

@@ -1,0 +1,77 @@
+{
+  "room_id": "room:29667b06-edbb-4a77-a3ab-03b7f6595f3d",
+  "status": "disagreement",
+  "live_ui_message_observed": true,
+  "reload_history_preserved": true,
+  "counts": {
+    "model": 16,
+    "tool": 16,
+    "reserved_tokens": 524288,
+    "input_tokens": 107050,
+    "output_tokens": 767,
+    "unknown_usage_calls": 0
+  },
+  "public_message_count": 4,
+  "tool_checks": [
+    {
+      "agent": "analyst",
+      "name": "skills_discover",
+      "status": "ok"
+    },
+    {
+      "agent": "skeptic",
+      "name": "skills_discover",
+      "status": "ok"
+    },
+    {
+      "agent": "analyst",
+      "name": "skills_load",
+      "status": "ok"
+    },
+    {
+      "agent": "skeptic",
+      "name": "skills_load",
+      "status": "ok"
+    },
+    {
+      "agent": "skeptic",
+      "name": "browser_read",
+      "status": "ok"
+    },
+    {
+      "agent": "analyst",
+      "name": "browser_read",
+      "status": "ok"
+    },
+    {
+      "agent": "analyst",
+      "name": "browser_read",
+      "status": "denied"
+    },
+    {
+      "agent": "analyst",
+      "name": "browser_read",
+      "status": "denied"
+    },
+    {
+      "agent": "skeptic",
+      "name": "browser_read",
+      "status": "denied"
+    },
+    {
+      "agent": "skeptic",
+      "name": "browser_read",
+      "status": "denied"
+    },
+    {
+      "agent": "skeptic",
+      "name": "browser_read",
+      "status": "denied"
+    },
+    {
+      "agent": "skeptic",
+      "name": "browser_read",
+      "status": "denied"
+    }
+  ]
+}

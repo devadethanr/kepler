@@ -42,6 +42,10 @@ const NewsScreen = lazy(() =>
   import('./screens/NewsScreen').then((module) => ({ default: module.NewsScreen })),
 );
 
+const ResearchDeskScreen = lazy(() =>
+  import('./screens/ResearchDeskScreen').then(module => ({ default: module.ResearchDeskScreen })),
+);
+
 export default function App() {
   const [currentTab, setCurrentTab] = useState('dashboard');
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -60,6 +64,7 @@ export default function App() {
         <Suspense fallback={<div className="flex-1 bg-surface" aria-label="Loading view" />}>
           {currentTab === 'dashboard' && <DashboardScreen />}
           {currentTab === 'telemetry' && <TelemetryScreen live={live} />}
+          {currentTab === 'research' && <ResearchDeskScreen />}
           {currentTab === 'news' && <NewsScreen />}
           {currentTab === 'knowledge' && <KnowledgeScreen />}
           {currentTab === 'control_pane' && <ControlPaneScreen />}

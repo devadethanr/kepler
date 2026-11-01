@@ -22,6 +22,7 @@ services:
     image: postgres:16@sha256:5a65324fe84dc41709ff914e90b07f3e2f577073ed27bf917d4873aca0c9ec51
     profiles:
       - test
+    networks: [disposable-test]
     environment:
       - POSTGRES_DB=swingtradev3_test
       - POSTGRES_USER=postgres
@@ -53,6 +54,7 @@ services:
     env_file:
       - swingtradev3/.env
     environment:
+      - KEPLER_RESEARCH_SOCKET=/app/logs/research-api.sock
       - PYTHONUNBUFFERED=1
       - TZ=Asia/Kolkata
       - DATABASE_URL=${DATABASE_URL:-postgresql+psycopg://postgres:postgres@db:5432/swingtradev3}
@@ -102,8 +104,7 @@ services:
     image: kepler-app:latest
     profiles:
       - test
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    networks: [disposable-test]
     volumes:
       - ./swingtradev3:/app
       - ./swingtradev3/context/nifty200.json:/test-fixtures/nifty200.json:ro
@@ -119,6 +120,12 @@ services:
       - TZ=Asia/Kolkata
       - DATABASE_URL=postgresql+psycopg://postgres:postgres@db-test:5432/swingtradev3_test
       - MEMGRAPH_URI=bolt://memgraph-test:7687
+      - MEMGRAPH_USER=
+      - MEMGRAPH_PASSWORD=
+      - MEMGRAPH_DATABASE=memgraph
+      - MEMGRAPH_TEST_TARGET=bolt://memgraph-test:7687
+      - MEMGRAPH_TEST_DATABASE=memgraph
+      - MEMGRAPH_TEST_ACK=kepler-disposable-only
       - TELEGRAM_BOT_TOKEN=
       - TELEGRAM_CHAT_ID=
       - RUN_LIVE_EVAL=false
@@ -202,6 +209,7 @@ services:
     image: memgraph/memgraph-mage:24.04@sha256:23a7c9080ce311a477c47ddee43759560f0a0154bee344c8ade1f1c1963a0c4a
     profiles:
       - test
+    networks: [disposable-test]
     command:
       - "--log-level=WARNING"
       - "--memory-limit=1024"
@@ -265,3 +273,7 @@ volumes:
   dashboard_node_modules:
   memgraph_data:
   memgraph_logs:
+
+networks:
+  disposable-test:
+    internal: true

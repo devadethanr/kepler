@@ -1,0 +1,25 @@
+{
+  "run": "activation-20261101T180935",
+  "base_git": "beaa5df",
+  "branch": "feat-generic-broker",
+  "scope": "normal personal app activation; no new model/runtime benchmark",
+  "model_admissions": 30,
+  "ceiling": 60,
+  "model_downloads": 0,
+  "redactions": "Only public repository-document discussion and aggregate browser/status/cancel/restart checks. No database backup, credentials/environment values, account/auth-session data, browser HTML or private Codex reasoning. Full private records retained outside Git.",
+  "source_sha256": {
+    "swingtradev3/api/routes/research_proxy.py": "dd60ec19f5aa8dadb17490f21ccee5eb3ecfa7f52cb7b9e90777069ac7dcec10",
+    "swingtradev3/ops/research_services.py": "5065e320fbd42700295b3eff1f038273f998020a9978395300bcf6794e258313",
+    "swingtradev3/research_room/host_api.py": "e165c6a1623754116667ffc302404bfc56a55af1d343205f7dfdfcf14e86d507",
+    "swingtradev3/api/main.py": "e43e80662b4ff59e675db5e5dfbd95eb3f9578ca5dbe02f0bc1aec6aab69d0ac",
+    "docker-compose.dev.yml": "35e8c7fae995ee6a5dc6826bf3abb3b25a4f9297c1c25f87140db1256884d227",
+    "swingtradev3/Makefile": "82a81aef512fde78b19a41f13218ed01a64e021dd544f43b9a40e9bcef491630"
+  },
+  "files": {
+    "cancel-summary.json": "9f05155cabd822455a0ad22d291186e61f2eaf67bfd7746cab37992e5e68465e",
+    "normal-path-summary.json": "cd10e4f92e72189dd4f357a69533319976f03edadce437011cf0179b6b5b18ab",
+    "browser-path-summary.json": "be89f19e282382168f3a160cace43a7ce8f90d74d39e2b1e90965c0e7fa2fb8b",
+    "normal-room-public.json": "752cf73edd043e619b2c6e237420f5033d71b903d19d06505fe7b866c5e98d57",
+    "restart-summary.json": "bf5922922039dd30a00c260638a15ac27f8d78c8d1d4f90a2b597eaad7c75321"
+  }
+}

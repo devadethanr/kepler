@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import time
+import os
 from threading import Thread
 from contextlib import asynccontextmanager
 
@@ -18,6 +19,8 @@ from .routes import (
     positions,
     postbacks,
     regime,
+    research,
+    research_proxy,
     scan,
     sse,
     stats,
@@ -106,6 +109,10 @@ app.include_router(positions.router, prefix="/positions", tags=["Positions"])
 app.include_router(trades.router, prefix="/trades", tags=["Trades"])
 app.include_router(approvals.router, prefix="/approvals", tags=["Approvals"])
 app.include_router(scan.router, prefix="/scan", tags=["Scan"])
+app.include_router(
+    research_proxy.router if os.getenv("KEPLER_RESEARCH_SOCKET") else research.router,
+    prefix="/research", tags=["Research"],
+)
 app.include_router(regime.router, prefix="/regime", tags=["Regime"])
 app.include_router(stats.router, prefix="/stats", tags=["Stats"])
 app.include_router(dashboard.router, prefix="/dashboard", tags=["Dashboard"])

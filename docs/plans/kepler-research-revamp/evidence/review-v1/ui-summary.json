@@ -1,0 +1,10 @@
+{
+  "exit_code": 0,
+  "checks": {
+    "discussion": true,
+    "replay_after_reload": true,
+    "body_bytes": 8014
+  },
+  "url": "http://127.0.0.1:18513",
+  "scope": "real existing React Research Desk against the persisted native room; normal API reads use existing service, research reads use separate host API"
+}

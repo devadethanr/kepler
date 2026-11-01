@@ -1,5 +1,7 @@
 # Pre-implementation configuration audit
 
+Remediation update, 1 November 2026: environment precedence for graph/Toolbox and independently inspected disposable graph target/database guards are now implemented, with focused refusal and actual disposable tests passing. The historical audit below is retained. See [RESEARCH_ROOM_IMPLEMENTATION.md](RESEARCH_ROOM_IMPLEMENTATION.md) and [RESEARCH_ROOM_RUNBOOK.md](RESEARCH_ROOM_RUNBOOK.md). Other configuration/forecast findings remain open.
+
 Scope: read-only inspection of `origin/main` at `8fb50888c47a8b4f62e0917dd0475ee5dfaa6fb0`, 2026-10-31. Paths and lines below refer to that Git tree, not necessarily the checked-out branch. No application code, migrations, tests, or credentials were changed or executed. This is an inventory and proposed migration, not an instruction to silently change trading behavior.
 
 ## Immediate blocker: destructive graph tests

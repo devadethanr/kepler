@@ -1,5 +1,9 @@
 # Kepler collaborative-research revamp — revised handoff
 
+Normal personal-app activation is complete for this room slice; no additional commercial-production qualification stage is required. See [LOCAL_ACTIVATION.md](LOCAL_ACTIVATION.md). Remaining answer-quality and later capability work stays explicit.
+
+Implementation progress, 1 November 2026: the graph safety patch and first connected Codex room/API/Research Desk slice are implemented and verified. This advances parts of P1/P2/P4/P5; it does not complete all phases or the extraction-accuracy gate. See [RESEARCH_ROOM_IMPLEMENTATION.md](RESEARCH_ROOM_IMPLEMENTATION.md). P3 forecasts/feeds and P6 experiments remain unchanged.
+
 Revision 5, 1 November 2026. **Codex App Server with the tested local Responses-to-Chat adapter is the selected implementation runtime for the user's personal Kepler workspace.** Read CODEX_IMPLEMENTATION.md for the concrete work order. The initial spike and all three follow-ups are complete at `8d7ddfc`; do not reopen framework selection or treat Codex as an optional experiment.
 
 ## Implementation starting point

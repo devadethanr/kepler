@@ -1,0 +1,25 @@
+{
+  "run": "20261101T004535+0530",
+  "tested_git": "5ebdd171cf3dc3862e1b7a1dd17427ad626471a3",
+  "original_runner_sha256": "b15799b7e20414bbd40203c089011384cc584d839c46e3016291aa7c52b85df6",
+  "original_scored_sha256": "139f973f6f4e719438b88523415200c7176e15d868c9d4a0b6e957a93025d1fa",
+  "redactions": "Only synthetic corpus, explicit task prompts, structured JSON answers and scoring code. No private reasoning, credentials, raw broker/FRED observations, or full traces. Added integration exports contain only public discussion quoting repository documents, aggregate graph/browser checks, cancellation and synthetic A/B results. Full browser body, private Codex rollouts and test database dump stay outside Git.",
+  "files": {
+    "ui-summary.json": "f891cc8b22e3c6b020910cf1a7474f95343b9bf72b47b762201ec1c4e4dbea48",
+    "corpus.json": "0ab8aa70395fbcd91b8669fb73c6da4c4a54c0aa583bd18ba5f9b3719cb4b147",
+    "cancel-summary.json": "c0bd964a002c57a6fff11663685ee0387a71c8ba21beab8a79b3c0f735cbc61b",
+    "grounding-summary.json": "eed4f746718bd44e8cbdfe77c4bc889494b2006a6a11c87160456ace0bcd77a3",
+    "actual-graph-proof.json": "2cd7c26d2868caa4a192dac98d8b971aa8ba07d9c4881a44a7dc2ca5815ff299",
+    "grounding-policy.json": "311070ba5d6f2d95172cbb3d44c37f4a12ec4c2e32c3af11a9c98347cb8d458c",
+    "grounding-results.json": "dcf09c92a63899cb574c0d20a20e4c0e5d8a0d667238f1591bed3591c2382161",
+    "final-profiles.json": "bdc70de24395a9cfaf4b9c2719553bc96930c230715f312cb08e039e46495afd",
+    "original_scorer.py.txt": "5e0387ac8321bb30ac7fa071f9ef0f61f6dff65a1d8b671493114cd10e59a7e0",
+    "audit.json": "2f8259a399cd11ac4b69c90800b103a1ba6ce5a52701dd9f8a4a534e8e732c6c",
+    "integrated-room-public.json": "69409b939310f81912331dda1097a253b135dfb148f253a5ba3a71637e15816d",
+    "preservation-summary.json": "2310a3da93cd1ad03ce3937562fe5677aa26a4867fffdeb78776c88c76b30cf8",
+    "grounding-cases.json": "15518bfb90b1ca2f9b7d22d7a31661a14f671ba9af89a94624509a72ed473475",
+    "browser-summary.json": "79385e2085d33a51b77694d5a96d712531398786286275f8c03ea04b6f79f3af"
+  },
+  "integration_run": "validation-20261101T063228",
+  "integration_source_pins": "swingtradev3/research_room/provenance.json"
+}

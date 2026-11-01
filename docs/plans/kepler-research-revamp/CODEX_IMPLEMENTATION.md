@@ -1,5 +1,9 @@
 # Codex implementation for personal Kepler
 
+The selected runtime is now active in the normal personal app at :8502. See [LOCAL_ACTIVATION.md](LOCAL_ACTIVATION.md) for activation and actual normal-path verification.
+
+First usable room slice implemented locally on 1 November 2026 from `beaa5df`. See [RESEARCH_ROOM_IMPLEMENTATION.md](RESEARCH_ROOM_IMPLEMENTATION.md) for changes, native room results, failed grounding gates and preservation checks, and [RESEARCH_ROOM_RUNBOOK.md](RESEARCH_ROOM_RUNBOOK.md) for operation.
+
 Decision updated 1 November 2026 after the user's clarification: **use Codex App Server with the tested local Responses-to-Chat adapter as Kepler's research-agent runtime.** This is the chosen implementation path, not an optional experiment or an undecided framework comparison. Kepler is the user's own trading/research workspace; build the useful local workflow without a separate commercial-product qualification process.
 
 The browser and adapter-backed tool, streaming, cancellation, recovery and bounded-accounting fixtures in [FOLLOW_UP_FINDINGS.md](FOLLOW_UP_FINDINGS.md) provide enough evidence to make this engineering choice. They do not claim that every research answer is correct. Improve grounding as part of implementation. Keep manual approval for live entries, as already requested.

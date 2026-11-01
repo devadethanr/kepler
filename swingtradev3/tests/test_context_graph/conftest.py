@@ -1,6 +1,6 @@
 """pytest fixtures for Memgraph integration tests.
 
-These tests require a running Memgraph instance (bolt://memgraph:7687).
+These tests require the isolated disposable memgraph-test service.
 Run with: make test-memgraph
 
 Each test receives a fresh ``graph`` instance with Memgraph pre-wiped.
@@ -13,19 +13,18 @@ from collections.abc import Generator
 import pytest
 
 from context_graph.repository import ContextGraphRepository, GraphUnavailableError
+from context_graph.test_safety import guard, wipe_disposable_graph
 
 
 def _wipe(repo: ContextGraphRepository) -> None:
-    """Remove all nodes and edges from Memgraph."""
-    repo._client()
-    with repo._driver.session() as s:
-        s.run("MATCH (n) DETACH DELETE n")
+    wipe_disposable_graph(repo)
 
 
 @pytest.fixture(scope="session")
 def _schema() -> Generator[None, None, None]:
     """Ensure Memgraph schema exists once per session; clean at session end."""
     repo = ContextGraphRepository()
+    guard(repo)  # Refuse unsafe configuration before schema or delete.
     try:
         repo._client()
     except GraphUnavailableError:
@@ -37,6 +36,7 @@ def _schema() -> Generator[None, None, None]:
     _wipe(repo)
     yield
     _wipe(repo)
+    repo.close()
 
 
 @pytest.fixture

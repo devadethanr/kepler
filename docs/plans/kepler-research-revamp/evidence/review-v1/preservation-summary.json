@@ -1,0 +1,90 @@
+{
+  "base_git": "beaa5df",
+  "branch": "feat-generic-broker",
+  "head": "beaa5df3f6c2308b1ccc3773cdaa71c888176016",
+  "existing_containers": [
+    {
+      "name": "swingtradev3-dashboard",
+      "id_unchanged": true,
+      "running": true,
+      "started_at": "2026-10-31T07:21:23.557145053Z"
+    },
+    {
+      "name": "swingtradev3-app",
+      "id_unchanged": true,
+      "running": true,
+      "started_at": "2026-10-31T07:21:23.458310896Z"
+    },
+    {
+      "name": "kepler-worker-1",
+      "id_unchanged": true,
+      "running": true,
+      "started_at": "2026-10-31T07:21:23.367884046Z"
+    },
+    {
+      "name": "swingtradev3-kite-mcp",
+      "id_unchanged": true,
+      "running": true,
+      "started_at": "2026-10-31T07:21:22.861505049Z"
+    },
+    {
+      "name": "hush-backend",
+      "id_unchanged": true,
+      "running": true,
+      "started_at": "2026-10-31T06:52:22.196571131Z"
+    },
+    {
+      "name": "hush-postgres",
+      "id_unchanged": true,
+      "running": true,
+      "started_at": "2026-10-31T06:52:22.207880032Z"
+    },
+    {
+      "name": "swingtradev3-toolbox",
+      "id_unchanged": true,
+      "running": true,
+      "started_at": "2026-10-31T06:52:36.846707795Z"
+    },
+    {
+      "name": "swingtradev3-memgraph-lab",
+      "id_unchanged": true,
+      "running": true,
+      "started_at": "2026-10-31T06:52:22.216329729Z"
+    },
+    {
+      "name": "swingtradev3-db",
+      "id_unchanged": true,
+      "running": true,
+      "started_at": "2026-10-31T06:52:22.214264314Z"
+    },
+    {
+      "name": "swingtradev3-memgraph",
+      "id_unchanged": true,
+      "running": true,
+      "started_at": "2026-10-31T06:52:22.189867278Z"
+    },
+    {
+      "name": "hush-frontend",
+      "id_unchanged": true,
+      "running": true,
+      "started_at": "2026-10-31T06:52:22.195123042Z"
+    }
+  ],
+  "model_ports_after_stop": {
+    "19181": "free",
+    "19182": "free"
+  },
+  "graph_mutations_in_production": 0,
+  "production_services_restarted": 0,
+  "broker_migrations": 0,
+  "new_entry_authority": false,
+  "validation_db_backup": "validation-postgres.sql",
+  "retained_preview": "http://127.0.0.1:18513",
+  "retained_services": [
+    "owned research API :18012",
+    "owned Vite preview :18513",
+    "disposable kepler-db-test-1 for saved history"
+  ],
+  "models_and_research_worker": "stopped after validation; broker worker unchanged",
+  "recorded_at": "2026-11-01T12:26:46.925440+00:00"
+}

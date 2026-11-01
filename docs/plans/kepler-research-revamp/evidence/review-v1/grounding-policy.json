@@ -1,0 +1,282 @@
+{
+  "run": "validation-20261101T063228",
+  "ceiling": 120,
+  "n_unique_per_arm_lane": 30,
+  "model_downloads": 0,
+  "context": 32768,
+  "output": 512,
+  "temperature": 0,
+  "deadline_s": 45,
+  "gate_schema": "30/30 each arm/lane",
+  "gate_scoped_exact": ">=27/30 each lane",
+  "gate_accepted_cross_target_or_fabrication": 0,
+  "fixture_sha256": "bba6833c03ebbdcf4a3e5f5baccb3a47649faef5ffb121c95a9b9340a5994dae",
+  "evaluator_sha256": "99a8abbe44b5108a9d966b4dc9a833c36d67e370f11bc2a2a5e81549f2e4bac7",
+  "baseline": [
+    {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "current",
+      "citations": [
+        "h1"
+      ]
+    },
+    {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "current",
+      "citations": [
+        "h2"
+      ]
+    },
+    {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "current",
+      "citations": [
+        "h3"
+      ]
+    },
+    {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "current",
+      "citations": [
+        "h4"
+      ]
+    },
+    {
+      "entity": "ECHO",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "current",
+      "citations": [
+        "h5"
+      ]
+    },
+    {
+      "entity": "ALPHA",
+      "date": "2026-07-13",
+      "event_type": "policy",
+      "status": "stale",
+      "citations": [
+        "h6"
+      ]
+    },
+    {
+      "entity": "BRAVO",
+      "date": "2026-07-13",
+      "event_type": "supply_disruption",
+      "status": "stale",
+      "citations": [
+        "h7"
+      ]
+    },
+    {
+      "entity": "CHARLIE",
+      "date": "2026-07-13",
+      "event_type": "earnings",
+      "status": "stale",
+      "citations": [
+        "h8"
+      ]
+    },
+    {
+      "entity": "DELTA",
+      "date": "2026-07-13",
+      "event_type": "policy",
+      "status": "stale",
+      "citations": [
+        "h9"
+      ]
+    },
+    {
+      "entity": "ECHO",
+      "date": "2026-07-13",
+      "event_type": "supply_disruption",
+      "status": "stale",
+      "citations": [
+        "h10"
+      ]
+    },
+    {
+      "entity": "ALPHA",
+      "date": "2026-11-06",
+      "event_type": "earnings",
+      "status": "future",
+      "citations": [
+        "h11"
+      ]
+    },
+    {
+      "entity": "BRAVO",
+      "date": "2026-11-06",
+      "event_type": "policy",
+      "status": "future",
+      "citations": [
+        "h12"
+      ]
+    },
+    {
+      "entity": "CHARLIE",
+      "date": "2026-11-06",
+      "event_type": "supply_disruption",
+      "status": "future",
+      "citations": [
+        "h13"
+      ]
+    },
+    {
+      "entity": "DELTA",
+      "date": "2026-11-06",
+      "event_type": "earnings",
+      "status": "future",
+      "citations": [
+        "h14"
+      ]
+    },
+    {
+      "entity": "ECHO",
+      "date": "2026-11-06",
+      "event_type": "policy",
+      "status": "future",
+      "citations": [
+        "h15"
+      ]
+    },
+    {
+      "entity": "ALPHA",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    {
+      "entity": "BRAVO",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    {
+      "entity": "CHARLIE",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    {
+      "entity": "DELTA",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    {
+      "entity": "ECHO",
+      "date": "",
+      "event_type": "unknown",
+      "status": "missing",
+      "citations": []
+    },
+    {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h21",
+        "z21"
+      ]
+    },
+    {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h22",
+        "z22"
+      ]
+    },
+    {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "conflict",
+      "citations": [
+        "h23",
+        "z23"
+      ]
+    },
+    {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "conflict",
+      "citations": [
+        "h24",
+        "z24"
+      ]
+    },
+    {
+      "entity": "ECHO",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "conflict",
+      "citations": [
+        "h25",
+        "z25"
+      ]
+    },
+    {
+      "entity": "ALPHA",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "current",
+      "citations": [
+        "h26"
+      ]
+    },
+    {
+      "entity": "BRAVO",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "current",
+      "citations": [
+        "h27"
+      ]
+    },
+    {
+      "entity": "CHARLIE",
+      "date": "2026-10-28",
+      "event_type": "supply_disruption",
+      "status": "current",
+      "citations": [
+        "h28"
+      ]
+    },
+    {
+      "entity": "DELTA",
+      "date": "2026-10-28",
+      "event_type": "earnings",
+      "status": "current",
+      "citations": [
+        "h29"
+      ]
+    },
+    {
+      "entity": "ECHO",
+      "date": "2026-10-28",
+      "event_type": "policy",
+      "status": "current",
+      "citations": [
+        "h30"
+      ]
+    }
+  ]
+}

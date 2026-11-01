@@ -1,0 +1,9 @@
+{
+  "room_id": "room:44d39d73-894f-422d-81f1-88808f780b2f",
+  "status": "cancelled",
+  "active_before": {
+    "model": 2,
+    "tool": 0
+  },
+  "elapsed_s": 6.938574682993931
+}

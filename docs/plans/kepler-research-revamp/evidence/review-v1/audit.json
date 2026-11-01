@@ -1,0 +1,28 @@
+{
+  "llama-gemma-e4b-dual": {
+    "n_requests": 30,
+    "unique_case_ids": 20,
+    "schema_valid": 30,
+    "original_exact": 2,
+    "citation_order_normalized_exact": 2,
+    "field_errors": {
+      "status": 27,
+      "citations": 1,
+      "entity": 5
+    },
+    "cross_record_citation_requests": 1
+  },
+  "llama-qwen35-9b": {
+    "n_requests": 30,
+    "unique_case_ids": 20,
+    "schema_valid": 30,
+    "original_exact": 2,
+    "citation_order_normalized_exact": 2,
+    "field_errors": {
+      "status": 27,
+      "citations": 9,
+      "date": 1
+    },
+    "cross_record_citation_requests": 8
+  }
+}

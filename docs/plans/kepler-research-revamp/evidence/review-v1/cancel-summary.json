@@ -1,0 +1,18 @@
+{
+  "id": "room:d9d3605a-6bc3-4261-8046-3d2bc17fda9d",
+  "before": "running",
+  "active_before": {
+    "model": 2,
+    "tool": 0
+  },
+  "after": "cancelled",
+  "elapsed_s": 6.564872835995629,
+  "counts": {
+    "model": 2,
+    "tool": 0,
+    "reserved_tokens": 65536,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "unknown_usage_calls": 2
+  }
+}

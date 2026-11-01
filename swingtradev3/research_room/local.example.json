@@ -1,0 +1,32 @@
+{
+  "codex_binary": "/home/devadethanr/.local/state/kepler-spikes/20261101T051358+0530-followups/binaries/codex",
+  "codex_sha256": "b93f6811d3f653f0fb83be4050d857fb9abbb111dfa2ce160563327daff7f306",
+  "browser_binary": "/home/devadethanr/.local/state/kepler-spikes/20261101T051358+0530-followups/binaries/agent-browser",
+  "browser_sha256": "399c7e9f06bd29aa933fdf25c0bd958eea06927fc0ce6f536ba6347aabd64628",
+  "browser_skill": "/home/devadethanr/.local/state/kepler-spikes/20261101T051358+0530-followups/evidence/browser-core.md",
+  "browser_skill_sha256": "cd33c2a5a3d02b1f75ce240e3c96727ecd417892a89efbf4fe183e475e3940b8",
+  "artifact_root": "/home/devadethanr/projects/kepler/docs",
+  "browser_domains": [
+    "nseindia.com",
+    "sebi.gov.in",
+    "rbi.org.in"
+  ],
+  "profiles": {
+    "analyst": {
+      "model": "gemma-e4b-followup",
+      "endpoint": "http://127.0.0.1:19181/v1",
+      "gpu_uuid": "GPU-fe6b9da0-31a7-e026-0b40-8957cb0d5b4c",
+      "gguf_sha256": "676c35070db6dbe52f93e9c864ee0fba4eddea94b9c875d9cb10daff453fbaee",
+      "model_path": "/home/devadethanr/.local/state/kepler-spikes/20261101T004535+0530/models/gemma-gguf/gemma-4-E4B_q4_0-it.gguf"
+    },
+    "skeptic": {
+      "model": "qwen35-9b-followup",
+      "endpoint": "http://127.0.0.1:19182/v1",
+      "gpu_uuid": "GPU-afdd0316-820f-339d-78c2-d173b72e5457",
+      "gguf_sha256": "dc2a39aef291f91a9116ad214058da0d86eb648743a124bd8c333787c4b9c91c",
+      "model_path": "/home/devadethanr/.local/state/kepler-spikes/20261101T004535+0530/models/qwen-gguf/Qwen3.5-9B-Q5_K_M.gguf"
+    }
+  },
+  "llama_binary": "/home/devadethanr/local-llm/llama.cpp/build-cuda13/bin/llama-server",
+  "llama_sha256": "011e1ec48f04994dbf8d1f00c87ae0342ede420d867a4486888d164d800d8b83"
+}

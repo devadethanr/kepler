@@ -7,22 +7,24 @@ DOCKER_COMPOSE_TEST := $(DOCKER_COMPOSE) --profile test
 .PHONY: dev dev-detach worker-up worker-smoke test test-file test-memgraph lint lint-fix format dashboard-test dashboard-lint dashboard-build logs logs-app logs-worker logs-mcp logs-dashboard logs-memory logs-memgraph logs-memgraph-lab logs-toolbox toolbox-health local-llm-install local-llm-uninstall local-llm-start local-llm-stop local-llm-logs local-llm-health phase12-smoke phase13-llm-smoke phase13-smoke phase14-smoke memgraph-shell memgraph-snapshot pre-soak-audit pre-soak-backup pre-soak-reset stop clean shell health login phase0-check phase0-reconcile-state phase3-check phase6-check phase7-check db-upgrade
 
 define RUN_PYTEST_ISOLATED
-	@was_running=$$($(DOCKER_COMPOSE) ps --status running --services worker 2>/dev/null | grep -c '^worker$$' || true); \
-	restore_worker() { \
+	@set -e; \
+	restore_tests() { \
 		$(DOCKER_COMPOSE_TEST) rm -sf app-test memgraph-test db-test >/dev/null 2>&1 || true; \
-		if [ "$$was_running" -gt 0 ]; then \
-			$(DOCKER_COMPOSE) up -d worker >/dev/null; \
-		fi; \
 	}; \
-	trap restore_worker EXIT; \
-	if [ "$$was_running" -gt 0 ]; then \
-		$(DOCKER_COMPOSE) stop worker; \
-	fi; \
+	trap restore_tests EXIT; \
 	$(DOCKER_COMPOSE_TEST) up -d db-test memgraph-test app-test; \
 	$(DOCKER_COMPOSE_TEST) exec -T app-test python -c \
 		'from memory.db import ensure_database_ready; ensure_database_ready()'; \
+	test_graph_id=$$($(DOCKER_COMPOSE_TEST) ps -q memgraph-test); \
+	test_graph_ip=$$(docker inspect --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$$test_graph_id"); \
+	test_graph_network=$$(docker inspect --format '{{range $$name, $$network := .NetworkSettings.Networks}}{{$$name}}{{end}}' "$$test_graph_id"); \
+	test_app_id=$$($(DOCKER_COMPOSE_TEST) ps -q app-test); \
+	test_app_network=$$(docker inspect --format '{{range $$name, $$network := .NetworkSettings.Networks}}{{$$name}}{{end}}' "$$test_app_id"); \
+	[ "$$test_graph_network" = "$$test_app_network" ]; \
+	[ "$$(docker network inspect --format '{{.Internal}}' "$$test_graph_network")" = true ]; \
+	[ "$$(docker inspect --format '{{index .Config.Labels "com.docker.compose.service"}}' "$$test_graph_id")" = memgraph-test ]; \
 	status=0; \
-	$(DOCKER_COMPOSE_TEST) exec -T app-test pytest $(1) -v || status=$$?; \
+	$(DOCKER_COMPOSE_TEST) exec -T -e MEMGRAPH_TEST_EXPECTED_ADDRESS="$$test_graph_ip:7687" app-test pytest $(1) -v || status=$$?; \
 	exit $$status
 endef
 
@@ -214,3 +216,26 @@ phase7-check:
 
 db-upgrade:
 	$(DOCKER_COMPOSE) exec app alembic upgrade head
+
+# Opt-in host research processes, independent of trading services.
+# KEPLER_RESEARCH_CONFIG and a host-reachable DATABASE_URL must be set explicitly.
+RESEARCH_PYTHON ?= $(if $(wildcard $(HOME)/.local/state/kepler-rooms/venv/bin/python),$(HOME)/.local/state/kepler-rooms/venv/bin/python,python)
+.PHONY: research-api research-worker research-models
+research-api:
+	$(RESEARCH_PYTHON) -m uvicorn research_room.server:app --host 127.0.0.1 --port 18012
+
+research-worker:
+	$(RESEARCH_PYTHON) -m research_room.worker
+
+research-models:
+	$(RESEARCH_PYTHON) -m research_room.models
+
+.PHONY: research-start research-stop research-status
+research-start:
+	$(RESEARCH_PYTHON) -m ops.research_services start
+
+research-stop:
+	$(RESEARCH_PYTHON) -m ops.research_services stop
+
+research-status:
+	$(RESEARCH_PYTHON) -m ops.research_services status

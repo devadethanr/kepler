@@ -589,6 +589,18 @@ class ContextGraphConfig(BaseModel):
     dashboard_node_limit: int = 150
     dashboard_edge_limit: int = 300
 
+    @model_validator(mode="before")
+    @classmethod
+    def environment_over_yaml(cls, value: Any) -> Any:
+        data = dict(value or {})
+        for field, variable in {
+            "uri": "MEMGRAPH_URI", "user": "MEMGRAPH_USER",
+            "password": "MEMGRAPH_PASSWORD", "database": "MEMGRAPH_DATABASE",
+        }.items():
+            if variable in os.environ:
+                data[field] = os.environ[variable]
+        return data
+
 
 class ToolboxConfig(BaseModel):
     """Phase 12: read-only Google MCP Toolbox access for agent memory views."""
@@ -596,6 +608,16 @@ class ToolboxConfig(BaseModel):
     enabled: bool = Field(default_factory=lambda: _env_bool("TOOLBOX_ENABLED", True))
     url: str = Field(default_factory=lambda: os.getenv("TOOLBOX_URL", "http://toolbox:5000"))
     timeout_seconds: float = 2.0
+
+    @model_validator(mode="before")
+    @classmethod
+    def environment_over_yaml(cls, value: Any) -> Any:
+        data = dict(value or {})
+        if "TOOLBOX_ENABLED" in os.environ:
+            data["enabled"] = _env_bool("TOOLBOX_ENABLED", False)
+        if "TOOLBOX_URL" in os.environ:
+            data["url"] = os.environ["TOOLBOX_URL"]
+        return data
 
 
 # ═══════════════════════════════════════════════════════════

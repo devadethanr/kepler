@@ -1,0 +1,37 @@
+{
+  "source_run": "20261101T051358+0530-followups",
+  "tested_git": "5ebdd171cf3dc3862e1b7a1dd17427ad626471a3",
+  "codex_version": "0.164.0",
+  "browser_version": "0.41.0",
+  "browser_skill_commit": "5868f7c05020e047c00e68e4abf9253cce864f41",
+  "llama_build": "9067 / 44dbe8c5218829be1603a08dee8847f4d0bca323",
+  "source_sha256": {
+    "bridge.py": "74d6aec8d8f58a6b30a3116ca7f988e494897adf9273d985695b9472cdbe0496",
+    "codex_working.py": "71306d2f27eb97600e44b6637e832ad4e80a6a115f6cfaa6826e271b24abcc21",
+    "browser_probe.py": "4ece928c08292d71be5ce390643ae48a400fcc151a9f26152cc6bef8e70c97cf"
+  },
+  "binary_sha256": {
+    "codex_sha256": "b93f6811d3f653f0fb83be4050d857fb9abbb111dfa2ce160563327daff7f306",
+    "browser_sha256": "399c7e9f06bd29aa933fdf25c0bd958eea06927fc0ce6f536ba6347aabd64628",
+    "browser_skill_sha256": "cd33c2a5a3d02b1f75ce240e3c96727ecd417892a89efbf4fe183e475e3940b8"
+  },
+  "changes": [
+    "durable per-room admission and usage accounting",
+    "public events only; no raw prompt/reasoning logs",
+    "512 output cap, duplicate backend-call IDs and truncated tool calls refused",
+    "real read-only capabilities and addressed messages instead of fixture tools"
+  ],
+  "app_server_schema_bundle": {
+    "source_run": "20261101T004535+0530",
+    "file_count": 458,
+    "tree_sha256": "9a4bb6018dc39516711ad671a2c351d6559c810437c578233137ae1e4aabe2eb"
+  },
+  "integration_changes": [
+    "durable per-room transaction/lease/admission/outbox and actual/unknown usage",
+    "per-model single-inference lock and two distinct top-level threads",
+    "typed gateway denials preserve malformed model proposals for repair without tool execution",
+    "compact four-field publication with source-bound quote span IDs and inline-ID checks",
+    "explicit native turn interruption after committed publication, same-thread mail delivery",
+    "bounded target-scoped file/search excerpts and read-only actual graph/browser gateways"
+  ]
+}
