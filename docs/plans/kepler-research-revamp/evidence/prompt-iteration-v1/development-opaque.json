@@ -1,0 +1,776 @@
+[
+  {
+    "id": "dev-new-01-opaque",
+    "target_entity": "Plover Pantry",
+    "event_id": "evt_dd8133a94a6ecd3c242922de",
+    "question": "Using only the supplied evidence, assess this exact claim: Plover Pantry distributed 45 food parcels on Friday.",
+    "claim_text": "Plover Pantry distributed 45 food parcels on Friday.",
+    "sources": [
+      {
+        "record_id": "rec_729343a2a832369104dc9230",
+        "source": "src_95ed38f78cbd4717f5f46f57",
+        "text": "On Friday Plover Pantry distributed 45 food parcels.",
+        "published_at": "2026-09-20T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "evt_dd8133a94a6ecd3c242922de",
+        "status": "ok",
+        "target_entity": "Plover Pantry"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "supported",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "src_95ed38f78cbd4717f5f46f57"
+      ],
+      "uncertainty_required": false,
+      "allowed_quotes": {
+        "src_95ed38f78cbd4717f5f46f57": [
+          "On Friday Plover Pantry distributed 45 food parcels."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "direct",
+    "synthetic": true,
+    "rationale": "The source states the count and day."
+  },
+  {
+    "id": "dev-new-02-opaque",
+    "target_entity": "Quartz Aquarium",
+    "event_id": "evt_8b81b22a4af0080acb0bc993",
+    "question": "Using only the supplied evidence, assess this exact claim: The Quartz Aquarium tank was 24 degrees Celsius at noon.",
+    "claim_text": "The Quartz Aquarium tank was 24 degrees Celsius at noon.",
+    "sources": [
+      {
+        "record_id": "rec_59ff583e08116d65c1c8c6b1",
+        "source": "src_439913b3e2da97a42e1c413d",
+        "text": "At noon the tank water measured 24 degrees Celsius.",
+        "published_at": "2026-09-20T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "evt_8b81b22a4af0080acb0bc993",
+        "status": "ok",
+        "target_entity": "Quartz Aquarium"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "supported",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "src_439913b3e2da97a42e1c413d"
+      ],
+      "uncertainty_required": false,
+      "allowed_quotes": {
+        "src_439913b3e2da97a42e1c413d": [
+          "At noon the tank water measured 24 degrees Celsius."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "direct",
+    "synthetic": true,
+    "rationale": "The measurement, unit and time are explicit.",
+    "stale_after_days": 25
+  },
+  {
+    "id": "dev-new-03-opaque",
+    "target_entity": "Rill Footpath",
+    "event_id": "evt_419e318cdc0548f1fdb68dd2",
+    "question": "Using only the supplied evidence, assess this exact claim: Rill Footpath closed on 15 July 2026.",
+    "claim_text": "Rill Footpath closed on 15 July 2026.",
+    "sources": [
+      {
+        "record_id": "rec_f0e5ce7748abe635853f8f49",
+        "source": "src_8c87213eab6a86dbed44aae6",
+        "text": "Rill Footpath closed on 15 July 2026.",
+        "published_at": "2026-07-16T00:00:00+00:00",
+        "event_at": null,
+        "event_id": "evt_419e318cdc0548f1fdb68dd2",
+        "status": "ok",
+        "target_entity": "Rill Footpath"
+      }
+    ],
+    "decision_cutoff": "2026-08-01T00:00:00+00:00",
+    "expected": {
+      "support_assessment": "supported",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "src_8c87213eab6a86dbed44aae6"
+      ],
+      "uncertainty_required": false,
+      "allowed_quotes": {
+        "src_8c87213eab6a86dbed44aae6": [
+          "Rill Footpath closed on 15 July 2026."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "direct",
+    "synthetic": true,
+    "rationale": "The exact historical date is present."
+  },
+  {
+    "id": "dev-new-04-opaque",
+    "target_entity": "Sable Gallery",
+    "event_id": "evt_aa8d696363ddeff22a260a4e",
+    "question": "Using only the supplied evidence, assess this exact claim: Sable Gallery displayed six sculptures in exhibit A.",
+    "claim_text": "Sable Gallery displayed six sculptures in exhibit A.",
+    "sources": [
+      {
+        "record_id": "rec_c7bd9fd3df959f584948e51c",
+        "source": "src_8330f76914bd90eb8973b620",
+        "text": "Exhibit A included six sculptures.",
+        "published_at": null,
+        "event_at": null,
+        "event_id": "evt_aa8d696363ddeff22a260a4e",
+        "status": "ok",
+        "target_entity": "Sable Gallery"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "supported",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "src_8330f76914bd90eb8973b620"
+      ],
+      "uncertainty_required": false,
+      "allowed_quotes": {
+        "src_8330f76914bd90eb8973b620": [
+          "Exhibit A included six sculptures."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "direct",
+    "synthetic": true,
+    "rationale": "This stable exhibition count does not require a publication date."
+  },
+  {
+    "id": "dev-new-05-opaque",
+    "target_entity": "Thistle Farm",
+    "event_id": "evt_6c06431970f8556f6e04ddfa",
+    "question": "Using only the supplied evidence, assess this exact claim: Thistle Farm applied fertilizer during the test.",
+    "claim_text": "Thistle Farm applied fertilizer during the test.",
+    "sources": [
+      {
+        "record_id": "rec_14c0f20fa5a3c0695221e50d",
+        "source": "src_4e6cf8d44c24e92a43d62982",
+        "text": "No fertilizer was applied during the test.",
+        "published_at": "2026-09-20T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "evt_6c06431970f8556f6e04ddfa",
+        "status": "ok",
+        "target_entity": "Thistle Farm"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "contradicted",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "src_4e6cf8d44c24e92a43d62982"
+      ],
+      "uncertainty_required": false,
+      "allowed_quotes": {
+        "src_4e6cf8d44c24e92a43d62982": [
+          "No fertilizer was applied during the test."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "direct",
+    "synthetic": true,
+    "rationale": "The source explicitly negates application."
+  },
+  {
+    "id": "dev-new-06-opaque",
+    "target_entity": "Upland Orchestra",
+    "event_id": "evt_dfb56386d3272cb750422db1",
+    "question": "Using only the supplied evidence, assess this exact claim: Upland Orchestra rehearsed for 90 minutes.",
+    "claim_text": "Upland Orchestra rehearsed for 90 minutes.",
+    "sources": [
+      {
+        "record_id": "rec_9b06deb7fbe470d2c637ecd9",
+        "source": "src_af7ca05c2f5bf1e7734b4087",
+        "text": "The rehearsal lasted 60 minutes.",
+        "published_at": "2026-09-20T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "evt_dfb56386d3272cb750422db1",
+        "status": "ok",
+        "target_entity": "Upland Orchestra"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "contradicted",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "src_af7ca05c2f5bf1e7734b4087"
+      ],
+      "uncertainty_required": false,
+      "allowed_quotes": {
+        "src_af7ca05c2f5bf1e7734b4087": [
+          "The rehearsal lasted 60 minutes."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "direct",
+    "synthetic": true,
+    "rationale": "A different same-event duration directly contradicts the claim."
+  },
+  {
+    "id": "dev-new-07-opaque",
+    "target_entity": "Violet Lake",
+    "event_id": "evt_0f67a482f20a8a0a853c5f13",
+    "question": "Using only the supplied evidence, assess this exact claim: Violet Lake currently prohibits fishing.",
+    "claim_text": "Violet Lake currently prohibits fishing.",
+    "sources": [
+      {
+        "record_id": "rec_c6c8c40af175d330fe3b02fa",
+        "source": "src_33045bc4992f25e0dc415671",
+        "text": "Fishing was prohibited in March 2024.",
+        "published_at": "2024-03-05T00:00:00+00:00",
+        "event_at": null,
+        "event_id": "evt_0f67a482f20a8a0a853c5f13",
+        "status": "ok",
+        "target_entity": "Violet Lake"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "insufficient",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "src_33045bc4992f25e0dc415671"
+      ],
+      "uncertainty_required": true,
+      "allowed_quotes": {
+        "src_33045bc4992f25e0dc415671": [
+          "Fishing was prohibited in March 2024."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "stale-current",
+    "synthetic": true,
+    "rationale": "The past statement is older than the specified freshness policy.",
+    "stale_after_days": 45
+  },
+  {
+    "id": "dev-new-08-opaque",
+    "target_entity": "Westward Archive",
+    "event_id": "evt_99c4353b51c2d6a3453c30d6",
+    "question": "Using only the supplied evidence, assess this exact claim: The Westward Archive index contains no photographs of trains.",
+    "claim_text": "The Westward Archive index contains no photographs of trains.",
+    "sources": [
+      {
+        "record_id": "rec_8b400a3ba3ad424d5e61bbcf",
+        "source": "src_5d4493f59782794a600e309f",
+        "text": "The first index page has no train photographs; later pages were omitted.",
+        "published_at": "2026-09-20T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "evt_99c4353b51c2d6a3453c30d6",
+        "status": "ok",
+        "target_entity": "Westward Archive",
+        "retrieval": {
+          "completeness": "incomplete",
+          "truncated": true
+        }
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "insufficient",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "src_5d4493f59782794a600e309f"
+      ],
+      "uncertainty_required": true,
+      "allowed_quotes": {
+        "src_5d4493f59782794a600e309f": [
+          "The first index page has no train photographs; later pages were omitted."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "incomplete",
+    "synthetic": true,
+    "rationale": "One truncated page cannot prove absence from the whole index."
+  },
+  {
+    "id": "dev-new-09-opaque",
+    "target_entity": "Yarrow Bakery",
+    "event_id": "evt_852de43330414ff1c1cf21d7",
+    "question": "Using only the supplied evidence, assess this exact claim: Yarrow Bakery will need a larger oven because weekend sales increased.",
+    "claim_text": "Yarrow Bakery will need a larger oven because weekend sales increased.",
+    "sources": [
+      {
+        "record_id": "rec_9a3dfc18d22fa0abada3a615",
+        "source": "src_794b3c94472a6234f79de864",
+        "text": "Weekend sales increased by 12 loaves.",
+        "published_at": "2026-09-20T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "evt_852de43330414ff1c1cf21d7",
+        "status": "ok",
+        "target_entity": "Yarrow Bakery"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "unassessed",
+      "claim_kind": "inference",
+      "relevant_sources": [
+        "src_794b3c94472a6234f79de864"
+      ],
+      "uncertainty_required": true,
+      "allowed_quotes": {
+        "src_794b3c94472a6234f79de864": [
+          "Weekend sales increased by 12 loaves."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "direct",
+    "synthetic": true,
+    "rationale": "Oven need is an inference from observed sales."
+  },
+  {
+    "id": "dev-new-10-opaque",
+    "target_entity": "Zephyr Museum",
+    "event_id": "evt_b9a89b27cf5478f7306b2940",
+    "question": "Using only the supplied evidence, assess this exact claim: The Zephyr Museum advertisement caused the attendance increase.",
+    "claim_text": "The Zephyr Museum advertisement caused the attendance increase.",
+    "sources": [
+      {
+        "record_id": "rec_4fcb2436de1b2272aa6aeb2f",
+        "source": "src_3518a070ef54da19aca060cc",
+        "text": "Attendance increased after the advertisement ran.",
+        "published_at": "2026-09-20T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "evt_b9a89b27cf5478f7306b2940",
+        "status": "ok",
+        "target_entity": "Zephyr Museum"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "unassessed",
+      "claim_kind": "inference",
+      "relevant_sources": [
+        "src_3518a070ef54da19aca060cc"
+      ],
+      "uncertainty_required": true,
+      "allowed_quotes": {
+        "src_3518a070ef54da19aca060cc": [
+          "Attendance increased after the advertisement ran."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "direct",
+    "synthetic": true,
+    "rationale": "Timing alone does not establish causation."
+  },
+  {
+    "id": "dev-new-11-opaque",
+    "target_entity": "Amber Garden",
+    "event_id": "evt_70c98f580af685c71bee0828",
+    "question": "Using only the supplied evidence, assess this exact claim: Should Amber Garden install another rain barrel?",
+    "claim_text": "Should Amber Garden install another rain barrel?",
+    "sources": [
+      {
+        "record_id": "rec_401760b78007778e5a197432",
+        "source": "src_a9e447b356c2d773d73d6349",
+        "text": "The existing rain barrel holds 100 litres.",
+        "published_at": "2026-09-20T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "evt_70c98f580af685c71bee0828",
+        "status": "ok",
+        "target_entity": "Amber Garden"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "unassessed",
+      "claim_kind": "question",
+      "relevant_sources": [
+        "src_a9e447b356c2d773d73d6349"
+      ],
+      "uncertainty_required": true,
+      "allowed_quotes": {
+        "src_a9e447b356c2d773d73d6349": [
+          "The existing rain barrel holds 100 litres."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "direct",
+    "synthetic": true,
+    "rationale": "This is a question rather than an assertion."
+  },
+  {
+    "id": "dev-new-12-opaque",
+    "target_entity": "Basil Workshop",
+    "event_id": "evt_063476d9aeeb44fca4f3de99",
+    "question": "Using only the supplied evidence, assess this exact claim: Is Basil Workshop planning to repaint the entrance?",
+    "claim_text": "Is Basil Workshop planning to repaint the entrance?",
+    "sources": [
+      {
+        "record_id": "rec_b6e793d8af5e3b2d1b36ebb2",
+        "source": "src_da6a7ff143ccc2d77b18f5df",
+        "text": "The entrance is currently painted green.",
+        "published_at": "2026-09-20T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "evt_063476d9aeeb44fca4f3de99",
+        "status": "ok",
+        "target_entity": "Basil Workshop"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "unassessed",
+      "claim_kind": "question",
+      "relevant_sources": [
+        "src_da6a7ff143ccc2d77b18f5df"
+      ],
+      "uncertainty_required": true,
+      "allowed_quotes": {
+        "src_da6a7ff143ccc2d77b18f5df": [
+          "The entrance is currently painted green."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "direct",
+    "synthetic": true,
+    "rationale": "This is an unanswered question, not a factual assertion."
+  },
+  {
+    "id": "dev-new-13-opaque",
+    "target_entity": "Alder Radio",
+    "event_id": "evt_2a983efbac45cdf42fc94ef5",
+    "question": "Using only the supplied evidence, assess this exact claim: Esha is currently Alder Radio director.",
+    "claim_text": "Esha is currently Alder Radio director.",
+    "sources": [
+      {
+        "record_id": "rec_d445981c2b436c58c9276389",
+        "source": "src_0866d87fa80dbb9a10e47db1",
+        "text": "Esha is director of Alder Radio.",
+        "published_at": null,
+        "event_at": null,
+        "event_id": "evt_2a983efbac45cdf42fc94ef5",
+        "status": "ok",
+        "target_entity": "Alder Radio"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "insufficient",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "src_0866d87fa80dbb9a10e47db1"
+      ],
+      "uncertainty_required": true,
+      "allowed_quotes": {
+        "src_0866d87fa80dbb9a10e47db1": [
+          "Esha is director of Alder Radio."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "unknown-publication-current",
+    "synthetic": true,
+    "rationale": "Unknown publication time prevents establishing a current officeholder.",
+    "stale_after_days": 14
+  },
+  {
+    "id": "dev-new-14-opaque",
+    "target_entity": "Bramble Marina",
+    "event_id": "evt_b854cd42355842e173ff5164",
+    "question": "Using only the supplied evidence, assess this exact claim: Bramble Marina increased berth fees in September 2026.",
+    "claim_text": "Bramble Marina increased berth fees in September 2026.",
+    "sources": [
+      {
+        "record_id": "rec_77bd74c910bd94ca8303aeaf",
+        "source": "src_cf20bc75ed785f0b201fa5a5",
+        "text": "Bramble Marina increased berth fees in September 2026.",
+        "published_at": "2026-09-24T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "evt_b854cd42355842e173ff5164",
+        "status": "ok",
+        "target_entity": "Bramble Marina"
+      },
+      {
+        "record_id": "rec_9ac26e7f68a5c763e6e819b5",
+        "source": "src_93bbb570cfa0eefac671c6d2",
+        "text": "Bramble Marina did not increase berth fees in September 2026.",
+        "published_at": "2026-09-24T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "evt_b854cd42355842e173ff5164",
+        "status": "ok",
+        "target_entity": "Bramble Marina"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "insufficient",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "src_cf20bc75ed785f0b201fa5a5",
+        "src_93bbb570cfa0eefac671c6d2"
+      ],
+      "uncertainty_required": true,
+      "allowed_quotes": {
+        "src_cf20bc75ed785f0b201fa5a5": [
+          "Bramble Marina increased berth fees in September 2026."
+        ],
+        "src_93bbb570cfa0eefac671c6d2": [
+          "Bramble Marina did not increase berth fees in September 2026."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "conflict",
+    "synthetic": true,
+    "rationale": "Both applicable sources conflict with no stated basis to choose one.",
+    "stale_after_days": 20
+  },
+  {
+    "id": "dev-new-15-opaque",
+    "target_entity": "Cobalt Hospital",
+    "event_id": "evt_51cd74b854dfc727cc6b66f7",
+    "question": "Using only the supplied evidence, assess this exact claim: Cobalt Hospital bought two ambulances in 2026.",
+    "claim_text": "Cobalt Hospital bought two ambulances in 2026.",
+    "sources": [
+      {
+        "record_id": "rec_15dd0a6f8cc79b9bdc24a568",
+        "source": "src_eaaaeb95db4d80b0588b3f29",
+        "text": "Cobalt Hospice bought two ambulances in 2026.",
+        "published_at": "2026-09-24T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "evt_51cd74b854dfc727cc6b66f7",
+        "status": "ok",
+        "target_entity": "Cobalt Hospital"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "insufficient",
+      "claim_kind": "observation",
+      "relevant_sources": [],
+      "uncertainty_required": true,
+      "allowed_quotes": {},
+      "wrong_entity_sources": [
+        "src_eaaaeb95db4d80b0588b3f29"
+      ],
+      "wrong_event_sources": []
+    },
+    "category": "wrong-actual-entity",
+    "synthetic": true,
+    "rationale": "The source text identifies Cobalt Hospice, even though the packet scope label names Cobalt Hospital.",
+    "stale_after_days": 30
+  },
+  {
+    "id": "dev-new-16-opaque",
+    "target_entity": "Dahlia Airport",
+    "event_id": "evt_6b2ed05b632da961294b8b71",
+    "question": "Using only the supplied evidence, assess this exact claim: Dahlia Airport opened the east gate in September.",
+    "claim_text": "Dahlia Airport opened the east gate in September.",
+    "sources": [
+      {
+        "record_id": "rec_2b034270c181ebbefcd422b5",
+        "source": "src_63e68aa7f848eb9f12570fe3",
+        "text": "Dahlia Airport opened the west gate in September.",
+        "published_at": "2026-09-24T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "evt_6b2ed05b632da961294b8b71",
+        "status": "ok",
+        "target_entity": "Dahlia Airport"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "insufficient",
+      "claim_kind": "observation",
+      "relevant_sources": [],
+      "uncertainty_required": true,
+      "allowed_quotes": {},
+      "wrong_entity_sources": [],
+      "wrong_event_sources": [
+        "src_63e68aa7f848eb9f12570fe3"
+      ]
+    },
+    "category": "wrong-actual-event",
+    "synthetic": true,
+    "rationale": "The source describes a different gate despite the requested event label on the packet.",
+    "stale_after_days": 25
+  },
+  {
+    "id": "dev-new-17-opaque",
+    "target_entity": "research room runbook",
+    "event_id": null,
+    "question": "Using only the supplied evidence, assess this exact claim: The runbook says history and SSE share one committed sequence.",
+    "claim_text": "The runbook says history and SSE share one committed sequence.",
+    "sources": [
+      {
+        "record_id": "rec_902bd325f7676eb3d85f5454",
+        "source": "src_95ff5a24947672e14c3756de",
+        "text": "History and SSE share one committed sequence. Reconnect uses `Last-Event-ID`; UI merges by immutable event ID.",
+        "published_at": null,
+        "event_at": null,
+        "event_id": null,
+        "status": "ok",
+        "target_entity": "research room runbook"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "supported",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "src_95ff5a24947672e14c3756de"
+      ],
+      "uncertainty_required": false,
+      "allowed_quotes": {
+        "src_95ff5a24947672e14c3756de": [
+          "History and SSE share one committed sequence."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "irrelevant-real-span",
+    "synthetic": false,
+    "rationale": "The first real sentence states the claim; the adjacent real sentence is about reconnection and event deduplication.",
+    "stale_after_days": 40
+  },
+  {
+    "id": "dev-new-18-opaque",
+    "target_entity": "Elm City Council",
+    "event_id": "evt_7adf126e178849c86d0bca30",
+    "question": "Using only the supplied evidence, assess this exact claim: Elm City Council approved the new park before the cutoff.",
+    "claim_text": "Elm City Council approved the new park before the cutoff.",
+    "sources": [
+      {
+        "record_id": "rec_b7bedbf35fddbc705449a8cc",
+        "source": "src_7715c5047bc218c0ec2f3a4f",
+        "text": "Elm City Council approved the new park.",
+        "published_at": "2026-10-02T00:00:00+00:00",
+        "event_at": null,
+        "event_id": "evt_7adf126e178849c86d0bca30",
+        "status": "ok",
+        "target_entity": "Elm City Council"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "insufficient",
+      "claim_kind": "observation",
+      "relevant_sources": [],
+      "uncertainty_required": true,
+      "allowed_quotes": {},
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "future-publication",
+    "synthetic": true,
+    "rationale": "The only publication was issued after the cutoff.",
+    "stale_after_days": 35
+  },
+  {
+    "id": "dev-new-19-opaque",
+    "target_entity": "Fennel Community Centre",
+    "event_id": "evt_aad63d8c81cc7dfa5c422559",
+    "question": "Using only the supplied evidence, assess this exact claim: Fennel Community Centre reopened its roof terrace before the cutoff.",
+    "claim_text": "Fennel Community Centre reopened its roof terrace before the cutoff.",
+    "sources": [
+      {
+        "record_id": "rec_e982d94127d10d383421f8b6",
+        "source": "src_4e94010f8f13ba7dc272c19d",
+        "text": "Fennel Community Centre plans to reopen its roof terrace on 8 October 2026.",
+        "published_at": "2026-09-24T12:00:00+00:00",
+        "event_at": "2026-10-08T00:00:00+00:00",
+        "event_id": "evt_aad63d8c81cc7dfa5c422559",
+        "status": "ok",
+        "target_entity": "Fennel Community Centre"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "insufficient",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "src_4e94010f8f13ba7dc272c19d"
+      ],
+      "uncertainty_required": true,
+      "allowed_quotes": {
+        "src_4e94010f8f13ba7dc272c19d": [
+          "Fennel Community Centre plans to reopen its roof terrace on 8 October 2026."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "future-planned-event",
+    "synthetic": true,
+    "rationale": "The timely report describes a future plan, not an opening before the cutoff.",
+    "stale_after_days": 21
+  },
+  {
+    "id": "dev-new-20-opaque",
+    "target_entity": "Grove Postal Service",
+    "event_id": "evt_48fa0b96c5c2e93eaa0fe7b3",
+    "question": "Using only the supplied evidence, assess this exact claim: Grove Postal Service currently delivers 900 parcels per day.",
+    "claim_text": "Grove Postal Service currently delivers 900 parcels per day.",
+    "sources": [
+      {
+        "record_id": "rec_b4cb993fd3756b98699fdc76",
+        "source": "src_2feea7b88f26b9a25594b043",
+        "text": "In January 2022 Grove Postal Service delivered 900 parcels per day.",
+        "published_at": "2026-09-24T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "evt_48fa0b96c5c2e93eaa0fe7b3",
+        "status": "ok",
+        "target_entity": "Grove Postal Service"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "insufficient",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "src_2feea7b88f26b9a25594b043"
+      ],
+      "uncertainty_required": true,
+      "allowed_quotes": {
+        "src_2feea7b88f26b9a25594b043": [
+          "In January 2022 Grove Postal Service delivered 900 parcels per day."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "recent-publication-old-observation",
+    "synthetic": true,
+    "rationale": "A recent report repeating a historical observation does not establish a current delivery rate.",
+    "stale_after_days": 60
+  }
+]

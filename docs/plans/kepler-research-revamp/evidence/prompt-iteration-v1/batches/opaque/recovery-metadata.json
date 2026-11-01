@@ -1,0 +1,66 @@
+{
+  "batch": "opaque",
+  "note": "Raw private files left unchanged. Export contains only valid JSONL prefix records.",
+  "results.jsonl": {
+    "raw_sha256": "17814642f4a26323273a74f77b30b225b15b6c0d5daced3b1761cee3a320f6e6",
+    "raw_size_bytes": 57344,
+    "valid_prefix_bytes": 53440,
+    "torn_nul_tail_bytes": 3904,
+    "tail_bytes": 3904
+  },
+  "ledger.jsonl": {
+    "raw_sha256": "e9508bd39a2431ec31390fbe6bd2dbdfa198e65abaa837b84d0e6b33264f6d8d",
+    "raw_size_bytes": 8192,
+    "valid_prefix_bytes": 7077,
+    "torn_nul_tail_bytes": 1115,
+    "tail_bytes": 1115
+  },
+  "summary.json": {
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "raw_size_bytes": 0,
+    "valid_prefix_bytes": 0,
+    "torn_nul_tail_bytes": 0,
+    "tail_bytes": 0
+  },
+  "missing_intent": "analyst/selected/dev-new-14-opaque (ledger intent has no JSONL result; SQLite confirms one admitted model and tool call plus an ok public-message event)",
+  "sqlite_readonly_audit": {
+    "source": "read-only SQLite audit; source DB files not exported",
+    "db_count": 40,
+    "cognition_run_rows": 40,
+    "all_run_statuses": {
+      "running": 40
+    },
+    "active_budget_counts_after_events": {
+      "model": 0,
+      "tool": 0
+    },
+    "aggregate_admitted_counts": {
+      "model": 40,
+      "tool": 40,
+      "reserved_tokens": 1310720,
+      "input_tokens": 79812,
+      "output_tokens": 4781,
+      "unknown_usage_calls": 0
+    },
+    "aggregate_cognition_report_event_counts": {
+      "room.created": 40,
+      "room.started": 40,
+      "budget.admitted": 80,
+      "tool.started": 40,
+      "message": 39,
+      "tool.result": 40
+    },
+    "aggregate_room_message_tool_result_statuses": {
+      "ok": 39,
+      "denied": 1
+    },
+    "public_message_events": 39,
+    "result_prefix_rows": 28,
+    "db_only_model_calls_vs_original_result_prefix": 12,
+    "db_only_public_message_events": 11,
+    "db_only_denied_tool_results": 1,
+    "db_only_attempt_protocol_completion": "unknown where JSONL response_status/output_shapes are missing",
+    "note": "No public proposal text, reasoning, packet content, or SQLite database files are included."
+  },
+  "sqlite_audit_export": "sqlite-audit.json contains sanitized per-role/case counters and database hashes; no database or proposal text exported"
+}

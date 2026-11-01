@@ -1,0 +1,250 @@
+{
+  "scope": "Native dashboard rooms after reboot; original runtime prompt, no candidate-gain claim",
+  "rooms": {
+    "queued": {
+      "id": "room:6035cdd4-f8b2-48f0-a388-5fa208a9cb8a",
+      "status": "cancelled",
+      "seq": 3,
+      "termination_reason": "queued_cancel",
+      "limits": {
+        "model": 24,
+        "tool": 24,
+        "seconds": 1200
+      },
+      "counts": {
+        "model": 0,
+        "tool": 0,
+        "reserved_tokens": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "unknown_usage_calls": 0
+      },
+      "cursor": {
+        "cursor": 3,
+        "after_count": 0,
+        "after_cursor": 3
+      },
+      "reopened_after_reload": true
+    },
+    "kepler_files": {
+      "id": "room:a9ea22f6-c97f-49ac-a789-2abce4bab8ba",
+      "status": "abstention",
+      "seq": 94,
+      "termination_reason": "call_or_resource_limit",
+      "limits": {
+        "model": 24,
+        "tool": 24,
+        "seconds": 1200
+      },
+      "counts": {
+        "model": 16,
+        "tool": 15,
+        "reserved_tokens": 524288,
+        "input_tokens": 200768,
+        "output_tokens": 1418,
+        "unknown_usage_calls": 0
+      },
+      "cursor": {
+        "cursor": 94,
+        "after_count": 0,
+        "after_cursor": 94
+      },
+      "reopened_after_reload": true
+    },
+    "sebi_browser": {
+      "id": "room:0f8c2cf5-5bc7-49f4-9f7f-4bcf4adf3ac1",
+      "status": "conclusion",
+      "seq": 114,
+      "termination_reason": "outcome",
+      "limits": {
+        "model": 24,
+        "tool": 24,
+        "seconds": 1200
+      },
+      "counts": {
+        "model": 17,
+        "tool": 17,
+        "reserved_tokens": 557056,
+        "input_tokens": 168882,
+        "output_tokens": 1572,
+        "unknown_usage_calls": 0
+      },
+      "cursor": {
+        "cursor": 114,
+        "after_count": 0,
+        "after_cursor": 114
+      },
+      "reopened_after_reload": true
+    },
+    "browser_cancel": {
+      "id": "room:8b0f9db0-e526-42cb-bce6-417b9c66de00",
+      "status": "cancelled",
+      "seq": 28,
+      "termination_reason": "cancelled",
+      "limits": {
+        "model": 24,
+        "tool": 24,
+        "seconds": 1200
+      },
+      "counts": {
+        "model": 6,
+        "tool": 5,
+        "reserved_tokens": 196608,
+        "input_tokens": 19296,
+        "output_tokens": 127,
+        "unknown_usage_calls": 0
+      },
+      "cursor": {
+        "cursor": 28,
+        "after_count": 0,
+        "after_cursor": 28
+      },
+      "reopened_after_reload": true,
+      "cancellation_observed": {
+        "tool_start_at": "2026-11-01T16:54:02.499080+00:00",
+        "observed_at": "2026-11-01T16:54:02.513Z",
+        "response_at": "2026-11-01T16:54:02.571Z"
+      }
+    },
+    "reliance_graph": {
+      "id": "room:f5797c3d-8c53-4de2-95d1-ca2c5c72a091",
+      "status": "abstention",
+      "seq": 93,
+      "termination_reason": "no_pending_mail",
+      "limits": {
+        "model": 24,
+        "tool": 24,
+        "seconds": 1200
+      },
+      "counts": {
+        "model": 14,
+        "tool": 13,
+        "reserved_tokens": 458752,
+        "input_tokens": 101509,
+        "output_tokens": 1241,
+        "unknown_usage_calls": 1
+      },
+      "cursor": {
+        "cursor": 93,
+        "after_count": 0,
+        "after_cursor": 93
+      },
+      "reopened_after_reload": true
+    },
+    "interrupted": {
+      "id": "room:ecd3a17a-736e-49d5-a529-ee42d8b5a0ca",
+      "parent_room": null,
+      "status": "interrupted",
+      "seq": 9,
+      "termination_reason": "lease_expired",
+      "limits": {
+        "model": 24,
+        "tool": 24,
+        "seconds": 1200
+      },
+      "counts": {
+        "model": 2,
+        "tool": 0,
+        "reserved_tokens": 65536,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "unknown_usage_calls": 2
+      },
+      "activity_state": "unknown",
+      "unresolved_activity": {
+        "model": 2,
+        "tool": 0
+      },
+      "ui": {
+        "first": {
+          "status": "interrupted \u00b7 Saved discussion",
+          "unknown_usage_count_displayed": true,
+          "unknown_activity_displayed": true,
+          "cards": 9
+        },
+        "after_reload": {
+          "status": "interrupted \u00b7 Saved discussion",
+          "unknown_usage_count_displayed": true,
+          "unknown_activity_displayed": true,
+          "cards": 9
+        },
+        "terminal_sse_requests": 0,
+        "room_equal": true,
+        "history_equal": true,
+        "seq": 9,
+        "cursor": 9,
+        "counts": {
+          "model": 2,
+          "tool": 0,
+          "reserved_tokens": 65536,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "unknown_usage_calls": 2
+        },
+        "termination_reason": "lease_expired"
+      }
+    },
+    "retry": {
+      "id": "room:59b8cdf0-84f6-4278-bd3b-cf6848fc1005",
+      "parent_room": "room:ecd3a17a-736e-49d5-a529-ee42d8b5a0ca",
+      "status": "cancelled",
+      "seq": 3,
+      "termination_reason": "queued_cancel",
+      "limits": {
+        "model": 24,
+        "tool": 24,
+        "seconds": 1200
+      },
+      "counts": {
+        "model": 0,
+        "tool": 0,
+        "reserved_tokens": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "unknown_usage_calls": 0
+      },
+      "activity_state": null,
+      "unresolved_activity": null,
+      "ui": {
+        "first": {
+          "status": "cancelled \u00b7 Saved discussion",
+          "unknown_usage_count_displayed": true,
+          "unknown_activity_displayed": false,
+          "cards": 3
+        },
+        "after_reload": {
+          "status": "cancelled \u00b7 Saved discussion",
+          "unknown_usage_count_displayed": true,
+          "unknown_activity_displayed": false,
+          "cards": 3
+        },
+        "terminal_sse_requests": 0,
+        "room_equal": true,
+        "history_equal": true,
+        "seq": 3,
+        "cursor": 3,
+        "counts": {
+          "model": 0,
+          "tool": 0,
+          "reserved_tokens": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "unknown_usage_calls": 0
+        },
+        "termination_reason": "queued_cancel"
+      }
+    }
+  },
+  "totals": {
+    "rooms": 7,
+    "model_admitted": 55,
+    "tool_admitted": 50,
+    "unknown_usage_calls": 3
+  },
+  "caveats": [
+    "Tool output status is not a semantic truth check.",
+    "Kepler workspace room did not invoke a graph tool.",
+    "Browser cancellation was observed in the public event stream, not instrumented internal browser phase.",
+    "Worker interruption harness assertions were corrected against the actual public schema on the same attempt without further inference."
+  ]
+}

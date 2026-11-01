@@ -1,0 +1,776 @@
+[
+  {
+    "id": "dev-new-01",
+    "target_entity": "Plover Pantry",
+    "event_id": "distribution",
+    "question": "Using only the supplied evidence, assess this exact claim: Plover Pantry distributed 45 food parcels on Friday.",
+    "claim_text": "Plover Pantry distributed 45 food parcels on Friday.",
+    "sources": [
+      {
+        "record_id": "record:pantry",
+        "source": "synthetic:pantry",
+        "text": "On Friday Plover Pantry distributed 45 food parcels.",
+        "published_at": "2026-09-20T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "distribution",
+        "status": "ok",
+        "target_entity": "Plover Pantry"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "supported",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "synthetic:pantry"
+      ],
+      "uncertainty_required": false,
+      "allowed_quotes": {
+        "synthetic:pantry": [
+          "On Friday Plover Pantry distributed 45 food parcels."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "direct",
+    "synthetic": true,
+    "rationale": "The source states the count and day."
+  },
+  {
+    "id": "dev-new-02",
+    "target_entity": "Quartz Aquarium",
+    "event_id": "water-temp",
+    "question": "Using only the supplied evidence, assess this exact claim: The Quartz Aquarium tank was 24 degrees Celsius at noon.",
+    "claim_text": "The Quartz Aquarium tank was 24 degrees Celsius at noon.",
+    "sources": [
+      {
+        "record_id": "record:tank",
+        "source": "synthetic:tank",
+        "text": "At noon the tank water measured 24 degrees Celsius.",
+        "published_at": "2026-09-20T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "water-temp",
+        "status": "ok",
+        "target_entity": "Quartz Aquarium"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "supported",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "synthetic:tank"
+      ],
+      "uncertainty_required": false,
+      "allowed_quotes": {
+        "synthetic:tank": [
+          "At noon the tank water measured 24 degrees Celsius."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "direct",
+    "synthetic": true,
+    "rationale": "The measurement, unit and time are explicit.",
+    "stale_after_days": 25
+  },
+  {
+    "id": "dev-new-03",
+    "target_entity": "Rill Footpath",
+    "event_id": "closure-date",
+    "question": "Using only the supplied evidence, assess this exact claim: Rill Footpath closed on 15 July 2026.",
+    "claim_text": "Rill Footpath closed on 15 July 2026.",
+    "sources": [
+      {
+        "record_id": "record:footpath",
+        "source": "synthetic:footpath",
+        "text": "Rill Footpath closed on 15 July 2026.",
+        "published_at": "2026-07-16T00:00:00+00:00",
+        "event_at": null,
+        "event_id": "closure-date",
+        "status": "ok",
+        "target_entity": "Rill Footpath"
+      }
+    ],
+    "decision_cutoff": "2026-08-01T00:00:00+00:00",
+    "expected": {
+      "support_assessment": "supported",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "synthetic:footpath"
+      ],
+      "uncertainty_required": false,
+      "allowed_quotes": {
+        "synthetic:footpath": [
+          "Rill Footpath closed on 15 July 2026."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "direct",
+    "synthetic": true,
+    "rationale": "The exact historical date is present."
+  },
+  {
+    "id": "dev-new-04",
+    "target_entity": "Sable Gallery",
+    "event_id": "exhibit-count",
+    "question": "Using only the supplied evidence, assess this exact claim: Sable Gallery displayed six sculptures in exhibit A.",
+    "claim_text": "Sable Gallery displayed six sculptures in exhibit A.",
+    "sources": [
+      {
+        "record_id": "record:gallery",
+        "source": "synthetic:gallery",
+        "text": "Exhibit A included six sculptures.",
+        "published_at": null,
+        "event_at": null,
+        "event_id": "exhibit-count",
+        "status": "ok",
+        "target_entity": "Sable Gallery"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "supported",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "synthetic:gallery"
+      ],
+      "uncertainty_required": false,
+      "allowed_quotes": {
+        "synthetic:gallery": [
+          "Exhibit A included six sculptures."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "direct",
+    "synthetic": true,
+    "rationale": "This stable exhibition count does not require a publication date."
+  },
+  {
+    "id": "dev-new-05",
+    "target_entity": "Thistle Farm",
+    "event_id": "fertilizer-test",
+    "question": "Using only the supplied evidence, assess this exact claim: Thistle Farm applied fertilizer during the test.",
+    "claim_text": "Thistle Farm applied fertilizer during the test.",
+    "sources": [
+      {
+        "record_id": "record:farm",
+        "source": "synthetic:farm",
+        "text": "No fertilizer was applied during the test.",
+        "published_at": "2026-09-20T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "fertilizer-test",
+        "status": "ok",
+        "target_entity": "Thistle Farm"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "contradicted",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "synthetic:farm"
+      ],
+      "uncertainty_required": false,
+      "allowed_quotes": {
+        "synthetic:farm": [
+          "No fertilizer was applied during the test."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "direct",
+    "synthetic": true,
+    "rationale": "The source explicitly negates application."
+  },
+  {
+    "id": "dev-new-06",
+    "target_entity": "Upland Orchestra",
+    "event_id": "rehearsal",
+    "question": "Using only the supplied evidence, assess this exact claim: Upland Orchestra rehearsed for 90 minutes.",
+    "claim_text": "Upland Orchestra rehearsed for 90 minutes.",
+    "sources": [
+      {
+        "record_id": "record:rehearsal",
+        "source": "synthetic:rehearsal",
+        "text": "The rehearsal lasted 60 minutes.",
+        "published_at": "2026-09-20T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "rehearsal",
+        "status": "ok",
+        "target_entity": "Upland Orchestra"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "contradicted",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "synthetic:rehearsal"
+      ],
+      "uncertainty_required": false,
+      "allowed_quotes": {
+        "synthetic:rehearsal": [
+          "The rehearsal lasted 60 minutes."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "direct",
+    "synthetic": true,
+    "rationale": "A different same-event duration directly contradicts the claim."
+  },
+  {
+    "id": "dev-new-07",
+    "target_entity": "Violet Lake",
+    "event_id": "fishing-ban",
+    "question": "Using only the supplied evidence, assess this exact claim: Violet Lake currently prohibits fishing.",
+    "claim_text": "Violet Lake currently prohibits fishing.",
+    "sources": [
+      {
+        "record_id": "record:lake",
+        "source": "synthetic:lake",
+        "text": "Fishing was prohibited in March 2024.",
+        "published_at": "2024-03-05T00:00:00+00:00",
+        "event_at": null,
+        "event_id": "fishing-ban",
+        "status": "ok",
+        "target_entity": "Violet Lake"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "insufficient",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "synthetic:lake"
+      ],
+      "uncertainty_required": true,
+      "allowed_quotes": {
+        "synthetic:lake": [
+          "Fishing was prohibited in March 2024."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "stale-current",
+    "synthetic": true,
+    "rationale": "The past statement is older than the specified freshness policy.",
+    "stale_after_days": 45
+  },
+  {
+    "id": "dev-new-08",
+    "target_entity": "Westward Archive",
+    "event_id": "photo-index",
+    "question": "Using only the supplied evidence, assess this exact claim: The Westward Archive index contains no photographs of trains.",
+    "claim_text": "The Westward Archive index contains no photographs of trains.",
+    "sources": [
+      {
+        "record_id": "record:index",
+        "source": "synthetic:index",
+        "text": "The first index page has no train photographs; later pages were omitted.",
+        "published_at": "2026-09-20T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "photo-index",
+        "status": "ok",
+        "target_entity": "Westward Archive",
+        "retrieval": {
+          "completeness": "incomplete",
+          "truncated": true
+        }
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "insufficient",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "synthetic:index"
+      ],
+      "uncertainty_required": true,
+      "allowed_quotes": {
+        "synthetic:index": [
+          "The first index page has no train photographs; later pages were omitted."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "incomplete",
+    "synthetic": true,
+    "rationale": "One truncated page cannot prove absence from the whole index."
+  },
+  {
+    "id": "dev-new-09",
+    "target_entity": "Yarrow Bakery",
+    "event_id": "sales",
+    "question": "Using only the supplied evidence, assess this exact claim: Yarrow Bakery will need a larger oven because weekend sales increased.",
+    "claim_text": "Yarrow Bakery will need a larger oven because weekend sales increased.",
+    "sources": [
+      {
+        "record_id": "record:bakery",
+        "source": "synthetic:bakery",
+        "text": "Weekend sales increased by 12 loaves.",
+        "published_at": "2026-09-20T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "sales",
+        "status": "ok",
+        "target_entity": "Yarrow Bakery"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "unassessed",
+      "claim_kind": "inference",
+      "relevant_sources": [
+        "synthetic:bakery"
+      ],
+      "uncertainty_required": true,
+      "allowed_quotes": {
+        "synthetic:bakery": [
+          "Weekend sales increased by 12 loaves."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "direct",
+    "synthetic": true,
+    "rationale": "Oven need is an inference from observed sales."
+  },
+  {
+    "id": "dev-new-10",
+    "target_entity": "Zephyr Museum",
+    "event_id": "visitors",
+    "question": "Using only the supplied evidence, assess this exact claim: The Zephyr Museum advertisement caused the attendance increase.",
+    "claim_text": "The Zephyr Museum advertisement caused the attendance increase.",
+    "sources": [
+      {
+        "record_id": "record:museum",
+        "source": "synthetic:museum",
+        "text": "Attendance increased after the advertisement ran.",
+        "published_at": "2026-09-20T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "visitors",
+        "status": "ok",
+        "target_entity": "Zephyr Museum"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "unassessed",
+      "claim_kind": "inference",
+      "relevant_sources": [
+        "synthetic:museum"
+      ],
+      "uncertainty_required": true,
+      "allowed_quotes": {
+        "synthetic:museum": [
+          "Attendance increased after the advertisement ran."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "direct",
+    "synthetic": true,
+    "rationale": "Timing alone does not establish causation."
+  },
+  {
+    "id": "dev-new-11",
+    "target_entity": "Amber Garden",
+    "event_id": "rain-barrel",
+    "question": "Using only the supplied evidence, assess this exact claim: Should Amber Garden install another rain barrel?",
+    "claim_text": "Should Amber Garden install another rain barrel?",
+    "sources": [
+      {
+        "record_id": "record:barrel",
+        "source": "synthetic:barrel",
+        "text": "The existing rain barrel holds 100 litres.",
+        "published_at": "2026-09-20T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "rain-barrel",
+        "status": "ok",
+        "target_entity": "Amber Garden"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "unassessed",
+      "claim_kind": "question",
+      "relevant_sources": [
+        "synthetic:barrel"
+      ],
+      "uncertainty_required": true,
+      "allowed_quotes": {
+        "synthetic:barrel": [
+          "The existing rain barrel holds 100 litres."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "direct",
+    "synthetic": true,
+    "rationale": "This is a question rather than an assertion."
+  },
+  {
+    "id": "dev-new-12",
+    "target_entity": "Basil Workshop",
+    "event_id": "paint",
+    "question": "Using only the supplied evidence, assess this exact claim: Is Basil Workshop planning to repaint the entrance?",
+    "claim_text": "Is Basil Workshop planning to repaint the entrance?",
+    "sources": [
+      {
+        "record_id": "record:paint",
+        "source": "synthetic:paint",
+        "text": "The entrance is currently painted green.",
+        "published_at": "2026-09-20T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "paint",
+        "status": "ok",
+        "target_entity": "Basil Workshop"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "unassessed",
+      "claim_kind": "question",
+      "relevant_sources": [
+        "synthetic:paint"
+      ],
+      "uncertainty_required": true,
+      "allowed_quotes": {
+        "synthetic:paint": [
+          "The entrance is currently painted green."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "direct",
+    "synthetic": true,
+    "rationale": "This is an unanswered question, not a factual assertion."
+  },
+  {
+    "id": "dev-new-13",
+    "target_entity": "Alder Radio",
+    "event_id": "director-current",
+    "question": "Using only the supplied evidence, assess this exact claim: Esha is currently Alder Radio director.",
+    "claim_text": "Esha is currently Alder Radio director.",
+    "sources": [
+      {
+        "record_id": "record:alder-undated",
+        "source": "synthetic:alder-undated",
+        "text": "Esha is director of Alder Radio.",
+        "published_at": null,
+        "event_at": null,
+        "event_id": "director-current",
+        "status": "ok",
+        "target_entity": "Alder Radio"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "insufficient",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "synthetic:alder-undated"
+      ],
+      "uncertainty_required": true,
+      "allowed_quotes": {
+        "synthetic:alder-undated": [
+          "Esha is director of Alder Radio."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "unknown-publication-current",
+    "synthetic": true,
+    "rationale": "Unknown publication time prevents establishing a current officeholder.",
+    "stale_after_days": 14
+  },
+  {
+    "id": "dev-new-14",
+    "target_entity": "Bramble Marina",
+    "event_id": "berth-fee",
+    "question": "Using only the supplied evidence, assess this exact claim: Bramble Marina increased berth fees in September 2026.",
+    "claim_text": "Bramble Marina increased berth fees in September 2026.",
+    "sources": [
+      {
+        "record_id": "record:fee-increased",
+        "source": "synthetic:fee-increased",
+        "text": "Bramble Marina increased berth fees in September 2026.",
+        "published_at": "2026-09-24T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "berth-fee",
+        "status": "ok",
+        "target_entity": "Bramble Marina"
+      },
+      {
+        "record_id": "record:fee-unchanged",
+        "source": "synthetic:fee-unchanged",
+        "text": "Bramble Marina did not increase berth fees in September 2026.",
+        "published_at": "2026-09-24T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "berth-fee",
+        "status": "ok",
+        "target_entity": "Bramble Marina"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "insufficient",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "synthetic:fee-increased",
+        "synthetic:fee-unchanged"
+      ],
+      "uncertainty_required": true,
+      "allowed_quotes": {
+        "synthetic:fee-increased": [
+          "Bramble Marina increased berth fees in September 2026."
+        ],
+        "synthetic:fee-unchanged": [
+          "Bramble Marina did not increase berth fees in September 2026."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "conflict",
+    "synthetic": true,
+    "rationale": "Both applicable sources conflict with no stated basis to choose one.",
+    "stale_after_days": 20
+  },
+  {
+    "id": "dev-new-15",
+    "target_entity": "Cobalt Hospital",
+    "event_id": "ambulance-2026",
+    "question": "Using only the supplied evidence, assess this exact claim: Cobalt Hospital bought two ambulances in 2026.",
+    "claim_text": "Cobalt Hospital bought two ambulances in 2026.",
+    "sources": [
+      {
+        "record_id": "record:wrong-hospital",
+        "source": "synthetic:wrong-hospital",
+        "text": "Cobalt Hospice bought two ambulances in 2026.",
+        "published_at": "2026-09-24T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "ambulance-2026",
+        "status": "ok",
+        "target_entity": "Cobalt Hospital"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "insufficient",
+      "claim_kind": "observation",
+      "relevant_sources": [],
+      "uncertainty_required": true,
+      "allowed_quotes": {},
+      "wrong_entity_sources": [
+        "synthetic:wrong-hospital"
+      ],
+      "wrong_event_sources": []
+    },
+    "category": "wrong-actual-entity",
+    "synthetic": true,
+    "rationale": "The source text identifies Cobalt Hospice, even though the packet scope label names Cobalt Hospital.",
+    "stale_after_days": 30
+  },
+  {
+    "id": "dev-new-16",
+    "target_entity": "Dahlia Airport",
+    "event_id": "gate-east",
+    "question": "Using only the supplied evidence, assess this exact claim: Dahlia Airport opened the east gate in September.",
+    "claim_text": "Dahlia Airport opened the east gate in September.",
+    "sources": [
+      {
+        "record_id": "record:wrong-gate",
+        "source": "synthetic:wrong-gate",
+        "text": "Dahlia Airport opened the west gate in September.",
+        "published_at": "2026-09-24T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "gate-east",
+        "status": "ok",
+        "target_entity": "Dahlia Airport"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "insufficient",
+      "claim_kind": "observation",
+      "relevant_sources": [],
+      "uncertainty_required": true,
+      "allowed_quotes": {},
+      "wrong_entity_sources": [],
+      "wrong_event_sources": [
+        "synthetic:wrong-gate"
+      ]
+    },
+    "category": "wrong-actual-event",
+    "synthetic": true,
+    "rationale": "The source describes a different gate despite the requested event label on the packet.",
+    "stale_after_days": 25
+  },
+  {
+    "id": "dev-new-17",
+    "target_entity": "research room runbook",
+    "event_id": null,
+    "question": "Using only the supplied evidence, assess this exact claim: The runbook says history and SSE share one committed sequence.",
+    "claim_text": "The runbook says history and SSE share one committed sequence.",
+    "sources": [
+      {
+        "record_id": "record:runbook-sequence",
+        "source": "file:docs/plans/kepler-research-revamp/RESEARCH_ROOM_RUNBOOK.md",
+        "text": "History and SSE share one committed sequence. Reconnect uses `Last-Event-ID`; UI merges by immutable event ID.",
+        "published_at": null,
+        "event_at": null,
+        "event_id": null,
+        "status": "ok",
+        "target_entity": "research room runbook"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "supported",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "file:docs/plans/kepler-research-revamp/RESEARCH_ROOM_RUNBOOK.md"
+      ],
+      "uncertainty_required": false,
+      "allowed_quotes": {
+        "file:docs/plans/kepler-research-revamp/RESEARCH_ROOM_RUNBOOK.md": [
+          "History and SSE share one committed sequence."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "irrelevant-real-span",
+    "synthetic": false,
+    "rationale": "The first real sentence states the claim; the adjacent real sentence is about reconnection and event deduplication.",
+    "stale_after_days": 40
+  },
+  {
+    "id": "dev-new-18",
+    "target_entity": "Elm City Council",
+    "event_id": "park-approval",
+    "question": "Using only the supplied evidence, assess this exact claim: Elm City Council approved the new park before the cutoff.",
+    "claim_text": "Elm City Council approved the new park before the cutoff.",
+    "sources": [
+      {
+        "record_id": "record:future-park",
+        "source": "synthetic:future-park",
+        "text": "Elm City Council approved the new park.",
+        "published_at": "2026-10-02T00:00:00+00:00",
+        "event_at": null,
+        "event_id": "park-approval",
+        "status": "ok",
+        "target_entity": "Elm City Council"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "insufficient",
+      "claim_kind": "observation",
+      "relevant_sources": [],
+      "uncertainty_required": true,
+      "allowed_quotes": {},
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "future-publication",
+    "synthetic": true,
+    "rationale": "The only publication was issued after the cutoff.",
+    "stale_after_days": 35
+  },
+  {
+    "id": "dev-new-19",
+    "target_entity": "Fennel Community Centre",
+    "event_id": "roof-opening",
+    "question": "Using only the supplied evidence, assess this exact claim: Fennel Community Centre reopened its roof terrace before the cutoff.",
+    "claim_text": "Fennel Community Centre reopened its roof terrace before the cutoff.",
+    "sources": [
+      {
+        "record_id": "record:roof-plan",
+        "source": "synthetic:roof-plan",
+        "text": "Fennel Community Centre plans to reopen its roof terrace on 8 October 2026.",
+        "published_at": "2026-09-24T12:00:00+00:00",
+        "event_at": "2026-10-08T00:00:00+00:00",
+        "event_id": "roof-opening",
+        "status": "ok",
+        "target_entity": "Fennel Community Centre"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "insufficient",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "synthetic:roof-plan"
+      ],
+      "uncertainty_required": true,
+      "allowed_quotes": {
+        "synthetic:roof-plan": [
+          "Fennel Community Centre plans to reopen its roof terrace on 8 October 2026."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "future-planned-event",
+    "synthetic": true,
+    "rationale": "The timely report describes a future plan, not an opening before the cutoff.",
+    "stale_after_days": 21
+  },
+  {
+    "id": "dev-new-20",
+    "target_entity": "Grove Postal Service",
+    "event_id": "parcel-current",
+    "question": "Using only the supplied evidence, assess this exact claim: Grove Postal Service currently delivers 900 parcels per day.",
+    "claim_text": "Grove Postal Service currently delivers 900 parcels per day.",
+    "sources": [
+      {
+        "record_id": "record:recent-old-observation",
+        "source": "synthetic:recent-old-observation",
+        "text": "In January 2022 Grove Postal Service delivered 900 parcels per day.",
+        "published_at": "2026-09-24T12:00:00+00:00",
+        "event_at": null,
+        "event_id": "parcel-current",
+        "status": "ok",
+        "target_entity": "Grove Postal Service"
+      }
+    ],
+    "decision_cutoff": "2026-09-30T12:00:00+00:00",
+    "expected": {
+      "support_assessment": "insufficient",
+      "claim_kind": "observation",
+      "relevant_sources": [
+        "synthetic:recent-old-observation"
+      ],
+      "uncertainty_required": true,
+      "allowed_quotes": {
+        "synthetic:recent-old-observation": [
+          "In January 2022 Grove Postal Service delivered 900 parcels per day."
+        ]
+      },
+      "wrong_entity_sources": [],
+      "wrong_event_sources": []
+    },
+    "category": "recent-publication-old-observation",
+    "synthetic": true,
+    "rationale": "A recent report repeating a historical observation does not establish a current delivery rate.",
+    "stale_after_days": 60
+  }
+]

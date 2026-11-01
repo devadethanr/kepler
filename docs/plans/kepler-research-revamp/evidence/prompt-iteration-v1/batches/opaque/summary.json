@@ -1,0 +1,26 @@
+{
+  "status": "reboot-interrupted JSONL result/ledger; original SQLite audited read-only",
+  "result_records_in_valid_prefix": 28,
+  "recorded_model_calls_in_result_rows": 28,
+  "sqlite_confirmed_original_model_calls": 40,
+  "sqlite_confirmed_original_tool_calls": 40,
+  "sqlite_confirmed_original_usage": {
+    "model": 40,
+    "tool": 40,
+    "reserved_tokens": 1310720,
+    "input_tokens": 79812,
+    "output_tokens": 4781,
+    "unknown_usage_calls": 0
+  },
+  "sqlite_confirmed_public_message_events": 39,
+  "sqlite_room_message_tool_results": {
+    "ok": 39,
+    "denied": 1
+  },
+  "sqlite_db_only_calls_missing_from_original_results": 12,
+  "db_only_calls_with_public_message": 11,
+  "db_only_calls_denied": 1,
+  "db_only_protocol_completion": "unknown where JSONL response_status/output_shapes are missing",
+  "score_rows_added_from_sqlite": 0,
+  "unmatched_ledger_intent_model_outcome": "model/tool admission and public-message event confirmed by SQLite; JSONL result row remains absent"
+}

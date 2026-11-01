@@ -1,0 +1,74 @@
+{
+  "started": "2026-11-01T16:46:49.387Z",
+  "room_id": "room:6035cdd4-f8b2-48f0-a388-5fa208a9cb8a",
+  "before": {
+    "status": "cancelled",
+    "seq": 3,
+    "event_ids": [
+      "room:6035cdd4-f8b2-48f0-a388-5fa208a9cb8a:406effb1e9c59672c66a598c2b21e331",
+      "room:6035cdd4-f8b2-48f0-a388-5fa208a9cb8a:2374d91794b79f4fb4ec9587d2cf00ae",
+      "room:6035cdd4-f8b2-48f0-a388-5fa208a9cb8a:05343e9845302eb730fa9d18ac7b28d5"
+    ],
+    "event_seq": [
+      1,
+      2,
+      3
+    ],
+    "cursor": 3
+  },
+  "restart": {
+    "exit_code": 0,
+    "completed": true,
+    "samples": [
+      {
+        "at": "2026-11-01T16:46:49.432Z",
+        "health": 200,
+        "rooms": 200
+      },
+      {
+        "at": "2026-11-01T16:46:49.562Z",
+        "health": 503,
+        "rooms": 503
+      },
+      {
+        "at": "2026-11-01T16:46:49.698Z",
+        "health": 200,
+        "rooms": 200
+      },
+      {
+        "at": "2026-11-01T16:46:50.193Z",
+        "health": 200,
+        "rooms": 200
+      },
+      {
+        "at": "2026-11-01T16:46:50.331Z",
+        "health": 200,
+        "rooms": 200
+      }
+    ],
+    "observed_non_200": true,
+    "ready": true
+  },
+  "after": {
+    "status": "cancelled",
+    "seq": 3,
+    "event_ids": [
+      "room:6035cdd4-f8b2-48f0-a388-5fa208a9cb8a:406effb1e9c59672c66a598c2b21e331",
+      "room:6035cdd4-f8b2-48f0-a388-5fa208a9cb8a:2374d91794b79f4fb4ec9587d2cf00ae",
+      "room:6035cdd4-f8b2-48f0-a388-5fa208a9cb8a:05343e9845302eb730fa9d18ac7b28d5"
+    ],
+    "event_seq": [
+      1,
+      2,
+      3
+    ],
+    "cursor": 3,
+    "room_bytes_identical": true,
+    "history_bytes_identical": true
+  },
+  "browser": {
+    "opened_before_reload": "cancelled \u00b7 Saved discussion",
+    "opened_after_reload": "cancelled \u00b7 Saved discussion",
+    "terminal_sse_requests": 0
+  }
+}

@@ -1,0 +1,216 @@
+{
+  "schema_version": 1,
+  "run_id": "prompt-tuning-20261101T205220",
+  "scope": "Model-backed batch accounting; native room/browser/worker calls are excluded. Original opaque cognition_runs/cognition_reports were audited read-only; DB-only proposals were not scored or inserted into result rows.",
+  "incomplete_definition": "Count incomplete attempts visible in JSONL rows (non-completed response or no single proposal). The 12 DB-only original opaque calls have unknown protocol completion because response_status/output_shapes are absent; the denied gate is reported separately and not counted as protocol-incomplete.",
+  "per_batch": {
+    "development-01": {
+      "result_rows": 160,
+      "model_calls": 160,
+      "tool_calls": 154,
+      "reserved_tokens": 5242880,
+      "input_tokens": 303904,
+      "output_tokens": 19339,
+      "unknown_usage_calls": 0,
+      "incomplete_attempts": 6
+    },
+    "development-02": {
+      "result_rows": 120,
+      "model_calls": 120,
+      "tool_calls": 103,
+      "reserved_tokens": 3932160,
+      "input_tokens": 226810,
+      "output_tokens": 21245,
+      "unknown_usage_calls": 1,
+      "incomplete_attempts": 17
+    },
+    "development-03": {
+      "result_rows": 80,
+      "model_calls": 80,
+      "tool_calls": 79,
+      "reserved_tokens": 2621440,
+      "input_tokens": 147432,
+      "output_tokens": 8897,
+      "unknown_usage_calls": 0,
+      "incomplete_attempts": 1
+    },
+    "development-04-compact": {
+      "result_rows": 120,
+      "model_calls": 120,
+      "tool_calls": 113,
+      "reserved_tokens": 3932160,
+      "input_tokens": 239587,
+      "output_tokens": 16436,
+      "unknown_usage_calls": 0,
+      "incomplete_attempts": 7
+    },
+    "development-05": {
+      "result_rows": 120,
+      "model_calls": 120,
+      "tool_calls": 118,
+      "reserved_tokens": 3932160,
+      "input_tokens": 231268,
+      "output_tokens": 13855,
+      "unknown_usage_calls": 0,
+      "incomplete_attempts": 2
+    },
+    "development-06-compact": {
+      "result_rows": 80,
+      "model_calls": 80,
+      "tool_calls": 78,
+      "reserved_tokens": 2621440,
+      "input_tokens": 174258,
+      "output_tokens": 9479,
+      "unknown_usage_calls": 0,
+      "incomplete_attempts": 2
+    },
+    "development-07": {
+      "result_rows": 120,
+      "model_calls": 120,
+      "tool_calls": 119,
+      "reserved_tokens": 3932160,
+      "input_tokens": 224628,
+      "output_tokens": 13316,
+      "unknown_usage_calls": 0,
+      "incomplete_attempts": 1
+    },
+    "opaque": {
+      "result_rows": 28,
+      "model_calls": 40,
+      "tool_calls": 40,
+      "reserved_tokens": 1310720,
+      "input_tokens": 79812,
+      "output_tokens": 4781,
+      "unknown_usage_calls": 0,
+      "incomplete_attempts": 0,
+      "sqlite_calls_not_in_result_prefix": 12,
+      "sqlite_db_only_public_messages": 11,
+      "sqlite_db_only_denied": 1,
+      "sqlite_db_only_protocol_status_unknown": 12,
+      "count_source": "read-only SQLite counters plus 28 JSONL result rows; no DB-only call rescored"
+    },
+    "opaque-recovery": {
+      "result_rows": 12,
+      "model_calls": 12,
+      "tool_calls": 12,
+      "reserved_tokens": 393216,
+      "input_tokens": 24422,
+      "output_tokens": 1443,
+      "unknown_usage_calls": 0,
+      "incomplete_attempts": 0
+    },
+    "heldout": {
+      "result_rows": 180,
+      "model_calls": 180,
+      "tool_calls": 179,
+      "reserved_tokens": 5898240,
+      "input_tokens": 331626,
+      "output_tokens": 19996,
+      "unknown_usage_calls": 0,
+      "incomplete_attempts": 1
+    },
+    "challenge": {
+      "result_rows": 80,
+      "model_calls": 80,
+      "tool_calls": 80,
+      "reserved_tokens": 2621440,
+      "input_tokens": 155962,
+      "output_tokens": 8959,
+      "unknown_usage_calls": 0,
+      "incomplete_attempts": 0
+    },
+    "confirmation": {
+      "result_rows": 120,
+      "model_calls": 120,
+      "tool_calls": 120,
+      "reserved_tokens": 3932160,
+      "input_tokens": 219158,
+      "output_tokens": 13273,
+      "unknown_usage_calls": 0,
+      "incomplete_attempts": 0
+    }
+  },
+  "totals": {
+    "result_rows": 1220,
+    "model_calls": 1232,
+    "tool_calls": 1195,
+    "reserved_tokens": 40370176,
+    "input_tokens": 2358867,
+    "output_tokens": 151019,
+    "unknown_usage_calls": 1,
+    "incomplete_attempts": 37,
+    "confirmed_model_calls": 1232,
+    "unmatched_ledger_intents": 1,
+    "unmatched_ledger_intent_status": "model and tool admission plus public-message event confirmed in original SQLite; JSONL result is absent",
+    "original_opaque_calls_missing_from_jsonl": 12,
+    "original_opaque_db_only_public_messages": 11,
+    "original_opaque_db_only_denied": 1,
+    "original_opaque_db_only_protocol_completion_unknown": 12,
+    "original_opaque_db_only_role_case_keys_overlap_recovery": 12,
+    "possible_additional_model_calls": 0,
+    "unknown_usage_calls_are_separate": "The one unknown-usage call is present in a result counter; SQLite confirms zero unknown usage for the original opaque batch. The unmatched ledger intent is not an unknown model-call outcome.",
+    "known_usage_token_totals_include_recorded_values_only": true
+  },
+  "excluded": [
+    "native room/browser/worker counters; pending separate browser-agent accounting"
+  ],
+  "isolated_experiment": {
+    "result_rows": 1220,
+    "confirmed_model_calls": 1232,
+    "tool_calls": 1195,
+    "reserved_tokens": 40370176,
+    "input_tokens_recorded": 2358867,
+    "output_tokens_recorded": 151019,
+    "unknown_usage_calls": 1,
+    "observed_incomplete_attempts": 37,
+    "original_opaque_db_only_calls": 12,
+    "original_opaque_db_only_protocol_completion_unknown": 12,
+    "original_opaque_db_only_denied": 1
+  },
+  "native_total": {
+    "unique_room_ids": 7,
+    "model_admitted": 55,
+    "tool_admitted": 50,
+    "reserved_tokens": 1802240,
+    "input_tokens_recorded": 490455,
+    "output_tokens_recorded": 4358,
+    "unknown_usage_calls": 3,
+    "interrupted_model_admissions_with_unknown_outcome": 2,
+    "source": "sanitized evidence/prompt-iteration-v1/native/rooms-summary.json; unique IDs counted once"
+  },
+  "combined_overall": {
+    "model_admitted_or_confirmed": 1287,
+    "tool_admitted_or_counted": 1245,
+    "reserved_tokens": 42172416,
+    "input_tokens_recorded": 2849322,
+    "output_tokens_recorded": 155377,
+    "unknown_usage_calls": 4,
+    "experiment_result_rows": 1220,
+    "experiment_observed_incomplete_attempts": 37,
+    "opaque_protocol_completion_unknown_calls": 12,
+    "native_interrupted_model_admissions_with_unknown_outcome": 2,
+    "actual_input_output_token_totals_exact": false,
+    "token_note": "Input/output counters sum recorded values only; unknown-usage calls prevent an exact total of actual tokens consumed."
+  },
+  "excluded_prior_phase": {
+    "model_calls": 112,
+    "included_in_totals": false,
+    "reason": "Older phase outside this run accounting."
+  },
+  "native_api_read_check": {
+    "endpoint": "GET http://localhost:8502/api/research/rooms/{room_id}",
+    "credentials": "none",
+    "unique_room_ids_requested": 7,
+    "http_200_responses": 7,
+    "unique_returned_room_ids": 7,
+    "counts_match_native_export": true,
+    "verified_totals": {
+      "model": 55,
+      "tool": 50,
+      "reserved_tokens": 1802240,
+      "input_tokens": 490455,
+      "output_tokens": 4358,
+      "unknown_usage_calls": 3
+    }
+  }
+}

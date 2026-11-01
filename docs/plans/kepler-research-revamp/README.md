@@ -1,5 +1,12 @@
 Current installed follow-up: [NEXT_PHASE_FINDINGS.md](NEXT_PHASE_FINDINGS.md) records the LAN loading fix, R1–R8 changes, bounded evaluation and remaining quality failures.
 
+Latest local follow-up: [PROMPT_TUNING_FINDINGS.md](PROMPT_TUNING_FINDINGS.md),
+[all prompt results](PROMPT_TUNING_RESULTS.md) and
+[post-reboot browser checks](REBOOT_BROWSER_CHECKS.md) record the resumed experiment.
+The seven-round prompt study improved some matched results but missed its quality
+objective; experimental prompts are not active. The older loading-failure and
+next-phase instructions below are preserved as the original handoff history.
+
 # Kepler collaborative research revamp
 
 Implementation handoff, revision 6 — review of `aebd42d`, 1 November 2026.

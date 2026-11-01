@@ -1,0 +1,20 @@
+{
+  "source_commit": "7f6dc9f",
+  "backend": {
+    "command": "make test-file file='tests/test_research_room tests/test_context_graph/test_repository.py'",
+    "passed": 125,
+    "failed": 0,
+    "skipped": 0,
+    "warnings": 2,
+    "infrastructure": "guarded disposable Postgres/Memgraph internal network"
+  },
+  "frontend": {
+    "tests_passed": 21,
+    "typescript": "passed",
+    "vite_build": "passed with private output directory; Docker-owned served dist untouched"
+  },
+  "ruff": "passed",
+  "whitespace": "passed",
+  "runtime_promotion": false,
+  "serving_configuration_changed": false
+}

@@ -10,6 +10,13 @@ The normal dashboard at **http://localhost:8502 → Research Desk** is now conne
 
 The Docker API relays `/research` over the owner-only shared Unix socket configured by `KEPLER_RESEARCH_SOCKET`. It has already been recreated to activate that path; no broker worker restart was needed. The earlier isolated preview was retired.
 
+The research units are transient: a PC reboot stops them while the normal Docker
+stack can restart automatically. From the supported IDE terminal, run `make
+research-start` in `swingtradev3/` to recreate the model/API units and managed worker
+scope, then `make research-status`. This retains the installed models/configuration;
+it does not rebuild Docker or alter broker controls. Reboot recovery and actual
+browser/API/worker checks are recorded in [REBOOT_BROWSER_CHECKS.md](REBOOT_BROWSER_CHECKS.md).
+
 ## Processes and configuration
 
 The existing API now registers `/research`. Inference belongs to a separate **host** worker, not the broker process. The optional host research API imports only the research routes, existing API-key authentication and existing Postgres storage; it does not start trading, the scheduler or model warmup. There are no new database tables or schema migrations: room state uses `cognition_runs` with phase `research_room_v1`, and immutable messages/evidence/tool events use `cognition_reports` with schema `room.event.v1`.

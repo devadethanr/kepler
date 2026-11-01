@@ -1,0 +1,29 @@
+{
+  "selection": {
+    "analyst": {
+      "variant": "combined-v2",
+      "packet_style": "full"
+    },
+    "skeptic": {
+      "variant": "combined-v7",
+      "packet_style": "full"
+    }
+  },
+  "basis": "development-07: Gemma v7 weaker than v2; Qwen v7 improved exact text/kind and strict over commonbaseline without accepted unsafe support. First heldout now seen and historical failures retained. Confirmation diagnostic, no unconditional promotion.",
+  "matrix": "30 new cases x 2models x (full control, selected)=120planned; same shared packets",
+  "quality_objective": "27/30 strict, >=9/10 strict positive recall, zeroacceptedunsupported perrole; earlier failures also retained; no thresholds lowered",
+  "files": {
+    "swingtradev3/research_room/prompts/evidence-v4.md": "3451663b1a9a6a58a8531425cf2236f8427bbfcc957aa4d78126e6764d05c004",
+    "swingtradev3/research_room/prompts/evidence-v2.md": "ba16a3d83705e6979fb1f2f7138134d2cb8cd7cb901da1b5386e1eb7ecb382b3",
+    "swingtradev3/research_room/prompts/contract-generic.md": "8471fb5c3112afdd73c62e2291dc6473de6f32984f8c4512d888524d095387d5",
+    "swingtradev3/research_room/prompts/evidence-v5.md": "b661ffc9a1930ecc0f74dbb9c8d1ee33c1eefef8e1e0b5c43ffad8b189f3d6de",
+    "swingtradev3/research_room/prompts/contract-v5.md": "33b3d0ed027d0b583c9d8ca2dd953d8eefe330175b4e6473ed8e8567de833a6c",
+    "swingtradev3/research_room/prompts/contract-v7.md": "9331bf0c0280d5d7e790bc81ced30d146f43c33b0b12b7f9ea298c2021c0aac8",
+    "swingtradev3/research_room/prompts/contract-v3.md": "ce9dabf2f8eeb98bf61792fde2d50e12043e757580aaff6d4d614ec6732e6ddc",
+    "swingtradev3/research_room/prompts/contract-v4.md": "53a63c42b69e39e819ea4cb6cf27c57d535239cc13fe974838d7c3a75c6dd83e",
+    "swingtradev3/research_room/prompts/contract-v6.md": "fc12557a7156a91ae6ba2856111ec3b1085b2846439b7bc35a9852c5556f6a23",
+    "swingtradev3/research_room/prompts/evidence-v3.md": "fa89a519e64e1ba4e94930f075363e5f5d5b2b5dc9401f02d9c80dd4fd4bdd9b",
+    "swingtradev3/research_room/prompts/evidence-v7.md": "757880a36f5a30a1961e279c2fa77d4e330f20ff9c62ea8a0550f75e7520755a",
+    "swingtradev3/research_room/prompts/contract-v2.md": "e74ce6da8546e8a2bd47130e3cf17dc1fea91ca76f0ec1004b76257decc35fcf"
+  }
+}

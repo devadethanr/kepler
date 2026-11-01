@@ -1,0 +1,8 @@
+{
+  "current_source_commit": "7f6dc9f",
+  "legacy_score_AST_identical_across_frozen_snapshots": true,
+  "span_v2_score_AST_identical_across_frozen_snapshots": true,
+  "legacy_AST_sha256": "0b588a0d45ba5d8ccfe20efece98894c7f469eac34d93adc953d1ca6e4db4a7b",
+  "span_v2_AST_sha256": "c24d61306ced7dcfef88d9311cc445c42337d5852e2fedfca7fe01c3565481f6",
+  "note": "Final formatting changes bytes only. Historical frozen source snapshots remain unchanged. Exact text matching is protocol adherence, not semantic truth accuracy."
+}

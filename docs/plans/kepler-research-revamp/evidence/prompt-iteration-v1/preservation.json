@@ -1,0 +1,12 @@
+{
+  "broker_and_dashboard_container_identity_unchanged_after_reboot_recovery": {
+    "swingtradev3-app": true,
+    "kepler-worker-1": true,
+    "swingtradev3-db": true,
+    "swingtradev3-memgraph": true,
+    "swingtradev3-dashboard": true
+  },
+  "operator_controls_unchanged": true,
+  "block_reasons_unchanged": true,
+  "private_config_byte_identical": true
+}

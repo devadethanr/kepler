@@ -1,0 +1,36 @@
+{
+  "status": "complete by combining original partial results and recovery results",
+  "original_partial_result_records": 28,
+  "recovery_result_records": 12,
+  "unresolved_original_intent": "analyst/selected/dev-new-14-opaque; not counted; model-call status unknown",
+  "results": {
+    "analyst/selected": {
+      "n": 20,
+      "model_calls": 20,
+      "strict": 16,
+      "accepted": 19,
+      "supported_case_correct": 5,
+      "supported_gold": 5,
+      "unsupported_supported_proposal_accepted": 0,
+      "ungrounded_support_accepted": 0,
+      "unknown_usage_calls": 0
+    },
+    "skeptic/selected": {
+      "n": 20,
+      "model_calls": 20,
+      "strict": 13,
+      "accepted": 20,
+      "supported_case_correct": 4,
+      "supported_gold": 5,
+      "unsupported_supported_proposal_accepted": 0,
+      "ungrounded_support_accepted": 0,
+      "unknown_usage_calls": 0
+    }
+  },
+  "original_sqlite_confirmed_model_calls": 40,
+  "recovery_model_calls": 12,
+  "scored_result_rows": 40,
+  "original_db_only_calls_not_scored": 12,
+  "original_db_only_calls_overlap_recovery_role_case_keys": 12,
+  "scoring_note": "Existing score totals use only the 28 original JSONL-prefix rows plus 12 recovery result rows. Original SQLite confirms 12 additional calls on the same role/case keys as the recovery run; they were not inserted or rescored and do not represent new independent cases."
+}

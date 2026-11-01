@@ -1,5 +1,12 @@
 # Next research-room phase — measured findings
 
+Subsequent user-authorized prompt tuning and reboot recovery are recorded in
+[PROMPT_TUNING_FINDINGS.md](PROMPT_TUNING_FINDINGS.md),
+[PROMPT_TUNING_RESULTS.md](PROMPT_TUNING_RESULTS.md) and
+[REBOOT_BROWSER_CHECKS.md](REBOOT_BROWSER_CHECKS.md). Those requests supersede the
+old inference ceiling only for the new experiment; the completed phase's scores
+and usage below remain unchanged. No experimental prompt has been promoted.
+
 Completed 1 November 2026 on `feat-generic-broker`, starting at `3bc6876`.
 Implementation source: **`921088c`**. Documentation/evidence are committed separately
 after that source commit. Read the [evidence manifest](evidence/phase2-v1/manifest.json)

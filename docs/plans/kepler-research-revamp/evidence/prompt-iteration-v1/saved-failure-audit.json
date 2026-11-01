@@ -1,0 +1,323 @@
+{
+  "source_commit": "5adeaea",
+  "original_results_sha256": "aeb85b778ede8bf95213acd884dee43fc6ad994f5557afba196cc1f165ef20c7",
+  "fresh_model_calls": 0,
+  "original_scores_unchanged": true,
+  "old_heldout_is_now_seen_regression_data": true,
+  "roles": {
+    "analyst": {
+      "denominator": 30,
+      "failure_buckets": {
+        "fully_correct": 20,
+        "citation_only": 2,
+        "multiple_or_gate_rejection": 6,
+        "support_label_only": 2
+      },
+      "field_accuracy": {
+        "claim_text": 29,
+        "claim_kind": 30,
+        "support_assessment": 26,
+        "relevant_citation": 24,
+        "event_identity": 28
+      },
+      "unsupported_supported_proposals_accepted": 1
+    },
+    "skeptic": {
+      "denominator": 30,
+      "failure_buckets": {
+        "fully_correct": 14,
+        "support_label_only": 6,
+        "multiple_or_gate_rejection": 4,
+        "verbatim_text_only": 4,
+        "citation_only": 2
+      },
+      "field_accuracy": {
+        "claim_text": 25,
+        "claim_kind": 30,
+        "support_assessment": 22,
+        "relevant_citation": 26,
+        "event_identity": 29
+      },
+      "unsupported_supported_proposals_accepted": 1
+    }
+  },
+  "failed_cases": [
+    {
+      "case_id": "heldout-03",
+      "role": "analyst",
+      "category": "repository-document",
+      "failed_fields": [
+        "relevant_citation"
+      ],
+      "gate_status": "ok",
+      "gate_error": null
+    },
+    {
+      "case_id": "heldout-05",
+      "role": "analyst",
+      "category": "wrong-entity",
+      "failed_fields": [
+        "relevant_citation"
+      ],
+      "gate_status": "denied",
+      "gate_error": "Unknown/cross-target citation or unsupported quote"
+    },
+    {
+      "case_id": "heldout-06",
+      "role": "analyst",
+      "category": "wrong-event",
+      "failed_fields": [
+        "relevant_citation",
+        "event_identity"
+      ],
+      "gate_status": "denied",
+      "gate_error": "Event identity is not established by this evidence"
+    },
+    {
+      "case_id": "heldout-09",
+      "role": "analyst",
+      "category": "unknown-date-current",
+      "failed_fields": [
+        "support_assessment"
+      ],
+      "gate_status": "ok",
+      "gate_error": null
+    },
+    {
+      "case_id": "heldout-12",
+      "role": "analyst",
+      "category": "future-publication",
+      "failed_fields": [
+        "relevant_citation"
+      ],
+      "gate_status": "denied",
+      "gate_error": "Unusable publication time or decision cutoff"
+    },
+    {
+      "case_id": "heldout-14",
+      "role": "analyst",
+      "category": "irrelevant-real-quote",
+      "failed_fields": [
+        "relevant_citation"
+      ],
+      "gate_status": "ok",
+      "gate_error": null
+    },
+    {
+      "case_id": "heldout-15",
+      "role": "analyst",
+      "category": "source-outage",
+      "failed_fields": [
+        "event_identity"
+      ],
+      "gate_status": "denied",
+      "gate_error": "Event identity is not established by this evidence"
+    },
+    {
+      "case_id": "heldout-19",
+      "role": "analyst",
+      "category": "inference",
+      "failed_fields": [
+        "support_assessment"
+      ],
+      "gate_status": "ok",
+      "gate_error": null
+    },
+    {
+      "case_id": "heldout-20",
+      "role": "analyst",
+      "category": "question",
+      "failed_fields": [
+        "claim_text",
+        "support_assessment"
+      ],
+      "gate_status": "ok",
+      "gate_error": null
+    },
+    {
+      "case_id": "heldout-26",
+      "role": "analyst",
+      "category": "temporal-scope",
+      "failed_fields": [
+        "support_assessment",
+        "relevant_citation"
+      ],
+      "gate_status": "ok",
+      "gate_error": null
+    },
+    {
+      "case_id": "heldout-29",
+      "role": "skeptic",
+      "category": "explicit-source-disagreement",
+      "failed_fields": [
+        "support_assessment"
+      ],
+      "gate_status": "ok",
+      "gate_error": null
+    },
+    {
+      "case_id": "heldout-27",
+      "role": "skeptic",
+      "category": "event-time-vs-publication",
+      "failed_fields": [
+        "claim_text",
+        "support_assessment"
+      ],
+      "gate_status": "ok",
+      "gate_error": null
+    },
+    {
+      "case_id": "heldout-26",
+      "role": "skeptic",
+      "category": "temporal-scope",
+      "failed_fields": [
+        "support_assessment",
+        "relevant_citation"
+      ],
+      "gate_status": "ok",
+      "gate_error": null
+    },
+    {
+      "case_id": "heldout-21",
+      "role": "skeptic",
+      "category": "negation",
+      "failed_fields": [
+        "claim_text"
+      ],
+      "gate_status": "ok",
+      "gate_error": null
+    },
+    {
+      "case_id": "heldout-20",
+      "role": "skeptic",
+      "category": "question",
+      "failed_fields": [
+        "support_assessment"
+      ],
+      "gate_status": "ok",
+      "gate_error": null
+    },
+    {
+      "case_id": "heldout-19",
+      "role": "skeptic",
+      "category": "inference",
+      "failed_fields": [
+        "support_assessment"
+      ],
+      "gate_status": "ok",
+      "gate_error": null
+    },
+    {
+      "case_id": "heldout-18",
+      "role": "skeptic",
+      "category": "unit-boundary",
+      "failed_fields": [
+        "claim_text"
+      ],
+      "gate_status": "ok",
+      "gate_error": null
+    },
+    {
+      "case_id": "heldout-16",
+      "role": "skeptic",
+      "category": "incomplete-retrieval",
+      "failed_fields": [
+        "claim_text"
+      ],
+      "gate_status": "ok",
+      "gate_error": null
+    },
+    {
+      "case_id": "heldout-15",
+      "role": "skeptic",
+      "category": "source-outage",
+      "failed_fields": [
+        "event_identity"
+      ],
+      "gate_status": "denied",
+      "gate_error": "Event identity is not established by this evidence"
+    },
+    {
+      "case_id": "heldout-14",
+      "role": "skeptic",
+      "category": "irrelevant-real-quote",
+      "failed_fields": [
+        "relevant_citation"
+      ],
+      "gate_status": "ok",
+      "gate_error": null
+    },
+    {
+      "case_id": "heldout-13",
+      "role": "skeptic",
+      "category": "future-event",
+      "failed_fields": [
+        "support_assessment"
+      ],
+      "gate_status": "ok",
+      "gate_error": null
+    },
+    {
+      "case_id": "heldout-12",
+      "role": "skeptic",
+      "category": "future-publication",
+      "failed_fields": [
+        "relevant_citation"
+      ],
+      "gate_status": "denied",
+      "gate_error": "Unusable publication time or decision cutoff"
+    },
+    {
+      "case_id": "heldout-11",
+      "role": "skeptic",
+      "category": "stale-current",
+      "failed_fields": [
+        "claim_text"
+      ],
+      "gate_status": "ok",
+      "gate_error": null
+    },
+    {
+      "case_id": "heldout-09",
+      "role": "skeptic",
+      "category": "unknown-date-current",
+      "failed_fields": [
+        "support_assessment"
+      ],
+      "gate_status": "ok",
+      "gate_error": null
+    },
+    {
+      "case_id": "heldout-08",
+      "role": "skeptic",
+      "category": "conflicting-sources",
+      "failed_fields": [
+        "support_assessment"
+      ],
+      "gate_status": "ok",
+      "gate_error": null
+    },
+    {
+      "case_id": "heldout-03",
+      "role": "skeptic",
+      "category": "repository-document",
+      "failed_fields": [
+        "relevant_citation"
+      ],
+      "gate_status": "ok",
+      "gate_error": null
+    }
+  ],
+  "hypotheses_not_established_causes": [
+    "verbatim copy instruction competing with explanation/conclusion conventions",
+    "insufficient versus unassessed and conflicted versus contradicted labels need explicit precedence",
+    "entity/event source IDs copied from requested scope when no admissible quote exists",
+    "undated current facts require explicit temporal admissibility",
+    "irrelevant quotes retained despite an insufficient assessment"
+  ],
+  "rubric_issues_for_new_dataset_only": [
+    "Development stale-current case dev-05 disallows an old quote, whereas held-out stale-current case heldout-11 permits one as relevant context. Preserve old labels/scores and clarify context-citation policy in a new freeze.",
+    "Question/inference predictions marked insufficient are cautious outputs but miss the frozen unassessed label. Score label adherence separately from unsupported support.",
+    "Exact-claim-text mismatch can occur even when the factual assessment is appropriate. Preserve strict score and report field-level outcomes."
+  ]
+}

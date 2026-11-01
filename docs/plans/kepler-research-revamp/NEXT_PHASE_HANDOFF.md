@@ -1,5 +1,12 @@
 Execution follow-up: [NEXT_PHASE_FINDINGS.md](NEXT_PHASE_FINDINGS.md) records source `921088c`, completed correctness/UI changes and the still-failed grounding objective. The original handoff/plan/review below is preserved.
 
+Latest continuation: [PROMPT_TUNING_FINDINGS.md](PROMPT_TUNING_FINDINGS.md) contains
+the completed seven-round prompt study, source `7f6dc9f`, corrected request accounting,
+post-reboot restoration and a new copyable handback. Do not rerun the historical
+phase or replace its scores. Experimental candidates remain inactive; the final
+confirmation still missed 27/30. [REBOOT_BROWSER_CHECKS.md](REBOOT_BROWSER_CHECKS.md)
+records actual live tools, cancellation, API restart and worker interruption checks.
+
 # Local Codex handoff — next research-room phase
 
 Start from `feat-generic-broker` containing `aebd42d` and the subsequent review-doc commit. Preserve the five changing runtime-state files and any newer local changes. This is the user's personal, already activated Kepler at :8502; keep Codex selected.

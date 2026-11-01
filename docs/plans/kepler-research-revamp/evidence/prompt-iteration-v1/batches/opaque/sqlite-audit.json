@@ -1,0 +1,1320 @@
+{
+  "source": "read-only SQLite audit; source DB files not exported",
+  "db_count": 40,
+  "cognition_run_rows": 40,
+  "all_run_statuses": {
+    "running": 40
+  },
+  "active_budget_counts_after_events": {
+    "model": 0,
+    "tool": 0
+  },
+  "aggregate_admitted_counts": {
+    "model": 40,
+    "tool": 40,
+    "reserved_tokens": 1310720,
+    "input_tokens": 79812,
+    "output_tokens": 4781,
+    "unknown_usage_calls": 0
+  },
+  "aggregate_cognition_report_event_counts": {
+    "room.created": 40,
+    "room.started": 40,
+    "budget.admitted": 80,
+    "tool.started": 40,
+    "message": 39,
+    "tool.result": 40
+  },
+  "aggregate_room_message_tool_result_statuses": {
+    "ok": 39,
+    "denied": 1
+  },
+  "public_message_events": 39,
+  "result_prefix_rows": 28,
+  "db_only_model_calls_vs_original_result_prefix": 12,
+  "db_only_public_message_events": 11,
+  "db_only_denied_tool_results": 1,
+  "db_only_attempt_protocol_completion": "unknown where JSONL response_status/output_shapes are missing",
+  "records": [
+    {
+      "role": "analyst",
+      "case_id": "dev-new-01-opaque",
+      "db_sha256": "693dea6f5cea8f6480688e364e89b1400148a5b096192849392b93a429ecb08a",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 2105,
+        "output_tokens": 103,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "analyst",
+      "case_id": "dev-new-02-opaque",
+      "db_sha256": "986c6f47339448b1db4a1d853afe467d66b886c155ae8775e0ae4cbdecc0007c",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 2107,
+        "output_tokens": 105,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "analyst",
+      "case_id": "dev-new-03-opaque",
+      "db_sha256": "833ade44c4638391e018213314386e33812dc79a1afebcbb97b58afe1474c58c",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 2119,
+        "output_tokens": 107,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "analyst",
+      "case_id": "dev-new-04-opaque",
+      "db_sha256": "b1d0ea77b87613011cbd86241825e5e41cfe4c95efbdd42283095003b27d0f18",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 2047,
+        "output_tokens": 98,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "analyst",
+      "case_id": "dev-new-05-opaque",
+      "db_sha256": "38512b1ea02d06281ab5adb465e3022d12fd35d0d1d3420f92001c59fea2cc16",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 2097,
+        "output_tokens": 102,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "analyst",
+      "case_id": "dev-new-06-opaque",
+      "db_sha256": "0f40b1f9c7a02269aaf4adc5b4196ba2ec42a4fd5aad9508d299f0b6e5c4986d",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 2087,
+        "output_tokens": 104,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "analyst",
+      "case_id": "dev-new-07-opaque",
+      "db_sha256": "ee8794bc2278b858aa1ce049e1158d80253ff78bcdfe79e7ead8142d78d52cd7",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 2098,
+        "output_tokens": 100,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "analyst",
+      "case_id": "dev-new-08-opaque",
+      "db_sha256": "3ca51db96a210c018f0c7d70e1b037c41bc2db33c4a95bea462e3bf46990aa95",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 2118,
+        "output_tokens": 107,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "analyst",
+      "case_id": "dev-new-09-opaque",
+      "db_sha256": "b98d9450eeed7c2ebe2ef3fcf9039dd6a16a516d0a2dd9582f2104c9df90768b",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 2099,
+        "output_tokens": 107,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "analyst",
+      "case_id": "dev-new-10-opaque",
+      "db_sha256": "2f8efaef267a7b0497817ac3744aa69645d4d129fc2467263d9d678f40bb9676",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 2091,
+        "output_tokens": 105,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "analyst",
+      "case_id": "dev-new-11-opaque",
+      "db_sha256": "4bae8e489dfb3c38d2b058b48af911b21e0ec6b183b902b50dd412f3367a071b",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 2096,
+        "output_tokens": 99,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "analyst",
+      "case_id": "dev-new-12-opaque",
+      "db_sha256": "01171d68f31c4e94cb846b57208e10e089bb5033c9665141feef6b8855ecaca8",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 2077,
+        "output_tokens": 101,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "analyst",
+      "case_id": "dev-new-13-opaque",
+      "db_sha256": "eefd6ac993c345b53c75dd51453bdbf12621bed801625e2957c6bbd28cfb5102",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 2040,
+        "output_tokens": 98,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "analyst",
+      "case_id": "dev-new-14-opaque",
+      "db_sha256": "3742ac458de272bbe2a1896baa505856952c610a8b7de0dd0b5a70f826bcd727",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 2622,
+        "output_tokens": 107,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "unknown from missing JSONL response_status/output_shapes",
+      "in_original_result_prefix": false,
+      "db_only_vs_original_result_prefix": true
+    },
+    {
+      "role": "analyst",
+      "case_id": "dev-new-15-opaque",
+      "db_sha256": "44447424c9c069f13faf5b9f7d793e9d4a77065b5b6b47060d78475079656e0d",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 2103,
+        "output_tokens": 106,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "unknown from missing JSONL response_status/output_shapes",
+      "in_original_result_prefix": false,
+      "db_only_vs_original_result_prefix": true
+    },
+    {
+      "role": "analyst",
+      "case_id": "dev-new-16-opaque",
+      "db_sha256": "33e95c129886a9b4b2a2ed797e71952e893e2bc2fbb48b864f7fe274c475e8e7",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 2098,
+        "output_tokens": 105,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "unknown from missing JSONL response_status/output_shapes",
+      "in_original_result_prefix": false,
+      "db_only_vs_original_result_prefix": true
+    },
+    {
+      "role": "analyst",
+      "case_id": "dev-new-17-opaque",
+      "db_sha256": "002166179df949bb67907be60045baa57f29c0a4874709b722c79904e6cb9cf5",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 2048,
+        "output_tokens": 82,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "unknown from missing JSONL response_status/output_shapes",
+      "in_original_result_prefix": false,
+      "db_only_vs_original_result_prefix": true
+    },
+    {
+      "role": "analyst",
+      "case_id": "dev-new-18-opaque",
+      "db_sha256": "a7077f52ed1078e1b0557572052f0a682d8d7dd6f5c5719f3d35b6b665b0343c",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 2094,
+        "output_tokens": 105,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "denied": 1
+      },
+      "public_message_events": 0,
+      "db_only_protocol_completion": "unknown from missing JSONL response_status/output_shapes",
+      "in_original_result_prefix": false,
+      "db_only_vs_original_result_prefix": true
+    },
+    {
+      "role": "analyst",
+      "case_id": "dev-new-19-opaque",
+      "db_sha256": "e2404c95fce6796e910ea33b4b66d9fbe5a91d5949a496252e7e6af98865bd56",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 2154,
+        "output_tokens": 105,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "unknown from missing JSONL response_status/output_shapes",
+      "in_original_result_prefix": false,
+      "db_only_vs_original_result_prefix": true
+    },
+    {
+      "role": "analyst",
+      "case_id": "dev-new-20-opaque",
+      "db_sha256": "0d94976966379e64156766978285e770f9c404172c1418cc6c6758658dafd282",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 2113,
+        "output_tokens": 80,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "unknown from missing JSONL response_status/output_shapes",
+      "in_original_result_prefix": false,
+      "db_only_vs_original_result_prefix": true
+    },
+    {
+      "role": "skeptic",
+      "case_id": "dev-new-01-opaque",
+      "db_sha256": "b4f5a55b040dcb4884505a7653c0d39e318dcb6a7e503cda0b0096efb500388b",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 1852,
+        "output_tokens": 147,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "unknown from missing JSONL response_status/output_shapes",
+      "in_original_result_prefix": false,
+      "db_only_vs_original_result_prefix": true
+    },
+    {
+      "role": "skeptic",
+      "case_id": "dev-new-02-opaque",
+      "db_sha256": "b3aeca06670a6781dd402fb80751c2a9b2bf6f779b90be6b3d31597583e4ae7b",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 1853,
+        "output_tokens": 169,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "unknown from missing JSONL response_status/output_shapes",
+      "in_original_result_prefix": false,
+      "db_only_vs_original_result_prefix": true
+    },
+    {
+      "role": "skeptic",
+      "case_id": "dev-new-03-opaque",
+      "db_sha256": "988c2f39197b361707c4ea447fba7567ee32ecd10bf6b1e273f77ae076598f7c",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 1854,
+        "output_tokens": 149,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "unknown from missing JSONL response_status/output_shapes",
+      "in_original_result_prefix": false,
+      "db_only_vs_original_result_prefix": true
+    },
+    {
+      "role": "skeptic",
+      "case_id": "dev-new-04-opaque",
+      "db_sha256": "aa19020e1fcc218e50e666b98478ced6fe8df88b69ede9e97d3103eeb5cba42a",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 1788,
+        "output_tokens": 141,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "unknown from missing JSONL response_status/output_shapes",
+      "in_original_result_prefix": false,
+      "db_only_vs_original_result_prefix": true
+    },
+    {
+      "role": "skeptic",
+      "case_id": "dev-new-05-opaque",
+      "db_sha256": "22a04d5b4fec4e0904e1fcbed6b2a79e548ba87b7ad280be8b1880730d89bee0",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 1843,
+        "output_tokens": 147,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "unknown from missing JSONL response_status/output_shapes",
+      "in_original_result_prefix": false,
+      "db_only_vs_original_result_prefix": true
+    },
+    {
+      "role": "skeptic",
+      "case_id": "dev-new-06-opaque",
+      "db_sha256": "d3067e3a2cbdb74b745e5e737bca30b476c8102c3685da141d3d66eccd994c91",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 1830,
+        "output_tokens": 149,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "skeptic",
+      "case_id": "dev-new-07-opaque",
+      "db_sha256": "f1bd8771a37230be8cc39c02335266f2b5c6fd3ea4795274419c3ab95ae9b7bd",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 1847,
+        "output_tokens": 105,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "skeptic",
+      "case_id": "dev-new-08-opaque",
+      "db_sha256": "5ceefe07eabea0ca02bc3e2bbd6b2a18c5a5adbe09765f8993d3219f414a4a45",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 1871,
+        "output_tokens": 150,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "skeptic",
+      "case_id": "dev-new-09-opaque",
+      "db_sha256": "f3113abf28da023b611b4eba79459f78f7f9b7882f933209e198bae79f2d66d1",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 1850,
+        "output_tokens": 113,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "skeptic",
+      "case_id": "dev-new-10-opaque",
+      "db_sha256": "91a8442be1ca30b97297ac2417c20cdf3cae81e06718eeab6d899ccb8955faf6",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 1832,
+        "output_tokens": 148,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "skeptic",
+      "case_id": "dev-new-11-opaque",
+      "db_sha256": "638af868058e27e8e59a898cad6792a91902d7ab68d334da377df78c840ea820",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 1840,
+        "output_tokens": 107,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "skeptic",
+      "case_id": "dev-new-12-opaque",
+      "db_sha256": "7d3f466507e9894d17991c0aeec68f682ba1247b2e1e6bcfc6c13a9891801208",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 1818,
+        "output_tokens": 108,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "skeptic",
+      "case_id": "dev-new-13-opaque",
+      "db_sha256": "342e3bddd97aef0020e18727ddec011b81401587eb8e284bd26ab92fba2619e2",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 1793,
+        "output_tokens": 142,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "skeptic",
+      "case_id": "dev-new-14-opaque",
+      "db_sha256": "1c278e588eec3a76dfc97e5de5084c70b199f8f0c8f6bf0fde5ccfe7647dd4d7",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 2402,
+        "output_tokens": 150,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "skeptic",
+      "case_id": "dev-new-15-opaque",
+      "db_sha256": "f6674b1c209c3f4d79653e8cfe9c695779c8a43cea20cb543e016f978db6a7e9",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 1855,
+        "output_tokens": 113,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "skeptic",
+      "case_id": "dev-new-16-opaque",
+      "db_sha256": "4ea0ff20d568ff98ab8d79c89b2cdb14d5916fef0279f82353ec05360186073d",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 1851,
+        "output_tokens": 109,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "skeptic",
+      "case_id": "dev-new-17-opaque",
+      "db_sha256": "1b97c25c86788c17c66814c2408977c17c4f6f617285b2083003507167a83684",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 1864,
+        "output_tokens": 124,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "skeptic",
+      "case_id": "dev-new-18-opaque",
+      "db_sha256": "caa8f380ee308563b487fd370915e901d50edefc5ad0702964d3720f584ea9e7",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 1808,
+        "output_tokens": 110,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "skeptic",
+      "case_id": "dev-new-19-opaque",
+      "db_sha256": "cd71dc21ee100037ac2cc13caa8a615f15853ef454477cf1b335d2c3c3c5b639",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 1890,
+        "output_tokens": 187,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    },
+    {
+      "role": "skeptic",
+      "case_id": "dev-new-20-opaque",
+      "db_sha256": "c81b40b17454cbc053193ca497fc904d86b06a1e071ce0ea0f2d6184e1641be8",
+      "cognition_runs": 1,
+      "run_statuses": [
+        "running"
+      ],
+      "counts": {
+        "model": 1,
+        "tool": 1,
+        "reserved_tokens": 32768,
+        "input_tokens": 1858,
+        "output_tokens": 187,
+        "unknown_usage_calls": 0
+      },
+      "cognition_report_event_counts": {
+        "room.created": 1,
+        "room.started": 1,
+        "budget.admitted": 2,
+        "tool.started": 1,
+        "message": 1,
+        "tool.result": 1
+      },
+      "room_message_tool_result_statuses": {
+        "ok": 1
+      },
+      "public_message_events": 1,
+      "db_only_protocol_completion": "covered by original JSONL result prefix",
+      "in_original_result_prefix": true,
+      "db_only_vs_original_result_prefix": false
+    }
+  ],
+  "note": "No public proposal text, reasoning, packet content, or SQLite database files are included."
+}

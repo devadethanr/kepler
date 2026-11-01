@@ -1,0 +1,1586 @@
+{
+  "schema_version": 1,
+  "scrub_rules": [
+    "Removed every gate.message_id field from exported result rows.",
+    "Removed opaque.source_base from opaque/freeze.json.",
+    "Exported only whitelisted source modules and prompts/*.md; omitted configuration, prepared evidence, SQLite, and private HTML."
+  ],
+  "batches": {
+    "batch-01": {
+      "directory": "development-01",
+      "scrublist": [
+        "gate.message_id (recursively from results JSONL)"
+      ],
+      "artifacts": [
+        {
+          "path": "freeze.json",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-01/freeze.json",
+          "private_raw_sha256": "da384120890ff85f15d428a0dbb2198b190b0071bbd167a89010512418be2fa0",
+          "public_sha256": "848677c4b0a3138612b08b708330a2518006dc97a9a1ef189d8cae04b0ad1614",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "ledger.jsonl",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-01/ledger.jsonl",
+          "private_raw_sha256": "d386578235bd8777e94c971ec60ffd727bec73297fece6ace7c5b8fba4428eb3",
+          "public_sha256": "41267e4a67e81f9aa0cc4b6ea59ec3cf527dda65e085ae1374bf4930e5a5601f",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "results.jsonl",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-01/results.jsonl",
+          "private_raw_sha256": "c55eb16556cb8e3a1542ecd22244baec04c5ddb5ef5f860409e14e7154858617",
+          "public_sha256": "e2c44959037436b867e15045f4d58be36611721dbb14c3cedd538732f15ab68f",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/contract_eval.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-01/source/contract_eval.py",
+          "private_raw_sha256": "b85487c837e32d97d00d4e24dcde32a7b2fb926104fc222ec78389cb070eed76",
+          "public_sha256": "b85487c837e32d97d00d4e24dcde32a7b2fb926104fc222ec78389cb070eed76",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/iteration_scoring.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-01/source/iteration_scoring.py",
+          "private_raw_sha256": "dc841f02d549bd2ba138db66c25455e9c809635118f41825b4e0c385b2485280",
+          "public_sha256": "dc841f02d549bd2ba138db66c25455e9c809635118f41825b4e0c385b2485280",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompt_candidates.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-01/source/prompt_candidates.py",
+          "private_raw_sha256": "5b41036407dc95d1ef876c2cc4384c10ab521169db56c1934b9bf89fc61a1cd1",
+          "public_sha256": "5b41036407dc95d1ef876c2cc4384c10ab521169db56c1934b9bf89fc61a1cd1",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompt_experiment.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-01/source/prompt_experiment.py",
+          "private_raw_sha256": "b0669a529a2f761f1a4e3f3556c8dcf79d3dcfc424669e3e006e862f88603327",
+          "public_sha256": "b0669a529a2f761f1a4e3f3556c8dcf79d3dcfc424669e3e006e862f88603327",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-generic.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-01/source/prompts/contract-generic.md",
+          "private_raw_sha256": "8471fb5c3112afdd73c62e2291dc6473de6f32984f8c4512d888524d095387d5",
+          "public_sha256": "8471fb5c3112afdd73c62e2291dc6473de6f32984f8c4512d888524d095387d5",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v2.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-01/source/prompts/contract-v2.md",
+          "private_raw_sha256": "e74ce6da8546e8a2bd47130e3cf17dc1fea91ca76f0ec1004b76257decc35fcf",
+          "public_sha256": "e74ce6da8546e8a2bd47130e3cf17dc1fea91ca76f0ec1004b76257decc35fcf",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v2.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-01/source/prompts/evidence-v2.md",
+          "private_raw_sha256": "ba16a3d83705e6979fb1f2f7138134d2cb8cd7cb901da1b5386e1eb7ecb382b3",
+          "public_sha256": "ba16a3d83705e6979fb1f2f7138134d2cb8cd7cb901da1b5386e1eb7ecb382b3",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "summary.json",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-01/summary.json",
+          "private_raw_sha256": "0e2dfc07ec8796f2f1f2fa8bb93f2c13e01928c4e540042df83746e5f53e4ffa",
+          "public_sha256": "0e2dfc07ec8796f2f1f2fa8bb93f2c13e01928c4e540042df83746e5f53e4ffa",
+          "origin": "private source artifact"
+        }
+      ]
+    },
+    "batch-02": {
+      "directory": "development-02",
+      "scrublist": [
+        "gate.message_id (recursively from results JSONL)"
+      ],
+      "artifacts": [
+        {
+          "path": "freeze.json",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-02/freeze.json",
+          "private_raw_sha256": "21a91c5ebdb62f3e79871e8d5de004e4d496e3598d04742a12b18c0cdd5ae5e7",
+          "public_sha256": "70c5958c6df8c2f9dad2d0deacea5e2951ac2c4edde9835ec143f0cec4af7d80",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "ledger.jsonl",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-02/ledger.jsonl",
+          "private_raw_sha256": "d789ceec2485f9f6e21fc6f79058c1c3f14fba43d7501ac489944be4486e012b",
+          "public_sha256": "657ac152cdee82cdead89d024b3121cdb22ea2971d2d0148672c31383cab79ca",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "results.jsonl",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-02/results.jsonl",
+          "private_raw_sha256": "88fd7d059994c610f4ce4fe264ca1ae64afe6f6462c7b758046f8066f8e1845c",
+          "public_sha256": "3f25b599aa1dbf4d1a563ee214af62b5a461c91bcadbc36e84dc9e34657ea697",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/contract_eval.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-02/source/contract_eval.py",
+          "private_raw_sha256": "9a90a0e5c067ce88f8643d9ba8f9bf9d7910ef6bfc51f783c837f758c4b7b152",
+          "public_sha256": "9a90a0e5c067ce88f8643d9ba8f9bf9d7910ef6bfc51f783c837f758c4b7b152",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/iteration_scoring.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-02/source/iteration_scoring.py",
+          "private_raw_sha256": "dc841f02d549bd2ba138db66c25455e9c809635118f41825b4e0c385b2485280",
+          "public_sha256": "dc841f02d549bd2ba138db66c25455e9c809635118f41825b4e0c385b2485280",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompt_candidates.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-02/source/prompt_candidates.py",
+          "private_raw_sha256": "9b67580c1664c38415f16a1d15dae97f5f4512bba105619816de30af2a90c9af",
+          "public_sha256": "9b67580c1664c38415f16a1d15dae97f5f4512bba105619816de30af2a90c9af",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompt_experiment.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-02/source/prompt_experiment.py",
+          "private_raw_sha256": "b0669a529a2f761f1a4e3f3556c8dcf79d3dcfc424669e3e006e862f88603327",
+          "public_sha256": "b0669a529a2f761f1a4e3f3556c8dcf79d3dcfc424669e3e006e862f88603327",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-generic.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-02/source/prompts/contract-generic.md",
+          "private_raw_sha256": "8471fb5c3112afdd73c62e2291dc6473de6f32984f8c4512d888524d095387d5",
+          "public_sha256": "8471fb5c3112afdd73c62e2291dc6473de6f32984f8c4512d888524d095387d5",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v2.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-02/source/prompts/contract-v2.md",
+          "private_raw_sha256": "e74ce6da8546e8a2bd47130e3cf17dc1fea91ca76f0ec1004b76257decc35fcf",
+          "public_sha256": "e74ce6da8546e8a2bd47130e3cf17dc1fea91ca76f0ec1004b76257decc35fcf",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v3.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-02/source/prompts/contract-v3.md",
+          "private_raw_sha256": "ce9dabf2f8eeb98bf61792fde2d50e12043e757580aaff6d4d614ec6732e6ddc",
+          "public_sha256": "ce9dabf2f8eeb98bf61792fde2d50e12043e757580aaff6d4d614ec6732e6ddc",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v2.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-02/source/prompts/evidence-v2.md",
+          "private_raw_sha256": "ba16a3d83705e6979fb1f2f7138134d2cb8cd7cb901da1b5386e1eb7ecb382b3",
+          "public_sha256": "ba16a3d83705e6979fb1f2f7138134d2cb8cd7cb901da1b5386e1eb7ecb382b3",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v3.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-02/source/prompts/evidence-v3.md",
+          "private_raw_sha256": "fa89a519e64e1ba4e94930f075363e5f5d5b2b5dc9401f02d9c80dd4fd4bdd9b",
+          "public_sha256": "fa89a519e64e1ba4e94930f075363e5f5d5b2b5dc9401f02d9c80dd4fd4bdd9b",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "summary.json",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-02/summary.json",
+          "private_raw_sha256": "dee7fc25c285f9c37cf438de32a5eb8eae2cbb599009577bcaf98dafd697438b",
+          "public_sha256": "dee7fc25c285f9c37cf438de32a5eb8eae2cbb599009577bcaf98dafd697438b",
+          "origin": "private source artifact"
+        }
+      ]
+    },
+    "batch-03": {
+      "directory": "development-03",
+      "scrublist": [
+        "gate.message_id (recursively from results JSONL)"
+      ],
+      "artifacts": [
+        {
+          "path": "freeze.json",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-03/freeze.json",
+          "private_raw_sha256": "567aab4c460fd031d63235a4a15223d4728fd8b92100492047866975690d4049",
+          "public_sha256": "778ed6ae9653afe5f93946936febcccf7a002e4818a0e5d4866540e5b8bbdbcd",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "ledger.jsonl",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-03/ledger.jsonl",
+          "private_raw_sha256": "807eae05d9c21698164080191342c634abbe46cfaaf7684c2e898a2f111865aa",
+          "public_sha256": "a87ad531642b87a09337280bd510e3bbff93489734784934c365d0bfb7062c25",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "results.jsonl",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-03/results.jsonl",
+          "private_raw_sha256": "77cdc219759c1b98ad3313f04a59df19647c15cf2a51c13a2f15d55aaa32b430",
+          "public_sha256": "cb2aae3822980427f5f7686a35d638bf99fab3d872d851819366f0c2d7334b91",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/contract_eval.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-03/source/contract_eval.py",
+          "private_raw_sha256": "63bb0980b7bb761f9818e16ed85717bf125c907739f2fd7b12d10fa441b011ab",
+          "public_sha256": "63bb0980b7bb761f9818e16ed85717bf125c907739f2fd7b12d10fa441b011ab",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/iteration_scoring.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-03/source/iteration_scoring.py",
+          "private_raw_sha256": "dc841f02d549bd2ba138db66c25455e9c809635118f41825b4e0c385b2485280",
+          "public_sha256": "dc841f02d549bd2ba138db66c25455e9c809635118f41825b4e0c385b2485280",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompt_candidates.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-03/source/prompt_candidates.py",
+          "private_raw_sha256": "e44c627208732545f99258e6d3a0258a87d20aff3487b3a6185b0709c16ccbff",
+          "public_sha256": "e44c627208732545f99258e6d3a0258a87d20aff3487b3a6185b0709c16ccbff",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompt_experiment.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-03/source/prompt_experiment.py",
+          "private_raw_sha256": "b0669a529a2f761f1a4e3f3556c8dcf79d3dcfc424669e3e006e862f88603327",
+          "public_sha256": "b0669a529a2f761f1a4e3f3556c8dcf79d3dcfc424669e3e006e862f88603327",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-generic.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-03/source/prompts/contract-generic.md",
+          "private_raw_sha256": "8471fb5c3112afdd73c62e2291dc6473de6f32984f8c4512d888524d095387d5",
+          "public_sha256": "8471fb5c3112afdd73c62e2291dc6473de6f32984f8c4512d888524d095387d5",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v2.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-03/source/prompts/contract-v2.md",
+          "private_raw_sha256": "e74ce6da8546e8a2bd47130e3cf17dc1fea91ca76f0ec1004b76257decc35fcf",
+          "public_sha256": "e74ce6da8546e8a2bd47130e3cf17dc1fea91ca76f0ec1004b76257decc35fcf",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v3.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-03/source/prompts/contract-v3.md",
+          "private_raw_sha256": "ce9dabf2f8eeb98bf61792fde2d50e12043e757580aaff6d4d614ec6732e6ddc",
+          "public_sha256": "ce9dabf2f8eeb98bf61792fde2d50e12043e757580aaff6d4d614ec6732e6ddc",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v4.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-03/source/prompts/contract-v4.md",
+          "private_raw_sha256": "53a63c42b69e39e819ea4cb6cf27c57d535239cc13fe974838d7c3a75c6dd83e",
+          "public_sha256": "53a63c42b69e39e819ea4cb6cf27c57d535239cc13fe974838d7c3a75c6dd83e",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v2.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-03/source/prompts/evidence-v2.md",
+          "private_raw_sha256": "ba16a3d83705e6979fb1f2f7138134d2cb8cd7cb901da1b5386e1eb7ecb382b3",
+          "public_sha256": "ba16a3d83705e6979fb1f2f7138134d2cb8cd7cb901da1b5386e1eb7ecb382b3",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v3.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-03/source/prompts/evidence-v3.md",
+          "private_raw_sha256": "fa89a519e64e1ba4e94930f075363e5f5d5b2b5dc9401f02d9c80dd4fd4bdd9b",
+          "public_sha256": "fa89a519e64e1ba4e94930f075363e5f5d5b2b5dc9401f02d9c80dd4fd4bdd9b",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v4.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-03/source/prompts/evidence-v4.md",
+          "private_raw_sha256": "3451663b1a9a6a58a8531425cf2236f8427bbfcc957aa4d78126e6764d05c004",
+          "public_sha256": "3451663b1a9a6a58a8531425cf2236f8427bbfcc957aa4d78126e6764d05c004",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "summary.json",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-03/summary.json",
+          "private_raw_sha256": "20ffe92900f693a08e34f44fbb3b22620f5b03c8025078757b9929c9778f443f",
+          "public_sha256": "20ffe92900f693a08e34f44fbb3b22620f5b03c8025078757b9929c9778f443f",
+          "origin": "private source artifact"
+        }
+      ]
+    },
+    "batch-04": {
+      "directory": "development-04",
+      "scrublist": [
+        "gate.message_id (recursively from results JSONL)"
+      ],
+      "artifacts": []
+    },
+    "batch-05": {
+      "directory": "development-05",
+      "scrublist": [
+        "gate.message_id (recursively from results JSONL)"
+      ],
+      "artifacts": [
+        {
+          "path": "freeze.json",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-05/freeze.json",
+          "private_raw_sha256": "5213c65ab2c1447fbfe049d959c2984a3014454142eddce2b555abf7ba99c877",
+          "public_sha256": "9438eed39c5706932f72f0a921ba53415135d7f560599acec4e662440d30e044",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "ledger.jsonl",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-05/ledger.jsonl",
+          "private_raw_sha256": "486eccbcd22a3730702c03b1190445127672a6b03128a81141c01844d769fac6",
+          "public_sha256": "b9571e1356c123045c9db48ddb16350075f0d96a83d814e8eab1153cfae5c284",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "results.jsonl",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-05/results.jsonl",
+          "private_raw_sha256": "329057614337fec4a4a4b1b2f08fddff4a59a8c821f2c6c0cacbed813380d245",
+          "public_sha256": "02b6e96236af63c9083b26f07e7ea9bfe18224eb2d0c63a66560276d06bb0fd2",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/contract_eval.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-05/source/contract_eval.py",
+          "private_raw_sha256": "db1a77639541e63625e9620d3e53ab78c9e1b1ee58fed011bd669b480956d3f7",
+          "public_sha256": "db1a77639541e63625e9620d3e53ab78c9e1b1ee58fed011bd669b480956d3f7",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/iteration_inputs.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-05/source/iteration_inputs.py",
+          "private_raw_sha256": "0da4c7863dfb4d3582eb4aa5da4d97746ccde5d2629ecb87472359030bc52b40",
+          "public_sha256": "0da4c7863dfb4d3582eb4aa5da4d97746ccde5d2629ecb87472359030bc52b40",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/iteration_scoring.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-05/source/iteration_scoring.py",
+          "private_raw_sha256": "dc841f02d549bd2ba138db66c25455e9c809635118f41825b4e0c385b2485280",
+          "public_sha256": "dc841f02d549bd2ba138db66c25455e9c809635118f41825b4e0c385b2485280",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompt_candidates.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-05/source/prompt_candidates.py",
+          "private_raw_sha256": "e54d1df5999a5200c1dffec1807a5dbb0df291a6c74b821cbef347b3e2bcad9d",
+          "public_sha256": "e54d1df5999a5200c1dffec1807a5dbb0df291a6c74b821cbef347b3e2bcad9d",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompt_experiment.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-05/source/prompt_experiment.py",
+          "private_raw_sha256": "1f59d214e0147dc49305c2598b603ad4567139f3270f06a04164f0360e161e97",
+          "public_sha256": "1f59d214e0147dc49305c2598b603ad4567139f3270f06a04164f0360e161e97",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-generic.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-05/source/prompts/contract-generic.md",
+          "private_raw_sha256": "8471fb5c3112afdd73c62e2291dc6473de6f32984f8c4512d888524d095387d5",
+          "public_sha256": "8471fb5c3112afdd73c62e2291dc6473de6f32984f8c4512d888524d095387d5",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v2.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-05/source/prompts/contract-v2.md",
+          "private_raw_sha256": "e74ce6da8546e8a2bd47130e3cf17dc1fea91ca76f0ec1004b76257decc35fcf",
+          "public_sha256": "e74ce6da8546e8a2bd47130e3cf17dc1fea91ca76f0ec1004b76257decc35fcf",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v3.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-05/source/prompts/contract-v3.md",
+          "private_raw_sha256": "ce9dabf2f8eeb98bf61792fde2d50e12043e757580aaff6d4d614ec6732e6ddc",
+          "public_sha256": "ce9dabf2f8eeb98bf61792fde2d50e12043e757580aaff6d4d614ec6732e6ddc",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v4.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-05/source/prompts/contract-v4.md",
+          "private_raw_sha256": "53a63c42b69e39e819ea4cb6cf27c57d535239cc13fe974838d7c3a75c6dd83e",
+          "public_sha256": "53a63c42b69e39e819ea4cb6cf27c57d535239cc13fe974838d7c3a75c6dd83e",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v5.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-05/source/prompts/contract-v5.md",
+          "private_raw_sha256": "33b3d0ed027d0b583c9d8ca2dd953d8eefe330175b4e6473ed8e8567de833a6c",
+          "public_sha256": "33b3d0ed027d0b583c9d8ca2dd953d8eefe330175b4e6473ed8e8567de833a6c",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v6.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-05/source/prompts/contract-v6.md",
+          "private_raw_sha256": "fc12557a7156a91ae6ba2856111ec3b1085b2846439b7bc35a9852c5556f6a23",
+          "public_sha256": "fc12557a7156a91ae6ba2856111ec3b1085b2846439b7bc35a9852c5556f6a23",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v2.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-05/source/prompts/evidence-v2.md",
+          "private_raw_sha256": "ba16a3d83705e6979fb1f2f7138134d2cb8cd7cb901da1b5386e1eb7ecb382b3",
+          "public_sha256": "ba16a3d83705e6979fb1f2f7138134d2cb8cd7cb901da1b5386e1eb7ecb382b3",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v3.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-05/source/prompts/evidence-v3.md",
+          "private_raw_sha256": "fa89a519e64e1ba4e94930f075363e5f5d5b2b5dc9401f02d9c80dd4fd4bdd9b",
+          "public_sha256": "fa89a519e64e1ba4e94930f075363e5f5d5b2b5dc9401f02d9c80dd4fd4bdd9b",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v4.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-05/source/prompts/evidence-v4.md",
+          "private_raw_sha256": "3451663b1a9a6a58a8531425cf2236f8427bbfcc957aa4d78126e6764d05c004",
+          "public_sha256": "3451663b1a9a6a58a8531425cf2236f8427bbfcc957aa4d78126e6764d05c004",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v5.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-05/source/prompts/evidence-v5.md",
+          "private_raw_sha256": "b661ffc9a1930ecc0f74dbb9c8d1ee33c1eefef8e1e0b5c43ffad8b189f3d6de",
+          "public_sha256": "b661ffc9a1930ecc0f74dbb9c8d1ee33c1eefef8e1e0b5c43ffad8b189f3d6de",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "summary.json",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-05/summary.json",
+          "private_raw_sha256": "58cfa858c16f838cd93e3b05e6ed323eaa64d5fb2099b1ffd6282b4609d1b208",
+          "public_sha256": "58cfa858c16f838cd93e3b05e6ed323eaa64d5fb2099b1ffd6282b4609d1b208",
+          "origin": "private source artifact"
+        }
+      ]
+    },
+    "batch-06": {
+      "directory": "development-06",
+      "scrublist": [
+        "gate.message_id (recursively from results JSONL)"
+      ],
+      "artifacts": []
+    },
+    "opaque-partial": {
+      "directory": "opaque",
+      "scrublist": [
+        "gate.message_id (recursively from exported result JSONL)",
+        "opaque.source_base (freeze JSON)",
+        "SQLite payloads/proposals omitted; export is per-case counters and raw hashes only"
+      ],
+      "artifacts": [
+        {
+          "path": "freeze.json",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque/freeze.json",
+          "private_raw_sha256": "6b82f6f21bff485338f4adb09072aec14c15dc971d17e403b31837e609012cd2",
+          "public_sha256": "e32fd3b4ae6eab3dc664ffa0b2ec4cfae8ba3f8f9fbb2c36f3d86ceeb4073241",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "ledger.jsonl",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque/ledger.jsonl",
+          "private_raw_sha256": "e9508bd39a2431ec31390fbe6bd2dbdfa198e65abaa837b84d0e6b33264f6d8d",
+          "public_sha256": "a47d359f68f2e377318cf5a53d5a0e03df6f41817f2ca431c54ad5bfdd4a2c49",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "recovery-metadata.json",
+          "private_source": null,
+          "private_raw_sha256": null,
+          "public_sha256": "64e706c58064644a2b5136b2c6bfd14842d5591e9d543fbd17c1b6f5101a9b20",
+          "origin": "derived from NUL-tailed private files and read-only SQLite counters",
+          "input_private_sha256": [
+            "693dea6f5cea8f6480688e364e89b1400148a5b096192849392b93a429ecb08a",
+            "986c6f47339448b1db4a1d853afe467d66b886c155ae8775e0ae4cbdecc0007c",
+            "833ade44c4638391e018213314386e33812dc79a1afebcbb97b58afe1474c58c",
+            "b1d0ea77b87613011cbd86241825e5e41cfe4c95efbdd42283095003b27d0f18",
+            "38512b1ea02d06281ab5adb465e3022d12fd35d0d1d3420f92001c59fea2cc16",
+            "0f40b1f9c7a02269aaf4adc5b4196ba2ec42a4fd5aad9508d299f0b6e5c4986d",
+            "ee8794bc2278b858aa1ce049e1158d80253ff78bcdfe79e7ead8142d78d52cd7",
+            "3ca51db96a210c018f0c7d70e1b037c41bc2db33c4a95bea462e3bf46990aa95",
+            "b98d9450eeed7c2ebe2ef3fcf9039dd6a16a516d0a2dd9582f2104c9df90768b",
+            "2f8efaef267a7b0497817ac3744aa69645d4d129fc2467263d9d678f40bb9676",
+            "4bae8e489dfb3c38d2b058b48af911b21e0ec6b183b902b50dd412f3367a071b",
+            "01171d68f31c4e94cb846b57208e10e089bb5033c9665141feef6b8855ecaca8",
+            "eefd6ac993c345b53c75dd51453bdbf12621bed801625e2957c6bbd28cfb5102",
+            "3742ac458de272bbe2a1896baa505856952c610a8b7de0dd0b5a70f826bcd727",
+            "44447424c9c069f13faf5b9f7d793e9d4a77065b5b6b47060d78475079656e0d",
+            "33e95c129886a9b4b2a2ed797e71952e893e2bc2fbb48b864f7fe274c475e8e7",
+            "002166179df949bb67907be60045baa57f29c0a4874709b722c79904e6cb9cf5",
+            "a7077f52ed1078e1b0557572052f0a682d8d7dd6f5c5719f3d35b6b665b0343c",
+            "e2404c95fce6796e910ea33b4b66d9fbe5a91d5949a496252e7e6af98865bd56",
+            "0d94976966379e64156766978285e770f9c404172c1418cc6c6758658dafd282",
+            "b4f5a55b040dcb4884505a7653c0d39e318dcb6a7e503cda0b0096efb500388b",
+            "b3aeca06670a6781dd402fb80751c2a9b2bf6f779b90be6b3d31597583e4ae7b",
+            "988c2f39197b361707c4ea447fba7567ee32ecd10bf6b1e273f77ae076598f7c",
+            "aa19020e1fcc218e50e666b98478ced6fe8df88b69ede9e97d3103eeb5cba42a",
+            "22a04d5b4fec4e0904e1fcbed6b2a79e548ba87b7ad280be8b1880730d89bee0",
+            "d3067e3a2cbdb74b745e5e737bca30b476c8102c3685da141d3d66eccd994c91",
+            "f1bd8771a37230be8cc39c02335266f2b5c6fd3ea4795274419c3ab95ae9b7bd",
+            "5ceefe07eabea0ca02bc3e2bbd6b2a18c5a5adbe09765f8993d3219f414a4a45",
+            "f3113abf28da023b611b4eba79459f78f7f9b7882f933209e198bae79f2d66d1",
+            "91a8442be1ca30b97297ac2417c20cdf3cae81e06718eeab6d899ccb8955faf6",
+            "638af868058e27e8e59a898cad6792a91902d7ab68d334da377df78c840ea820",
+            "7d3f466507e9894d17991c0aeec68f682ba1247b2e1e6bcfc6c13a9891801208",
+            "342e3bddd97aef0020e18727ddec011b81401587eb8e284bd26ab92fba2619e2",
+            "1c278e588eec3a76dfc97e5de5084c70b199f8f0c8f6bf0fde5ccfe7647dd4d7",
+            "f6674b1c209c3f4d79653e8cfe9c695779c8a43cea20cb543e016f978db6a7e9",
+            "4ea0ff20d568ff98ab8d79c89b2cdb14d5916fef0279f82353ec05360186073d",
+            "1b97c25c86788c17c66814c2408977c17c4f6f617285b2083003507167a83684",
+            "caa8f380ee308563b487fd370915e901d50edefc5ad0702964d3720f584ea9e7",
+            "cd71dc21ee100037ac2cc13caa8a615f15853ef454477cf1b335d2c3c3c5b639",
+            "c81b40b17454cbc053193ca497fc904d86b06a1e071ce0ea0f2d6184e1641be8"
+          ]
+        },
+        {
+          "path": "results.jsonl",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque/results.jsonl",
+          "private_raw_sha256": "17814642f4a26323273a74f77b30b225b15b6c0d5daced3b1761cee3a320f6e6",
+          "public_sha256": "8acfa670abd4cb5da3b6b2adba08c7caf514f2c89d6b720c1ebd68759aa3cb7a",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/contract_eval.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/contract_eval.py",
+          "private_raw_sha256": "fbef793c2ad2c32ddde94fbdc71dfffd2b55a29a4c1b651a0fbd88693524313a",
+          "public_sha256": "fbef793c2ad2c32ddde94fbdc71dfffd2b55a29a4c1b651a0fbd88693524313a",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/iteration_inputs.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/iteration_inputs.py",
+          "private_raw_sha256": "0da4c7863dfb4d3582eb4aa5da4d97746ccde5d2629ecb87472359030bc52b40",
+          "public_sha256": "0da4c7863dfb4d3582eb4aa5da4d97746ccde5d2629ecb87472359030bc52b40",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/iteration_scoring.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/iteration_scoring.py",
+          "private_raw_sha256": "dc841f02d549bd2ba138db66c25455e9c809635118f41825b4e0c385b2485280",
+          "public_sha256": "dc841f02d549bd2ba138db66c25455e9c809635118f41825b4e0c385b2485280",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/paired_experiment.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/paired_experiment.py",
+          "private_raw_sha256": "3df0f42f8d82c3becc0b767d31a3de24059f207dd55b552cc60786bec0d98fad",
+          "public_sha256": "3df0f42f8d82c3becc0b767d31a3de24059f207dd55b552cc60786bec0d98fad",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompt_candidates.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompt_candidates.py",
+          "private_raw_sha256": "e54d1df5999a5200c1dffec1807a5dbb0df291a6c74b821cbef347b3e2bcad9d",
+          "public_sha256": "e54d1df5999a5200c1dffec1807a5dbb0df291a6c74b821cbef347b3e2bcad9d",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompt_experiment.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompt_experiment.py",
+          "private_raw_sha256": "1f59d214e0147dc49305c2598b603ad4567139f3270f06a04164f0360e161e97",
+          "public_sha256": "1f59d214e0147dc49305c2598b603ad4567139f3270f06a04164f0360e161e97",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-generic.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompts/contract-generic.md",
+          "private_raw_sha256": "8471fb5c3112afdd73c62e2291dc6473de6f32984f8c4512d888524d095387d5",
+          "public_sha256": "8471fb5c3112afdd73c62e2291dc6473de6f32984f8c4512d888524d095387d5",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v2.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompts/contract-v2.md",
+          "private_raw_sha256": "e74ce6da8546e8a2bd47130e3cf17dc1fea91ca76f0ec1004b76257decc35fcf",
+          "public_sha256": "e74ce6da8546e8a2bd47130e3cf17dc1fea91ca76f0ec1004b76257decc35fcf",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v3.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompts/contract-v3.md",
+          "private_raw_sha256": "ce9dabf2f8eeb98bf61792fde2d50e12043e757580aaff6d4d614ec6732e6ddc",
+          "public_sha256": "ce9dabf2f8eeb98bf61792fde2d50e12043e757580aaff6d4d614ec6732e6ddc",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v4.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompts/contract-v4.md",
+          "private_raw_sha256": "53a63c42b69e39e819ea4cb6cf27c57d535239cc13fe974838d7c3a75c6dd83e",
+          "public_sha256": "53a63c42b69e39e819ea4cb6cf27c57d535239cc13fe974838d7c3a75c6dd83e",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v5.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompts/contract-v5.md",
+          "private_raw_sha256": "33b3d0ed027d0b583c9d8ca2dd953d8eefe330175b4e6473ed8e8567de833a6c",
+          "public_sha256": "33b3d0ed027d0b583c9d8ca2dd953d8eefe330175b4e6473ed8e8567de833a6c",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v6.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompts/contract-v6.md",
+          "private_raw_sha256": "fc12557a7156a91ae6ba2856111ec3b1085b2846439b7bc35a9852c5556f6a23",
+          "public_sha256": "fc12557a7156a91ae6ba2856111ec3b1085b2846439b7bc35a9852c5556f6a23",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v2.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompts/evidence-v2.md",
+          "private_raw_sha256": "ba16a3d83705e6979fb1f2f7138134d2cb8cd7cb901da1b5386e1eb7ecb382b3",
+          "public_sha256": "ba16a3d83705e6979fb1f2f7138134d2cb8cd7cb901da1b5386e1eb7ecb382b3",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v3.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompts/evidence-v3.md",
+          "private_raw_sha256": "fa89a519e64e1ba4e94930f075363e5f5d5b2b5dc9401f02d9c80dd4fd4bdd9b",
+          "public_sha256": "fa89a519e64e1ba4e94930f075363e5f5d5b2b5dc9401f02d9c80dd4fd4bdd9b",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v4.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompts/evidence-v4.md",
+          "private_raw_sha256": "3451663b1a9a6a58a8531425cf2236f8427bbfcc957aa4d78126e6764d05c004",
+          "public_sha256": "3451663b1a9a6a58a8531425cf2236f8427bbfcc957aa4d78126e6764d05c004",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v5.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompts/evidence-v5.md",
+          "private_raw_sha256": "b661ffc9a1930ecc0f74dbb9c8d1ee33c1eefef8e1e0b5c43ffad8b189f3d6de",
+          "public_sha256": "b661ffc9a1930ecc0f74dbb9c8d1ee33c1eefef8e1e0b5c43ffad8b189f3d6de",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "summary.json",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque/summary.json",
+          "private_raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "public_sha256": "4b8d64edb40c3235cb4e0265244ab9246e0352863150f6c9053bf42f5a5baf48",
+          "origin": "derived from NUL-tailed private files and read-only SQLite counters",
+          "input_private_sha256": [
+            "693dea6f5cea8f6480688e364e89b1400148a5b096192849392b93a429ecb08a",
+            "986c6f47339448b1db4a1d853afe467d66b886c155ae8775e0ae4cbdecc0007c",
+            "833ade44c4638391e018213314386e33812dc79a1afebcbb97b58afe1474c58c",
+            "b1d0ea77b87613011cbd86241825e5e41cfe4c95efbdd42283095003b27d0f18",
+            "38512b1ea02d06281ab5adb465e3022d12fd35d0d1d3420f92001c59fea2cc16",
+            "0f40b1f9c7a02269aaf4adc5b4196ba2ec42a4fd5aad9508d299f0b6e5c4986d",
+            "ee8794bc2278b858aa1ce049e1158d80253ff78bcdfe79e7ead8142d78d52cd7",
+            "3ca51db96a210c018f0c7d70e1b037c41bc2db33c4a95bea462e3bf46990aa95",
+            "b98d9450eeed7c2ebe2ef3fcf9039dd6a16a516d0a2dd9582f2104c9df90768b",
+            "2f8efaef267a7b0497817ac3744aa69645d4d129fc2467263d9d678f40bb9676",
+            "4bae8e489dfb3c38d2b058b48af911b21e0ec6b183b902b50dd412f3367a071b",
+            "01171d68f31c4e94cb846b57208e10e089bb5033c9665141feef6b8855ecaca8",
+            "eefd6ac993c345b53c75dd51453bdbf12621bed801625e2957c6bbd28cfb5102",
+            "3742ac458de272bbe2a1896baa505856952c610a8b7de0dd0b5a70f826bcd727",
+            "44447424c9c069f13faf5b9f7d793e9d4a77065b5b6b47060d78475079656e0d",
+            "33e95c129886a9b4b2a2ed797e71952e893e2bc2fbb48b864f7fe274c475e8e7",
+            "002166179df949bb67907be60045baa57f29c0a4874709b722c79904e6cb9cf5",
+            "a7077f52ed1078e1b0557572052f0a682d8d7dd6f5c5719f3d35b6b665b0343c",
+            "e2404c95fce6796e910ea33b4b66d9fbe5a91d5949a496252e7e6af98865bd56",
+            "0d94976966379e64156766978285e770f9c404172c1418cc6c6758658dafd282",
+            "b4f5a55b040dcb4884505a7653c0d39e318dcb6a7e503cda0b0096efb500388b",
+            "b3aeca06670a6781dd402fb80751c2a9b2bf6f779b90be6b3d31597583e4ae7b",
+            "988c2f39197b361707c4ea447fba7567ee32ecd10bf6b1e273f77ae076598f7c",
+            "aa19020e1fcc218e50e666b98478ced6fe8df88b69ede9e97d3103eeb5cba42a",
+            "22a04d5b4fec4e0904e1fcbed6b2a79e548ba87b7ad280be8b1880730d89bee0",
+            "d3067e3a2cbdb74b745e5e737bca30b476c8102c3685da141d3d66eccd994c91",
+            "f1bd8771a37230be8cc39c02335266f2b5c6fd3ea4795274419c3ab95ae9b7bd",
+            "5ceefe07eabea0ca02bc3e2bbd6b2a18c5a5adbe09765f8993d3219f414a4a45",
+            "f3113abf28da023b611b4eba79459f78f7f9b7882f933209e198bae79f2d66d1",
+            "91a8442be1ca30b97297ac2417c20cdf3cae81e06718eeab6d899ccb8955faf6",
+            "638af868058e27e8e59a898cad6792a91902d7ab68d334da377df78c840ea820",
+            "7d3f466507e9894d17991c0aeec68f682ba1247b2e1e6bcfc6c13a9891801208",
+            "342e3bddd97aef0020e18727ddec011b81401587eb8e284bd26ab92fba2619e2",
+            "1c278e588eec3a76dfc97e5de5084c70b199f8f0c8f6bf0fde5ccfe7647dd4d7",
+            "f6674b1c209c3f4d79653e8cfe9c695779c8a43cea20cb543e016f978db6a7e9",
+            "4ea0ff20d568ff98ab8d79c89b2cdb14d5916fef0279f82353ec05360186073d",
+            "1b97c25c86788c17c66814c2408977c17c4f6f617285b2083003507167a83684",
+            "caa8f380ee308563b487fd370915e901d50edefc5ad0702964d3720f584ea9e7",
+            "cd71dc21ee100037ac2cc13caa8a615f15853ef454477cf1b335d2c3c3c5b639",
+            "c81b40b17454cbc053193ca497fc904d86b06a1e071ce0ea0f2d6184e1641be8"
+          ]
+        },
+        {
+          "path": "sqlite-audit.json",
+          "private_source": null,
+          "private_raw_sha256": null,
+          "input_private_sha256": [
+            "693dea6f5cea8f6480688e364e89b1400148a5b096192849392b93a429ecb08a",
+            "986c6f47339448b1db4a1d853afe467d66b886c155ae8775e0ae4cbdecc0007c",
+            "833ade44c4638391e018213314386e33812dc79a1afebcbb97b58afe1474c58c",
+            "b1d0ea77b87613011cbd86241825e5e41cfe4c95efbdd42283095003b27d0f18",
+            "38512b1ea02d06281ab5adb465e3022d12fd35d0d1d3420f92001c59fea2cc16",
+            "0f40b1f9c7a02269aaf4adc5b4196ba2ec42a4fd5aad9508d299f0b6e5c4986d",
+            "ee8794bc2278b858aa1ce049e1158d80253ff78bcdfe79e7ead8142d78d52cd7",
+            "3ca51db96a210c018f0c7d70e1b037c41bc2db33c4a95bea462e3bf46990aa95",
+            "b98d9450eeed7c2ebe2ef3fcf9039dd6a16a516d0a2dd9582f2104c9df90768b",
+            "2f8efaef267a7b0497817ac3744aa69645d4d129fc2467263d9d678f40bb9676",
+            "4bae8e489dfb3c38d2b058b48af911b21e0ec6b183b902b50dd412f3367a071b",
+            "01171d68f31c4e94cb846b57208e10e089bb5033c9665141feef6b8855ecaca8",
+            "eefd6ac993c345b53c75dd51453bdbf12621bed801625e2957c6bbd28cfb5102",
+            "3742ac458de272bbe2a1896baa505856952c610a8b7de0dd0b5a70f826bcd727",
+            "44447424c9c069f13faf5b9f7d793e9d4a77065b5b6b47060d78475079656e0d",
+            "33e95c129886a9b4b2a2ed797e71952e893e2bc2fbb48b864f7fe274c475e8e7",
+            "002166179df949bb67907be60045baa57f29c0a4874709b722c79904e6cb9cf5",
+            "a7077f52ed1078e1b0557572052f0a682d8d7dd6f5c5719f3d35b6b665b0343c",
+            "e2404c95fce6796e910ea33b4b66d9fbe5a91d5949a496252e7e6af98865bd56",
+            "0d94976966379e64156766978285e770f9c404172c1418cc6c6758658dafd282",
+            "b4f5a55b040dcb4884505a7653c0d39e318dcb6a7e503cda0b0096efb500388b",
+            "b3aeca06670a6781dd402fb80751c2a9b2bf6f779b90be6b3d31597583e4ae7b",
+            "988c2f39197b361707c4ea447fba7567ee32ecd10bf6b1e273f77ae076598f7c",
+            "aa19020e1fcc218e50e666b98478ced6fe8df88b69ede9e97d3103eeb5cba42a",
+            "22a04d5b4fec4e0904e1fcbed6b2a79e548ba87b7ad280be8b1880730d89bee0",
+            "d3067e3a2cbdb74b745e5e737bca30b476c8102c3685da141d3d66eccd994c91",
+            "f1bd8771a37230be8cc39c02335266f2b5c6fd3ea4795274419c3ab95ae9b7bd",
+            "5ceefe07eabea0ca02bc3e2bbd6b2a18c5a5adbe09765f8993d3219f414a4a45",
+            "f3113abf28da023b611b4eba79459f78f7f9b7882f933209e198bae79f2d66d1",
+            "91a8442be1ca30b97297ac2417c20cdf3cae81e06718eeab6d899ccb8955faf6",
+            "638af868058e27e8e59a898cad6792a91902d7ab68d334da377df78c840ea820",
+            "7d3f466507e9894d17991c0aeec68f682ba1247b2e1e6bcfc6c13a9891801208",
+            "342e3bddd97aef0020e18727ddec011b81401587eb8e284bd26ab92fba2619e2",
+            "1c278e588eec3a76dfc97e5de5084c70b199f8f0c8f6bf0fde5ccfe7647dd4d7",
+            "f6674b1c209c3f4d79653e8cfe9c695779c8a43cea20cb543e016f978db6a7e9",
+            "4ea0ff20d568ff98ab8d79c89b2cdb14d5916fef0279f82353ec05360186073d",
+            "1b97c25c86788c17c66814c2408977c17c4f6f617285b2083003507167a83684",
+            "caa8f380ee308563b487fd370915e901d50edefc5ad0702964d3720f584ea9e7",
+            "cd71dc21ee100037ac2cc13caa8a615f15853ef454477cf1b335d2c3c3c5b639",
+            "c81b40b17454cbc053193ca497fc904d86b06a1e071ce0ea0f2d6184e1641be8"
+          ],
+          "public_sha256": "259170edd09b5666a7170822754f9921f06fd0626fc7cf2946a08a7edfc3ff1f",
+          "origin": "read-only summary of private cognition_runs and cognition_reports; databases/proposals not exported"
+        }
+      ]
+    },
+    "opaque-recovery": {
+      "directory": "opaque-recovery",
+      "scrublist": [
+        "gate.message_id (recursively from results JSONL)"
+      ],
+      "artifacts": [
+        {
+          "path": "freeze.json",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/freeze.json",
+          "private_raw_sha256": "c8012d37534cba9065dbf22fe51d59c86c0a27fea512030d187a18b540b4e858",
+          "public_sha256": "fb6b110a99d25e439fa83f669e23d6190985462d9bd9546f42c1ec78fd93da54",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "ledger.jsonl",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/ledger.jsonl",
+          "private_raw_sha256": "5159755f98005d4d65e440e3c8281154683765ac6b7023afe8dca98a4318d4af",
+          "public_sha256": "23d8fca356d5a858fd635301ae7dee15514c84c1f726289c33486f232a64468f",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "results.jsonl",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/results.jsonl",
+          "private_raw_sha256": "28d911a354cc4765a203d9d1f28d64771ea2d19096274102b47f36aa2a58a5de",
+          "public_sha256": "a92ec5df9935d1d23e20c261e889eb38c690cf08c6df962fb6b4a7e0bc10f515",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/contract_eval.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/contract_eval.py",
+          "private_raw_sha256": "fbef793c2ad2c32ddde94fbdc71dfffd2b55a29a4c1b651a0fbd88693524313a",
+          "public_sha256": "fbef793c2ad2c32ddde94fbdc71dfffd2b55a29a4c1b651a0fbd88693524313a",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/iteration_inputs.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/iteration_inputs.py",
+          "private_raw_sha256": "0da4c7863dfb4d3582eb4aa5da4d97746ccde5d2629ecb87472359030bc52b40",
+          "public_sha256": "0da4c7863dfb4d3582eb4aa5da4d97746ccde5d2629ecb87472359030bc52b40",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/iteration_scoring.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/iteration_scoring.py",
+          "private_raw_sha256": "dc841f02d549bd2ba138db66c25455e9c809635118f41825b4e0c385b2485280",
+          "public_sha256": "dc841f02d549bd2ba138db66c25455e9c809635118f41825b4e0c385b2485280",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/paired_experiment.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/paired_experiment.py",
+          "private_raw_sha256": "3df0f42f8d82c3becc0b767d31a3de24059f207dd55b552cc60786bec0d98fad",
+          "public_sha256": "3df0f42f8d82c3becc0b767d31a3de24059f207dd55b552cc60786bec0d98fad",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompt_candidates.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompt_candidates.py",
+          "private_raw_sha256": "e54d1df5999a5200c1dffec1807a5dbb0df291a6c74b821cbef347b3e2bcad9d",
+          "public_sha256": "e54d1df5999a5200c1dffec1807a5dbb0df291a6c74b821cbef347b3e2bcad9d",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompt_experiment.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompt_experiment.py",
+          "private_raw_sha256": "1f59d214e0147dc49305c2598b603ad4567139f3270f06a04164f0360e161e97",
+          "public_sha256": "1f59d214e0147dc49305c2598b603ad4567139f3270f06a04164f0360e161e97",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-generic.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompts/contract-generic.md",
+          "private_raw_sha256": "8471fb5c3112afdd73c62e2291dc6473de6f32984f8c4512d888524d095387d5",
+          "public_sha256": "8471fb5c3112afdd73c62e2291dc6473de6f32984f8c4512d888524d095387d5",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v2.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompts/contract-v2.md",
+          "private_raw_sha256": "e74ce6da8546e8a2bd47130e3cf17dc1fea91ca76f0ec1004b76257decc35fcf",
+          "public_sha256": "e74ce6da8546e8a2bd47130e3cf17dc1fea91ca76f0ec1004b76257decc35fcf",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v3.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompts/contract-v3.md",
+          "private_raw_sha256": "ce9dabf2f8eeb98bf61792fde2d50e12043e757580aaff6d4d614ec6732e6ddc",
+          "public_sha256": "ce9dabf2f8eeb98bf61792fde2d50e12043e757580aaff6d4d614ec6732e6ddc",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v4.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompts/contract-v4.md",
+          "private_raw_sha256": "53a63c42b69e39e819ea4cb6cf27c57d535239cc13fe974838d7c3a75c6dd83e",
+          "public_sha256": "53a63c42b69e39e819ea4cb6cf27c57d535239cc13fe974838d7c3a75c6dd83e",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v5.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompts/contract-v5.md",
+          "private_raw_sha256": "33b3d0ed027d0b583c9d8ca2dd953d8eefe330175b4e6473ed8e8567de833a6c",
+          "public_sha256": "33b3d0ed027d0b583c9d8ca2dd953d8eefe330175b4e6473ed8e8567de833a6c",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v6.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompts/contract-v6.md",
+          "private_raw_sha256": "fc12557a7156a91ae6ba2856111ec3b1085b2846439b7bc35a9852c5556f6a23",
+          "public_sha256": "fc12557a7156a91ae6ba2856111ec3b1085b2846439b7bc35a9852c5556f6a23",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v2.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompts/evidence-v2.md",
+          "private_raw_sha256": "ba16a3d83705e6979fb1f2f7138134d2cb8cd7cb901da1b5386e1eb7ecb382b3",
+          "public_sha256": "ba16a3d83705e6979fb1f2f7138134d2cb8cd7cb901da1b5386e1eb7ecb382b3",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v3.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompts/evidence-v3.md",
+          "private_raw_sha256": "fa89a519e64e1ba4e94930f075363e5f5d5b2b5dc9401f02d9c80dd4fd4bdd9b",
+          "public_sha256": "fa89a519e64e1ba4e94930f075363e5f5d5b2b5dc9401f02d9c80dd4fd4bdd9b",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v4.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompts/evidence-v4.md",
+          "private_raw_sha256": "3451663b1a9a6a58a8531425cf2236f8427bbfcc957aa4d78126e6764d05c004",
+          "public_sha256": "3451663b1a9a6a58a8531425cf2236f8427bbfcc957aa4d78126e6764d05c004",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v5.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/source/prompts/evidence-v5.md",
+          "private_raw_sha256": "b661ffc9a1930ecc0f74dbb9c8d1ee33c1eefef8e1e0b5c43ffad8b189f3d6de",
+          "public_sha256": "b661ffc9a1930ecc0f74dbb9c8d1ee33c1eefef8e1e0b5c43ffad8b189f3d6de",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "summary.json",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/opaque-recovery/summary.json",
+          "private_raw_sha256": "22e736f27779561896c91cdacb7f81276ba94c30b127042cfb45c91841b9cdf7",
+          "public_sha256": "90e36b2c63bee61924efa93369089b0d39ebea9a761ea005f900eebbfe7dd153",
+          "origin": "private source artifact"
+        }
+      ]
+    },
+    "heldout": {
+      "directory": "heldout",
+      "scrublist": [
+        "gate.message_id (recursively from results JSONL)"
+      ],
+      "artifacts": [
+        {
+          "path": "freeze.json",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/heldout/freeze.json",
+          "private_raw_sha256": "d9fecfb6b662e33e05e71d70c6f555443ee270637612eb6111d48227bdd313f2",
+          "public_sha256": "df69ae45d3a20e856403ecbecef78aa1586fc75a314a322480bc6ed2e233954a",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "ledger.jsonl",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/heldout/ledger.jsonl",
+          "private_raw_sha256": "8dea38eb6e5f1d645100778ef80f070d64f811d57628150cd1b41c315bbf19cb",
+          "public_sha256": "1c377415a34023599d9fa153de8c903798df021a61b362587db87d98be862d09",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "results.jsonl",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/heldout/results.jsonl",
+          "private_raw_sha256": "9c6e78b2d23ef713cf11f2269ef286bfc8a72e5e40f6cacdfc15b0a96bf582b2",
+          "public_sha256": "46fe266b2b2e858f8005624a91d2509b16186644d1ab0dc3029a15090c5f9deb",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/contract_eval.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/heldout/source/contract_eval.py",
+          "private_raw_sha256": "fbef793c2ad2c32ddde94fbdc71dfffd2b55a29a4c1b651a0fbd88693524313a",
+          "public_sha256": "fbef793c2ad2c32ddde94fbdc71dfffd2b55a29a4c1b651a0fbd88693524313a",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/iteration_inputs.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/heldout/source/iteration_inputs.py",
+          "private_raw_sha256": "0da4c7863dfb4d3582eb4aa5da4d97746ccde5d2629ecb87472359030bc52b40",
+          "public_sha256": "0da4c7863dfb4d3582eb4aa5da4d97746ccde5d2629ecb87472359030bc52b40",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/iteration_scoring.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/heldout/source/iteration_scoring.py",
+          "private_raw_sha256": "dc841f02d549bd2ba138db66c25455e9c809635118f41825b4e0c385b2485280",
+          "public_sha256": "dc841f02d549bd2ba138db66c25455e9c809635118f41825b4e0c385b2485280",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/paired_experiment.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/heldout/source/paired_experiment.py",
+          "private_raw_sha256": "3df0f42f8d82c3becc0b767d31a3de24059f207dd55b552cc60786bec0d98fad",
+          "public_sha256": "3df0f42f8d82c3becc0b767d31a3de24059f207dd55b552cc60786bec0d98fad",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompt_candidates.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/heldout/source/prompt_candidates.py",
+          "private_raw_sha256": "e54d1df5999a5200c1dffec1807a5dbb0df291a6c74b821cbef347b3e2bcad9d",
+          "public_sha256": "e54d1df5999a5200c1dffec1807a5dbb0df291a6c74b821cbef347b3e2bcad9d",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompt_experiment.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/heldout/source/prompt_experiment.py",
+          "private_raw_sha256": "1f59d214e0147dc49305c2598b603ad4567139f3270f06a04164f0360e161e97",
+          "public_sha256": "1f59d214e0147dc49305c2598b603ad4567139f3270f06a04164f0360e161e97",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-generic.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/heldout/source/prompts/contract-generic.md",
+          "private_raw_sha256": "8471fb5c3112afdd73c62e2291dc6473de6f32984f8c4512d888524d095387d5",
+          "public_sha256": "8471fb5c3112afdd73c62e2291dc6473de6f32984f8c4512d888524d095387d5",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v2.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/heldout/source/prompts/contract-v2.md",
+          "private_raw_sha256": "e74ce6da8546e8a2bd47130e3cf17dc1fea91ca76f0ec1004b76257decc35fcf",
+          "public_sha256": "e74ce6da8546e8a2bd47130e3cf17dc1fea91ca76f0ec1004b76257decc35fcf",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v3.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/heldout/source/prompts/contract-v3.md",
+          "private_raw_sha256": "ce9dabf2f8eeb98bf61792fde2d50e12043e757580aaff6d4d614ec6732e6ddc",
+          "public_sha256": "ce9dabf2f8eeb98bf61792fde2d50e12043e757580aaff6d4d614ec6732e6ddc",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v4.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/heldout/source/prompts/contract-v4.md",
+          "private_raw_sha256": "53a63c42b69e39e819ea4cb6cf27c57d535239cc13fe974838d7c3a75c6dd83e",
+          "public_sha256": "53a63c42b69e39e819ea4cb6cf27c57d535239cc13fe974838d7c3a75c6dd83e",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v5.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/heldout/source/prompts/contract-v5.md",
+          "private_raw_sha256": "33b3d0ed027d0b583c9d8ca2dd953d8eefe330175b4e6473ed8e8567de833a6c",
+          "public_sha256": "33b3d0ed027d0b583c9d8ca2dd953d8eefe330175b4e6473ed8e8567de833a6c",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v6.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/heldout/source/prompts/contract-v6.md",
+          "private_raw_sha256": "fc12557a7156a91ae6ba2856111ec3b1085b2846439b7bc35a9852c5556f6a23",
+          "public_sha256": "fc12557a7156a91ae6ba2856111ec3b1085b2846439b7bc35a9852c5556f6a23",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v2.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/heldout/source/prompts/evidence-v2.md",
+          "private_raw_sha256": "ba16a3d83705e6979fb1f2f7138134d2cb8cd7cb901da1b5386e1eb7ecb382b3",
+          "public_sha256": "ba16a3d83705e6979fb1f2f7138134d2cb8cd7cb901da1b5386e1eb7ecb382b3",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v3.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/heldout/source/prompts/evidence-v3.md",
+          "private_raw_sha256": "fa89a519e64e1ba4e94930f075363e5f5d5b2b5dc9401f02d9c80dd4fd4bdd9b",
+          "public_sha256": "fa89a519e64e1ba4e94930f075363e5f5d5b2b5dc9401f02d9c80dd4fd4bdd9b",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v4.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/heldout/source/prompts/evidence-v4.md",
+          "private_raw_sha256": "3451663b1a9a6a58a8531425cf2236f8427bbfcc957aa4d78126e6764d05c004",
+          "public_sha256": "3451663b1a9a6a58a8531425cf2236f8427bbfcc957aa4d78126e6764d05c004",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v5.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/heldout/source/prompts/evidence-v5.md",
+          "private_raw_sha256": "b661ffc9a1930ecc0f74dbb9c8d1ee33c1eefef8e1e0b5c43ffad8b189f3d6de",
+          "public_sha256": "b661ffc9a1930ecc0f74dbb9c8d1ee33c1eefef8e1e0b5c43ffad8b189f3d6de",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "summary.json",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/heldout/summary.json",
+          "private_raw_sha256": "5c9fa61819c8036a46db337a0fc0d3db527a07fd5c4b4a340cee60baa1d71749",
+          "public_sha256": "c0f592652422a1881e8b8f8506c58374c187a9f4b45d98e6fa7d9441ae43286f",
+          "origin": "private source artifact"
+        }
+      ]
+    },
+    "opaque-combined": {
+      "directory": "opaque-combined",
+      "scrublist": [
+        "No additional field-level scrubs; metrics are derived from original and recovery results."
+      ],
+      "artifacts": [
+        {
+          "path": "summary.json",
+          "private_source": null,
+          "private_raw_sha256": null,
+          "input_private_sha256": [
+            "17814642f4a26323273a74f77b30b225b15b6c0d5daced3b1761cee3a320f6e6",
+            "28d911a354cc4765a203d9d1f28d64771ea2d19096274102b47f36aa2a58a5de",
+            "693dea6f5cea8f6480688e364e89b1400148a5b096192849392b93a429ecb08a",
+            "986c6f47339448b1db4a1d853afe467d66b886c155ae8775e0ae4cbdecc0007c",
+            "833ade44c4638391e018213314386e33812dc79a1afebcbb97b58afe1474c58c",
+            "b1d0ea77b87613011cbd86241825e5e41cfe4c95efbdd42283095003b27d0f18",
+            "38512b1ea02d06281ab5adb465e3022d12fd35d0d1d3420f92001c59fea2cc16",
+            "0f40b1f9c7a02269aaf4adc5b4196ba2ec42a4fd5aad9508d299f0b6e5c4986d",
+            "ee8794bc2278b858aa1ce049e1158d80253ff78bcdfe79e7ead8142d78d52cd7",
+            "3ca51db96a210c018f0c7d70e1b037c41bc2db33c4a95bea462e3bf46990aa95",
+            "b98d9450eeed7c2ebe2ef3fcf9039dd6a16a516d0a2dd9582f2104c9df90768b",
+            "2f8efaef267a7b0497817ac3744aa69645d4d129fc2467263d9d678f40bb9676",
+            "4bae8e489dfb3c38d2b058b48af911b21e0ec6b183b902b50dd412f3367a071b",
+            "01171d68f31c4e94cb846b57208e10e089bb5033c9665141feef6b8855ecaca8",
+            "eefd6ac993c345b53c75dd51453bdbf12621bed801625e2957c6bbd28cfb5102",
+            "3742ac458de272bbe2a1896baa505856952c610a8b7de0dd0b5a70f826bcd727",
+            "44447424c9c069f13faf5b9f7d793e9d4a77065b5b6b47060d78475079656e0d",
+            "33e95c129886a9b4b2a2ed797e71952e893e2bc2fbb48b864f7fe274c475e8e7",
+            "002166179df949bb67907be60045baa57f29c0a4874709b722c79904e6cb9cf5",
+            "a7077f52ed1078e1b0557572052f0a682d8d7dd6f5c5719f3d35b6b665b0343c",
+            "e2404c95fce6796e910ea33b4b66d9fbe5a91d5949a496252e7e6af98865bd56",
+            "0d94976966379e64156766978285e770f9c404172c1418cc6c6758658dafd282",
+            "b4f5a55b040dcb4884505a7653c0d39e318dcb6a7e503cda0b0096efb500388b",
+            "b3aeca06670a6781dd402fb80751c2a9b2bf6f779b90be6b3d31597583e4ae7b",
+            "988c2f39197b361707c4ea447fba7567ee32ecd10bf6b1e273f77ae076598f7c",
+            "aa19020e1fcc218e50e666b98478ced6fe8df88b69ede9e97d3103eeb5cba42a",
+            "22a04d5b4fec4e0904e1fcbed6b2a79e548ba87b7ad280be8b1880730d89bee0",
+            "d3067e3a2cbdb74b745e5e737bca30b476c8102c3685da141d3d66eccd994c91",
+            "f1bd8771a37230be8cc39c02335266f2b5c6fd3ea4795274419c3ab95ae9b7bd",
+            "5ceefe07eabea0ca02bc3e2bbd6b2a18c5a5adbe09765f8993d3219f414a4a45",
+            "f3113abf28da023b611b4eba79459f78f7f9b7882f933209e198bae79f2d66d1",
+            "91a8442be1ca30b97297ac2417c20cdf3cae81e06718eeab6d899ccb8955faf6",
+            "638af868058e27e8e59a898cad6792a91902d7ab68d334da377df78c840ea820",
+            "7d3f466507e9894d17991c0aeec68f682ba1247b2e1e6bcfc6c13a9891801208",
+            "342e3bddd97aef0020e18727ddec011b81401587eb8e284bd26ab92fba2619e2",
+            "1c278e588eec3a76dfc97e5de5084c70b199f8f0c8f6bf0fde5ccfe7647dd4d7",
+            "f6674b1c209c3f4d79653e8cfe9c695779c8a43cea20cb543e016f978db6a7e9",
+            "4ea0ff20d568ff98ab8d79c89b2cdb14d5916fef0279f82353ec05360186073d",
+            "1b97c25c86788c17c66814c2408977c17c4f6f617285b2083003507167a83684",
+            "caa8f380ee308563b487fd370915e901d50edefc5ad0702964d3720f584ea9e7",
+            "cd71dc21ee100037ac2cc13caa8a615f15853ef454477cf1b335d2c3c3c5b639",
+            "c81b40b17454cbc053193ca497fc904d86b06a1e071ce0ea0f2d6184e1641be8"
+          ],
+          "public_sha256": "491c96d627dccc3a58ebd2bfbc0e60d2257aea9e9ea39b4f87418201e55066d7",
+          "origin": "derived score summary from result files plus read-only opaque DB audit; no DB-only outputs rescored"
+        }
+      ]
+    },
+    "challenge": {
+      "directory": "challenge",
+      "scrublist": [
+        "gate.message_id (recursively from results JSONL)"
+      ],
+      "artifacts": [
+        {
+          "path": "freeze.json",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/challenge/freeze.json",
+          "private_raw_sha256": "2a094623bc838016acc5892f99387d5ded2d2309a8547da9faa9e10cb783852a",
+          "public_sha256": "c120a517d22057ccc744656394c11715e5242d4d97102011960ed6c01f6625e9",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "ledger.jsonl",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/challenge/ledger.jsonl",
+          "private_raw_sha256": "f277dfd844d0ae1b6f23707fe87320579841ba82c90588018e2e84e4e2e8b908",
+          "public_sha256": "81ee9f7b8d055422d83c2526f5ce52bfa9b68a198c85e30d4c9cc77ffbe9b5c9",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "results.jsonl",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/challenge/results.jsonl",
+          "private_raw_sha256": "7478e4cf82d335997b8564e54743399bf2c62823505895d2f07afbd0ccd1414a",
+          "public_sha256": "d13237565be49791b467fd26b33f7afcf7c57e7e290602cecfc1a336e31b5bc2",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/contract_eval.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/challenge/source/contract_eval.py",
+          "private_raw_sha256": "fbef793c2ad2c32ddde94fbdc71dfffd2b55a29a4c1b651a0fbd88693524313a",
+          "public_sha256": "fbef793c2ad2c32ddde94fbdc71dfffd2b55a29a4c1b651a0fbd88693524313a",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/iteration_inputs.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/challenge/source/iteration_inputs.py",
+          "private_raw_sha256": "0da4c7863dfb4d3582eb4aa5da4d97746ccde5d2629ecb87472359030bc52b40",
+          "public_sha256": "0da4c7863dfb4d3582eb4aa5da4d97746ccde5d2629ecb87472359030bc52b40",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/iteration_scoring.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/challenge/source/iteration_scoring.py",
+          "private_raw_sha256": "dc841f02d549bd2ba138db66c25455e9c809635118f41825b4e0c385b2485280",
+          "public_sha256": "dc841f02d549bd2ba138db66c25455e9c809635118f41825b4e0c385b2485280",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/paired_experiment.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/challenge/source/paired_experiment.py",
+          "private_raw_sha256": "3df0f42f8d82c3becc0b767d31a3de24059f207dd55b552cc60786bec0d98fad",
+          "public_sha256": "3df0f42f8d82c3becc0b767d31a3de24059f207dd55b552cc60786bec0d98fad",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompt_candidates.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/challenge/source/prompt_candidates.py",
+          "private_raw_sha256": "e54d1df5999a5200c1dffec1807a5dbb0df291a6c74b821cbef347b3e2bcad9d",
+          "public_sha256": "e54d1df5999a5200c1dffec1807a5dbb0df291a6c74b821cbef347b3e2bcad9d",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompt_experiment.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/challenge/source/prompt_experiment.py",
+          "private_raw_sha256": "1f59d214e0147dc49305c2598b603ad4567139f3270f06a04164f0360e161e97",
+          "public_sha256": "1f59d214e0147dc49305c2598b603ad4567139f3270f06a04164f0360e161e97",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-generic.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/challenge/source/prompts/contract-generic.md",
+          "private_raw_sha256": "8471fb5c3112afdd73c62e2291dc6473de6f32984f8c4512d888524d095387d5",
+          "public_sha256": "8471fb5c3112afdd73c62e2291dc6473de6f32984f8c4512d888524d095387d5",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v2.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/challenge/source/prompts/contract-v2.md",
+          "private_raw_sha256": "e74ce6da8546e8a2bd47130e3cf17dc1fea91ca76f0ec1004b76257decc35fcf",
+          "public_sha256": "e74ce6da8546e8a2bd47130e3cf17dc1fea91ca76f0ec1004b76257decc35fcf",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v3.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/challenge/source/prompts/contract-v3.md",
+          "private_raw_sha256": "ce9dabf2f8eeb98bf61792fde2d50e12043e757580aaff6d4d614ec6732e6ddc",
+          "public_sha256": "ce9dabf2f8eeb98bf61792fde2d50e12043e757580aaff6d4d614ec6732e6ddc",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v4.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/challenge/source/prompts/contract-v4.md",
+          "private_raw_sha256": "53a63c42b69e39e819ea4cb6cf27c57d535239cc13fe974838d7c3a75c6dd83e",
+          "public_sha256": "53a63c42b69e39e819ea4cb6cf27c57d535239cc13fe974838d7c3a75c6dd83e",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v5.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/challenge/source/prompts/contract-v5.md",
+          "private_raw_sha256": "33b3d0ed027d0b583c9d8ca2dd953d8eefe330175b4e6473ed8e8567de833a6c",
+          "public_sha256": "33b3d0ed027d0b583c9d8ca2dd953d8eefe330175b4e6473ed8e8567de833a6c",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v6.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/challenge/source/prompts/contract-v6.md",
+          "private_raw_sha256": "fc12557a7156a91ae6ba2856111ec3b1085b2846439b7bc35a9852c5556f6a23",
+          "public_sha256": "fc12557a7156a91ae6ba2856111ec3b1085b2846439b7bc35a9852c5556f6a23",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v2.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/challenge/source/prompts/evidence-v2.md",
+          "private_raw_sha256": "ba16a3d83705e6979fb1f2f7138134d2cb8cd7cb901da1b5386e1eb7ecb382b3",
+          "public_sha256": "ba16a3d83705e6979fb1f2f7138134d2cb8cd7cb901da1b5386e1eb7ecb382b3",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v3.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/challenge/source/prompts/evidence-v3.md",
+          "private_raw_sha256": "fa89a519e64e1ba4e94930f075363e5f5d5b2b5dc9401f02d9c80dd4fd4bdd9b",
+          "public_sha256": "fa89a519e64e1ba4e94930f075363e5f5d5b2b5dc9401f02d9c80dd4fd4bdd9b",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v4.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/challenge/source/prompts/evidence-v4.md",
+          "private_raw_sha256": "3451663b1a9a6a58a8531425cf2236f8427bbfcc957aa4d78126e6764d05c004",
+          "public_sha256": "3451663b1a9a6a58a8531425cf2236f8427bbfcc957aa4d78126e6764d05c004",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v5.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/challenge/source/prompts/evidence-v5.md",
+          "private_raw_sha256": "b661ffc9a1930ecc0f74dbb9c8d1ee33c1eefef8e1e0b5c43ffad8b189f3d6de",
+          "public_sha256": "b661ffc9a1930ecc0f74dbb9c8d1ee33c1eefef8e1e0b5c43ffad8b189f3d6de",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "summary.json",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/challenge/summary.json",
+          "private_raw_sha256": "c3a1f73b8b17fe45a991fab9d8eef4d84b8361382b35289f67a3593e81de197c",
+          "public_sha256": "0389e1446f3fd65993259b3d61515c8a9ee22479f96f0935a545fedb7fbefd3b",
+          "origin": "private source artifact"
+        }
+      ]
+    },
+    "development-07": {
+      "directory": "development-07",
+      "scrublist": [
+        "gate.message_id (recursively from results JSONL)"
+      ],
+      "artifacts": [
+        {
+          "path": "freeze.json",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-07/freeze.json",
+          "private_raw_sha256": "7b1cd435ceadef09da593e18bbcbe49e15db4a58138c491988c26743180ba505",
+          "public_sha256": "5d3fa28a2c1be8cc506c4c935d327e4131aa4a4f2a73ccc096102f7ebb4fb391",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "ledger.jsonl",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-07/ledger.jsonl",
+          "private_raw_sha256": "53da1404603e70105e06248e3f2bdad8d73e92aadcb656fc99281cc96904c1da",
+          "public_sha256": "f9b36fa2e17e929403731a54da46f8e6a8be83ee2390a4587257427435488f2e",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "results.jsonl",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-07/results.jsonl",
+          "private_raw_sha256": "65685a34f59efb40d53f7cb3eaa736f5760f5f9134b4d63ff9a2306017724fa3",
+          "public_sha256": "eeac2f2eab75f13c78862c537c3a61a06d7008bf66dd1b22daf649dc386b4c05",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/contract_eval.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-07/source/contract_eval.py",
+          "private_raw_sha256": "fbef793c2ad2c32ddde94fbdc71dfffd2b55a29a4c1b651a0fbd88693524313a",
+          "public_sha256": "fbef793c2ad2c32ddde94fbdc71dfffd2b55a29a4c1b651a0fbd88693524313a",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/iteration_inputs.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-07/source/iteration_inputs.py",
+          "private_raw_sha256": "0da4c7863dfb4d3582eb4aa5da4d97746ccde5d2629ecb87472359030bc52b40",
+          "public_sha256": "0da4c7863dfb4d3582eb4aa5da4d97746ccde5d2629ecb87472359030bc52b40",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/iteration_scoring.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-07/source/iteration_scoring.py",
+          "private_raw_sha256": "dc841f02d549bd2ba138db66c25455e9c809635118f41825b4e0c385b2485280",
+          "public_sha256": "dc841f02d549bd2ba138db66c25455e9c809635118f41825b4e0c385b2485280",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/paired_experiment.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-07/source/paired_experiment.py",
+          "private_raw_sha256": "3df0f42f8d82c3becc0b767d31a3de24059f207dd55b552cc60786bec0d98fad",
+          "public_sha256": "3df0f42f8d82c3becc0b767d31a3de24059f207dd55b552cc60786bec0d98fad",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompt_candidates.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-07/source/prompt_candidates.py",
+          "private_raw_sha256": "947a039bbae96617314c23ac3aa9fc97f8a7372d2d205b4b26d5950bb34291ee",
+          "public_sha256": "947a039bbae96617314c23ac3aa9fc97f8a7372d2d205b4b26d5950bb34291ee",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompt_experiment.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-07/source/prompt_experiment.py",
+          "private_raw_sha256": "1f59d214e0147dc49305c2598b603ad4567139f3270f06a04164f0360e161e97",
+          "public_sha256": "1f59d214e0147dc49305c2598b603ad4567139f3270f06a04164f0360e161e97",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-generic.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-07/source/prompts/contract-generic.md",
+          "private_raw_sha256": "8471fb5c3112afdd73c62e2291dc6473de6f32984f8c4512d888524d095387d5",
+          "public_sha256": "8471fb5c3112afdd73c62e2291dc6473de6f32984f8c4512d888524d095387d5",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v2.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-07/source/prompts/contract-v2.md",
+          "private_raw_sha256": "e74ce6da8546e8a2bd47130e3cf17dc1fea91ca76f0ec1004b76257decc35fcf",
+          "public_sha256": "e74ce6da8546e8a2bd47130e3cf17dc1fea91ca76f0ec1004b76257decc35fcf",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v3.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-07/source/prompts/contract-v3.md",
+          "private_raw_sha256": "ce9dabf2f8eeb98bf61792fde2d50e12043e757580aaff6d4d614ec6732e6ddc",
+          "public_sha256": "ce9dabf2f8eeb98bf61792fde2d50e12043e757580aaff6d4d614ec6732e6ddc",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v4.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-07/source/prompts/contract-v4.md",
+          "private_raw_sha256": "53a63c42b69e39e819ea4cb6cf27c57d535239cc13fe974838d7c3a75c6dd83e",
+          "public_sha256": "53a63c42b69e39e819ea4cb6cf27c57d535239cc13fe974838d7c3a75c6dd83e",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v5.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-07/source/prompts/contract-v5.md",
+          "private_raw_sha256": "33b3d0ed027d0b583c9d8ca2dd953d8eefe330175b4e6473ed8e8567de833a6c",
+          "public_sha256": "33b3d0ed027d0b583c9d8ca2dd953d8eefe330175b4e6473ed8e8567de833a6c",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v6.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-07/source/prompts/contract-v6.md",
+          "private_raw_sha256": "fc12557a7156a91ae6ba2856111ec3b1085b2846439b7bc35a9852c5556f6a23",
+          "public_sha256": "fc12557a7156a91ae6ba2856111ec3b1085b2846439b7bc35a9852c5556f6a23",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v7.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-07/source/prompts/contract-v7.md",
+          "private_raw_sha256": "9331bf0c0280d5d7e790bc81ced30d146f43c33b0b12b7f9ea298c2021c0aac8",
+          "public_sha256": "9331bf0c0280d5d7e790bc81ced30d146f43c33b0b12b7f9ea298c2021c0aac8",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v2.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-07/source/prompts/evidence-v2.md",
+          "private_raw_sha256": "ba16a3d83705e6979fb1f2f7138134d2cb8cd7cb901da1b5386e1eb7ecb382b3",
+          "public_sha256": "ba16a3d83705e6979fb1f2f7138134d2cb8cd7cb901da1b5386e1eb7ecb382b3",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v3.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-07/source/prompts/evidence-v3.md",
+          "private_raw_sha256": "fa89a519e64e1ba4e94930f075363e5f5d5b2b5dc9401f02d9c80dd4fd4bdd9b",
+          "public_sha256": "fa89a519e64e1ba4e94930f075363e5f5d5b2b5dc9401f02d9c80dd4fd4bdd9b",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v4.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-07/source/prompts/evidence-v4.md",
+          "private_raw_sha256": "3451663b1a9a6a58a8531425cf2236f8427bbfcc957aa4d78126e6764d05c004",
+          "public_sha256": "3451663b1a9a6a58a8531425cf2236f8427bbfcc957aa4d78126e6764d05c004",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v5.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-07/source/prompts/evidence-v5.md",
+          "private_raw_sha256": "b661ffc9a1930ecc0f74dbb9c8d1ee33c1eefef8e1e0b5c43ffad8b189f3d6de",
+          "public_sha256": "b661ffc9a1930ecc0f74dbb9c8d1ee33c1eefef8e1e0b5c43ffad8b189f3d6de",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v7.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-07/source/prompts/evidence-v7.md",
+          "private_raw_sha256": "757880a36f5a30a1961e279c2fa77d4e330f20ff9c62ea8a0550f75e7520755a",
+          "public_sha256": "757880a36f5a30a1961e279c2fa77d4e330f20ff9c62ea8a0550f75e7520755a",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "summary.json",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/development-07/summary.json",
+          "private_raw_sha256": "dea9b919010d73a0086ffeb9d503a57d3423ef541a22b3aba3602d8625224997",
+          "public_sha256": "62f2f24e98cc8c43b59529941c97552043e9c4a6bfc86805b2eda8497d639741",
+          "origin": "private source artifact"
+        }
+      ]
+    },
+    "confirmation": {
+      "directory": "confirmation",
+      "scrublist": [
+        "gate.message_id (recursively from results JSONL)"
+      ],
+      "artifacts": [
+        {
+          "path": "candidate-selection-confirmation.json",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/candidate-selection-confirmation.json",
+          "private_raw_sha256": "6d8ef221aa7b9eb2e85544d11fbdc838672786baeb8413b500c21b87a0dd2d1f",
+          "public_sha256": "6d8ef221aa7b9eb2e85544d11fbdc838672786baeb8413b500c21b87a0dd2d1f",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "freeze.json",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/confirmation/freeze.json",
+          "private_raw_sha256": "97b873d6d500ae0379572d8c542908ddfcb607157886330d5eabb3cf6abea1db",
+          "public_sha256": "896fccff4befe3c2fe0bcdd6f1dff310ad0e35c7eb87f74cda9f6211e52ab940",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "ledger.jsonl",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/confirmation/ledger.jsonl",
+          "private_raw_sha256": "6acc8fa581db91ce7e68a55f27c0a9463c2c69d75d2c5ace45817792ad01389a",
+          "public_sha256": "6b6b8e9fa74d975eedefe2401a509c6902ee7485c588a6a61a3fcd00b2defdcf",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "results.jsonl",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/confirmation/results.jsonl",
+          "private_raw_sha256": "5dba62cf5f2127df780735ae99ac7bb0f31a132c0b28154c09291ddb43dd008e",
+          "public_sha256": "7e0c75998d25db1c4c3f404a618b409564873d5e3330982fcc6db55edda31b0e",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/contract_eval.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/confirmation/source/contract_eval.py",
+          "private_raw_sha256": "fbef793c2ad2c32ddde94fbdc71dfffd2b55a29a4c1b651a0fbd88693524313a",
+          "public_sha256": "fbef793c2ad2c32ddde94fbdc71dfffd2b55a29a4c1b651a0fbd88693524313a",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/iteration_inputs.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/confirmation/source/iteration_inputs.py",
+          "private_raw_sha256": "0da4c7863dfb4d3582eb4aa5da4d97746ccde5d2629ecb87472359030bc52b40",
+          "public_sha256": "0da4c7863dfb4d3582eb4aa5da4d97746ccde5d2629ecb87472359030bc52b40",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/iteration_scoring.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/confirmation/source/iteration_scoring.py",
+          "private_raw_sha256": "dc841f02d549bd2ba138db66c25455e9c809635118f41825b4e0c385b2485280",
+          "public_sha256": "dc841f02d549bd2ba138db66c25455e9c809635118f41825b4e0c385b2485280",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/paired_experiment.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/confirmation/source/paired_experiment.py",
+          "private_raw_sha256": "5410c2e1d8b39c6963e51d31c5994ef3c143902322723dc988eb2c14f3fabeb5",
+          "public_sha256": "5410c2e1d8b39c6963e51d31c5994ef3c143902322723dc988eb2c14f3fabeb5",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompt_candidates.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/confirmation/source/prompt_candidates.py",
+          "private_raw_sha256": "947a039bbae96617314c23ac3aa9fc97f8a7372d2d205b4b26d5950bb34291ee",
+          "public_sha256": "947a039bbae96617314c23ac3aa9fc97f8a7372d2d205b4b26d5950bb34291ee",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompt_experiment.py",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/confirmation/source/prompt_experiment.py",
+          "private_raw_sha256": "f00c258fd98cb08f71665582a21809f4aa92d73852518b649663c53cb2de4b05",
+          "public_sha256": "f00c258fd98cb08f71665582a21809f4aa92d73852518b649663c53cb2de4b05",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-generic.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/confirmation/source/prompts/contract-generic.md",
+          "private_raw_sha256": "8471fb5c3112afdd73c62e2291dc6473de6f32984f8c4512d888524d095387d5",
+          "public_sha256": "8471fb5c3112afdd73c62e2291dc6473de6f32984f8c4512d888524d095387d5",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v2.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/confirmation/source/prompts/contract-v2.md",
+          "private_raw_sha256": "e74ce6da8546e8a2bd47130e3cf17dc1fea91ca76f0ec1004b76257decc35fcf",
+          "public_sha256": "e74ce6da8546e8a2bd47130e3cf17dc1fea91ca76f0ec1004b76257decc35fcf",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v3.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/confirmation/source/prompts/contract-v3.md",
+          "private_raw_sha256": "ce9dabf2f8eeb98bf61792fde2d50e12043e757580aaff6d4d614ec6732e6ddc",
+          "public_sha256": "ce9dabf2f8eeb98bf61792fde2d50e12043e757580aaff6d4d614ec6732e6ddc",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v4.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/confirmation/source/prompts/contract-v4.md",
+          "private_raw_sha256": "53a63c42b69e39e819ea4cb6cf27c57d535239cc13fe974838d7c3a75c6dd83e",
+          "public_sha256": "53a63c42b69e39e819ea4cb6cf27c57d535239cc13fe974838d7c3a75c6dd83e",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v5.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/confirmation/source/prompts/contract-v5.md",
+          "private_raw_sha256": "33b3d0ed027d0b583c9d8ca2dd953d8eefe330175b4e6473ed8e8567de833a6c",
+          "public_sha256": "33b3d0ed027d0b583c9d8ca2dd953d8eefe330175b4e6473ed8e8567de833a6c",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v6.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/confirmation/source/prompts/contract-v6.md",
+          "private_raw_sha256": "fc12557a7156a91ae6ba2856111ec3b1085b2846439b7bc35a9852c5556f6a23",
+          "public_sha256": "fc12557a7156a91ae6ba2856111ec3b1085b2846439b7bc35a9852c5556f6a23",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/contract-v7.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/confirmation/source/prompts/contract-v7.md",
+          "private_raw_sha256": "9331bf0c0280d5d7e790bc81ced30d146f43c33b0b12b7f9ea298c2021c0aac8",
+          "public_sha256": "9331bf0c0280d5d7e790bc81ced30d146f43c33b0b12b7f9ea298c2021c0aac8",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v2.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/confirmation/source/prompts/evidence-v2.md",
+          "private_raw_sha256": "ba16a3d83705e6979fb1f2f7138134d2cb8cd7cb901da1b5386e1eb7ecb382b3",
+          "public_sha256": "ba16a3d83705e6979fb1f2f7138134d2cb8cd7cb901da1b5386e1eb7ecb382b3",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v3.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/confirmation/source/prompts/evidence-v3.md",
+          "private_raw_sha256": "fa89a519e64e1ba4e94930f075363e5f5d5b2b5dc9401f02d9c80dd4fd4bdd9b",
+          "public_sha256": "fa89a519e64e1ba4e94930f075363e5f5d5b2b5dc9401f02d9c80dd4fd4bdd9b",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v4.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/confirmation/source/prompts/evidence-v4.md",
+          "private_raw_sha256": "3451663b1a9a6a58a8531425cf2236f8427bbfcc957aa4d78126e6764d05c004",
+          "public_sha256": "3451663b1a9a6a58a8531425cf2236f8427bbfcc957aa4d78126e6764d05c004",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v5.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/confirmation/source/prompts/evidence-v5.md",
+          "private_raw_sha256": "b661ffc9a1930ecc0f74dbb9c8d1ee33c1eefef8e1e0b5c43ffad8b189f3d6de",
+          "public_sha256": "b661ffc9a1930ecc0f74dbb9c8d1ee33c1eefef8e1e0b5c43ffad8b189f3d6de",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "source/prompts/evidence-v7.md",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/confirmation/source/prompts/evidence-v7.md",
+          "private_raw_sha256": "757880a36f5a30a1961e279c2fa77d4e330f20ff9c62ea8a0550f75e7520755a",
+          "public_sha256": "757880a36f5a30a1961e279c2fa77d4e330f20ff9c62ea8a0550f75e7520755a",
+          "origin": "private source artifact"
+        },
+        {
+          "path": "summary.json",
+          "private_source": "/home/devadethanr/.local/state/kepler-rooms/prompt-tuning-20261101T205220/confirmation/summary.json",
+          "private_raw_sha256": "27bbe91412b1e5dc4c4fabf7151466f8275973afa0c901d456c756bbca6ae521",
+          "public_sha256": "5bbbbc9cf57deb258f3c943644f1b648a83a0dba627b8b0d1658e716d406b7ea",
+          "origin": "private source artifact"
+        }
+      ]
+    }
+  }
+}

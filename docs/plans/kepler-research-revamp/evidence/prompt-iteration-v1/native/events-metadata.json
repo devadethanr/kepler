@@ -1,0 +1,3519 @@
+{
+  "queued": [
+    {
+      "seq": 1,
+      "kind": "room.created",
+      "agent": "manager",
+      "at": "2026-11-01T16:41:42.592951+00:00",
+      "data": {}
+    },
+    {
+      "seq": 2,
+      "kind": "room.cancel_requested",
+      "agent": "manager",
+      "at": "2026-11-01T16:41:42.725166+00:00",
+      "data": {}
+    },
+    {
+      "seq": 3,
+      "kind": "room.finished",
+      "agent": "manager",
+      "at": "2026-11-01T16:41:42.728980+00:00",
+      "data": {
+        "status": "cancelled",
+        "reason_code": "queued_cancel"
+      }
+    }
+  ],
+  "kepler_files": [
+    {
+      "seq": 1,
+      "kind": "room.created",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:03.763700+00:00",
+      "data": {}
+    },
+    {
+      "seq": 2,
+      "kind": "room.started",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:04.222993+00:00",
+      "data": {}
+    },
+    {
+      "seq": 3,
+      "kind": "thread.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:05.009733+00:00",
+      "data": {}
+    },
+    {
+      "seq": 4,
+      "kind": "thread.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:05.458704+00:00",
+      "data": {}
+    },
+    {
+      "seq": 5,
+      "kind": "turn.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:05.465091+00:00",
+      "data": {}
+    },
+    {
+      "seq": 6,
+      "kind": "turn.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:05.470993+00:00",
+      "data": {}
+    },
+    {
+      "seq": 7,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:05.474292+00:00",
+      "data": {
+        "kind": "model",
+        "count": 1,
+        "reserved_tokens": 32768
+      }
+    },
+    {
+      "seq": 8,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:05.477809+00:00",
+      "data": {
+        "kind": "model",
+        "count": 2,
+        "reserved_tokens": 65536
+      }
+    },
+    {
+      "seq": 9,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:06.450611+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 1,
+        "reserved_tokens": 65536
+      }
+    },
+    {
+      "seq": 10,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:06.454496+00:00",
+      "data": {
+        "name": "artifact_search"
+      }
+    },
+    {
+      "seq": 11,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:06.505328+00:00",
+      "data": {
+        "name": "artifact_search",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 12,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:06.525495+00:00",
+      "data": {
+        "kind": "model",
+        "count": 3,
+        "reserved_tokens": 98304
+      }
+    },
+    {
+      "seq": 13,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:06.597006+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 2,
+        "reserved_tokens": 98304
+      }
+    },
+    {
+      "seq": 14,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:06.602430+00:00",
+      "data": {
+        "name": "artifact_search"
+      }
+    },
+    {
+      "seq": 15,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:06.626468+00:00",
+      "data": {
+        "name": "artifact_search",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 16,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:06.648027+00:00",
+      "data": {
+        "kind": "model",
+        "count": 4,
+        "reserved_tokens": 131072
+      }
+    },
+    {
+      "seq": 17,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:08.231354+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 3,
+        "reserved_tokens": 131072
+      }
+    },
+    {
+      "seq": 18,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:08.235483+00:00",
+      "data": {
+        "name": "artifact_read"
+      }
+    },
+    {
+      "seq": 19,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:08.239023+00:00",
+      "data": {
+        "name": "artifact_read",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 20,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:08.251265+00:00",
+      "data": {
+        "kind": "model",
+        "count": 5,
+        "reserved_tokens": 163840
+      }
+    },
+    {
+      "seq": 21,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:09.110876+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 4,
+        "reserved_tokens": 163840
+      }
+    },
+    {
+      "seq": 22,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:09.116744+00:00",
+      "data": {
+        "name": "artifact_read"
+      }
+    },
+    {
+      "seq": 23,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:09.122630+00:00",
+      "data": {
+        "name": "artifact_read",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 24,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:09.143495+00:00",
+      "data": {
+        "kind": "model",
+        "count": 6,
+        "reserved_tokens": 196608
+      }
+    },
+    {
+      "seq": 25,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:10.780696+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 5,
+        "reserved_tokens": 196608
+      }
+    },
+    {
+      "seq": 26,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:10.783321+00:00",
+      "data": {
+        "name": "artifact_read"
+      }
+    },
+    {
+      "seq": 27,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:10.785965+00:00",
+      "data": {
+        "name": "artifact_read",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 28,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:10.801258+00:00",
+      "data": {
+        "kind": "model",
+        "count": 7,
+        "reserved_tokens": 229376
+      }
+    },
+    {
+      "seq": 29,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:14.172251+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 6,
+        "reserved_tokens": 229376
+      }
+    },
+    {
+      "seq": 30,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:14.175124+00:00",
+      "data": {
+        "name": "artifact_read"
+      }
+    },
+    {
+      "seq": 31,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:14.178435+00:00",
+      "data": {
+        "name": "artifact_read",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 32,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:14.193396+00:00",
+      "data": {
+        "kind": "model",
+        "count": 8,
+        "reserved_tokens": 262144
+      }
+    },
+    {
+      "seq": 33,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:14.252057+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 7,
+        "reserved_tokens": 262144
+      }
+    },
+    {
+      "seq": 34,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:14.256568+00:00",
+      "data": {
+        "name": "room_message"
+      }
+    },
+    {
+      "seq": 35,
+      "kind": "message",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:14.261497+00:00",
+      "data": {
+        "recipient": "skeptic",
+        "kind": "question",
+        "stance": "continue",
+        "validation": "exact citation spans verified; interpretation not fact-checked",
+        "claims": [
+          {
+            "kind": "question",
+            "support_assessment": "unassessed",
+            "has_quote": true,
+            "has_refs": true
+          }
+        ]
+      }
+    },
+    {
+      "seq": 36,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:14.264397+00:00",
+      "data": {
+        "name": "room_message",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 37,
+      "kind": "turn.finished",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:14.269600+00:00",
+      "data": {
+        "status": "interrupted"
+      }
+    },
+    {
+      "seq": 38,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:19.541277+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 8,
+        "reserved_tokens": 262144
+      }
+    },
+    {
+      "seq": 39,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:19.543738+00:00",
+      "data": {
+        "name": "room_message"
+      }
+    },
+    {
+      "seq": 40,
+      "kind": "message",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:19.548414+00:00",
+      "data": {
+        "recipient": "room",
+        "kind": "question",
+        "stance": "continue",
+        "validation": "exact citation spans verified; interpretation not fact-checked",
+        "claims": [
+          {
+            "kind": "question",
+            "support_assessment": "unassessed",
+            "has_quote": true,
+            "has_refs": true
+          }
+        ]
+      }
+    },
+    {
+      "seq": 41,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:19.550715+00:00",
+      "data": {
+        "name": "room_message",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 42,
+      "kind": "turn.finished",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:19.557544+00:00",
+      "data": {
+        "status": "interrupted"
+      }
+    },
+    {
+      "seq": 43,
+      "kind": "mail.delivery_attempted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:19.564610+00:00",
+      "data": {
+        "recipient": "skeptic"
+      }
+    },
+    {
+      "seq": 44,
+      "kind": "turn.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:19.569384+00:00",
+      "data": {}
+    },
+    {
+      "seq": 45,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:19.577260+00:00",
+      "data": {
+        "kind": "model",
+        "count": 9,
+        "reserved_tokens": 294912
+      }
+    },
+    {
+      "seq": 46,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:24.090189+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 9,
+        "reserved_tokens": 294912
+      }
+    },
+    {
+      "seq": 47,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:24.092747+00:00",
+      "data": {
+        "name": "artifact_read"
+      }
+    },
+    {
+      "seq": 48,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:24.095547+00:00",
+      "data": {
+        "name": "artifact_read",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 49,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:24.106968+00:00",
+      "data": {
+        "kind": "model",
+        "count": 10,
+        "reserved_tokens": 327680
+      }
+    },
+    {
+      "seq": 50,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:26.888736+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 10,
+        "reserved_tokens": 327680
+      }
+    },
+    {
+      "seq": 51,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:26.891735+00:00",
+      "data": {
+        "name": "room_message"
+      }
+    },
+    {
+      "seq": 52,
+      "kind": "message",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:26.896048+00:00",
+      "data": {
+        "recipient": "analyst",
+        "kind": "challenge",
+        "stance": "disagreement",
+        "validation": "exact citation spans verified; interpretation not fact-checked",
+        "claims": [
+          {
+            "kind": "observation",
+            "support_assessment": "insufficient",
+            "has_quote": true,
+            "has_refs": true
+          }
+        ]
+      }
+    },
+    {
+      "seq": 53,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:26.898327+00:00",
+      "data": {
+        "name": "room_message",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 54,
+      "kind": "turn.finished",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:26.905356+00:00",
+      "data": {
+        "status": "interrupted"
+      }
+    },
+    {
+      "seq": 55,
+      "kind": "mail.response_opportunity",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:26.909431+00:00",
+      "data": {
+        "recipient": "skeptic"
+      }
+    },
+    {
+      "seq": 56,
+      "kind": "mail.delivery_attempted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:26.913494+00:00",
+      "data": {
+        "recipient": "analyst"
+      }
+    },
+    {
+      "seq": 57,
+      "kind": "turn.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:26.918277+00:00",
+      "data": {}
+    },
+    {
+      "seq": 58,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:26.928502+00:00",
+      "data": {
+        "kind": "model",
+        "count": 11,
+        "reserved_tokens": 360448
+      }
+    },
+    {
+      "seq": 59,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:31.957705+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 11,
+        "reserved_tokens": 360448
+      }
+    },
+    {
+      "seq": 60,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:31.962091+00:00",
+      "data": {
+        "name": "artifact_search"
+      }
+    },
+    {
+      "seq": 61,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:31.985651+00:00",
+      "data": {
+        "name": "artifact_search",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 62,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:31.999660+00:00",
+      "data": {
+        "kind": "model",
+        "count": 12,
+        "reserved_tokens": 393216
+      }
+    },
+    {
+      "seq": 63,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:34.825850+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 12,
+        "reserved_tokens": 393216
+      }
+    },
+    {
+      "seq": 64,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:34.828498+00:00",
+      "data": {
+        "name": "room_message"
+      }
+    },
+    {
+      "seq": 65,
+      "kind": "message",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:34.833103+00:00",
+      "data": {
+        "recipient": "skeptic",
+        "kind": "question",
+        "stance": "continue",
+        "validation": "exact citation spans verified; interpretation not fact-checked",
+        "claims": [
+          {
+            "kind": "question",
+            "support_assessment": "unassessed",
+            "has_quote": true,
+            "has_refs": true
+          }
+        ]
+      }
+    },
+    {
+      "seq": 66,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:34.835295+00:00",
+      "data": {
+        "name": "room_message",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 67,
+      "kind": "turn.finished",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:34.841033+00:00",
+      "data": {
+        "status": "interrupted"
+      }
+    },
+    {
+      "seq": 68,
+      "kind": "mail.response_opportunity",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:34.845298+00:00",
+      "data": {
+        "recipient": "analyst"
+      }
+    },
+    {
+      "seq": 69,
+      "kind": "mail.delivery_attempted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:34.849578+00:00",
+      "data": {
+        "recipient": "skeptic"
+      }
+    },
+    {
+      "seq": 70,
+      "kind": "turn.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:34.854192+00:00",
+      "data": {}
+    },
+    {
+      "seq": 71,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:34.862881+00:00",
+      "data": {
+        "kind": "model",
+        "count": 13,
+        "reserved_tokens": 425984
+      }
+    },
+    {
+      "seq": 72,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:36.488618+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 13,
+        "reserved_tokens": 425984
+      }
+    },
+    {
+      "seq": 73,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:36.491313+00:00",
+      "data": {
+        "name": "artifact_read"
+      }
+    },
+    {
+      "seq": 74,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:36.494222+00:00",
+      "data": {
+        "name": "artifact_read",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 75,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:36.507196+00:00",
+      "data": {
+        "kind": "model",
+        "count": 14,
+        "reserved_tokens": 458752
+      }
+    },
+    {
+      "seq": 76,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:39.298733+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 14,
+        "reserved_tokens": 458752
+      }
+    },
+    {
+      "seq": 77,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:39.301676+00:00",
+      "data": {
+        "name": "room_message"
+      }
+    },
+    {
+      "seq": 78,
+      "kind": "message",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:39.306209+00:00",
+      "data": {
+        "recipient": "analyst",
+        "kind": "challenge",
+        "stance": "disagreement",
+        "validation": "exact citation spans verified; interpretation not fact-checked",
+        "claims": [
+          {
+            "kind": "observation",
+            "support_assessment": "insufficient",
+            "has_quote": true,
+            "has_refs": true
+          }
+        ]
+      }
+    },
+    {
+      "seq": 79,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:39.308218+00:00",
+      "data": {
+        "name": "room_message",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 80,
+      "kind": "turn.finished",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:39.314245+00:00",
+      "data": {
+        "status": "interrupted"
+      }
+    },
+    {
+      "seq": 81,
+      "kind": "mail.response_opportunity",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:39.319476+00:00",
+      "data": {
+        "recipient": "skeptic"
+      }
+    },
+    {
+      "seq": 82,
+      "kind": "mail.delivery_attempted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:39.324048+00:00",
+      "data": {
+        "recipient": "analyst"
+      }
+    },
+    {
+      "seq": 83,
+      "kind": "turn.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:39.329696+00:00",
+      "data": {}
+    },
+    {
+      "seq": 84,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:39.336885+00:00",
+      "data": {
+        "kind": "model",
+        "count": 15,
+        "reserved_tokens": 491520
+      }
+    },
+    {
+      "seq": 85,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:41.590917+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 15,
+        "reserved_tokens": 491520
+      }
+    },
+    {
+      "seq": 86,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:41.594558+00:00",
+      "data": {
+        "name": "room_message"
+      }
+    },
+    {
+      "seq": 87,
+      "kind": "message",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:41.600516+00:00",
+      "data": {
+        "recipient": "skeptic",
+        "kind": "question",
+        "stance": "continue",
+        "validation": "exact citation spans verified; interpretation not fact-checked",
+        "claims": [
+          {
+            "kind": "question",
+            "support_assessment": "unassessed",
+            "has_quote": true,
+            "has_refs": true
+          }
+        ]
+      }
+    },
+    {
+      "seq": 88,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:41.602979+00:00",
+      "data": {
+        "name": "room_message",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 89,
+      "kind": "turn.finished",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:41.608566+00:00",
+      "data": {
+        "status": "interrupted"
+      }
+    },
+    {
+      "seq": 90,
+      "kind": "mail.response_opportunity",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:41.612656+00:00",
+      "data": {
+        "recipient": "analyst"
+      }
+    },
+    {
+      "seq": 91,
+      "kind": "mail.delivery_attempted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:41.616909+00:00",
+      "data": {
+        "recipient": "skeptic"
+      }
+    },
+    {
+      "seq": 92,
+      "kind": "turn.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:41.622360+00:00",
+      "data": {}
+    },
+    {
+      "seq": 93,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:41.630805+00:00",
+      "data": {
+        "kind": "model",
+        "count": 16,
+        "reserved_tokens": 524288
+      }
+    },
+    {
+      "seq": 94,
+      "kind": "room.finished",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:48.642923+00:00",
+      "data": {
+        "status": "abstention",
+        "reason_code": "call_or_resource_limit"
+      }
+    }
+  ],
+  "sebi_browser": [
+    {
+      "seq": 1,
+      "kind": "room.created",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:56.128868+00:00",
+      "data": {}
+    },
+    {
+      "seq": 2,
+      "kind": "room.started",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:56.677724+00:00",
+      "data": {}
+    },
+    {
+      "seq": 3,
+      "kind": "thread.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:57.473356+00:00",
+      "data": {}
+    },
+    {
+      "seq": 4,
+      "kind": "thread.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:57.866803+00:00",
+      "data": {}
+    },
+    {
+      "seq": 5,
+      "kind": "turn.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:57.873799+00:00",
+      "data": {}
+    },
+    {
+      "seq": 6,
+      "kind": "turn.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:57.876663+00:00",
+      "data": {}
+    },
+    {
+      "seq": 7,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:57.882097+00:00",
+      "data": {
+        "kind": "model",
+        "count": 1,
+        "reserved_tokens": 32768
+      }
+    },
+    {
+      "seq": 8,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:57.884751+00:00",
+      "data": {
+        "kind": "model",
+        "count": 2,
+        "reserved_tokens": 65536
+      }
+    },
+    {
+      "seq": 9,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:58.878200+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 1,
+        "reserved_tokens": 65536
+      }
+    },
+    {
+      "seq": 10,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:58.883221+00:00",
+      "data": {
+        "name": "skills_discover"
+      }
+    },
+    {
+      "seq": 11,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:58.888710+00:00",
+      "data": {
+        "name": "skills_discover",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 12,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:58.905268+00:00",
+      "data": {
+        "kind": "model",
+        "count": 3,
+        "reserved_tokens": 98304
+      }
+    },
+    {
+      "seq": 13,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:59.119709+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 2,
+        "reserved_tokens": 98304
+      }
+    },
+    {
+      "seq": 14,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:59.123447+00:00",
+      "data": {
+        "name": "skills_discover"
+      }
+    },
+    {
+      "seq": 15,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:59.125650+00:00",
+      "data": {
+        "name": "skills_discover",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 16,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:59.142937+00:00",
+      "data": {
+        "kind": "model",
+        "count": 4,
+        "reserved_tokens": 131072
+      }
+    },
+    {
+      "seq": 17,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:59.230287+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 3,
+        "reserved_tokens": 131072
+      }
+    },
+    {
+      "seq": 18,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:59.236104+00:00",
+      "data": {
+        "name": "skills_load"
+      }
+    },
+    {
+      "seq": 19,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:52:59.242567+00:00",
+      "data": {
+        "name": "skills_load",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 20,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:59.260947+00:00",
+      "data": {
+        "kind": "model",
+        "count": 5,
+        "reserved_tokens": 163840
+      }
+    },
+    {
+      "seq": 21,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:59.429838+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 4,
+        "reserved_tokens": 163840
+      }
+    },
+    {
+      "seq": 22,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:59.433135+00:00",
+      "data": {
+        "name": "skills_load"
+      }
+    },
+    {
+      "seq": 23,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:52:59.436069+00:00",
+      "data": {
+        "name": "skills_load",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 24,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:52:59.451718+00:00",
+      "data": {
+        "kind": "model",
+        "count": 6,
+        "reserved_tokens": 196608
+      }
+    },
+    {
+      "seq": 25,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:00.365980+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 5,
+        "reserved_tokens": 196608
+      }
+    },
+    {
+      "seq": 26,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:00.368859+00:00",
+      "data": {
+        "name": "browser_read",
+        "url": "https://www.sebi.gov.in/"
+      }
+    },
+    {
+      "seq": 27,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:02.454094+00:00",
+      "data": {
+        "name": "browser_read",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 28,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:02.469261+00:00",
+      "data": {
+        "kind": "model",
+        "count": 7,
+        "reserved_tokens": 229376
+      }
+    },
+    {
+      "seq": 29,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:02.472852+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 6,
+        "reserved_tokens": 229376
+      }
+    },
+    {
+      "seq": 30,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:02.475657+00:00",
+      "data": {
+        "name": "browser_read",
+        "url": "https://www.sebi.gov.in/"
+      }
+    },
+    {
+      "seq": 31,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:04.095937+00:00",
+      "data": {
+        "name": "browser_read",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 32,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:04.112697+00:00",
+      "data": {
+        "kind": "model",
+        "count": 8,
+        "reserved_tokens": 262144
+      }
+    },
+    {
+      "seq": 33,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:05.259829+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 7,
+        "reserved_tokens": 262144
+      }
+    },
+    {
+      "seq": 34,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:05.265028+00:00",
+      "data": {
+        "name": "browser_read_more"
+      }
+    },
+    {
+      "seq": 35,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:06.852285+00:00",
+      "data": {
+        "name": "browser_read_more",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 36,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:06.867600+00:00",
+      "data": {
+        "kind": "model",
+        "count": 9,
+        "reserved_tokens": 294912
+      }
+    },
+    {
+      "seq": 37,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:09.143365+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 8,
+        "reserved_tokens": 294912
+      }
+    },
+    {
+      "seq": 38,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:09.149166+00:00",
+      "data": {
+        "name": "room_message"
+      }
+    },
+    {
+      "seq": 39,
+      "kind": "message",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:09.158940+00:00",
+      "data": {
+        "recipient": "skeptic",
+        "kind": "question",
+        "stance": "continue",
+        "validation": "exact citation spans verified; interpretation not fact-checked",
+        "claims": [
+          {
+            "kind": "observation",
+            "support_assessment": "unassessed",
+            "has_quote": true,
+            "has_refs": true
+          }
+        ]
+      }
+    },
+    {
+      "seq": 40,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:09.163910+00:00",
+      "data": {
+        "name": "room_message",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 41,
+      "kind": "turn.finished",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:09.175168+00:00",
+      "data": {
+        "status": "interrupted"
+      }
+    },
+    {
+      "seq": 42,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:11.606387+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 9,
+        "reserved_tokens": 294912
+      }
+    },
+    {
+      "seq": 43,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:11.611680+00:00",
+      "data": {
+        "name": "room_message"
+      }
+    },
+    {
+      "seq": 44,
+      "kind": "message",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:11.620978+00:00",
+      "data": {
+        "recipient": "analyst",
+        "kind": "question",
+        "stance": "continue",
+        "validation": "exact citation spans verified; interpretation not fact-checked",
+        "claims": [
+          {
+            "kind": "observation",
+            "support_assessment": "supported",
+            "has_quote": true,
+            "has_refs": true
+          }
+        ]
+      }
+    },
+    {
+      "seq": 45,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:11.626297+00:00",
+      "data": {
+        "name": "room_message",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 46,
+      "kind": "turn.finished",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:11.637712+00:00",
+      "data": {
+        "status": "interrupted"
+      }
+    },
+    {
+      "seq": 47,
+      "kind": "mail.delivery_attempted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:11.649355+00:00",
+      "data": {
+        "recipient": "skeptic"
+      }
+    },
+    {
+      "seq": 48,
+      "kind": "turn.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:11.658834+00:00",
+      "data": {}
+    },
+    {
+      "seq": 49,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:11.667644+00:00",
+      "data": {
+        "kind": "model",
+        "count": 10,
+        "reserved_tokens": 327680
+      }
+    },
+    {
+      "seq": 50,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:16.803394+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 10,
+        "reserved_tokens": 327680
+      }
+    },
+    {
+      "seq": 51,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:16.807347+00:00",
+      "data": {
+        "name": "room_message"
+      }
+    },
+    {
+      "seq": 52,
+      "kind": "message",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:16.813059+00:00",
+      "data": {
+        "recipient": "analyst",
+        "kind": "synthesis",
+        "stance": "conclusion",
+        "validation": "exact citation spans verified; interpretation not fact-checked",
+        "claims": [
+          {
+            "kind": "observation",
+            "support_assessment": "supported",
+            "has_quote": true,
+            "has_refs": true
+          }
+        ]
+      }
+    },
+    {
+      "seq": 53,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:16.815520+00:00",
+      "data": {
+        "name": "room_message",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 54,
+      "kind": "turn.finished",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:16.824710+00:00",
+      "data": {
+        "status": "interrupted"
+      }
+    },
+    {
+      "seq": 55,
+      "kind": "mail.response_opportunity",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:16.834359+00:00",
+      "data": {
+        "recipient": "skeptic"
+      }
+    },
+    {
+      "seq": 56,
+      "kind": "mail.delivery_attempted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:16.843494+00:00",
+      "data": {
+        "recipient": "analyst"
+      }
+    },
+    {
+      "seq": 57,
+      "kind": "turn.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:16.852755+00:00",
+      "data": {}
+    },
+    {
+      "seq": 58,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:16.861011+00:00",
+      "data": {
+        "kind": "model",
+        "count": 11,
+        "reserved_tokens": 360448
+      }
+    },
+    {
+      "seq": 59,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:23.638459+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 11,
+        "reserved_tokens": 360448
+      }
+    },
+    {
+      "seq": 60,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:23.643751+00:00",
+      "data": {
+        "name": "room_message"
+      }
+    },
+    {
+      "seq": 61,
+      "kind": "message",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:23.651889+00:00",
+      "data": {
+        "recipient": "skeptic",
+        "kind": "question",
+        "stance": "continue",
+        "validation": "exact citation spans verified; interpretation not fact-checked",
+        "claims": [
+          {
+            "kind": "question",
+            "support_assessment": "insufficient",
+            "has_quote": true,
+            "has_refs": true
+          }
+        ]
+      }
+    },
+    {
+      "seq": 62,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:23.656754+00:00",
+      "data": {
+        "name": "room_message",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 63,
+      "kind": "turn.finished",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:23.666871+00:00",
+      "data": {
+        "status": "interrupted"
+      }
+    },
+    {
+      "seq": 64,
+      "kind": "mail.response_opportunity",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:23.898529+00:00",
+      "data": {
+        "recipient": "analyst"
+      }
+    },
+    {
+      "seq": 65,
+      "kind": "mail.delivery_attempted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:23.907041+00:00",
+      "data": {
+        "recipient": "skeptic"
+      }
+    },
+    {
+      "seq": 66,
+      "kind": "turn.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:23.917419+00:00",
+      "data": {}
+    },
+    {
+      "seq": 67,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:23.931126+00:00",
+      "data": {
+        "kind": "model",
+        "count": 12,
+        "reserved_tokens": 393216
+      }
+    },
+    {
+      "seq": 68,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:26.109933+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 12,
+        "reserved_tokens": 393216
+      }
+    },
+    {
+      "seq": 69,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:26.114323+00:00",
+      "data": {
+        "name": "room_message"
+      }
+    },
+    {
+      "seq": 70,
+      "kind": "message",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:26.123549+00:00",
+      "data": {
+        "recipient": "analyst",
+        "kind": "abstention",
+        "stance": "abstention",
+        "validation": "exact citation spans verified; interpretation not fact-checked",
+        "claims": [
+          {
+            "kind": "observation",
+            "support_assessment": "insufficient",
+            "has_quote": true,
+            "has_refs": true
+          }
+        ]
+      }
+    },
+    {
+      "seq": 71,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:26.128687+00:00",
+      "data": {
+        "name": "room_message",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 72,
+      "kind": "turn.finished",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:26.141980+00:00",
+      "data": {
+        "status": "interrupted"
+      }
+    },
+    {
+      "seq": 73,
+      "kind": "mail.response_opportunity",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:26.152108+00:00",
+      "data": {
+        "recipient": "skeptic"
+      }
+    },
+    {
+      "seq": 74,
+      "kind": "mail.delivery_attempted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:26.163490+00:00",
+      "data": {
+        "recipient": "analyst"
+      }
+    },
+    {
+      "seq": 75,
+      "kind": "turn.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:26.169150+00:00",
+      "data": {}
+    },
+    {
+      "seq": 76,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:26.175704+00:00",
+      "data": {
+        "kind": "model",
+        "count": 13,
+        "reserved_tokens": 425984
+      }
+    },
+    {
+      "seq": 77,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:28.423477+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 13,
+        "reserved_tokens": 425984
+      }
+    },
+    {
+      "seq": 78,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:28.429472+00:00",
+      "data": {
+        "name": "room_message"
+      }
+    },
+    {
+      "seq": 79,
+      "kind": "message",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:28.439437+00:00",
+      "data": {
+        "recipient": "skeptic",
+        "kind": "question",
+        "stance": "continue",
+        "validation": "exact citation spans verified; interpretation not fact-checked",
+        "claims": [
+          {
+            "kind": "question",
+            "support_assessment": "unassessed",
+            "has_quote": true,
+            "has_refs": true
+          }
+        ]
+      }
+    },
+    {
+      "seq": 80,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:28.445353+00:00",
+      "data": {
+        "name": "room_message",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 81,
+      "kind": "turn.finished",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:28.457392+00:00",
+      "data": {
+        "status": "interrupted"
+      }
+    },
+    {
+      "seq": 82,
+      "kind": "mail.response_opportunity",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:28.466862+00:00",
+      "data": {
+        "recipient": "analyst"
+      }
+    },
+    {
+      "seq": 83,
+      "kind": "mail.delivery_attempted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:28.476734+00:00",
+      "data": {
+        "recipient": "skeptic"
+      }
+    },
+    {
+      "seq": 84,
+      "kind": "turn.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:28.485567+00:00",
+      "data": {}
+    },
+    {
+      "seq": 85,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:28.492451+00:00",
+      "data": {
+        "kind": "model",
+        "count": 14,
+        "reserved_tokens": 458752
+      }
+    },
+    {
+      "seq": 86,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:30.682325+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 14,
+        "reserved_tokens": 458752
+      }
+    },
+    {
+      "seq": 87,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:30.688962+00:00",
+      "data": {
+        "name": "room_message"
+      }
+    },
+    {
+      "seq": 88,
+      "kind": "message",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:30.697719+00:00",
+      "data": {
+        "recipient": "analyst",
+        "kind": "synthesis",
+        "stance": "conclusion",
+        "validation": "exact citation spans verified; interpretation not fact-checked",
+        "claims": [
+          {
+            "kind": "observation",
+            "support_assessment": "supported",
+            "has_quote": true,
+            "has_refs": true
+          }
+        ]
+      }
+    },
+    {
+      "seq": 89,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:30.703357+00:00",
+      "data": {
+        "name": "room_message",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 90,
+      "kind": "turn.finished",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:30.715662+00:00",
+      "data": {
+        "status": "interrupted"
+      }
+    },
+    {
+      "seq": 91,
+      "kind": "mail.response_opportunity",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:30.725419+00:00",
+      "data": {
+        "recipient": "skeptic"
+      }
+    },
+    {
+      "seq": 92,
+      "kind": "mail.delivery_attempted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:30.734879+00:00",
+      "data": {
+        "recipient": "analyst"
+      }
+    },
+    {
+      "seq": 93,
+      "kind": "turn.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:30.744449+00:00",
+      "data": {}
+    },
+    {
+      "seq": 94,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:30.755653+00:00",
+      "data": {
+        "kind": "model",
+        "count": 15,
+        "reserved_tokens": 491520
+      }
+    },
+    {
+      "seq": 95,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:31.987315+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 15,
+        "reserved_tokens": 491520
+      }
+    },
+    {
+      "seq": 96,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:31.993478+00:00",
+      "data": {
+        "name": "browser_read_more"
+      }
+    },
+    {
+      "seq": 97,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:33.606428+00:00",
+      "data": {
+        "name": "browser_read_more",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 98,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:33.625493+00:00",
+      "data": {
+        "kind": "model",
+        "count": 16,
+        "reserved_tokens": 524288
+      }
+    },
+    {
+      "seq": 99,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:36.756568+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 16,
+        "reserved_tokens": 524288
+      }
+    },
+    {
+      "seq": 100,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:36.761923+00:00",
+      "data": {
+        "name": "room_message"
+      }
+    },
+    {
+      "seq": 101,
+      "kind": "message",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:36.770546+00:00",
+      "data": {
+        "recipient": "skeptic",
+        "kind": "claim",
+        "stance": "conclusion",
+        "validation": "exact citation spans verified; interpretation not fact-checked",
+        "claims": [
+          {
+            "kind": "observation",
+            "support_assessment": "supported",
+            "has_quote": true,
+            "has_refs": true
+          }
+        ]
+      }
+    },
+    {
+      "seq": 102,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:36.776654+00:00",
+      "data": {
+        "name": "room_message",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 103,
+      "kind": "turn.finished",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:36.789430+00:00",
+      "data": {
+        "status": "interrupted"
+      }
+    },
+    {
+      "seq": 104,
+      "kind": "mail.response_opportunity",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:36.799071+00:00",
+      "data": {
+        "recipient": "analyst"
+      }
+    },
+    {
+      "seq": 105,
+      "kind": "mail.delivery_attempted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:36.809123+00:00",
+      "data": {
+        "recipient": "skeptic"
+      }
+    },
+    {
+      "seq": 106,
+      "kind": "turn.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:36.818704+00:00",
+      "data": {}
+    },
+    {
+      "seq": 107,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:36.829825+00:00",
+      "data": {
+        "kind": "model",
+        "count": 17,
+        "reserved_tokens": 557056
+      }
+    },
+    {
+      "seq": 108,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:39.014413+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 17,
+        "reserved_tokens": 557056
+      }
+    },
+    {
+      "seq": 109,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:39.019005+00:00",
+      "data": {
+        "name": "room_message"
+      }
+    },
+    {
+      "seq": 110,
+      "kind": "message",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:39.028031+00:00",
+      "data": {
+        "recipient": "analyst",
+        "kind": "synthesis",
+        "stance": "conclusion",
+        "validation": "exact citation spans verified; interpretation not fact-checked",
+        "claims": [
+          {
+            "kind": "observation",
+            "support_assessment": "supported",
+            "has_quote": true,
+            "has_refs": true
+          }
+        ]
+      }
+    },
+    {
+      "seq": 111,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:39.033628+00:00",
+      "data": {
+        "name": "room_message",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 112,
+      "kind": "turn.finished",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:53:39.043811+00:00",
+      "data": {
+        "status": "interrupted"
+      }
+    },
+    {
+      "seq": 113,
+      "kind": "mail.response_opportunity",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:39.054010+00:00",
+      "data": {
+        "recipient": "skeptic"
+      }
+    },
+    {
+      "seq": 114,
+      "kind": "room.finished",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:45.343137+00:00",
+      "data": {
+        "status": "conclusion",
+        "reason_code": "outcome"
+      }
+    }
+  ],
+  "browser_cancel": [
+    {
+      "seq": 1,
+      "kind": "room.created",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:58.941644+00:00",
+      "data": {}
+    },
+    {
+      "seq": 2,
+      "kind": "room.started",
+      "agent": "manager",
+      "at": "2026-11-01T16:53:59.402274+00:00",
+      "data": {}
+    },
+    {
+      "seq": 3,
+      "kind": "thread.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:53:59.858613+00:00",
+      "data": {}
+    },
+    {
+      "seq": 4,
+      "kind": "thread.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:00.259112+00:00",
+      "data": {}
+    },
+    {
+      "seq": 5,
+      "kind": "turn.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:00.265031+00:00",
+      "data": {}
+    },
+    {
+      "seq": 6,
+      "kind": "turn.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:00.267402+00:00",
+      "data": {}
+    },
+    {
+      "seq": 7,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:00.273200+00:00",
+      "data": {
+        "kind": "model",
+        "count": 1,
+        "reserved_tokens": 32768
+      }
+    },
+    {
+      "seq": 8,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:00.276032+00:00",
+      "data": {
+        "kind": "model",
+        "count": 2,
+        "reserved_tokens": 65536
+      }
+    },
+    {
+      "seq": 9,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:01.078649+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 1,
+        "reserved_tokens": 65536
+      }
+    },
+    {
+      "seq": 10,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:01.084102+00:00",
+      "data": {
+        "name": "skills_discover"
+      }
+    },
+    {
+      "seq": 11,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:01.088742+00:00",
+      "data": {
+        "name": "skills_discover",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 12,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:01.104615+00:00",
+      "data": {
+        "kind": "model",
+        "count": 3,
+        "reserved_tokens": 98304
+      }
+    },
+    {
+      "seq": 13,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:01.209409+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 2,
+        "reserved_tokens": 98304
+      }
+    },
+    {
+      "seq": 14,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:01.211821+00:00",
+      "data": {
+        "name": "skills_discover"
+      }
+    },
+    {
+      "seq": 15,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:01.215764+00:00",
+      "data": {
+        "name": "skills_discover",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 16,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:01.228011+00:00",
+      "data": {
+        "kind": "model",
+        "count": 4,
+        "reserved_tokens": 131072
+      }
+    },
+    {
+      "seq": 17,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:01.426114+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 3,
+        "reserved_tokens": 131072
+      }
+    },
+    {
+      "seq": 18,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:01.430355+00:00",
+      "data": {
+        "name": "skills_load"
+      }
+    },
+    {
+      "seq": 19,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:01.434176+00:00",
+      "data": {
+        "name": "skills_load",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 20,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:01.447758+00:00",
+      "data": {
+        "kind": "model",
+        "count": 5,
+        "reserved_tokens": 163840
+      }
+    },
+    {
+      "seq": 21,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:01.504959+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 4,
+        "reserved_tokens": 163840
+      }
+    },
+    {
+      "seq": 22,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:01.508627+00:00",
+      "data": {
+        "name": "skills_load"
+      }
+    },
+    {
+      "seq": 23,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:01.513294+00:00",
+      "data": {
+        "name": "skills_load",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 24,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:01.531008+00:00",
+      "data": {
+        "kind": "model",
+        "count": 6,
+        "reserved_tokens": 196608
+      }
+    },
+    {
+      "seq": 25,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:02.495212+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 5,
+        "reserved_tokens": 196608
+      }
+    },
+    {
+      "seq": 26,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:02.499080+00:00",
+      "data": {
+        "name": "browser_read",
+        "url": "https://www.sebi.gov.in/"
+      }
+    },
+    {
+      "seq": 27,
+      "kind": "room.cancel_requested",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:02.561705+00:00",
+      "data": {}
+    },
+    {
+      "seq": 28,
+      "kind": "room.finished",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:06.959132+00:00",
+      "data": {
+        "status": "cancelled",
+        "reason_code": "cancelled"
+      }
+    }
+  ],
+  "reliance_graph": [
+    {
+      "seq": 1,
+      "kind": "room.created",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:15.460225+00:00",
+      "data": {}
+    },
+    {
+      "seq": 2,
+      "kind": "room.started",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:15.993405+00:00",
+      "data": {}
+    },
+    {
+      "seq": 3,
+      "kind": "thread.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:16.387939+00:00",
+      "data": {}
+    },
+    {
+      "seq": 4,
+      "kind": "thread.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:16.787365+00:00",
+      "data": {}
+    },
+    {
+      "seq": 5,
+      "kind": "turn.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:16.794320+00:00",
+      "data": {}
+    },
+    {
+      "seq": 6,
+      "kind": "turn.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:16.796898+00:00",
+      "data": {}
+    },
+    {
+      "seq": 7,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:16.799750+00:00",
+      "data": {
+        "kind": "model",
+        "count": 1,
+        "reserved_tokens": 32768
+      }
+    },
+    {
+      "seq": 8,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:16.801985+00:00",
+      "data": {
+        "kind": "model",
+        "count": 2,
+        "reserved_tokens": 65536
+      }
+    },
+    {
+      "seq": 9,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:17.109734+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 1,
+        "reserved_tokens": 65536
+      }
+    },
+    {
+      "seq": 10,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:17.113059+00:00",
+      "data": {
+        "name": "graph_lookup"
+      }
+    },
+    {
+      "seq": 11,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:17.545089+00:00",
+      "data": {
+        "name": "graph_lookup",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 12,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:17.554753+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 2,
+        "reserved_tokens": 65536
+      }
+    },
+    {
+      "seq": 13,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:17.558678+00:00",
+      "data": {
+        "name": "graph_lookup"
+      }
+    },
+    {
+      "seq": 14,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:17.562038+00:00",
+      "data": {
+        "kind": "model",
+        "count": 3,
+        "reserved_tokens": 98304
+      }
+    },
+    {
+      "seq": 15,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:17.887005+00:00",
+      "data": {
+        "name": "graph_lookup",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 16,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:17.908245+00:00",
+      "data": {
+        "kind": "model",
+        "count": 4,
+        "reserved_tokens": 131072
+      }
+    },
+    {
+      "seq": 17,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:20.883929+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 3,
+        "reserved_tokens": 131072
+      }
+    },
+    {
+      "seq": 18,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:20.890421+00:00",
+      "data": {
+        "name": "room_message"
+      }
+    },
+    {
+      "seq": 19,
+      "kind": "message",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:20.898872+00:00",
+      "data": {
+        "recipient": "skeptic",
+        "kind": "question",
+        "stance": "continue",
+        "validation": "exact citation spans verified; interpretation not fact-checked",
+        "claims": [
+          {
+            "kind": "observation",
+            "support_assessment": "unassessed",
+            "has_quote": true,
+            "has_refs": true
+          }
+        ]
+      }
+    },
+    {
+      "seq": 20,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:20.904308+00:00",
+      "data": {
+        "name": "room_message",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 21,
+      "kind": "turn.finished",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:20.915178+00:00",
+      "data": {
+        "status": "interrupted"
+      }
+    },
+    {
+      "seq": 22,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:21.323886+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 4,
+        "reserved_tokens": 131072
+      }
+    },
+    {
+      "seq": 23,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:21.328957+00:00",
+      "data": {
+        "name": "room_message"
+      }
+    },
+    {
+      "seq": 24,
+      "kind": "message",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:21.334559+00:00",
+      "data": {
+        "recipient": "analyst",
+        "kind": "challenge",
+        "stance": "continue",
+        "validation": "exact citation spans verified; interpretation not fact-checked",
+        "claims": [
+          {
+            "kind": "inference",
+            "support_assessment": "insufficient",
+            "has_quote": true,
+            "has_refs": true
+          }
+        ]
+      }
+    },
+    {
+      "seq": 25,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:21.338999+00:00",
+      "data": {
+        "name": "room_message",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 26,
+      "kind": "turn.finished",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:21.348590+00:00",
+      "data": {
+        "status": "interrupted"
+      }
+    },
+    {
+      "seq": 27,
+      "kind": "mail.delivery_attempted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:21.356252+00:00",
+      "data": {
+        "recipient": "skeptic"
+      }
+    },
+    {
+      "seq": 28,
+      "kind": "turn.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:21.363495+00:00",
+      "data": {}
+    },
+    {
+      "seq": 29,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:21.371544+00:00",
+      "data": {
+        "kind": "model",
+        "count": 5,
+        "reserved_tokens": 163840
+      }
+    },
+    {
+      "seq": 30,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:24.834927+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 5,
+        "reserved_tokens": 163840
+      }
+    },
+    {
+      "seq": 31,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:24.837433+00:00",
+      "data": {
+        "name": "room_message"
+      }
+    },
+    {
+      "seq": 32,
+      "kind": "message",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:24.841661+00:00",
+      "data": {
+        "recipient": "analyst",
+        "kind": "challenge",
+        "stance": "disagreement",
+        "validation": "exact citation spans verified; interpretation not fact-checked",
+        "claims": [
+          {
+            "kind": "inference",
+            "support_assessment": "insufficient",
+            "has_quote": true,
+            "has_refs": true
+          }
+        ]
+      }
+    },
+    {
+      "seq": 33,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:24.843974+00:00",
+      "data": {
+        "name": "room_message",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 34,
+      "kind": "turn.finished",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:24.849218+00:00",
+      "data": {
+        "status": "interrupted"
+      }
+    },
+    {
+      "seq": 35,
+      "kind": "mail.response_opportunity",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:24.852373+00:00",
+      "data": {
+        "recipient": "skeptic"
+      }
+    },
+    {
+      "seq": 36,
+      "kind": "mail.delivery_attempted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:24.855566+00:00",
+      "data": {
+        "recipient": "analyst"
+      }
+    },
+    {
+      "seq": 37,
+      "kind": "turn.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:24.860300+00:00",
+      "data": {}
+    },
+    {
+      "seq": 38,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:24.868995+00:00",
+      "data": {
+        "kind": "model",
+        "count": 6,
+        "reserved_tokens": 196608
+      }
+    },
+    {
+      "seq": 39,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:27.258302+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 6,
+        "reserved_tokens": 196608
+      }
+    },
+    {
+      "seq": 40,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:27.261394+00:00",
+      "data": {
+        "name": "room_message"
+      }
+    },
+    {
+      "seq": 41,
+      "kind": "message",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:27.265378+00:00",
+      "data": {
+        "recipient": "skeptic",
+        "kind": "question",
+        "stance": "continue",
+        "validation": "exact citation spans verified; interpretation not fact-checked",
+        "claims": [
+          {
+            "kind": "question",
+            "support_assessment": "insufficient",
+            "has_quote": true,
+            "has_refs": true
+          }
+        ]
+      }
+    },
+    {
+      "seq": 42,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:27.267571+00:00",
+      "data": {
+        "name": "room_message",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 43,
+      "kind": "turn.finished",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:27.272425+00:00",
+      "data": {
+        "status": "interrupted"
+      }
+    },
+    {
+      "seq": 44,
+      "kind": "mail.response_opportunity",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:27.276043+00:00",
+      "data": {
+        "recipient": "analyst"
+      }
+    },
+    {
+      "seq": 45,
+      "kind": "mail.delivery_attempted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:27.279684+00:00",
+      "data": {
+        "recipient": "skeptic"
+      }
+    },
+    {
+      "seq": 46,
+      "kind": "turn.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:27.285777+00:00",
+      "data": {}
+    },
+    {
+      "seq": 47,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:27.292758+00:00",
+      "data": {
+        "kind": "model",
+        "count": 7,
+        "reserved_tokens": 229376
+      }
+    },
+    {
+      "seq": 48,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:29.643034+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 7,
+        "reserved_tokens": 229376
+      }
+    },
+    {
+      "seq": 49,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:29.646121+00:00",
+      "data": {
+        "name": "room_message"
+      }
+    },
+    {
+      "seq": 50,
+      "kind": "message",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:29.649571+00:00",
+      "data": {
+        "recipient": "analyst",
+        "kind": "question",
+        "stance": "continue",
+        "validation": "exact citation spans verified; interpretation not fact-checked",
+        "claims": [
+          {
+            "kind": "question",
+            "support_assessment": "insufficient",
+            "has_quote": true,
+            "has_refs": true
+          }
+        ]
+      }
+    },
+    {
+      "seq": 51,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:29.651591+00:00",
+      "data": {
+        "name": "room_message",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 52,
+      "kind": "turn.finished",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:29.656571+00:00",
+      "data": {
+        "status": "interrupted"
+      }
+    },
+    {
+      "seq": 53,
+      "kind": "mail.response_opportunity",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:29.660209+00:00",
+      "data": {
+        "recipient": "skeptic"
+      }
+    },
+    {
+      "seq": 54,
+      "kind": "mail.delivery_attempted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:29.663695+00:00",
+      "data": {
+        "recipient": "analyst"
+      }
+    },
+    {
+      "seq": 55,
+      "kind": "turn.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:29.668602+00:00",
+      "data": {}
+    },
+    {
+      "seq": 56,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:29.678294+00:00",
+      "data": {
+        "kind": "model",
+        "count": 8,
+        "reserved_tokens": 262144
+      }
+    },
+    {
+      "seq": 57,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:31.852970+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 8,
+        "reserved_tokens": 262144
+      }
+    },
+    {
+      "seq": 58,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:31.857934+00:00",
+      "data": {
+        "name": "room_message"
+      }
+    },
+    {
+      "seq": 59,
+      "kind": "message",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:31.866058+00:00",
+      "data": {
+        "recipient": "skeptic",
+        "kind": "question",
+        "stance": "continue",
+        "validation": "exact citation spans verified; interpretation not fact-checked",
+        "claims": [
+          {
+            "kind": "question",
+            "support_assessment": "insufficient",
+            "has_quote": true,
+            "has_refs": true
+          }
+        ]
+      }
+    },
+    {
+      "seq": 60,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:31.871636+00:00",
+      "data": {
+        "name": "room_message",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 61,
+      "kind": "turn.finished",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:31.882546+00:00",
+      "data": {
+        "status": "interrupted"
+      }
+    },
+    {
+      "seq": 62,
+      "kind": "mail.response_opportunity",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:31.891146+00:00",
+      "data": {
+        "recipient": "analyst"
+      }
+    },
+    {
+      "seq": 63,
+      "kind": "mail.delivery_attempted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:31.899737+00:00",
+      "data": {
+        "recipient": "skeptic"
+      }
+    },
+    {
+      "seq": 64,
+      "kind": "turn.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:31.910890+00:00",
+      "data": {}
+    },
+    {
+      "seq": 65,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:31.917294+00:00",
+      "data": {
+        "kind": "model",
+        "count": 9,
+        "reserved_tokens": 294912
+      }
+    },
+    {
+      "seq": 66,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:34.095869+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 9,
+        "reserved_tokens": 294912
+      }
+    },
+    {
+      "seq": 67,
+      "kind": "tool.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:34.098565+00:00",
+      "data": {
+        "name": "room_message"
+      }
+    },
+    {
+      "seq": 68,
+      "kind": "message",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:34.103287+00:00",
+      "data": {
+        "recipient": "analyst",
+        "kind": "question",
+        "stance": "continue",
+        "validation": "exact citation spans verified; interpretation not fact-checked",
+        "claims": [
+          {
+            "kind": "question",
+            "support_assessment": "insufficient",
+            "has_quote": true,
+            "has_refs": true
+          }
+        ]
+      }
+    },
+    {
+      "seq": 69,
+      "kind": "tool.result",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:34.105768+00:00",
+      "data": {
+        "name": "room_message",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 70,
+      "kind": "turn.finished",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:54:34.110619+00:00",
+      "data": {
+        "status": "interrupted"
+      }
+    },
+    {
+      "seq": 71,
+      "kind": "mail.response_opportunity",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:34.116484+00:00",
+      "data": {
+        "recipient": "skeptic"
+      }
+    },
+    {
+      "seq": 72,
+      "kind": "mail.delivery_attempted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:34.120766+00:00",
+      "data": {
+        "recipient": "analyst"
+      }
+    },
+    {
+      "seq": 73,
+      "kind": "turn.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:34.128041+00:00",
+      "data": {}
+    },
+    {
+      "seq": 74,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:34.134691+00:00",
+      "data": {
+        "kind": "model",
+        "count": 10,
+        "reserved_tokens": 327680
+      }
+    },
+    {
+      "seq": 75,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:34.852379+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 10,
+        "reserved_tokens": 327680
+      }
+    },
+    {
+      "seq": 76,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:34.856251+00:00",
+      "data": {
+        "name": "skills_discover"
+      }
+    },
+    {
+      "seq": 77,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:34.859078+00:00",
+      "data": {
+        "name": "skills_discover",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 78,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:34.871113+00:00",
+      "data": {
+        "kind": "model",
+        "count": 11,
+        "reserved_tokens": 360448
+      }
+    },
+    {
+      "seq": 79,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:35.190675+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 11,
+        "reserved_tokens": 360448
+      }
+    },
+    {
+      "seq": 80,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:35.194840+00:00",
+      "data": {
+        "name": "skills_load"
+      }
+    },
+    {
+      "seq": 81,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:35.198067+00:00",
+      "data": {
+        "name": "skills_load",
+        "output_status": "ok"
+      }
+    },
+    {
+      "seq": 82,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:35.214205+00:00",
+      "data": {
+        "kind": "model",
+        "count": 12,
+        "reserved_tokens": 393216
+      }
+    },
+    {
+      "seq": 83,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:36.973208+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 12,
+        "reserved_tokens": 393216
+      }
+    },
+    {
+      "seq": 84,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:36.975690+00:00",
+      "data": {
+        "name": "browser_read",
+        "url": "https://www.sebi.gov.in/"
+      }
+    },
+    {
+      "seq": 85,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:38.579840+00:00",
+      "data": {
+        "name": "browser_read",
+        "output_status": "empty"
+      }
+    },
+    {
+      "seq": 86,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:38.595733+00:00",
+      "data": {
+        "kind": "model",
+        "count": 13,
+        "reserved_tokens": 425984
+      }
+    },
+    {
+      "seq": 87,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:39.034238+00:00",
+      "data": {
+        "kind": "tool",
+        "count": 13,
+        "reserved_tokens": 425984
+      }
+    },
+    {
+      "seq": 88,
+      "kind": "tool.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:39.037719+00:00",
+      "data": {
+        "name": "browser_read",
+        "url": "https://www.nseindia.com/"
+      }
+    },
+    {
+      "seq": 89,
+      "kind": "tool.result",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:39.553649+00:00",
+      "data": {
+        "name": "browser_read",
+        "output_status": "denied"
+      }
+    },
+    {
+      "seq": 90,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:39.570444+00:00",
+      "data": {
+        "kind": "model",
+        "count": 14,
+        "reserved_tokens": 458752
+      }
+    },
+    {
+      "seq": 91,
+      "kind": "turn.finished",
+      "agent": "analyst",
+      "at": "2026-11-01T16:54:44.998006+00:00",
+      "data": {
+        "status": "completed"
+      }
+    },
+    {
+      "seq": 92,
+      "kind": "mail.response_opportunity",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:45.005862+00:00",
+      "data": {
+        "recipient": "analyst"
+      }
+    },
+    {
+      "seq": 93,
+      "kind": "room.finished",
+      "agent": "manager",
+      "at": "2026-11-01T16:54:48.439158+00:00",
+      "data": {
+        "status": "abstention",
+        "reason_code": "no_pending_mail"
+      }
+    }
+  ],
+  "interrupted": [
+    {
+      "seq": 1,
+      "kind": "room.created",
+      "agent": "manager",
+      "at": "2026-11-01T16:55:56.792076+00:00",
+      "data": {}
+    },
+    {
+      "seq": 2,
+      "kind": "room.started",
+      "agent": "manager",
+      "at": "2026-11-01T16:55:57.658807+00:00",
+      "data": {}
+    },
+    {
+      "seq": 3,
+      "kind": "thread.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:55:58.046365+00:00",
+      "data": {}
+    },
+    {
+      "seq": 4,
+      "kind": "thread.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:55:58.429287+00:00",
+      "data": {}
+    },
+    {
+      "seq": 5,
+      "kind": "turn.started",
+      "agent": "skeptic",
+      "at": "2026-11-01T16:55:58.435129+00:00",
+      "data": {}
+    },
+    {
+      "seq": 6,
+      "kind": "turn.started",
+      "agent": "analyst",
+      "at": "2026-11-01T16:55:58.437247+00:00",
+      "data": {}
+    },
+    {
+      "seq": 7,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:55:58.442080+00:00",
+      "data": {
+        "kind": "model",
+        "count": 1,
+        "reserved_tokens": 32768
+      }
+    },
+    {
+      "seq": 8,
+      "kind": "budget.admitted",
+      "agent": "manager",
+      "at": "2026-11-01T16:55:58.444934+00:00",
+      "data": {
+        "kind": "model",
+        "count": 2,
+        "reserved_tokens": 65536
+      }
+    },
+    {
+      "seq": 9,
+      "kind": "room.finished",
+      "agent": "manager",
+      "at": "2026-11-01T16:56:43.361420+00:00",
+      "data": {
+        "status": "interrupted",
+        "reason_code": "lease_expired"
+      }
+    }
+  ],
+  "retry": [
+    {
+      "seq": 1,
+      "kind": "room.created",
+      "agent": "manager",
+      "at": "2026-11-01T16:56:43.498172+00:00",
+      "data": {}
+    },
+    {
+      "seq": 2,
+      "kind": "room.cancel_requested",
+      "agent": "manager",
+      "at": "2026-11-01T16:56:43.509029+00:00",
+      "data": {}
+    },
+    {
+      "seq": 3,
+      "kind": "room.finished",
+      "agent": "manager",
+      "at": "2026-11-01T16:56:43.510216+00:00",
+      "data": {
+        "status": "cancelled",
+        "reason_code": "queued_cancel"
+      }
+    }
+  ]
+}
