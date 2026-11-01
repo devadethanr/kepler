@@ -1,5 +1,7 @@
 Execution follow-up: [NEXT_PHASE_FINDINGS.md](NEXT_PHASE_FINDINGS.md) records source `921088c`, completed correctness/UI changes and the still-failed grounding objective. The original handoff/plan/review below is preserved.
 
+> Completed earlier scope: see [NEXT_PHASE_FINDINGS.md](NEXT_PHASE_FINDINGS.md) and [POST_TUNING_REVIEW.md](POST_TUNING_REVIEW.md). Most R1–R8 changes and the UI fix are delivered; semantic quality remains limited and one terminal-reason edge is carried forward. The active next task is [FRESH_SOURCE_HANDOFF.md](FRESH_SOURCE_HANDOFF.md). Preserve this earlier prompt/plan as history rather than replay it.
+
 # Next phase: useful, grounded research on the installed room
 
 Prepared 1 November 2026 for `feat-generic-broker@aebd42d`. Read [ROOM_REVIEW.md](ROOM_REVIEW.md) for findings and independently repeated checks. This plan extends the user's installed personal workspace. Codex App Server + the tested local adapter is selected and stays in place.

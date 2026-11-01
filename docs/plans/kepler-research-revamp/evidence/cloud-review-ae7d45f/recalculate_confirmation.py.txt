@@ -1,0 +1,56 @@
+"""Replay saved publication proposals into temporary SQLite; no inference/network."""
+from collections import Counter, defaultdict
+from contextlib import contextmanager
+import hashlib
+import json
+from pathlib import Path
+import tempfile
+from uuid import uuid4
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
+from memory.models import CognitionRunRow, CognitionReportRow
+from research_room.settings import Settings
+from research_room.store import Store, Budget
+from research_room.tools import Gateway
+from research_room.grounding import packet
+from research_room.iteration_scoring import score_v2
+
+repo = Path.cwd().parent
+saved = repo / 'docs/plans/kepler-research-revamp/evidence/prompt-iteration-v1'
+cases = {c['id']: c for c in json.loads((saved/'confirmation-heldout.json').read_text())}
+rows = [json.loads(line) for line in (saved/'batches/confirmation/results.jsonl').read_text().splitlines() if line.strip()]
+groups = defaultdict(list)
+mismatches = []
+with tempfile.TemporaryDirectory(prefix='kepler-confirmation-review-') as directory:
+    engine = create_engine('sqlite:///' + str(Path(directory)/'review.db'))
+    CognitionRunRow.__table__.create(engine)
+    CognitionReportRow.__table__.create(engine)
+    @contextmanager
+    def scope():
+        with Session(engine, expire_on_commit=False) as session, session.begin():
+            yield session
+    store = Store(scope)
+    config = json.loads(Path('research_room/local.example.json').read_text())
+    config.update(artifact_root=str(repo/'docs'), state_root=str(Path(directory)/'state'))
+    settings = Settings.model_validate(config)
+    for row in rows:
+        case = cases[row['case_id']]
+        room = store.create(case['question'], case['target_entity'], str(uuid4()), {'model':1,'tool':1,'seconds':120})
+        owner = 'offline-review'; store.claim(owner,120)
+        gateway = Gateway(settings,store,room,owner,Budget(store,room['id'],owner))
+        for source in case['sources']:
+            item = packet(source['target_entity'],source['source'],source['text'],record_id=source['record_id'],event_id=source.get('event_id'),published_at=source.get('published_at'),event_at=source.get('event_at'),decision_cutoff=case['decision_cutoff'],status=source.get('status','ok'),stale_after_days=case.get('stale_after_days',30),retrieval=source.get('retrieval',{'completeness':'complete for this supplied excerpt only'}))
+            gateway.evidence[item['id']] = item
+        output = gateway.execute(row['role'],{'tool':'room_message','arguments':row['proposal'],'callId':'review-call'})
+        score = score_v2(case,row['proposal'],output,store.events(room['id']),gateway.evidence)
+        if score != row['score']:
+            mismatches.append({'case':row['case_id'],'role':row['role'],'variant':row['prompt_variant'],'different_fields':{k:{'saved':row['score'].get(k),'replayed':v} for k,v in score.items() if row['score'].get(k)!=v}})
+        groups[row['role']+'/'+row['prompt_variant']].append(score)
+        gateway.close(); store.finish(room['id'],owner,'abstention','offline proposal review')
+    engine.dispose()
+summary = {}
+for key, scores in groups.items():
+    summary[key] = {'n':len(scores),'fully_correct':sum(s['fully_correct'] for s in scores),'accepted':sum(s['accepted'] for s in scores),'unsupported_support_accepted':sum(s['unsupported_supported_proposal_accepted'] for s in scores),'ungrounded_support_accepted':sum(s['ungrounded_support_accepted'] for s in scores),'supported_gold':sum(s['supported_gold'] for s in scores),'supported_case_correct':sum(s['supported_case_correct'] for s in scores),'field_correct':dict(Counter(k for s in scores for k,v in s['fields'].items() if v))}
+report={'reviewed_commit':'ae7d45f','scope':'Offline replay of saved proposals through actual Gateway.execute + score_v2 and disposable SQLite; no model/browser/network/graph/broker operations','rows_replayed':len(rows),'score_mismatches':mismatches,'summary':summary,'caveat':'Checks publication/evaluator reproducibility, not independent semantic label correctness or live-room quality.'}
+print(json.dumps(report,indent=2))
+assert not mismatches

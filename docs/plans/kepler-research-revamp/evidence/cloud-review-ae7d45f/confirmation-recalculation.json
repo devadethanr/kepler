@@ -1,0 +1,73 @@
+{
+  "reviewed_commit": "ae7d45f",
+  "scope": "Offline replay of saved proposals through actual Gateway.execute + score_v2 and disposable SQLite; no model/browser/network/graph/broker operations",
+  "rows_replayed": 120,
+  "score_mismatches": [],
+  "summary": {
+    "skeptic/selected": {
+      "n": 30,
+      "fully_correct": 24,
+      "accepted": 27,
+      "unsupported_support_accepted": 0,
+      "ungrounded_support_accepted": 0,
+      "supported_gold": 10,
+      "supported_case_correct": 9,
+      "field_correct": {
+        "claim_text": 30,
+        "claim_kind": 30,
+        "support_assessment": 28,
+        "relevant_citation": 25,
+        "event_identity": 30
+      }
+    },
+    "analyst/control-full": {
+      "n": 30,
+      "fully_correct": 20,
+      "accepted": 27,
+      "unsupported_support_accepted": 1,
+      "ungrounded_support_accepted": 1,
+      "supported_gold": 10,
+      "supported_case_correct": 10,
+      "field_correct": {
+        "claim_text": 30,
+        "claim_kind": 30,
+        "support_assessment": 23,
+        "relevant_citation": 25,
+        "event_identity": 29
+      }
+    },
+    "skeptic/control-full": {
+      "n": 30,
+      "fully_correct": 21,
+      "accepted": 27,
+      "unsupported_support_accepted": 0,
+      "ungrounded_support_accepted": 0,
+      "supported_gold": 10,
+      "supported_case_correct": 10,
+      "field_correct": {
+        "claim_text": 30,
+        "claim_kind": 30,
+        "relevant_citation": 24,
+        "event_identity": 30,
+        "support_assessment": 25
+      }
+    },
+    "analyst/selected": {
+      "n": 30,
+      "fully_correct": 25,
+      "accepted": 27,
+      "unsupported_support_accepted": 0,
+      "ungrounded_support_accepted": 0,
+      "supported_gold": 10,
+      "supported_case_correct": 10,
+      "field_correct": {
+        "claim_text": 30,
+        "claim_kind": 30,
+        "support_assessment": 29,
+        "relevant_citation": 25,
+        "event_identity": 29
+      }
+    }
+  },
+  "caveat": "Checks publication/evaluator reproducibility, not independent semantic label correctness or live-room quality."
+}

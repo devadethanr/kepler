@@ -1,5 +1,7 @@
 Execution update: the user subsequently authorized as many local SLM iterations as needed. See [PROMPT_TUNING_FINDINGS.md](PROMPT_TUNING_FINDINGS.md) and [all measured development results](PROMPT_TUNING_RESULTS.md). The original budget-pending preparation below is retained as history.
 
+> Completed experiment: subsequent user-authorized iterations are recorded in [PROMPT_TUNING_RESULTS.md](PROMPT_TUNING_RESULTS.md), [PROMPT_TUNING_FINDINGS.md](PROMPT_TUNING_FINDINGS.md) and their accounting manifest. Candidates remain inactive after final 25/30 and 24/30 scores. The active next task is [FRESH_SOURCE_IMPLEMENTATION.md](FRESH_SOURCE_IMPLEMENTATION.md), not another round on the now-seen sets.
+
 # Iterative prompt work — prepared, not promoted
 
 Prepared after `5adeaea` in response to the user's request to improve the installed

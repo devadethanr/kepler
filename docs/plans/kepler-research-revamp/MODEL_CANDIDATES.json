@@ -1,7 +1,7 @@
 {
   "researched_at": "2026-10-31",
   "baseline_commit": "8fb50888c47a8b4f62e0917dd0475ee5dfaa6fb0",
-  "status": "First Codex research room implemented and locally activated at aebd42d. Keep selected App Server/local adapter and measured llama.cpp profiles. Independent code/evidence review and next work are in ROOM_REVIEW.md and NEXT_PHASE_IMPLEMENTATION.md.",
+  "status": "Room/UI repair phase delivered and seven prompt rounds reviewed at ae7d45f. Installed Codex/model profiles remain selected; retained candidate prompts inactive below their functional target. Next: fresh primary-source evidence plus minor terminal-reason fix.",
   "hardware": {
     "source": "User-provided GPU output and refreshed local inventory in SPIKE_FINDINGS.md; operator-reported, not measured in this cloud review.",
     "confirmed": "Both GPUs are in the same PC.",
@@ -64,7 +64,7 @@
     "deployment": "Native isolated environments/start scripts remain accepted, Docker optional. Loopback-only endpoints and one process per GPU UUID for the measured baseline; CPU parameter placement must be explicit and resource-tested. Use these measured profiles for initial integration; record any configuration changes.",
     "quantization_gate": "Existing GGUF artifacts remain baseline pins. vLLM/SGLang need separately verified architecture/quantization/parser support; do not reinterpret Q4_0 or Q5_K_M as AWQ/GPTQ or assume a QAT-unquantized checkpoint is packed 4-bit.",
     "optimized_checkpoint_status": "Exact tested artifact/runtime pins are in SPIKE_FINDINGS.md, not unresolved preflight. vLLM 0.28.0 and SGLang 0.5.23 did not produce a passing preferred-pair arm under those conditions; startup/generation failures do not prove all configurations unsupported.",
-    "codex_status": "Codex 0.164.0 App Server + reused local adapter is implemented with actual tools and externally coordinated threads. Postgres history/API/SSE Research Desk activated locally at aebd42d. Worker recovery is a linked fresh attempt; native heterogeneous children are not required.",
+    "codex_status": "Installed Codex 0.164.0 App Server/local adapter with repaired room lifecycle, LAN UI fallback and actual graph/file/browser tools. Recovery remains linked fresh attempts. Small no-mail budget-denial reason edge remains.",
     "fresh_grounding_g2": {
       "source": "evidence/review-v1/grounding-summary.json",
       "transport": "Direct chat-completions constrained extraction; not end-to-end room research",
@@ -80,13 +80,36 @@
     },
     "room_tools": {
       "current_graph_lookup_neighbors": "wired",
-      "artifact_read_search": "wired with review findings",
-      "pinned_skill_public_html_browser": "wired with fetch-deadline limitation",
+      "artifact_read_search": "wired; earlier path/continuation/coverage fixes implemented",
+      "pinned_skill_public_html_browser": "wired; shared fetch/DOM deadline and cancellation implemented",
       "general_web_search": "not wired",
       "Scrapling": "not wired",
       "TimesFM": "not wired",
       "GIFT_STI": "not wired",
-      "scheduled_room_triggers": "not wired"
+      "scheduled_room_triggers": "not wired",
+      "news_snapshots": "planned next; existing data.news infrastructure not yet exposed as versioned room evidence service"
+    },
+    "active_participant_policy": "research_room/codex.py INSTRUCTIONS; no candidate prompt is loaded by installed RPC initialization.",
+    "prompt_confirmation": {
+      "source": "evidence/prompt-iteration-v1/batches/confirmation/summary.json",
+      "task": "Supplied-claim/evidence one-publication assessment, not live research",
+      "n_per_model_arm": 30,
+      "control_exact": {
+        "analyst": 20,
+        "skeptic": 21
+      },
+      "candidate_exact": {
+        "analyst": 25,
+        "skeptic": 24
+      },
+      "frozen_exact_target": 27,
+      "candidate_accepted_unsupported_support": {
+        "analyst": 0,
+        "skeptic": 0
+      },
+      "candidate_prompts_active": false,
+      "candidate_text_preserved_after_rename": true,
+      "interpretation": "Finite matched functional scores; both fail target. Policy and assessment-task changed together, no causal live-room quality claim."
     }
   },
   "candidates": [
@@ -250,14 +273,14 @@
       "caveat": "Not a third required resident model. Pin/review code and calibrate own outcomes; no zero-shot trading authority or production promotion from model probabilities."
     }
   ],
-  "plan_revision": 6,
+  "plan_revision": 7,
   "default_profiles": {
     "fast": "fast-gemma4-e4b",
     "slow": "slow-qwen35",
     "fast_fallback": "fast-qwen35",
     "forecast": "timesfm-25-tool-cpu"
   },
-  "updated_at": "2026-11-01",
+  "updated_at": "2026-11-02",
   "reviewed_report_commit": "8d7ddfc4f66603feb89dae83eb569a30af252163",
   "tested_runtime_commit": "5ebdd171cf3dc3862e1b7a1dd17427ad626471a3",
   "profile_status": "default_profiles identify the initial personal implementation profiles; fallback models are not silently substituted and TimesFM remains informational.",
@@ -268,7 +291,8 @@
     "adapter": "Reuse tested local Responses-to-Chat adapter",
     "collaboration": "Python room manager with externally coordinated top-level Codex threads",
     "model_serving": "Measured default-placement llama.cpp/GGUF pair",
-    "next_step": "Fix causal conversation, terminal events, retry identity, file/deadline boundaries and claim/evidence quality on the installed room.",
-    "delivery": "First local room, real tools, Postgres/SSE Research Desk and normal app activation implemented at aebd42d; known review findings remain."
-  }
+    "next_step": "FRESH_SOURCE_IMPLEMENTATION.md: source/date/identity/version service on installed room, not further prompt tuning on seen sets.",
+    "delivery": "First room plus lifecycle/tool/claim/UI repair phase implemented; local reboot restoration documented. Semantic quality remains limited."
+  },
+  "reviewed_implementation_commit": "ae7d45f"
 }

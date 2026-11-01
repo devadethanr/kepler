@@ -1,0 +1,29 @@
+"""Bounded public-feed reachability check; no application imports/persistence."""
+import concurrent.futures
+from email.utils import parsedate_to_datetime
+import hashlib,json,time
+from urllib.request import Request,urlopen
+import xml.etree.ElementTree as ET
+sources={
+ 'nse_announcements':'https://nsearchives.nseindia.com/content/RSS/Online_announcements.xml',
+ 'sebi':'https://www.sebi.gov.in/sebirss.xml',
+ 'rbi':'https://rbi.org.in/pressreleases_rss.xml',
+}
+def probe(item):
+ name,url=item;start=time.monotonic();row={'provider':name,'url':url}
+ try:
+  with urlopen(Request(url,headers={'User-Agent':'KeplerSourceReview/1.0','Accept':'application/rss+xml, application/xml, text/xml'}),timeout=12) as response:
+   body=response.read(1000001);row.update(http_status=response.status,content_type=response.headers.get('Content-Type'),final_url=response.geturl(),bytes_read=len(body))
+  if len(body)>1000000:raise ValueError('1 MB review body limit')
+  row['body_sha256']=hashlib.sha256(body).hexdigest()
+  tree=ET.fromstring(body);row['root_tag']=tree.tag
+  items=tree.findall('.//item');row['rss_item_count']=len(items)
+  row['atom_entry_count']=len(tree.findall('.//{http://www.w3.org/2005/Atom}entry'))
+  row['sample_publication_strings']=[e.findtext('pubDate') for e in items[:3]]
+  row['status']='valid_xml' if tree.tag.split('}')[-1] in ('rss','feed','RDF') else 'unexpected_xml'
+ except Exception as exc:
+  row.update(status='error',error_type=type(exc).__name__,error=str(exc)[:240])
+ row['elapsed_seconds']=round(time.monotonic()-start,3);return row
+with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
+ report={'reviewed_commit':'ae7d45f','review_date':'2026-11-02 Asia/Kolkata','scope':'Single bounded unauthenticated public feed request per configured source from cloud, inherited proxy/TLS; no app/provider health mutations','sources':list(pool.map(probe,sources.items())),'limits':'Reachability/XML diagnostics only. Feed freshness, completeness, entity mapping, attachment access, source retention terms and user-PC reachability not qualified.'}
+print(json.dumps(report,indent=2))

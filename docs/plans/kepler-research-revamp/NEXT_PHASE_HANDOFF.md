@@ -1,5 +1,7 @@
 Execution follow-up: [NEXT_PHASE_FINDINGS.md](NEXT_PHASE_FINDINGS.md) records source `921088c`, completed correctness/UI changes and the still-failed grounding objective. The original handoff/plan/review below is preserved.
 
+> Completed earlier scope: see [NEXT_PHASE_FINDINGS.md](NEXT_PHASE_FINDINGS.md) and [POST_TUNING_REVIEW.md](POST_TUNING_REVIEW.md). Most R1–R8 changes and the UI fix are delivered; semantic quality remains limited and one terminal-reason edge is carried forward. The active next task is [FRESH_SOURCE_HANDOFF.md](FRESH_SOURCE_HANDOFF.md). Preserve this earlier prompt/plan as history rather than replay it.
+
 Latest continuation: [PROMPT_TUNING_FINDINGS.md](PROMPT_TUNING_FINDINGS.md) contains
 the completed seven-round prompt study, source `7f6dc9f`, corrected request accounting,
 post-reboot restoration and a new copyable handback. Do not rerun the historical

@@ -1,0 +1,52 @@
+{
+  "reviewed_commit": "ae7d45fa14d8f936300fd499c72c4493ab02185a",
+  "date": "2026-11-02 Asia/Kolkata",
+  "scope": "Independent cloud review of phase-2 fixes, saved prompt experiments and next-source feasibility. No user-PC/GPU or hosted/local LLM inference.",
+  "backend": {
+    "command": "python -m pytest -q -p no:cacheprovider tests/test_research_room",
+    "passed": 55,
+    "skipped": 11,
+    "failed": 0,
+    "isolation": "Temporary SQLite/sentinel DB and graph endpoint; actual graph integration directory not collected",
+    "skips": "Disposable Postgres/graph checks not provided here",
+    "warning": "Existing Starlette httpx TestClient deprecation"
+  },
+  "frontend": {
+    "tests_passed": 21,
+    "typescript": "PASS",
+    "build": "PASS to /tmp/kepler-review-ae7d45f-dashboard",
+    "warning": "Existing KnowledgeScreen chunk size warning"
+  },
+  "ruff": {
+    "changed_python_files": 24,
+    "result": "PASS"
+  },
+  "artifact_integrity": {
+    "phase2_manifest_files_matched": 25,
+    "prompt_iteration_manifest_files_matched": 235,
+    "renamed_prompt_files_byte_identical_to_eda07cb": 4,
+    "mismatches": 0
+  },
+  "confirmation_replay": {
+    "saved_proposals": 120,
+    "mode": "Actual Gateway.execute plus score_v2 and temporary SQLite, no model call",
+    "score_mismatches": 0,
+    "result_file": "confirmation-recalculation.json"
+  },
+  "source_probe": {
+    "requests": 3,
+    "authentication": "none",
+    "mutations": "none",
+    "result_file": "source-reachability.json",
+    "date_parser_check": "Only the existing _parse_published_at AST function was executed; no news/app import or provider persistence."
+  },
+  "runtime_policy": "Installed research_room/codex.py INSTRUCTIONS remains active; retained prompt candidates inactive. Evaluation task contract is not an open-ended discussion prompt.",
+  "local_results_not_reproduced_here": {
+    "guarded_backend_graph_postgres_reported": 125,
+    "UI_GPU_reboot_and_native_runs": "Committed local reports/artifacts, not a cloud visit to user localhost",
+    "prompt_model_calls_reported": 1232,
+    "native_model_admissions_reported": 55
+  },
+  "remaining_review_issue": "worker no-mail terminal path can report no_pending_mail after a budget-denied tool finishes without a publication. Source inspection, not a native model reproduction. No budget bypass identified.",
+  "preserved": "Application source, model configuration, original findings/evidence, user-PC runtime files, broker services and manual live-entry approval unchanged."
+}

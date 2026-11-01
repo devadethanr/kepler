@@ -1,0 +1,92 @@
+{
+  "reviewed_commit": "ae7d45f",
+  "review_date": "2026-11-02 Asia/Kolkata",
+  "scope": "Single bounded unauthenticated public feed request per configured source from cloud, inherited proxy/TLS; no app/provider health mutations",
+  "sources": [
+    {
+      "provider": "nse_announcements",
+      "url": "https://nsearchives.nseindia.com/content/RSS/Online_announcements.xml",
+      "http_status": 200,
+      "content_type": "application/xml",
+      "final_url": "https://nsearchives.nseindia.com/content/RSS/Online_announcements.xml",
+      "bytes_read": 803,
+      "body_sha256": "ea409baddff902e34209b8426f2e915ab8f536b0d557d6cfbbcf2923fc73f148",
+      "root_tag": "rss",
+      "rss_item_count": 0,
+      "atom_entry_count": 0,
+      "sample_publication_strings": [],
+      "status": "valid_xml",
+      "elapsed_seconds": 0.361,
+      "current_app_date_parser": []
+    },
+    {
+      "provider": "sebi",
+      "url": "https://www.sebi.gov.in/sebirss.xml",
+      "http_status": 200,
+      "content_type": "text/xml",
+      "final_url": "https://www.sebi.gov.in/sebirss.xml",
+      "bytes_read": 16781,
+      "body_sha256": "6ef50bd9ac93b5218868e660a2312b8059ffb543e4e0c7a5a5520984600f3ecd",
+      "root_tag": "rss",
+      "rss_item_count": 30,
+      "atom_entry_count": 0,
+      "sample_publication_strings": [
+        "30 Oct, 2026 +0530",
+        "30 Oct, 2026 +0530",
+        "30 Oct, 2026 +0530"
+      ],
+      "status": "valid_xml",
+      "elapsed_seconds": 1.517,
+      "current_app_date_parser": [
+        {
+          "input": "30 Oct, 2026 +0530",
+          "output": null
+        },
+        {
+          "input": "30 Oct, 2026 +0530",
+          "output": null
+        },
+        {
+          "input": "30 Oct, 2026 +0530",
+          "output": null
+        }
+      ]
+    },
+    {
+      "provider": "rbi",
+      "url": "https://rbi.org.in/pressreleases_rss.xml",
+      "http_status": 200,
+      "content_type": "text/xml",
+      "final_url": "https://rbi.org.in/pressreleases_rss.xml",
+      "bytes_read": 67141,
+      "body_sha256": "efea3976c709a78faa0c3fc8f9946980ce06f6e4ccb88b8740a159b8347fab02",
+      "root_tag": "rss",
+      "rss_item_count": 10,
+      "atom_entry_count": 0,
+      "sample_publication_strings": [
+        "Fri, 30 Oct 2026 18:40:00",
+        "Fri, 30 Oct 2026 18:10:00",
+        "Fri, 30 Oct 2026 17:40:00"
+      ],
+      "status": "valid_xml",
+      "elapsed_seconds": 1.074,
+      "current_app_date_parser": [
+        {
+          "input": "Fri, 30 Oct 2026 18:40:00",
+          "output": "2026-10-30T13:10:00+00:00"
+        },
+        {
+          "input": "Fri, 30 Oct 2026 18:10:00",
+          "output": "2026-10-30T12:40:00+00:00"
+        },
+        {
+          "input": "Fri, 30 Oct 2026 17:40:00",
+          "output": "2026-10-30T12:10:00+00:00"
+        }
+      ]
+    }
+  ],
+  "limits": "Reachability/XML diagnostics only. Feed freshness, completeness, entity mapping, attachment access, source retention terms and user-PC reachability not qualified.",
+  "parser_check": "Executed only the actual _parse_published_at function extracted by AST, with its datetime/IST namespace; no news module/application import or persistence.",
+  "parser_source_sha256": "98b0c3866bad11447d2fc3d1e3346ebe1ed031cb4a58941aef1d807ba202c246"
+}

@@ -1,0 +1,26 @@
+"""Execute only the existing pure date helper on saved publication strings.
+Run from swingtradev3; no source requests or news/application imports.
+"""
+import ast
+from datetime import datetime, timezone
+import json
+from pathlib import Path
+from typing import Any
+from zoneinfo import ZoneInfo
+
+path = Path('data/news/core.py')
+tree = ast.parse(path.read_text())
+cls = next(n for n in tree.body if isinstance(n, ast.ClassDef) and n.name == 'NewsCoreMixin')
+fn = next(n for n in cls.body if isinstance(n, ast.FunctionDef) and n.name == '_parse_published_at')
+fn.decorator_list = []
+namespace = {'Any': Any, 'datetime': datetime, 'timezone': timezone, 'IST_ZONE': ZoneInfo('Asia/Kolkata')}
+exec(compile(ast.Module(body=[fn], type_ignores=[]), str(path), 'exec'), namespace)
+saved = Path('../docs/plans/kepler-research-revamp/evidence/cloud-review-ae7d45f/source-reachability.json')
+report = {}
+for source in json.loads(saved.read_text())['sources']:
+    values = []
+    for value in source.get('sample_publication_strings', []):
+        parsed = namespace['_parse_published_at'](value)
+        values.append({'input': value, 'output': parsed.isoformat() if parsed else None})
+    report[source['provider']] = values
+print(json.dumps(report, indent=2))

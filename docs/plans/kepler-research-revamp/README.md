@@ -1,45 +1,28 @@
-Current installed follow-up: [NEXT_PHASE_FINDINGS.md](NEXT_PHASE_FINDINGS.md) records the LAN loading fix, R1–R8 changes, bounded evaluation and remaining quality failures.
-
-Latest local follow-up: [PROMPT_TUNING_FINDINGS.md](PROMPT_TUNING_FINDINGS.md),
-[all prompt results](PROMPT_TUNING_RESULTS.md) and
-[post-reboot browser checks](REBOOT_BROWSER_CHECKS.md) record the resumed experiment.
-The seven-round prompt study improved some matched results but missed its quality
-objective; experimental prompts are not active. The older loading-failure and
-next-phase instructions below are preserved as the original handoff history.
-
-[WORK_HISTORY.md](WORK_HISTORY.md) indexes the completed work, source commits,
-retained prompt filenames and the reason changing runtime files remain local.
-
 # Kepler collaborative research revamp
 
-Implementation handoff, revision 6 — review of `aebd42d`, 1 November 2026.
+Implementation handoff, revision 7 — reviewed `ae7d45f`, 2 November 2026.
 
-**Current state:** the first local Codex research room is implemented and activated in the user's normal app at **http://localhost:8502 → Research Desk**, as recorded in [LOCAL_ACTIVATION.md](LOCAL_ACTIVATION.md). **Codex App Server + the tested local adapter remains the chosen runtime.** No framework-selection gate is reopened.
+**Current:** the local room/Research Desk is installed and restored after reboot. The LAN UUID loading bug and most earlier room findings are fixed. Codex App Server + the local adapter and measured Gemma/Qwen serving pair remain selected. Installed participants still use `research_room/codex.py:INSTRUCTIONS`; retained tuning candidates are inactive.
 
-**Reported current issue:** the user says Research Desk is not loading. It is intended to work now; local Codex must diagnose and restore it first, using the actual browser origin and API/service responses. See task 0 in NEXT_PHASE_IMPLEMENTATION.md.
-
-**Next:** fix the concrete conversation/lifecycle/tool gaps and improve grounded claims on that installed room. Read [ROOM_REVIEW.md](ROOM_REVIEW.md), then [NEXT_PHASE_IMPLEMENTATION.md](NEXT_PHASE_IMPLEMENTATION.md). Use [NEXT_PHASE_HANDOFF.md](NEXT_PHASE_HANDOFF.md) for local Codex.
-
-The cloud review repeated 22 backend tests, 16 frontend tests, typecheck/build and Ruff; eight backend checks needing disposable Postgres/graph infrastructure were skipped. It checked committed evidence hashes and reproduced specific defects using temporary SQLite/dummy files. The local report's 89 backend/graph tests and UI/GPU observations were not rerun on the user's PC. Review evidence and exact limits are linked in ROOM_REVIEW.md.
+**Next:** implement a narrow, fresh primary-source evidence service and close the small remaining terminal-reason edge. Read [POST_TUNING_REVIEW.md](POST_TUNING_REVIEW.md), [FRESH_SOURCE_IMPLEMENTATION.md](FRESH_SOURCE_IMPLEMENTATION.md) and [FRESH_SOURCE_HANDOFF.md](FRESH_SOURCE_HANDOFF.md). Do not restart the completed room-fix handoff or tune an eighth round on now-seen cases.
 
 ## Read this first
 
-The graph environment-precedence defect and independently verified disposable-target guard are **implemented at aebd42d**. Retain those guards and use the documented disposable launcher for destructive tests; never point it at the user's graph. The old static audit's “unfixed blocker” language is historical, not current status.
+1. [Current review](POST_TUNING_REVIEW.md): independently repeated tests, confirmation replay, repaired findings, remaining limits and official-source diagnostics.
+2. [Fresh-source implementation](FRESH_SOURCE_IMPLEMENTATION.md) and [local Codex handoff](FRESH_SOURCE_HANDOFF.md): active next task and findings template.
+3. [Runbook](RESEARCH_ROOM_RUNBOOK.md), [reboot/browser checks](REBOOT_BROWSER_CHECKS.md) and [local activation](LOCAL_ACTIVATION.md): normal :8502 entry point, model/API/worker services and supported IDE launch context.
+4. [Work history](WORK_HISTORY.md), [phase findings](NEXT_PHASE_FINDINGS.md), [prompt results](PROMPT_TUNING_RESULTS.md) and [prompt findings](PROMPT_TUNING_FINDINGS.md): completed source, tests, frozen scores, call accounting and filenames.
+5. [Overall implementation plan](IMPLEMENTATION_PLAN.md), [Codex architecture](CODEX_IMPLEMENTATION.md), [models/status](MODEL_CANDIDATES.json), [skills/tools](SKILLS_AND_CONTEXT_TOOLS.md), [harness](COLLABORATIVE_HARNESS_RESEARCH.md) and [TimesFM](TIMESFM_AUDIT_AND_REUSE.md): design and later capabilities.
 
-Read in this order:
+[ROOM_REVIEW.md](ROOM_REVIEW.md), [NEXT_PHASE_IMPLEMENTATION.md](NEXT_PHASE_IMPLEMENTATION.md), [NEXT_PHASE_HANDOFF.md](NEXT_PHASE_HANDOFF.md), the initial spike reports and [NEXT_VALIDATION_PLAN.md](NEXT_VALIDATION_PLAN.md) retain historical scope. Their early “UI not loading”, graph blocker and first-room build instructions are not current tasks. Retain the now-implemented graph/Toolbox precedence and verified disposable-target guard; destructive tests still require that launcher, never the user's graph.
 
-1. [Activated-room review](ROOM_REVIEW.md): verified behavior, reproductions, grounding limits and concrete findings.
-2. [Next implementation phase](NEXT_PHASE_IMPLEMENTATION.md) and [local Codex handoff](NEXT_PHASE_HANDOFF.md).
-3. [Local activation](LOCAL_ACTIVATION.md) and [runbook](RESEARCH_ROOM_RUNBOOK.md): normal :8502 entry point, host services and supported launch context.
-4. [First implementation report](RESEARCH_ROOM_IMPLEMENTATION.md) and its committed evidence.
-5. [Codex architecture](CODEX_IMPLEMENTATION.md) and [overall implementation plan](IMPLEMENTATION_PLAN.md): installed foundation plus later capabilities.
-6. [Configuration audit](PRE_IMPLEMENTATION_AUDIT.md): baseline inventory with remediation notes; other configuration/TimesFM items remain relevant.
-7. [Harness](COLLABORATIVE_HARNESS_RESEARCH.md), [skills/tools](SKILLS_AND_CONTEXT_TOOLS.md), [models](MODELS_AND_FAST_BRAIN.md) and [artifact/status manifest](MODEL_CANDIDATES.json).
-8. [TimesFM audit](TIMESFM_AUDIT_AND_REUSE.md), [discussion UI](LIVE_DISCUSSION_UI_RESEARCH.md) and [research sources](RESEARCH_SOURCES.md).
+## Current evidence and limitations
 
-[SPIKE_FINDINGS.md](SPIKE_FINDINGS.md), [FOLLOW_UP_FINDINGS.md](FOLLOW_UP_FINDINGS.md), the [closed request queue](FOLLOW_UP_REQUESTS.md), [SPIKE_REVIEW.md](SPIKE_REVIEW.md) and [NEXT_VALIDATION_PLAN.md](NEXT_VALIDATION_PLAN.md) preserve earlier scopes/results. The G0/G1 export and fresh 120-call G2 comparison are now recorded in evidence/review-v1; do not replay their expired budgets. Historical initial-spike/conformance documents are not current start instructions. This read order and NEXT_PHASE_IMPLEMENTATION.md take precedence over stale pre-implementation task wording.
-
-The current implementation review targets `aebd42d`; old source-line references at `8fb5088` remain explicitly historical. The five changing runtime-state files reported by the user remain local and must be preserved.
+- Independent cloud checks: **55 backend tests passed / 11 infrastructure-specific skips; 21 frontend tests, TypeScript, build and changed-file Ruff passed**. Local guarded 125-test and browser/GPU/reboot results remain local reports, not tests rerun on the user's PC.
+- All 25 phase-2 and 235 prompt-evidence files matched supplied manifests. Replaying all 120 final confirmation proposals through the actual gateway/scorer and temporary SQLite reproduced every score.
+- Final matched confirmation: Gemma **25/30**, Qwen **24/30**, below the frozen 27/30 objective; candidates remain inactive. This is a supplied-claim contract task, not financial accuracy or live-room quality. Earlier failed scores remain separate history.
+- SEBI/RBI RSS were populated in a bounded cloud check; NSE RSS was reachable but empty. The current helper returned unknown for the observed SEBI date-only strings. Freshness, identity, completeness and as-of history need source-specific implementation.
+- Manual live-entry approval, existing broker controls and TimesFM's lack of new score/risk authority remain unchanged. Preserve the changing local runtime files.
 
 ## Hardware and runtime update
 
@@ -79,4 +62,4 @@ The pinned API returns channel 5 as the point forecast, not the full-array chann
 
 ## Start instructions for local Codex
 
-Use [NEXT_PHASE_HANDOFF.md](NEXT_PHASE_HANDOFF.md). Preserve the installed setup and local runtime files, fix the concrete review findings, improve the claim/evidence contract and run focused verification. Keep the existing model/runtime pair and manual live-entry approval. Report measured results in NEXT_PHASE_FINDINGS.md and push source/sanitized docs on this branch. No new framework selection or unchanged spike rerun is required.
+Use [FRESH_SOURCE_HANDOFF.md](FRESH_SOURCE_HANDOFF.md). Reuse the installed room and existing news infrastructure, fix the small terminal-reason edge, preserve timestamp/identity/version provenance and connect bounded source tools to actual discussions. Keep the old runtime policy active, preserve local state and run one predeclared source-backed check after offline fixes. Report actual outcomes in FRESH_SOURCE_FINDINGS.md and push source/sanitized docs on this branch.

@@ -17,12 +17,12 @@ This directory now separates current source-of-truth docs from historical planni
 
 ## Personal Kepler Research Revamp
 
-- [Research handoff and read order](plans/kepler-research-revamp/README.md) — revision 6, installed local room at `aebd42d`; Codex remains selected.
-- [Activated-room review](plans/kepler-research-revamp/ROOM_REVIEW.md) — independent checks, reproducible findings and actual grounding limits.
-- [Next implementation phase](plans/kepler-research-revamp/NEXT_PHASE_IMPLEMENTATION.md) and [local Codex handoff](plans/kepler-research-revamp/NEXT_PHASE_HANDOFF.md) — conversation/lifecycle fixes, claim/evidence quality and focused verification on the existing setup.
-- [Local activation](plans/kepler-research-revamp/LOCAL_ACTIVATION.md) and [runbook](plans/kepler-research-revamp/RESEARCH_ROOM_RUNBOOK.md) — :8502 Research Desk, host services and supported start/stop procedure.
-- [Configuration audit](plans/kepler-research-revamp/PRE_IMPLEMENTATION_AUDIT.md) — historical inventory with graph/Toolbox precedence and test-target guard remediation recorded.
-- [Overall implementation plan](plans/kepler-research-revamp/IMPLEMENTATION_PLAN.md) — installed foundation plus later news, market context, forecasts and scheduled research.
+- [Current handoff/read order](plans/kepler-research-revamp/README.md) — revision 7 after `ae7d45f`; room/UI repaired, Codex installed, tuning candidates inactive.
+- [Post-tuning review](plans/kepler-research-revamp/POST_TUNING_REVIEW.md) — confirmation replay, tests, source diagnostics and actual limits.
+- [Fresh-source implementation](plans/kepler-research-revamp/FRESH_SOURCE_IMPLEMENTATION.md) and [local Codex handoff](plans/kepler-research-revamp/FRESH_SOURCE_HANDOFF.md) — active next scope.
+- [Work history](plans/kepler-research-revamp/WORK_HISTORY.md), [prompt results](plans/kepler-research-revamp/PROMPT_TUNING_RESULTS.md) and [phase findings](plans/kepler-research-revamp/NEXT_PHASE_FINDINGS.md) — completed work and frozen evidence.
+- [Runbook](plans/kepler-research-revamp/RESEARCH_ROOM_RUNBOOK.md) and [reboot checks](plans/kepler-research-revamp/REBOOT_BROWSER_CHECKS.md) — :8502 Research Desk and supported local services.
+- [Overall plan](plans/kepler-research-revamp/IMPLEMENTATION_PLAN.md) — later GIFT/Singapore, informational TimesFM, scheduled rooms and harness improvements.
 
 ## Historical References
 
