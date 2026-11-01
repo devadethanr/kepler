@@ -46,6 +46,19 @@ const ResearchDeskScreen = lazy(() =>
   import('./screens/ResearchDeskScreen').then(module => ({ default: module.ResearchDeskScreen })),
 );
 
+class ResearchErrorBoundary extends React.Component<React.PropsWithChildren, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() { return { failed: true }; }
+  render() {
+    if (this.state.failed) return <main className="flex-1 p-5" role="alert">
+      <h1>Research Desk could not load</h1>
+      <p>Reload the page to retry. Saved rooms remain available when the service reconnects.</p>
+      <button onClick={() => window.location.reload()}>Reload page</button>
+    </main>;
+    return this.props.children;
+  }
+}
+
 export default function App() {
   const [currentTab, setCurrentTab] = useState('dashboard');
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -61,10 +74,10 @@ export default function App() {
       />
       <div className="flex flex-col flex-1 h-full overflow-hidden">
         <TopBar onToggleSidebar={() => setSidebarOpen(!isSidebarOpen)} live={live} />
-        <Suspense fallback={<div className="flex-1 bg-surface" aria-label="Loading view" />}>
+        <Suspense fallback={<div className="flex-1 bg-surface p-5" role="status">Loading view…</div>}>
           {currentTab === 'dashboard' && <DashboardScreen />}
           {currentTab === 'telemetry' && <TelemetryScreen live={live} />}
-          {currentTab === 'research' && <ResearchDeskScreen />}
+          {currentTab === 'research' && <ResearchErrorBoundary><ResearchDeskScreen /></ResearchErrorBoundary>}
           {currentTab === 'news' && <NewsScreen />}
           {currentTab === 'knowledge' && <KnowledgeScreen />}
           {currentTab === 'control_pane' && <ControlPaneScreen />}

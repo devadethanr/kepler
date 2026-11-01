@@ -12,6 +12,7 @@ import uuid
 from datetime import datetime, timezone
 
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 
 from memory.db import session_scope
 from memory.models import CognitionReportRow, CognitionRunRow
@@ -37,12 +38,21 @@ class Store:
         parent_room: str | None = None,
     ) -> dict:
         room_id = "room:" + str(uuid.UUID(request_id))
+
+        def existing(row):
+            if (
+                row.phase != PHASE
+                or row.payload.get("question") != question
+                or row.payload.get("target") != target
+                or row.payload.get("parent_room") != parent_room
+            ):
+                raise ValueError("Request ID already used for a different room")
+            return self._view(row)
+
         with self.scope() as s:
             row = s.get(CognitionRunRow, room_id)
             if row:
-                if row.payload["question"] != question or row.payload["target"] != target:
-                    raise ValueError("Request ID already used for a different room")
-                return self._view(row)
+                return existing(row)
             row = CognitionRunRow(
                 run_id=room_id,
                 phase=PHASE,
@@ -65,19 +75,60 @@ class Store:
                     "active": {"model": 0, "tool": 0},
                 },
             )
-            s.add(row)
-            s.flush()
-            self._append(
-                s, row, "created", "room.created", {"question": question, "target": target}
-            )
+            try:
+                with s.begin_nested():
+                    s.add(row)
+                    s.flush()
+                    self._append(
+                        s, row, "created", "room.created", {"question": question, "target": target}
+                    )
+            except IntegrityError:
+                # A concurrent transaction may have inserted this request ID first.
+                # Only recover if that exact row exists; other integrity errors propagate.
+                winner = s.get(CognitionRunRow, room_id)
+                if winner is None:
+                    raise
+                return existing(winner)
             return self._view(row)
 
     @staticmethod
     def _view(row) -> dict:
         worker_state = "idle"
-        if row.status == "running":
+        if row.status in ("running", "cancelling"):
             worker_state = "active" if row.payload.get("lease_until", 0) >= time.time() else "stale"
-        return {"id": row.run_id, "status": row.status, "worker_state": worker_state, **row.payload}
+        payload = dict(row.payload)
+        if worker_state == "stale" or (
+            row.status in TERMINAL and any(payload.get("active", {}).values())
+        ):
+            payload["activity_state"] = "unknown"
+            payload["active"] = None
+        return {"id": row.run_id, "status": row.status, "worker_state": worker_state, **payload}
+
+    @classmethod
+    def _finish(cls, s, row, status, reason, reason_code=None):
+        """Called under the room row lock; state and terminal event commit together."""
+        if row.status in TERMINAL:
+            return
+        p = dict(row.payload)
+        p["termination_reason"] = reason_code
+        active = dict(p.get("active", {}))
+        if any(active.values()):
+            p["unresolved_activity"] = active
+            p["activity_state"] = "unknown"
+            p["active"] = {kind: 0 for kind in active}
+            counts = dict(p["counts"])
+            counts["unknown_usage_calls"] += active.get("model", 0)
+            p["counts"] = counts
+        row.payload = p
+        row.status = status
+        row.completed_at = datetime.now(timezone.utc)
+        cls._append(
+            s,
+            row,
+            "finished",
+            "room.finished",
+            {"status": status, "reason": reason, "reason_code": reason_code},
+        )
 
     @staticmethod
     def _row(s, room_id):
@@ -181,17 +232,13 @@ class Store:
                 p = dict(row.payload)
                 if row.status in ("running", "cancelling"):
                     if p.get("lease_until", 0) < time.time():
-                        row.status = "interrupted" if row.status == "running" else "cancelled"
-                        row.completed_at = datetime.now(timezone.utc)
-                        self._append(
+                        status = "interrupted" if row.status == "running" else "cancelled"
+                        self._finish(
                             s,
                             row,
-                            "lease.expired",
-                            "room.finished",
-                            {
-                                "status": row.status,
-                                "reason": "Worker lease expired; no tool replay",
-                            },
+                            status,
+                            "Worker lease expired; no tool replay",
+                            "lease_expired",
                         )
                     continue
                 p.update(
@@ -238,7 +285,11 @@ class Store:
     def release(self, room_id, owner, kind, usage=None):
         with self.scope() as s:
             row = self._row(s, room_id)
-            if row.payload.get("owner") != owner:
+            if (
+                row.payload.get("owner") != owner
+                or row.status in TERMINAL
+                or row.payload.get("lease_until", 0) < time.time()
+            ):
                 return
             p = dict(row.payload)
             counts, active = dict(p["counts"]), dict(p["active"])
@@ -254,21 +305,30 @@ class Store:
     def cancel(self, room_id):
         with self.scope() as s:
             row = self._row(s, room_id)
-            if row.status not in TERMINAL:
-                row.status = "cancelled" if row.status == "queued" else "cancelling"
+            if row.status not in TERMINAL and row.status != "cancelling":
+                queued = row.status == "queued"
+                if not queued:
+                    row.status = "cancelling"
                 self._append(s, row, "cancel", "room.cancel_requested", {})
+                if queued:
+                    self._finish(
+                        s, row, "cancelled", "Operator cancelled research", "queued_cancel"
+                    )
             return self._view(row)
 
-    def finish(self, room_id, owner, status, reason):
+    def finish(self, room_id, owner, status, reason, reason_code=None):
         with self.scope() as s:
             row = self._row(s, room_id)
-            if row.payload.get("owner") != owner or row.status in TERMINAL:
+            if (
+                row.payload.get("owner") != owner
+                or row.status in TERMINAL
+                or row.payload.get("lease_until", 0) < time.time()
+            ):
                 return
             if row.status == "cancelling":
                 status, reason = "cancelled", "Operator cancelled research"
-            row.status = status
-            row.completed_at = datetime.now(timezone.utc)
-            self._append(s, row, "finished", "room.finished", {"status": status, "reason": reason})
+                reason_code = "cancelled"
+            self._finish(s, row, status, reason, reason_code)
 
 
 class Budget:
@@ -280,12 +340,14 @@ class Budget:
 
     def __init__(self, store, room_id, owner):
         self.store, self.room_id, self.owner = store, room_id, owner
+        self.last_denial = None
 
     def admit(self, kind):
         try:
             self.store.admit(self.room_id, self.owner, kind)
             return True
-        except RoomStopped:
+        except RoomStopped as exc:
+            self.last_denial = str(exc)
             return False
 
     def release(self, kind, usage=None):

@@ -12,6 +12,23 @@ export const RoomEventSchema = z.object({
 export type Room = z.infer<typeof RoomSchema>;
 export type RoomEvent = z.infer<typeof RoomEventSchema>;
 
+export const terminalStatuses = new Set(['conclusion', 'disagreement', 'abstention', 'cancelled', 'interrupted', 'failed']);
+
+/** UUID v4 using browser cryptographic randomness, including on HTTP LAN origins. */
+export function newRequestId(cryptoApi: Crypto = globalThis.crypto): string {
+  if (typeof cryptoApi?.randomUUID === 'function') return cryptoApi.randomUUID();
+  if (typeof cryptoApi?.getRandomValues !== 'function') throw new Error('Secure random numbers are unavailable');
+  const bytes = cryptoApi.getRandomValues(new Uint8Array(16));
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  const hex = Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+}
+
+export function shouldStreamRoom(room: Room, events: RoomEvent[]): boolean {
+  return !terminalStatuses.has(room.status) && !events.some(event => event.kind === 'room.finished');
+}
+
 export function mergeRoomEvents(current: RoomEvent[], incoming: RoomEvent[]): RoomEvent[] {
   const byId = new Map(current.map((event) => [event.id, event]));
   for (const event of incoming) byId.set(event.id, event);
@@ -33,7 +50,7 @@ export const research = {
   get: async (id: string) => RoomSchema.parse(await request(`/rooms/${encodeURIComponent(id)}`)),
   create: async (target: string, question: string, requestId: string) => RoomSchema.parse(
     await request('/rooms', { target, question, request_id: requestId })),
-  retry: async (id: string) => RoomSchema.parse(await request(`/rooms/${encodeURIComponent(id)}/retry`, { request_id: crypto.randomUUID() })),
+  retry: async (id: string, requestId: string) => RoomSchema.parse(await request(`/rooms/${encodeURIComponent(id)}/retry`, { request_id: requestId })),
   cancel: async (id: string) => RoomSchema.parse(await request(`/rooms/${encodeURIComponent(id)}/cancel`, {})),
   events: async (id: string, after = 0) => z.object({ events: RoomEventSchema.array(), cursor: z.number() })
     .parse(await request(`/rooms/${encodeURIComponent(id)}/events?after=${after}`)),

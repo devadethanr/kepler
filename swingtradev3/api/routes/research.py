@@ -138,15 +138,20 @@ def retry_room(room_id: str, body: RetryRoom):
     previous = get_room(room_id)
     if previous["status"] not in TERMINAL:
         raise HTTPException(409, "Finish or cancel the previous room before a linked attempt")
-    settings = load_settings()
-    return Store().create(
-        previous["question"],
-        previous["target"],
-        str(body.request_id),
-        {
-            "model": settings.model_calls,
-            "tool": settings.tool_calls,
-            "seconds": settings.room_seconds,
-        },
-        parent_room=room_id,
-    )
+    try:
+        settings = load_settings()
+        return Store().create(
+            previous["question"],
+            previous["target"],
+            str(body.request_id),
+            {
+                "model": settings.model_calls,
+                "tool": settings.tool_calls,
+                "seconds": settings.room_seconds,
+            },
+            parent_room=room_id,
+        )
+    except RuntimeError as exc:
+        raise HTTPException(503, str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(409, str(exc)) from exc

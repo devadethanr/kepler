@@ -10,6 +10,7 @@ import hashlib
 import http.client
 import ipaddress
 import json
+import multiprocessing
 import os
 import signal
 import socket
@@ -36,17 +37,18 @@ def validate_url(url: str, domains: list[str]) -> tuple[str, int]:
     return host, 443
 
 
-def fetch_public(url, domains):
+def fetch_public(url, domains, deadline=None):
     for _ in range(4):
+        timeout = min(12, max(0.001, deadline - time.monotonic())) if deadline else 12
         host, port = validate_url(url, domains)
         addresses = {x[4][0] for x in socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)}
         if not addresses or any(not ipaddress.ip_address(x).is_global for x in addresses):
             raise ValueError("Non-public DNS destination refused")
-        conn = http.client.HTTPSConnection(host, port, timeout=12)
+        conn = http.client.HTTPSConnection(host, port, timeout=timeout)
         # Pin the validated address while retaining certificate verification + original SNI.
-        raw = socket.create_connection((sorted(addresses)[0], port), timeout=12)
-        conn.sock = ssl.create_default_context().wrap_socket(raw, server_hostname=host)
+        raw = socket.create_connection((sorted(addresses)[0], port), timeout=timeout)
         try:
+            conn.sock = ssl.create_default_context().wrap_socket(raw, server_hostname=host)
             p = urlsplit(url)
             path = (p.path or "/") + (("?" + p.query) if p.query else "")
             conn.request(
@@ -66,6 +68,7 @@ def fetch_public(url, domains):
             return body, url
         finally:
             conn.close()
+            raw.close()
     raise ValueError("Redirect limit exceeded")
 
 
@@ -74,9 +77,54 @@ def checked_hash(path, expected):
         raise ValueError("Pinned executable hash mismatch: " + path.name)
 
 
-def read_public_page(settings, url, cancelled=None):
+def _fetch_child(pipe, url, domains, deadline):
+    try:
+        pipe.send((True, fetch_public(url, domains, deadline)))
+    except Exception as exc:
+        pipe.send((False, (type(exc).__name__, str(exc))))
+    finally:
+        pipe.close()
+
+
+def _check_job(deadline, cancelled):
+    if cancelled is not None and cancelled.is_set():
+        raise TimeoutError("Research cancelled during browser job")
+    if time.monotonic() >= deadline:
+        raise TimeoutError("Browser job exceeded 100 seconds")
+
+
+def _supervised_fetch(url, domains, deadline, cancelled):
+    context = multiprocessing.get_context("spawn")
+    receive, send = context.Pipe(duplex=False)
+    process = context.Process(target=_fetch_child, args=(send, url, domains, deadline))
+    process.start()
+    send.close()
+    try:
+        while True:
+            _check_job(deadline, cancelled)
+            if receive.poll(min(0.1, max(0, deadline - time.monotonic()))):
+                ok, result = receive.recv()
+                if not ok:
+                    raise ValueError("Public fetch failed: " + result[0] + ": " + result[1])
+                return result
+            if not process.is_alive():
+                raise RuntimeError("Public fetch process exited without a result")
+    finally:
+        receive.close()
+        if process.is_alive():
+            process.terminate()
+        process.join(timeout=1)
+        if process.is_alive():
+            process.kill()
+            process.join()
+
+
+def read_public_page(settings, url, cancelled=None, *, with_metadata=False):
+    deadline = time.monotonic() + 100
+    _check_job(deadline, cancelled)
     checked_hash(settings.browser_binary, settings.browser_sha256)
-    body, source = fetch_public(url, settings.browser_domains)
+    body, source = _supervised_fetch(url, settings.browser_domains, deadline, cancelled)
+    _check_job(deadline, cancelled)
     settings.state_root.mkdir(parents=True, exist_ok=True, mode=0o700)
     with tempfile.TemporaryDirectory(prefix="browser-", dir=settings.state_root) as tmp:
         work = Path(tmp)
@@ -148,13 +196,9 @@ def read_public_page(settings, url, cancelled=None):
             env={"PATH": "/usr/bin:/bin", "LANG": "C.UTF-8"},
             start_new_session=True,
         )
-        deadline = time.monotonic() + 100
         try:
             while True:
-                if cancelled is not None and cancelled.is_set():
-                    raise TimeoutError("Research cancelled during browser job")
-                if time.monotonic() >= deadline:
-                    raise TimeoutError("Browser job exceeded 100 seconds")
+                _check_job(deadline, cancelled)
                 try:
                     stdout, stderr = p.communicate(timeout=0.2)
                     break
@@ -168,7 +212,21 @@ def read_public_page(settings, url, cancelled=None):
         if p.returncode:
             raise RuntimeError("Isolated agent-browser failed: " + stderr.decode()[-300:])
         result = json.loads(stdout.decode().splitlines()[-1])
-        return result["body"][:12000], source
+        body = result["body"]
+        if with_metadata:
+            return (
+                body[:12000],
+                source,
+                {
+                    "scope": "isolated DOM body text; external resources unavailable",
+                    "offset_basis": "DOM body characters",
+                    "offset": 0,
+                    "end_offset": min(len(body), 12000),
+                    "truncated": len(body) > 12000,
+                    "completeness": "unknown; public HTML only",
+                },
+            )
+        return body[:12000], source
 
 
 def inner(chrome):
