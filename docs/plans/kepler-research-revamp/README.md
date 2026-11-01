@@ -7,6 +7,9 @@ The seven-round prompt study improved some matched results but missed its qualit
 objective; experimental prompts are not active. The older loading-failure and
 next-phase instructions below are preserved as the original handoff history.
 
+[WORK_HISTORY.md](WORK_HISTORY.md) indexes the completed work, source commits,
+retained prompt filenames and the reason changing runtime files remain local.
+
 # Kepler collaborative research revamp
 
 Implementation handoff, revision 6 — review of `aebd42d`, 1 November 2026.

@@ -14,7 +14,7 @@ from pathlib import Path
 from .codex import INSTRUCTIONS
 from .contract_eval import TASK, evaluate_case
 from .grounding import packet
-from .prompt_candidates import VARIANTS, evaluation_prompts
+from .prompt_candidates import VARIANTS, evaluation_prompts, prompt_path
 from .prompt_experiment import summarize
 from .settings import load_settings
 
@@ -216,7 +216,10 @@ def main():
     source_root = Path(__file__).parent
     repo_root = source_root.parent.parent
     for name, expected in selection.get("files", {}).items():
-        if digest((repo_root / name).read_bytes()) != expected:
+        path = repo_root / name
+        if not path.exists() and path.parent == source_root / "prompts":
+            path = prompt_path(path.name)
+        if digest(path.read_bytes()) != expected:
             raise ValueError("A presealed source hash changed: " + name)
     cases_bytes = args.cases.read_bytes()
     cases = json.loads(cases_bytes)

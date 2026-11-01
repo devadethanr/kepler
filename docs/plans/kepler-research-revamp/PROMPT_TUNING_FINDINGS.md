@@ -7,6 +7,12 @@ not installed. Post-reboot research services and actual native UI/tool checks ar
 restored; see the final accounting and handback below. Earlier estimates are kept
 as an audit trail and explicitly corrected by durable admission records.
 
+Prompt packaging follow-up (2 November): retained v7 files are now
+`contract-agent.md` / `evidence-agent.md`; retained Gemma v2 files are
+`contract-analyst.md` / `evidence-analyst.md`. Text and experiment selectors are
+unchanged; frozen snapshots keep original names. See [WORK_HISTORY.md](WORK_HISTORY.md)
+for the full reference history and [prompt usage](../../../swingtradev3/research_room/prompts/README.md).
+
 User authorization on 1 November 2026 permits as many local-model prompt iterations
 as needed, superseding the completed phase's 120/20 request limits. The user requires
 general behavior for unseen data and retention of all findings. No entity, date,

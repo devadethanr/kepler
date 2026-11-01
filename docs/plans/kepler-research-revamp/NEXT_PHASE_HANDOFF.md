@@ -7,6 +7,9 @@ phase or replace its scores. Experimental candidates remain inactive; the final
 confirmation still missed 27/30. [REBOOT_BROWSER_CHECKS.md](REBOOT_BROWSER_CHECKS.md)
 records actual live tools, cancellation, API restart and worker interruption checks.
 
+[WORK_HISTORY.md](WORK_HISTORY.md) indexes the completed phases and the renamed
+retained prompt files (`contract-agent.md`, `evidence-agent.md` and analyst pair).
+
 # Local Codex handoff — next research-room phase
 
 Start from `feat-generic-broker` containing `aebd42d` and the subsequent review-doc commit. Preserve the five changing runtime-state files and any newer local changes. This is the user's personal, already activated Kepler at :8502; keep Codex selected.
