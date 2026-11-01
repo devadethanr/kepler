@@ -7,7 +7,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-10-29T18:00:02.915568",
+      "started_at": "2026-10-31T18:00:02.921395",
       "status": "running"
     },
     "FilterAgent": {
@@ -17,7 +17,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-10-29T18:00:02.914791",
+      "started_at": "2026-10-31T18:00:02.920256",
       "status": "running"
     },
     "KnowledgeGraphAgent": {
@@ -27,7 +27,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-10-29T18:00:02.959961",
+      "started_at": "2026-10-31T18:00:02.954995",
       "status": "running"
     },
     "RegimeAgent": {
@@ -37,17 +37,17 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-10-29T18:00:02.002555",
+      "started_at": "2026-10-31T18:00:02.135585",
       "status": "running"
     },
     "ResearchPipeline": {
       "agent_name": "ResearchPipeline",
-      "completed_at": "2026-10-29T18:00:02.960260",
+      "completed_at": "2026-10-31T18:00:02.955397",
       "current_task": "Full evening research scan",
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-10-29T18:00:00.104229",
+      "started_at": "2026-10-31T18:00:00.696998",
       "status": "completed"
     },
     "ResultsSaverAgent": {
@@ -57,7 +57,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-10-29T18:00:02.959684",
+      "started_at": "2026-10-31T18:00:02.954656",
       "status": "running"
     },
     "ScorerAgent": {
@@ -67,7 +67,7 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-10-29T18:00:02.915825",
+      "started_at": "2026-10-31T18:00:02.921754",
       "status": "running"
     },
     "SlowBrainDeskAgent": {
@@ -77,22 +77,22 @@
       "last_error": null,
       "metadata": {},
       "progress": null,
-      "started_at": "2026-10-29T18:00:02.947829",
+      "started_at": "2026-10-31T18:00:02.942853",
       "status": "running"
     },
     "scheduler": {
       "agent_name": "scheduler",
-      "completed_at": "2026-10-29T19:53:04.462006",
+      "completed_at": "2026-11-01T05:53:33.640839",
       "current_task": "intraday_exception_scan",
       "last_error": null,
       "metadata": {
         "last_job": "intraday_exception_scan"
       },
       "progress": null,
-      "started_at": "2026-10-29T19:53:04.460420",
+      "started_at": "2026-11-01T05:53:33.640484",
       "status": "completed"
     }
   },
-  "last_updated": "2026-10-31T01:26:59.893040",
+  "last_updated": "2026-11-01T05:53:33.640841",
   "scheduler_phase": "overnight_monitoring"
 }
