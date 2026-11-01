@@ -1,0 +1,11 @@
+{
+  "reviewed_commit": "aebd42d164e48882284c30e3d995eb562d212162",
+  "scope": "Independent cloud code/evidence review and isolated checks; no access to user localhost/GPU services",
+  "files": {
+    "README.md": "4e4fb0a9f2ccbd1f23c0202f51aaf3850f225f8391297ffd3e15ed6507bf3c46",
+    "grounding-recalculation.json": "6f47cc48afbdef07fe8d090fd82ea2fe48206ecade9785aedc01af93d1514856",
+    "probe-results.json": "edc429c4b4ea3c05eb34dc109bbd665b69ef8866e2880b8bca739a1f256f1bbb",
+    "review_probes.py.txt": "87298c954a1a82384e24dc4845445a5b34edd9c4b8ddf47b2467355cc0b94e37",
+    "validation.json": "260945dabd7af4f705b4563b8505a1c2d97e3060d0957ed9589e1231c9a3e27f"
+  }
+}

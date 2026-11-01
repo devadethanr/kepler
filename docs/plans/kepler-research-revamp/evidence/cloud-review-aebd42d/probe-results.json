@@ -1,0 +1,52 @@
+{
+  "reviewed_commit": "aebd42d164e48882284c30e3d995eb562d212162",
+  "scope": "Actual helpers/store with disposable SQLite; no live services or GPU",
+  "probes": {
+    "queued_cancel": {
+      "status": "cancelled",
+      "event_kinds": [
+        "room.created",
+        "room.cancel_requested"
+      ],
+      "has_finished_event": false,
+      "has_completed_at": false
+    },
+    "retry_request_collision": {
+      "same_room_returned": true,
+      "expected_parent_provided": true,
+      "returned_parent": null
+    },
+    "in_root_hidden_symlink": {
+      "visible_symlink_followed_into_hidden_directory": true,
+      "data": "dummy-only"
+    },
+    "latest_objection": {
+      "actual_outcome_helper": "disagreement",
+      "current_worker_terminal_condition": true,
+      "undelivered_objection_ids": [
+        "e4"
+      ],
+      "scope": "actual outcome helper plus inspected worker condition, not an end-to-end model run"
+    },
+    "message_cap_order": {
+      "cap_check_precedes_outcome": true,
+      "scope": "source control-flow inspection"
+    },
+    "quote_vs_interpretation": {
+      "source": "../docs/plans/kepler-research-revamp/evidence/activation-v1/normal-room-public.json",
+      "seq": 55,
+      "text": "I disagree that the broker is undefined. The architecture explicitly preserves the \"existing broker loop\" and \"Zerodha\" context, which implies the broker is a separate, existing component that the research runtime interacts with, rather than being conflated with it.",
+      "quotes": [
+        "**The first room slice is connected and verified.** Two native Codex threads used the pinned local model pair, retrieved actual research files/current graph, exchanged five addressed public messages, and ended with preserved disagreement and an analyst abstention."
+      ],
+      "validation_label": "exact citation spans verified; interpretation not fact-checked",
+      "scope": "committed public record; exact quote validation does not validate narrative entailment"
+    }
+  },
+  "source_sha256": {
+    "research_room/worker.py": "27eb004456a2f5f544e85b77ce46ab527a75409fe7928f7ecc321af5edd5149d",
+    "research_room/store.py": "8bcd5e47b0da1e1b3decbc32d240a205f0d612786e87189d40d02290aa78abf6",
+    "research_room/tools.py": "b15426d655faa530c6ea154248156aab614d22cb908088492d23c59958bb31cb",
+    "research_room/grounding.py": "1f5528bdfa32d8bcf8dfd3b7e4522b7c379513269159a928e925c3a5f7faed0d"
+  }
+}

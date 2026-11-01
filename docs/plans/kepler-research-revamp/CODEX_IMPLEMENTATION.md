@@ -1,5 +1,7 @@
 # Codex implementation for personal Kepler
 
+Current handoff after reviewing `aebd42d`: the first room is installed/activated. Follow [ROOM_REVIEW.md](ROOM_REVIEW.md), [NEXT_PHASE_IMPLEMENTATION.md](NEXT_PHASE_IMPLEMENTATION.md) and [NEXT_PHASE_HANDOFF.md](NEXT_PHASE_HANDOFF.md). They supersede old “build the first room” start instructions below. Codex remains selected; the graph test guard is implemented and must be retained.
+
 The selected runtime is now active in the normal personal app at :8502. See [LOCAL_ACTIVATION.md](LOCAL_ACTIVATION.md) for activation and actual normal-path verification.
 
 First usable room slice implemented locally on 1 November 2026 from `beaa5df`. See [RESEARCH_ROOM_IMPLEMENTATION.md](RESEARCH_ROOM_IMPLEMENTATION.md) for changes, native room results, failed grounding gates and preservation checks, and [RESEARCH_ROOM_RUNBOOK.md](RESEARCH_ROOM_RUNBOOK.md) for operation.

@@ -1,7 +1,7 @@
 {
   "researched_at": "2026-10-31",
   "baseline_commit": "8fb50888c47a8b4f62e0917dd0475ee5dfaa6fb0",
-  "status": "Initial spike and three follow-ups complete. User selected Codex App Server + tested local adapter for personal Kepler implementation; measured llama.cpp Gemma/Qwen profiles are the starting configuration. Grounding improvements remain implementation work. See CODEX_IMPLEMENTATION.md.",
+  "status": "First Codex research room implemented and locally activated at aebd42d. Keep selected App Server/local adapter and measured llama.cpp profiles. Independent code/evidence review and next work are in ROOM_REVIEW.md and NEXT_PHASE_IMPLEMENTATION.md.",
   "hardware": {
     "source": "User-provided GPU output and refreshed local inventory in SPIKE_FINDINGS.md; operator-reported, not measured in this cloud review.",
     "confirmed": "Both GPUs are in the same PC.",
@@ -42,7 +42,7 @@
     }
   },
   "runtime": {
-    "selection": "Selected implementation starting point: measured default-placement llama.cpp Gemma/Qwen pair, behind the tested Codex App Server adapter. Improve 2/30 grounding during integration. No optimized-engine migration required.",
+    "selection": "Installed first-room baseline: measured llama.cpp Gemma/Qwen pair behind Codex App Server/local adapter. Keep this setup while fixing conversation and grounding; no optimized-engine migration required.",
     "first_candidate": "Historical initial-spike order: vLLM. Not a new instruction to reinstall or rerun.",
     "mandatory_comparison": "Initial vLLM/SGLang comparisons executed and reported; do not repeat unchanged. These outcomes do not establish a universal engine ranking.",
     "baseline": {
@@ -64,7 +64,30 @@
     "deployment": "Native isolated environments/start scripts remain accepted, Docker optional. Loopback-only endpoints and one process per GPU UUID for the measured baseline; CPU parameter placement must be explicit and resource-tested. Use these measured profiles for initial integration; record any configuration changes.",
     "quantization_gate": "Existing GGUF artifacts remain baseline pins. vLLM/SGLang need separately verified architecture/quantization/parser support; do not reinterpret Q4_0 or Q5_K_M as AWQ/GPTQ or assume a QAT-unquantized checkpoint is packed 4-bit.",
     "optimized_checkpoint_status": "Exact tested artifact/runtime pins are in SPIKE_FINDINGS.md, not unresolved preflight. vLLM 0.28.0 and SGLang 0.5.23 did not produce a passing preferred-pair arm under those conditions; startup/generation failures do not prove all configurations unsupported.",
-    "codex_status": "Selected for implementation: tested Codex 0.164 App Server + local Responses-to-Chat adapter and externally coordinated threads. Bounded fixtures passed on both models. Native heterogeneous children are unproven and not required."
+    "codex_status": "Codex 0.164.0 App Server + reused local adapter is implemented with actual tools and externally coordinated threads. Postgres history/API/SSE Research Desk activated locally at aebd42d. Worker recovery is a linked fresh attempt; native heterogeneous children are not required.",
+    "fresh_grounding_g2": {
+      "source": "evidence/review-v1/grounding-summary.json",
+      "transport": "Direct chat-completions constrained extraction; not end-to-end room research",
+      "n_per_lane_arm": 30,
+      "analyst_A_exact": 5,
+      "analyst_B_exact": 4,
+      "skeptic_A_exact": 5,
+      "skeptic_B_exact": 9,
+      "schema_valid_per_arm": 30,
+      "acceptance_threshold_exact": 27,
+      "qualified": false,
+      "next": "Clarify task/record/entity identity and deterministic metadata; evaluate claim support separately from quote identity."
+    },
+    "room_tools": {
+      "current_graph_lookup_neighbors": "wired",
+      "artifact_read_search": "wired with review findings",
+      "pinned_skill_public_html_browser": "wired with fetch-deadline limitation",
+      "general_web_search": "not wired",
+      "Scrapling": "not wired",
+      "TimesFM": "not wired",
+      "GIFT_STI": "not wired",
+      "scheduled_room_triggers": "not wired"
+    }
   },
   "candidates": [
     {
@@ -215,7 +238,8 @@
           0.9
         ]
       },
-      "local_status": "36/36 disposable wrapper checks passed; six unchanged-product defects reproduced. Historical MAE showed no demonstrated baseline advantage; nominal 80% coverage 64.5% in limited SP500 sample. Informational CPU use only; no score/risk influence."
+      "local_status": "36/36 disposable wrapper checks passed; six unchanged-product defects reproduced. Historical MAE showed no demonstrated baseline advantage; nominal 80% coverage 64.5% in limited SP500 sample. Informational CPU use only; no score/risk influence.",
+      "room_integration": "Not yet exposed in first room tool registry; remains legacy application integration plus earlier isolated tool measurements."
     },
     {
       "id": "d1-decision-experiment",
@@ -226,7 +250,7 @@
       "caveat": "Not a third required resident model. Pin/review code and calibrate own outcomes; no zero-shot trading authority or production promotion from model probabilities."
     }
   ],
-  "plan_revision": 5,
+  "plan_revision": 6,
   "default_profiles": {
     "fast": "fast-gemma4-e4b",
     "slow": "slow-qwen35",
@@ -244,6 +268,7 @@
     "adapter": "Reuse tested local Responses-to-Chat adapter",
     "collaboration": "Python room manager with externally coordinated top-level Codex threads",
     "model_serving": "Measured default-placement llama.cpp/GGUF pair",
-    "next_step": "Integrate working code/tools/messages/UI and improve grounding; no new framework-selection gate."
+    "next_step": "Fix causal conversation, terminal events, retry identity, file/deadline boundaries and claim/evidence quality on the installed room.",
+    "delivery": "First local room, real tools, Postgres/SSE Research Desk and normal app activation implemented at aebd42d; known review findings remain."
   }
 }

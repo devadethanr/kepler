@@ -1,5 +1,7 @@
 # Kepler collaborative-research revamp — revised handoff
 
+Current handoff after reviewing `aebd42d`: the first room is installed/activated. Follow [ROOM_REVIEW.md](ROOM_REVIEW.md), [NEXT_PHASE_IMPLEMENTATION.md](NEXT_PHASE_IMPLEMENTATION.md) and [NEXT_PHASE_HANDOFF.md](NEXT_PHASE_HANDOFF.md). They supersede old “build the first room” start instructions below. Codex remains selected; the graph test guard is implemented and must be retained.
+
 Normal personal-app activation is complete for this room slice; no additional commercial-production qualification stage is required. See [LOCAL_ACTIVATION.md](LOCAL_ACTIVATION.md). Remaining answer-quality and later capability work stays explicit.
 
 Implementation progress, 1 November 2026: the graph safety patch and first connected Codex room/API/Research Desk slice are implemented and verified. This advances parts of P1/P2/P4/P5; it does not complete all phases or the extraction-accuracy gate. See [RESEARCH_ROOM_IMPLEMENTATION.md](RESEARCH_ROOM_IMPLEMENTATION.md). P3 forecasts/feeds and P6 experiments remain unchanged.
@@ -10,7 +12,7 @@ Revision 5, 1 November 2026. **Codex App Server with the tested local Responses-
 
 Reuse the working adapter and default llama.cpp/GGUF pair, including explicit CPU parameter placement. Browser/tool/stream/cancellation/accounting fixtures passed. Build the actual tool-connected adaptive room, durable discussion and UI. The 2/30 shared-register correctness result is a known answer-quality issue to diagnose and improve during integration, not a reason to postpone all implementation or retest every framework. vLLM/SGLang remain optional future alternatives rather than prerequisites. Docker is optional; preserve the working host driver and existing services.
 
-Read PRE_IMPLEMENTATION_AUDIT.md before tests. Fix the known graph target guard before destructive graph fixtures. Keep Zerodha, broker protection and manual approval of live entries.
+Read PRE_IMPLEMENTATION_AUDIT.md before tests. The graph target guard is now implemented; retain it and use only the verified disposable launcher for destructive graph fixtures. Keep Zerodha, broker protection and manual approval of live entries.
 
 ## 1. User decisions and scope
 
@@ -26,9 +28,9 @@ The user's local output confirms an RTX 5070 Ti with 16,303 MiB and an RTX 3060 
 
 Confirmed static defect: app-test environment MEMGRAPH_URI can be shadowed by explicit YAML context_graph.uri. A graph fixture calls MATCH(n)DETACHDELETE n using the resulting repository and default session database. If main graph is reachable, a supposedly isolated test can delete it.
 
-DO NOT run destructive graph tests, broad make test or arbitrary test-file collection until isolation is fixed and refusal is proved. Do not rely solely on a hostname containing 'test'.
+Run destructive graph tests only through the now-implemented disposable launcher/guard; refuse unsafe targets before schema/deletion. A hostname containing 'test' alone is insufficient.
 
-The first product safety slice, after spike findings review, must:
+Implemented by `aebd42d`; retain and regression-check this safety behavior:
 - Define effective configuration precedence using dummy-value unit tests and redacted diagnostics.
 - Configure an exclusive disposable graph service/database and isolated test identity/network.
 - Add a fail-closed guard checking the actual expected test target/database before any destructive operation, including fixture driver sessions.
@@ -280,4 +282,4 @@ This review adds no new benchmark/test/inference run beyond the operator-reporte
 
 ## 16. Local Codex starter
 
-Read CODEX_IMPLEMENTATION.md, README.md and PRE_IMPLEMENTATION_AUDIT.md. Implement the selected Codex App Server + tested local adapter path for this personal workspace. Reuse the local working source/config, connect graph/file/browser/forecast tools and pinned skills, persist agent messages/events and show actual discussion in the dashboard. Use external top-level threads for collaboration; do not require native child spawning or another framework comparison. Improve grounding and review adapter code while integrating, following NEXT_VALIDATION_PLAN.md. Fix the graph target guard before destructive tests, preserve local work and services, keep Zerodha and manual live-entry approval, and report concrete changes and verification.
+Use NEXT_PHASE_HANDOFF.md for the current task. The first room and normal app activation are complete. Implement the next conversation/lifecycle/tool-boundary and claim/evidence work from NEXT_PHASE_IMPLEMENTATION.md, preserving local state, installed Codex/model services and manual live-entry approval. Historical G0/G1/G2 and framework/conformance tests are not an open queue.

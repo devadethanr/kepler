@@ -1,0 +1,48 @@
+{
+  "reviewed_commit": "aebd42d164e48882284c30e3d995eb562d212162",
+  "rows_recalculated": 120,
+  "gold_matches_current_deterministic_fixture_policy": true,
+  "saved_scores_match_current_evaluator": true,
+  "scope": "Recomputed same declared rubric from saved outputs, not an independent gold-policy validation or new model run",
+  "summary": {
+    "analyst:A": {
+      "n": 30,
+      "unique_cases": 30,
+      "schema": 30,
+      "exact": 5,
+      "status_outputs": {
+        "conflict": 30
+      }
+    },
+    "analyst:B": {
+      "n": 30,
+      "unique_cases": 30,
+      "schema": 30,
+      "exact": 4,
+      "status_outputs": {
+        "conflict": 30
+      }
+    },
+    "skeptic:A": {
+      "n": 30,
+      "unique_cases": 30,
+      "schema": 30,
+      "exact": 5,
+      "status_outputs": {
+        "conflict": 27,
+        "future": 3
+      }
+    },
+    "skeptic:B": {
+      "n": 30,
+      "unique_cases": 30,
+      "schema": 30,
+      "exact": 9,
+      "status_outputs": {
+        "current": 1,
+        "future": 14,
+        "conflict": 15
+      }
+    }
+  }
+}

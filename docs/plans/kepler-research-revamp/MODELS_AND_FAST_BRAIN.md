@@ -1,5 +1,7 @@
 # Model pairing and intelligent fast brain — revision
 
+Current status: the measured pair now powers the installed first room at `aebd42d`. The fresh scoped extraction comparison scored Gemma 4/30 and Qwen 9/30, with valid JSON but failed accuracy. See [ROOM_REVIEW.md](ROOM_REVIEW.md) and [NEXT_PHASE_IMPLEMENTATION.md](NEXT_PHASE_IMPLEMENTATION.md); keep the serving pair while improving representation/claims. Market-hours fast-policy integration is still planned, not delivered by the Research Desk.
+
 Research checked 31 October 2026; local results reviewed 1 November 2026 at `8d7ddfc`. The user selected Codex App Server + the tested local adapter for personal Kepler; see [CODEX_IMPLEMENTATION.md](CODEX_IMPLEMENTATION.md). Start with the measured llama.cpp Gemma/Qwen profiles: concurrent p95 1.385 s / 1.087 s, n=30 each, with explicit CPU parameter placement. Fully correct record/citation selection was only 2/30 per lane, so improve retrieval/grounding during integration. The vLLM/SGLang trials did not supply a passing replacement; no engine migration is required. Keep Zerodha, protection and manual live-entry approval. [NEXT_VALIDATION_PLAN.md](NEXT_VALIDATION_PLAN.md) gives focused quality checks without repeating the full matrix.
 
 ## Two different model families

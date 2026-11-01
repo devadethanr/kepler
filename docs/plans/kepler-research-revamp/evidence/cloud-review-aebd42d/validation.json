@@ -1,0 +1,53 @@
+{
+  "reviewed_commit": "aebd42d164e48882284c30e3d995eb562d212162",
+  "date": "2026-11-01",
+  "scope": "Independent cloud code/evidence review and isolated checks; no access to user localhost/GPU services",
+  "application_source_changed": false,
+  "test_environment": "Python 3.12 isolated /tmp virtual environment from committed requirements-host.lock; SQLite/temp files; model/graph/broker services not started",
+  "backend": {
+    "command": "python -m pytest tests/test_research_room -q",
+    "passed": 22,
+    "skipped": 8,
+    "failed": 0,
+    "skip_scope": "Disposable Postgres integration (5) and disposable graph DNS/address checks (3) not provided in this cloud run. Graph integration directory was not collected.",
+    "warning": "Starlette httpx TestClient deprecation"
+  },
+  "frontend": {
+    "commands": [
+      "npm test",
+      "npm run lint",
+      "npm run build -- --outDir /tmp/kepler-review-aebd42d-dashboard"
+    ],
+    "tests_passed": 16,
+    "typecheck": "PASS",
+    "build": "PASS",
+    "build_warning": "Existing KnowledgeScreen bundle exceeds 500 kB warning"
+  },
+  "lint": {
+    "command": "ruff check <27 changed Python files from beaa5df..aebd42d>",
+    "files": 27,
+    "result": "PASS"
+  },
+  "evidence_integrity": {
+    "review_v1_files_matched": 14,
+    "activation_v1_files_matched": 5,
+    "activation_source_files_matched": 6,
+    "mismatches": 0,
+    "meaning": "Checks committed file identity against supplied manifests; not independent re-execution of local UI/GPU observations"
+  },
+  "local_report_not_reproduced_here": {
+    "backend_graph_tests_reported": 89,
+    "actual_ui_and_gpu_runs": "Operator-reported committed summaries; not rerun in cloud"
+  },
+  "probe_results": "probe-results.json",
+  "probe_source": "review_probes.py.txt",
+  "probe_scope": "Actual Store/Gateway/outcome helper; disposable SQLite/dummy files. Latest-objection includes inspected scheduler condition, not a live Codex room. Message-cap ordering is source inspection.",
+  "root_cause_not_established": [
+    "model status-conflict bias",
+    "effect of entity-vs-record wording",
+    "serving grammar/token/cache effects"
+  ],
+  "preservation": "No user-PC service operation, graph wipe, migration, model request, broker call or credential inspection.",
+  "requirements_host_lock_sha256": "f6f8be235326a178680e3974df3e293ade7135d50e221cd9e59e00d67c332c76",
+  "grounding_recalculation": "grounding-recalculation.json: all 120 saved rows recalculated; original evaluator/gold-policy outputs match. No new inference or independent label-policy proof."
+}

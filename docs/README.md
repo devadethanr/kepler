@@ -17,12 +17,12 @@ This directory now separates current source-of-truth docs from historical planni
 
 ## Personal Kepler Research Revamp
 
-- [Research handoff and read order](plans/kepler-research-revamp/README.md) — revision 5, Codex selected after the completed local spike reports at `8d7ddfc`; covers collaborative research rooms, local models, context/browser skills, TimesFM and live discussion UI. The implementation is planned; this documentation update does not claim it is deployed.
-- [Pre-implementation configuration audit](plans/kepler-research-revamp/PRE_IMPLEMENTATION_AUDIT.md) — required reading before tests or implementation; includes a confirmed destructive graph-test target risk and the configuration migration inventory.
-- [Codex implementation](plans/kepler-research-revamp/CODEX_IMPLEMENTATION.md) — selected App Server + tested local adapter architecture, external-thread collaboration and practical implementation order for the user’s own workspace.
-- [Completed spike review](plans/kepler-research-revamp/SPIKE_REVIEW.md) — measured evidence and limitations; Codex is selected for implementation.
-- [Next validation plan](plans/kepler-research-revamp/NEXT_VALIDATION_PLAN.md) — focused grounding and adapter checks during implementation; do not repeat the completed matrix unchanged or reopen runtime selection.
-- [Original spike procedure](plans/kepler-research-revamp/INITIAL_SPIKE_PLAN.md), [initial findings](plans/kepler-research-revamp/SPIKE_FINDINGS.md) and [follow-up findings](plans/kepler-research-revamp/FOLLOW_UP_FINDINGS.md) — retain the executed experiment scope and operator-reported measurements for reproducibility.
+- [Research handoff and read order](plans/kepler-research-revamp/README.md) — revision 6, installed local room at `aebd42d`; Codex remains selected.
+- [Activated-room review](plans/kepler-research-revamp/ROOM_REVIEW.md) — independent checks, reproducible findings and actual grounding limits.
+- [Next implementation phase](plans/kepler-research-revamp/NEXT_PHASE_IMPLEMENTATION.md) and [local Codex handoff](plans/kepler-research-revamp/NEXT_PHASE_HANDOFF.md) — conversation/lifecycle fixes, claim/evidence quality and focused verification on the existing setup.
+- [Local activation](plans/kepler-research-revamp/LOCAL_ACTIVATION.md) and [runbook](plans/kepler-research-revamp/RESEARCH_ROOM_RUNBOOK.md) — :8502 Research Desk, host services and supported start/stop procedure.
+- [Configuration audit](plans/kepler-research-revamp/PRE_IMPLEMENTATION_AUDIT.md) — historical inventory with graph/Toolbox precedence and test-target guard remediation recorded.
+- [Overall implementation plan](plans/kepler-research-revamp/IMPLEMENTATION_PLAN.md) — installed foundation plus later news, market context, forecasts and scheduled research.
 
 ## Historical References
 

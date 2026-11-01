@@ -1,5 +1,7 @@
 # Grounding and adapter checks during Codex implementation
 
+> Executed historical scope: G0/G1 artifacts, G2’s 120-call comparison and first adapter/room integration are recorded in [RESEARCH_ROOM_IMPLEMENTATION.md](RESEARCH_ROOM_IMPLEMENTATION.md) and evidence/review-v1. Accuracy failed; preserve its results. The next task is [NEXT_PHASE_IMPLEMENTATION.md](NEXT_PHASE_IMPLEMENTATION.md), not a repeat of this plan or another framework selection.
+
 Updated 1 November 2026 after the user selected Codex for personal Kepler. Read CODEX_IMPLEMENTATION.md first; SPIKE_REVIEW.md records the evidence.
 
 These are focused implementation checks, not another framework-selection or generic production-readiness stage. Do not rerun the completed spike unchanged. Existing R/F run budgets are expired; any fresh inference gets a new run ID and declared limits.

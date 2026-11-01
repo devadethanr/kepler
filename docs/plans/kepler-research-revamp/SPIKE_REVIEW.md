@@ -1,5 +1,7 @@
 # Review of completed spike and follow-ups
 
+> Later implementation now exists at `aebd42d`. Use [ROOM_REVIEW.md](ROOM_REVIEW.md) and [NEXT_PHASE_IMPLEMENTATION.md](NEXT_PHASE_IMPLEMENTATION.md) for current work; the review below records the earlier spike stage and its evidence boundary.
+
 Reviewed 1 November 2026 against pushed commit 8d7ddfc4f66603feb89dae83eb569a30af252163. Runtime code under test was 5ebdd171cf3dc3862e1b7a1dd17427ad626471a3. The reports and tracked runtime snapshots were committed later; do not label the reporting commit as the tested executable revision.
 
 Read [SPIKE_FINDINGS.md](SPIKE_FINDINGS.md), [FOLLOW_UP_FINDINGS.md](FOLLOW_UP_FINDINGS.md) and [FOLLOW_UP_REQUESTS.md](FOLLOW_UP_REQUESTS.md) together. The initial spike and all three authorized isolated follow-up requests are complete. A completed request can have failed quality gates. Do not restart the old queue or reuse expired budgets unchanged.

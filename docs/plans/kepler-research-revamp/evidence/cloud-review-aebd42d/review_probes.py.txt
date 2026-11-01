@@ -1,0 +1,87 @@
+"""Read-only application probes with disposable SQLite and dummy local artifacts.
+
+Run from swingtradev3 with the isolated review venv. No model, browser,
+Postgres, graph, broker or running-service operation is performed.
+"""
+from contextlib import contextmanager
+import hashlib
+import json
+from pathlib import Path
+import tempfile
+from uuid import uuid4
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
+
+from memory.models import CognitionRunRow, CognitionReportRow
+from research_room.settings import Settings
+from research_room.store import Store, Budget
+from research_room.tools import Gateway
+from research_room.worker import outcome
+
+report = {"reviewed_commit": "aebd42d164e48882284c30e3d995eb562d212162", "scope": "Actual helpers/store with disposable SQLite; no live services or GPU", "probes": {}}
+with tempfile.TemporaryDirectory(prefix="kepler-readonly-review-") as directory:
+    root = Path(directory)
+    engine = create_engine("sqlite:///" + str(root / "rooms.db"))
+    CognitionRunRow.__table__.create(engine)
+    CognitionReportRow.__table__.create(engine)
+
+    @contextmanager
+    def scope():
+        with Session(engine, expire_on_commit=False) as session:
+            with session.begin():
+                yield session
+
+    store = Store(scope)
+    limits = {"model": 2, "tool": 4, "seconds": 60}
+    queued = store.create("Which source supports Kepler?", "Kepler", str(uuid4()), limits)
+    cancelled = store.cancel(queued["id"])
+    events = store.events(queued["id"])
+    with scope() as session:
+        completion = session.get(CognitionRunRow, queued["id"]).completed_at
+    report["probes"]["queued_cancel"] = {"status": cancelled["status"], "event_kinds": [e["kind"] for e in events], "has_finished_event": any(e["kind"] == "room.finished" for e in events), "has_completed_at": completion is not None}
+    assert cancelled["status"] == "cancelled" and completion is None
+    assert not any(e["kind"] == "room.finished" for e in events)
+
+    request = str(uuid4())
+    existing = store.create("Which source supports Kepler?", "Kepler", request, limits)
+    retry = store.create("Which source supports Kepler?", "Kepler", request, limits, parent_room=queued["id"])
+    report["probes"]["retry_request_collision"] = {"same_room_returned": retry["id"] == existing["id"], "expected_parent_provided": True, "returned_parent": retry["parent_room"]}
+    assert retry["id"] == existing["id"] and retry["parent_room"] is None
+
+    artifacts = root / "artifacts"
+    (artifacts / ".hidden").mkdir(parents=True)
+    (artifacts / ".hidden" / "dummy.md").write_text("DUMMY Kepler review text only.")
+    (artifacts / "visible.md").symlink_to(artifacts / ".hidden" / "dummy.md")
+    config = json.loads(Path("research_room/local.example.json").read_text())
+    config["artifact_root"] = str(artifacts)
+    config["state_root"] = str(root / "state")
+    settings = Settings.model_validate(config)
+    gateway = Gateway(settings, store, existing, "review", Budget(store, existing["id"], "review"))
+    text = gateway._read("visible.md")
+    report["probes"]["in_root_hidden_symlink"] = {"visible_symlink_followed_into_hidden_directory": text == "DUMMY Kepler review text only.", "data": "dummy-only"}
+    assert text == "DUMMY Kepler review text only."
+    gateway.close()
+    engine.dispose()
+
+public = [
+    {"id": "e1", "seq": 1, "agent": "analyst", "data": {"stance": "continue", "recipient": "skeptic"}},
+    {"id": "e2", "seq": 2, "agent": "skeptic", "data": {"stance": "continue", "recipient": "analyst"}},
+    {"id": "e3", "seq": 3, "agent": "analyst", "data": {"stance": "conclusion", "recipient": "skeptic", "reply_to": "e2"}},
+    {"id": "e4", "seq": 4, "agent": "skeptic", "data": {"stance": "disagreement", "recipient": "analyst", "reply_to": "e3"}},
+]
+delivered = {"analyst": 2, "skeptic": 3}
+result = outcome(public)
+pending = [e["id"] for e in public if e["agent"] == "skeptic" and e["seq"] > delivered["analyst"]]
+report["probes"]["latest_objection"] = {"actual_outcome_helper": result, "current_worker_terminal_condition": bool(result and all(delivered[r] > 0 for r in delivered)), "undelivered_objection_ids": pending, "scope": "actual outcome helper plus inspected worker condition, not an end-to-end model run"}
+assert result == "disagreement" and pending == ["e4"]
+
+worker_source = Path("research_room/worker.py").read_text()
+report["probes"]["message_cap_order"] = {"cap_check_precedes_outcome": worker_source.index("if len(public) >= settings.max_messages:") < worker_source.index("result = outcome(public)"), "scope": "source control-flow inspection"}
+
+transcript_path = Path("../docs/plans/kepler-research-revamp/evidence/activation-v1/normal-room-public.json")
+transcript = json.loads(transcript_path.read_text())
+example = next(m for m in transcript["messages"] if m["seq"] == 55)
+report["probes"]["quote_vs_interpretation"] = {"source": str(transcript_path), "seq": 55, "text": example["data"]["text"], "quotes": [c["quote"] for c in example["data"]["claims"]], "validation_label": example["data"]["validation"], "scope": "committed public record; exact quote validation does not validate narrative entailment"}
+report["source_sha256"] = {name: hashlib.sha256(Path(name).read_bytes()).hexdigest() for name in ["research_room/worker.py", "research_room/store.py", "research_room/tools.py", "research_room/grounding.py"]}
+print(json.dumps(report, indent=2))

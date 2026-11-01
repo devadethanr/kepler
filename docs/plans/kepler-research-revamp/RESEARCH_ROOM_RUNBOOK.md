@@ -1,5 +1,7 @@
 # First research room: local operation
 
+Current known issues and next work are in [ROOM_REVIEW.md](ROOM_REVIEW.md). In particular queued cancel lacks a terminal event, latest objections may close early, and worker interruption uses a fresh linked attempt. Keep using the existing setup; do not mistake these limits for a new framework-selection requirement.
+
 Implemented from `feat-generic-broker@beaa5df`. See [RESEARCH_ROOM_IMPLEMENTATION.md](RESEARCH_ROOM_IMPLEMENTATION.md) for measured checks and limits. This is an additional read-only research path. Zerodha, reconciliation, protective orders, risk controls and manual live-entry approval retain their existing authority.
 
 ## Active personal setup

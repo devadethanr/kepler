@@ -194,3 +194,7 @@ The spike includes vLLM first, SGLang comparison and retained llama.cpp baseline
 ## User implementation decision — 1 November 2026
 
 The user selected Codex App Server + the tested local adapter for their personal workspace after the completed follow-ups. [CODEX_IMPLEMENTATION.md](CODEX_IMPLEMENTATION.md) is the active work order. Earlier experimental/undecided language describes the historical spike, not the current runtime choice. Grounding and integration checks continue as implementation work; no repeat framework-selection stage is required.
+
+## Activated-room code/evidence review — 1 November 2026
+
+[ROOM_REVIEW.md](ROOM_REVIEW.md) reviews implementation commit `aebd42d` and the now-committed evaluation/activation evidence. [Independent cloud checks and reproductions](evidence/cloud-review-aebd42d/manifest.json) distinguish repeated tests from operator-reported UI/GPU results. The next active work order is [NEXT_PHASE_IMPLEMENTATION.md](NEXT_PHASE_IMPLEMENTATION.md), with [local handoff](NEXT_PHASE_HANDOFF.md); prior G0/G1/G2 tasks are executed history.

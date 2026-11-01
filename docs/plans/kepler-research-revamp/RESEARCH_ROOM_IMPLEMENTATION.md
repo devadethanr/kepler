@@ -1,5 +1,7 @@
 # First usable research room — implementation and verification
 
+Current code review and next work: [ROOM_REVIEW.md](ROOM_REVIEW.md), [NEXT_PHASE_IMPLEMENTATION.md](NEXT_PHASE_IMPLEMENTATION.md) and [NEXT_PHASE_HANDOFF.md](NEXT_PHASE_HANDOFF.md). The initial isolated report below predates normal activation and the final push `aebd42d`; its “no commit/push” statements describe that earlier stage.
+
 Normal-app activation follow-up: the first report below records the earlier isolated verification. The user subsequently authorized normal API activation; that is now complete at :8502 with running research services and normal database history. See [LOCAL_ACTIVATION.md](LOCAL_ACTIVATION.md) for 89 passing focused checks and live UI/browser/cancel/restart results.
 
 1 November 2026. Branch `feat-generic-broker`, starting HEAD `beaa5df`. Changes remain in the working tree. No commit, push, broker migration, production restart or new live-entry authority was performed.
