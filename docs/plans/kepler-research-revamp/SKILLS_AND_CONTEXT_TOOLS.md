@@ -1,6 +1,10 @@
 # Agent skills and research context tools
 
-Design baseline: `origin/main` commit `8fb5088`, inspected with `git show` on 2026-10-31. This is a proposed implementation contract, not a claim that these capabilities are deployed. The worktree is older. No application code, credentials, dependencies, or running services were changed in this audit.
+Design baseline: `origin/main` commit `8fb5088`, inspected with `git show` on 2026-10-31. This is a proposed implementation contract, not a claim that these capabilities are deployed. No application code, credentials, dependencies, or running services were changed in this audit.
+
+## Selected runtime integration
+
+Use [CODEX_IMPLEMENTATION.md](CODEX_IMPLEMENTATION.md). Codex App Server with the tested local adapter is the selected runtime for this personal workspace. Expose the existing graph/artifact/browser/forecast services as flat dynamic functions using the working gateway. The browser skill and real tool fixtures already passed; retain the pinned official skill/core instructions and executable service, then connect them to application research. Use one local workspace and server-owned run context; multi-tenant infrastructure is unnecessary.
 
 ## Outcome and boundary
 
@@ -12,7 +16,7 @@ Research agents need to discover existing graph entities, follow evidence, inspe
 | Learning / post-trade analyst | Same graph and artifact read tools where relevant; curated post-trade views | Operational or broker mutations; secrets |
 | Other roles | Explicit minimum tools for their task, assigned by server policy | Inheriting all research tools merely by loading a skill |
 
-Role membership, tenant/workspace, run ID, permitted roots, allowed domains, rate/byte/time budgets and expiry are bound to a signed server-side run grant, not model-supplied arguments. If a role needs a decision or action, pass a structured proposal to the existing separate authorized workflow; research access itself never executes it. Treat retrieved pages, files and graph content as untrusted evidence, not instructions or authority to change permissions.
+Role membership, local workspace, run ID, permitted roots, allowed domains, rate/byte/time budgets and expiry are server-owned run context, not model-supplied authority. A local capability registry is enough; no separate multi-tenant grant service is required. If a role needs a decision or action, pass a structured proposal to the existing separate authorized workflow; research access itself never executes it. Treat retrieved pages, files and graph content as untrusted evidence, not instructions or authority to change permissions.
 
 ## Registry and discovery
 

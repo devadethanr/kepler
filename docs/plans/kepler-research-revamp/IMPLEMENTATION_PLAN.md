@@ -1,12 +1,12 @@
 # Kepler collaborative-research revamp — revised handoff
 
-Revision 4, 1 November 2026. Read SPIKE_REVIEW.md first: the local spike and all three authorized follow-ups are complete and recorded at `8d7ddfc`. They do not approve production deployment. Read PRE_IMPLEMENTATION_AUDIT.md before tests; the destructive graph-target defect is still unfixed. The next validation scope is evidence export and grounding/evaluator review, not a repetition of the whole spike.
+Revision 5, 1 November 2026. **Codex App Server with the tested local Responses-to-Chat adapter is the selected implementation runtime for the user's personal Kepler workspace.** Read CODEX_IMPLEMENTATION.md for the concrete work order. The initial spike and all three follow-ups are complete at `8d7ddfc`; do not reopen framework selection or treat Codex as an optional experiment.
 
-## Mandatory stage before product implementation
+## Implementation starting point
 
-The local spike tested runtime/model fit, cache/context, tools, Codex and forecasting with scoped successes and failures. Follow-ups resolved isolated browser execution and adapter-backed Codex worker functionality. Grounding, representative adaptive research, product durability, optimized runtimes and market data/forecast quality remain unresolved. Review the existing evidence before further implementation. Docker remains optional; neither host driver changes nor an unconditional all-GPU placement rule is justified.
+Reuse the working adapter and default llama.cpp/GGUF pair, including explicit CPU parameter placement. Browser/tool/stream/cancellation/accounting fixtures passed. Build the actual tool-connected adaptive room, durable discussion and UI. The 2/30 shared-register correctness result is a known answer-quality issue to diagnose and improve during integration, not a reason to postpone all implementation or retest every framework. vLLM/SGLang remain optional future alternatives rather than prerequisites. Docker is optional; preserve the working host driver and existing services.
 
-Keep the measured default llama.cpp/GGUF pair, including explicit CPU embedding placement, as a comparison baseline. The measured vLLM/SGLang arms did not yield a passing replacement; this is not a universal engine ranking. Selected-record correctness was 2/30 per preferred lane despite valid JSON. No production engine/model/coordinator is selected. Inspect the sanitized runner/evaluator/bridge artifacts and follow NEXT_VALIDATION_PLAN.md rather than reinstall or retest unchanged arms.
+Read PRE_IMPLEMENTATION_AUDIT.md before tests. Fix the known graph target guard before destructive graph fixtures. Keep Zerodha, broker protection and manual approval of live entries.
 
 ## 1. User decisions and scope
 
@@ -80,33 +80,22 @@ Stopping:
 - Loop detection for repeated claims/messages without new evidence.
 - No requirement that all agents agree; preserve minority objections.
 
-Full-room ceilings:20 minutes,24 model calls,24 tool calls,100k input and16k generated tokens including children/reasoning. Short-room ceilings:3 minutes,6 model calls,8 tool calls with explicit token caps. Start at1fast+1slow inference concurrently. Limits are ceilings, not targets, and remain outside model-editable content.
+Initial room limits: full room at most 20 minutes / 24 model calls / 24 tool calls; short room 3 minutes / 6 model calls / 8 tools. Start with one fast and one slow inference concurrently. Track actual usage separately from conservative admission reservations. The earlier proposed 100k input / 16k generated caps must be reconciled with the tested 32,768 context and 512 output configuration during integration; do not treat reserved context as consumed tokens or silently block normal discussion after three calls. Keep explicit call/deadline/resource limits and a reservation cap suited to the configured context. Limits are ceilings, not targets, and remain outside model-editable content.
 
-## 5. Orchestrator choice: genuinely test Codex
+## 5. Selected orchestrator: Codex App Server
 
-The current fixed ADK coordinator is not enough for the requested behavior. ADK itself supports custom dynamic agents, so it can implement the room contract; the existing SequentialAgent dispatch should not define the new room.
+Use [CODEX_IMPLEMENTATION.md](CODEX_IMPLEMENTATION.md). The tested local adapter-backed Codex environment is sufficient to choose the implementation direction for this personal workspace. Reuse App Server's external interface and agent/tool loop; do not copy Rust internals or build an alternative ADK room first.
 
-Codex offers reusable native agent loops, skills, tool/file/search behavior and collaboration. Prefer a supported external interface over copying Rust internals into Python.
+1. The existing Python application owns the room manager, persisted messages/events, tool services and shared limits.
+2. Codex App Server owns each agent's turn/tool loop. Use separate top-level threads, with explicit model routing and addressed messages delivered by the room manager.
+3. Reuse the tested local Responses-to-Chat adapter and flat allowlisted tools. Initially keep native multi-agent/shell/goals/sleep disabled, as in the passing follow-up.
+4. Keep existing useful ADK/Python specialists as callable services. Replace fixed sequential dispatch for the new room path; do not run competing room coordinators.
+5. Implement normal lifecycle handling: IDs/events, restart/cancel/reconnect, tool deduplication, shared call/time limits and actual-versus-reserved usage. Carry forward existing passing fixtures and test changed application paths.
+6. Fix grounding with scoped evidence and explicit citation validation, and evaluate a real unscripted research discussion. These are implementation tasks, not a new Codex selection gate.
 
-Decision:
-1. Build one framework-neutral Python/Postgres Research Room contract and read-only tool gateway.
-2. Run the bounded Codex App Server conformance spike before choosing its production room adapter.
-3. If EVERY mandatory gate passes, use Codex App Server as the selected room coordinator and retire the ADK room coordinator. Reuse existing Python data/forecast/validation services behind tools.
-4. A definitive inability to meet a mandatory product gate selects the dynamic ADK contingency; BLOCKED or unreviewed gates leave selection undecided. A scoped adapter worker pass is not a product coordinator pass. Preserve the explicitly authorized adapter experiment and do not silently call paid cloud models.
-5. Never run two competing coordinators for one room or add LangGraph/another framework just to obtain chat.
+Native heterogeneous child spawning remains unproven and is not required: externally coordinated threads are the selected design. The single controlled Codex/ADK comparison established both could execute that fixture, not a latency winner. The adapter supports a defined protocol subset, not every Responses feature. Keep these accurate limits in documentation without labelling the chosen runtime experimental.
 
-Post-spike qualification: original native endpoints failed, but the user explicitly authorized an isolated Responses/Chat adapter and it passed bounded worker/tool fixtures on both models. Native multi-agent tools remain disabled; routing used externally coordinated top-level threads. Do not automatically discard that result or call it unmodified native compatibility. Definitive inability to meet required behavior selects the ADK contingency; blocked/unreviewed gates leave selection undecided. The 1-run controlled Codex/ADK comparison proves neither a quality nor latency winner, and its conservative reserved-token counts are not actual consumption.
-
-Mandatory Codex gates:
-- Both actual local models support the required Responses request/stream/tool/result/cancellation behavior, not only chat completions.
-- Role routing to both model identities works; native child provider inheritance/overrides are measured, not assumed.
-- Complete public child messages/tools are captured and correlated durably.
-- Strict global parent budgets account for and halt children.
-- Sandboxed filesystem/network/tools cannot reach broker credentials or production writes.
-- Held-out Kepler evidence tasks are correct, grounded, observable and within latency/resource limits.
-- Crash/cancel/reconnect has verified semantics and no false recovered transcript.
-
-Do not treat the Codex Responses proxy as a chat-completions translator. Native collaboration flags and API shapes are versioned. Separate top-level Codex threads with externally mediated chat are acceptable only if the same gates pass and there is still one coordinator. See COLLABORATIVE_HARNESS_RESEARCH.md for pinned source references.
+If a concrete integration problem occurs, fix or report that problem rather than silently change framework or call paid cloud models.
 
 ## 6. Durable jobs, discussion and recovery
 
@@ -148,7 +137,7 @@ See SKILLS_AND_CONTEXT_TOOLS.md for actual repository gaps, capability contracts
 
 ## 8. Heterogeneous two-model deployment
 
-The initial spike is executed. Existing artifact pins below identify candidate and comparison profiles, not approved production defaults. Only default-placement llama.cpp completed the preferred-pair latency measurements; optimized formats and strict-GPU fast latency failed or were blocked in the measured arms. Native scripts remain a first-class option. Consult MODEL_CANDIDATES.json and SPIKE_REVIEW.md for reported versions and unresolved quality gates.
+The initial spike is executed. Use the measured Gemma/Qwen llama.cpp profiles for the first integration, with the recorded grounding limitations; other artifact pins remain alternatives, not automatic substitutions. Only default-placement llama.cpp completed the preferred-pair latency measurements; optimized formats and strict-GPU fast latency failed or were blocked in the measured arms. Native scripts remain a first-class option. Consult MODEL_CANDIDATES.json and SPIKE_REVIEW.md for reported versions and unresolved quality gates.
 
 Preferred pair:
 - RTX 3060: official Google Gemma 4 E4B QAT Q4_0, text only, file5.15GB/4.80GiB; no multimodal projector.
@@ -259,13 +248,13 @@ Agents use the currently APPROVED immutable harness during ordinaryresearch. The
 
 Freeze risk/permissions/budgets/executioncode/networkguards/productionconfig. No broker secrets or production writable mounts. UpstreamHarness² defaults disableCodexsandbox/unrestrictnetwork; replace those with isolatedexecution. Its fixed weights process is harnessimprovement, not model training.
 
-A customKepler task/evaluator is required. LocalResponses/executor compatibility remains a realgate. Reject citationfabrication/authorityviolations regardlessscore. Do not promote on selfpraise oronePnLbacktest.
+Harness² needs a Kepler task/evaluator adapter. Reuse the selected working Codex protocol path and add only the experiment-specific tools. Reject fabricated citations and authority violations; choose improvements using held-out results rather than model self-ratings or one PnL backtest.
 
 ## 15. Acceptance and delivery order
 
-P0 BEFORE ANY DESTRUCTIVE TEST: configuration precedence audit, isolatedtarget/refusalguard, preserveoperatorstate; local hardware/runtime inventory and non-mutating baseline checks.
+P0 Before destructive graph tests: fix configuration precedence and the isolated-target refusal guard; preserve operator data. Independent adapter/UI implementation can proceed without destructive fixtures.
 P1 Shared room/message/job/evidence contracts, transactional outbox, lease fencing, parent budgets and read-only tool/skill gateway.
-P2 Model pair validation and Codex App Server conformance decision. Selectone room coordinator using mandatory gates.
+P2 Reuse and integrate the tested Codex App Server adapter, model profiles and actual tools. Improve grounding during integration; runtime selection is already made.
 P3 Feed/news correctness, GIFT/STIservice, TimesFMtyped tool/cache/cutoff; enable diagnostic UI, no new decision authority.
 P4 Adaptive collaborative rooms, scheduled/event triggers, graph/artifact/browser research skills, ForecastAnalyst and intelligent advisory fast policy.
 P5 Real-time Research Desk, evidence/history/reconnect, optional Pixel office adapter after the transcript works.
@@ -287,4 +276,4 @@ This review adds no new benchmark/test/inference run beyond the operator-reporte
 
 ## 16. Local Codex starter
 
-Read README.md, SPIKE_REVIEW.md, both completed findings reports and PRE_IMPLEMENTATION_AUDIT.md. Do not rerun the old spike or closed follow-up queue. The next bounded task is G0/G1 in NEXT_VALIDATION_PLAN.md: export sanitized existing evidence and audit evaluator/grounding failures, without new inference. Preserve the original results and private artifacts. Any later inference experiment needs a fresh declared scope and budget. Do not run destructive graph fixtures, change product agents/schemas, expose credentials or promote a model/coordinator. Keep Zerodha and manual LIVE-entry approval; report evidence and the smallest justified next step.
+Read CODEX_IMPLEMENTATION.md, README.md and PRE_IMPLEMENTATION_AUDIT.md. Implement the selected Codex App Server + tested local adapter path for this personal workspace. Reuse the local working source/config, connect graph/file/browser/forecast tools and pinned skills, persist agent messages/events and show actual discussion in the dashboard. Use external top-level threads for collaboration; do not require native child spawning or another framework comparison. Improve grounding and review adapter code while integrating, following NEXT_VALIDATION_PLAN.md. Fix the graph target guard before destructive tests, preserve local work and services, keep Zerodha and manual live-entry approval, and report concrete changes and verification.

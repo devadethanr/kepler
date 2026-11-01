@@ -1,7 +1,7 @@
 {
   "researched_at": "2026-10-31",
   "baseline_commit": "8fb50888c47a8b4f62e0917dd0475ee5dfaa6fb0",
-  "status": "Initial spike and all three authorized isolated follow-ups EXECUTED. Local operator-reported results reviewed at 8d7ddfc; private runners/logs not independently reproduced in cloud. Grounding and production selection remain unqualified. See SPIKE_REVIEW.md and NEXT_VALIDATION_PLAN.md.",
+  "status": "Initial spike and three follow-ups complete. User selected Codex App Server + tested local adapter for personal Kepler implementation; measured llama.cpp Gemma/Qwen profiles are the starting configuration. Grounding improvements remain implementation work. See CODEX_IMPLEMENTATION.md.",
   "hardware": {
     "source": "User-provided GPU output and refreshed local inventory in SPIKE_FINDINGS.md; operator-reported, not measured in this cloud review.",
     "confirmed": "Both GPUs are in the same PC.",
@@ -42,7 +42,7 @@
     }
   },
   "runtime": {
-    "selection": "No production selection. Preserve the measured default llama.cpp arm as an experimental comparison baseline; optimized arms did not yield a passing replacement in the tested configurations.",
+    "selection": "Selected implementation starting point: measured default-placement llama.cpp Gemma/Qwen pair, behind the tested Codex App Server adapter. Improve 2/30 grounding during integration. No optimized-engine migration required.",
     "first_candidate": "Historical initial-spike order: vLLM. Not a new instruction to reinstall or rerun.",
     "mandatory_comparison": "Initial vLLM/SGLang comparisons executed and reported; do not repeat unchanged. These outcomes do not establish a universal engine ranking.",
     "baseline": {
@@ -59,12 +59,12 @@
       },
       "json_valid_per_lane": "30/30",
       "selected_record_all_fields_and_citations_correct_per_lane": "2/30",
-      "promotion": "NOT QUALIFIED: audit evaluator and grounding first; latency is not correctness."
+      "promotion": "Implementation baseline selected; latency is not correctness. Grounding remains an explicit improvement task."
     },
-    "deployment": "Native isolated environments/start scripts remain accepted, Docker optional. Loopback-only endpoints and one process per GPU UUID for the measured baseline; CPU parameter placement must be explicit and resource-tested. No production default approved.",
+    "deployment": "Native isolated environments/start scripts remain accepted, Docker optional. Loopback-only endpoints and one process per GPU UUID for the measured baseline; CPU parameter placement must be explicit and resource-tested. Use these measured profiles for initial integration; record any configuration changes.",
     "quantization_gate": "Existing GGUF artifacts remain baseline pins. vLLM/SGLang need separately verified architecture/quantization/parser support; do not reinterpret Q4_0 or Q5_K_M as AWQ/GPTQ or assume a QAT-unquantized checkpoint is packed 4-bit.",
     "optimized_checkpoint_status": "Exact tested artifact/runtime pins are in SPIKE_FINDINGS.md, not unresolved preflight. vLLM 0.28.0 and SGLang 0.5.23 did not produce a passing preferred-pair arm under those conditions; startup/generation failures do not prove all configurations unsupported.",
-    "codex_status": "Codex 0.164 with explicitly authorized experimental Responses-to-Chat adapter and externally coordinated top-level threads passed bounded fixtures on both models. Native heterogeneous child routing remains unproven; production coordinator not selected."
+    "codex_status": "Selected for implementation: tested Codex 0.164 App Server + local Responses-to-Chat adapter and externally coordinated threads. Bounded fixtures passed on both models. Native heterogeneous children are unproven and not required."
   },
   "candidates": [
     {
@@ -93,7 +93,7 @@
       "max_final_tokens": 256,
       "thinking": "off; use matched Gemma template, not Qwen tokens",
       "caveat": "Text-only, no vision projector. File size is not VRAM usage; default tested placement retains CPU parameters. Measure host RAM, GPU headroom and task correctness; strict placement failure is not universal.",
-      "local_status": "Default llama.cpp placement measured; strict full-GPU Gemma exceeded 10-second deadline at n=1. Grounding 2/30, no production approval."
+      "local_status": "Default llama.cpp placement measured; strict full-GPU Gemma exceeded 10-second deadline at n=1. Grounding 2/30, improve grounding during the selected implementation."
     },
     {
       "id": "fast-qwen35",
@@ -128,7 +128,7 @@
       "context_start": 8192,
       "max_final_tokens": 1200,
       "thinking": "bounded; measure combined reasoning/final budget separately",
-      "local_status": "Default llama.cpp placement measured concurrently with Gemma; retains CPU parameters. Grounding 2/30, no production approval."
+      "local_status": "Default llama.cpp placement measured concurrently with Gemma; retains CPU parameters. Grounding 2/30, improve grounding during the selected implementation."
     },
     {
       "id": "fast-liquid-challenger",
@@ -215,7 +215,7 @@
           0.9
         ]
       },
-      "local_status": "36/36 disposable wrapper checks passed; six unchanged-product defects reproduced. Historical MAE showed no demonstrated baseline advantage; nominal 80% coverage 64.5% in limited SP500 sample. Informational experimental use only; no score/risk influence."
+      "local_status": "36/36 disposable wrapper checks passed; six unchanged-product defects reproduced. Historical MAE showed no demonstrated baseline advantage; nominal 80% coverage 64.5% in limited SP500 sample. Informational CPU use only; no score/risk influence."
     },
     {
       "id": "d1-decision-experiment",
@@ -226,7 +226,7 @@
       "caveat": "Not a third required resident model. Pin/review code and calibrate own outcomes; no zero-shot trading authority or production promotion from model probabilities."
     }
   ],
-  "plan_revision": 4,
+  "plan_revision": 5,
   "default_profiles": {
     "fast": "fast-gemma4-e4b",
     "slow": "slow-qwen35",
@@ -236,10 +236,14 @@
   "updated_at": "2026-11-01",
   "reviewed_report_commit": "8d7ddfc4f66603feb89dae83eb569a30af252163",
   "tested_runtime_commit": "5ebdd171cf3dc3862e1b7a1dd17427ad626471a3",
-  "production_selection": {
-    "status": "UNDECIDED",
-    "approved_profiles": [],
-    "next_step": "Export existing sanitized evidence and audit evaluator/grounding failures (G0/G1); no repeat of completed spike unchanged."
-  },
-  "profile_status": "default_profiles below are historical preferred candidate IDs, not approved production defaults."
+  "profile_status": "default_profiles identify the initial personal implementation profiles; fallback models are not silently substituted and TimesFM remains informational.",
+  "implementation_selection": {
+    "status": "SELECTED",
+    "scope": "Personal Kepler research workspace",
+    "agent_runtime": "Codex App Server",
+    "adapter": "Reuse tested local Responses-to-Chat adapter",
+    "collaboration": "Python room manager with externally coordinated top-level Codex threads",
+    "model_serving": "Measured default-placement llama.cpp/GGUF pair",
+    "next_step": "Integrate working code/tools/messages/UI and improve grounding; no new framework-selection gate."
+  }
 }

@@ -1,14 +1,14 @@
-# Next validation plan — after the completed local spike
+# Grounding and adapter checks during Codex implementation
 
-Prepared 1 November 2026 after reviewing commit `8d7ddfc`. Read SPIKE_REVIEW.md first.
+Updated 1 November 2026 after the user selected Codex for personal Kepler. Read CODEX_IMPLEMENTATION.md first; SPIKE_REVIEW.md records the evidence.
 
-This is a NEW bounded scope, not a request to rerun the initial spike or completed follow-ups. No execution has started. Existing R/F run budgets are expired and must not be reused.
+These are focused implementation checks, not another framework-selection or generic production-readiness stage. Do not rerun the completed spike unchanged. Existing R/F run budgets are expired; any fresh inference gets a new run ID and declared limits.
 
-## Decision to unlock
+## What these checks improve
 
-Determine why correct-schema outputs failed source/record grounding and whether the scoped Codex bridge is reviewable enough to retain as an experimental worker.
+Diagnose why correct-schema outputs failed record grounding and preserve the working adapter behavior while integrating it into Kepler. Codex is already the selected implementation runtime.
 
-Do not choose a new model family, install another serving stack, force full-GPU placement, enable TimesFM score influence or build a production research room to answer this question.
+Use the measured model/runtime pair. Room/tool/UI implementation can proceed alongside this audit; avoid changing serving engines while isolating a grounding error. Keep TimesFM informational.
 
 ## G0 — export existing evidence, no inference needed
 
@@ -52,9 +52,9 @@ Report raw JSON validity, each field's accuracy, target selection, exact record-
 
 A deterministic extraction/retrieval baseline should establish what can be solved without an LLM. No new inference is needed for G1. If a required grounding artifact is unavailable, report the specific gap and the portion of the audit it blocks. Continue independent checks; do not request unrelated experiment logs.
 
-## G2 — proposed targeted grounding experiment, only after G1 review
+## G2 — targeted grounding comparison after auditing the labels
 
-If a new local run is approved, declare a new run ID/budget first. Suggested ceiling: 60 active minutes, 120 model calls including retries, no additional model downloads, no production service changes and no graph deletion fixtures.
+When implementation needs a new local comparison, declare a fresh run ID and limits. Suggested ceiling: 60 active minutes, 120 model calls including retries, no additional model downloads, preserve existing running services and avoid graph deletion fixtures. This is normal scoped verification, not a new request to approve the Codex choice.
 
 Use existing runtime/model/checkpoint/placement pins. Do not add vLLM/SGLang changes while diagnosing semantics.
 
@@ -92,9 +92,9 @@ Review the existing follow-up source before rewriting it:
 
 Native heterogeneous child spawn is optional if the selected architecture explicitly uses externally coordinated top-level threads. Do not relabel external routing as native spawn, and do not pursue unsupported namespaces merely to claim a feature.
 
-The fixture's 393216 conservative-token budget differs from the proposed product room budget. Show how a production budget would be estimated, reserved, reconciled and enforced; do not use reserved tokens as measured consumption.
+The fixture's 393216 conservative-token budget differs from the planned local room budget. Reconcile actual usage versus reserved admission when setting local limits; do not present reservations as measured consumption.
 
-Deliverable: accept with explicit limitations, bounded corrections needed, or reject with evidence. Do not describe a reviewed prototype as production durability proof.
+Deliverable: reusable adapter code/config with any concrete integration fixes and focused regression checks. Preserve limitations without reopening runtime selection.
 
 ## Safety and later product work
 
@@ -102,7 +102,7 @@ The known graph-test configuration/target guard and unchanged TimesFM cache/cont
 
 No TimesFM score/risk/stop/target influence. No broker migration or new live-entry authority. GIFT needs a valid existing local session and read-only entitlement checks; no token values in chat.
 
-Do not repeat the browser namespace fix,84-stream validation, controlled Codex/ADK exchange or full runtime matrix unchanged. Reuse their artifacts. Stop after review/new findings, report exact changes and evidence, and revisit the implementation decision with the user.
+Do not repeat the browser namespace fix, 84-stream validation, controlled Codex/ADK exchange or full runtime matrix unchanged. Reuse their artifacts, continue the selected implementation and report concrete changes and verification. A missing unrelated old artifact does not block independent implementation work.
 
 ## Handback
 
@@ -113,11 +113,11 @@ Export manifest and missing files:
 Evaluator/golden audit:
 Original versus revised metrics (if any):
 Per-field/target/citation/abstention failures:
-New run authorized/executed or NOT_RUN:
+New run ID/limits/results or NOT_RUN:
 Grounding arm A/B results, unique n and budgets:
 Adapter review and remaining limits:
 No score/risk influence from TimesFM:
 Graph test safety status:
 Recommended smallest next step:
-Product implementation started: no
+Implementation changes completed and remaining:
 ~~~

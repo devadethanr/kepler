@@ -2,6 +2,10 @@
 
 Research checked 2026-10-31 against Kepler commit `8fb5088` and upstream repository sources. Recommendation: build a **Research Desk** in the existing React dashboard, with a chronological, live, evidence-linked discussion as the primary surface. Add a small optional office view later, driven by the very same persisted events. It should visualize actual work and actual messages; it must not manufacture conversation, percentage progress, motion implying work, or expose hidden chain of thought. No implementation or dependency installation is implied by this research.
 
+## Selected Codex implementation
+
+Implement against [CODEX_IMPLEMENTATION.md](CODEX_IMPLEMENTATION.md). The Python room manager translates real Codex App Server thread/turn/tool notifications and addressed agent messages into Kepler’s persisted events. The existing API/SSE supplies them to the React discussion view. External top-level threads identify the agent roles; native Codex child spawning is not needed. Show actual public discussion, source references, running/completed/failed tools and reconnect state. The user’s personal setup needs no separate framework-selection or generic product-launch gate.
+
 ## What Kepler already has
 
 At `8fb5088`, `swingtradev3-dashboard/src/hooks/useDashboardData.ts` fetches cognition runs and reports and connects live events; `src/lib/sse.ts` parses `ready`, `heartbeat`, and execution events; `swingtradev3/api/routes/sse.py` streams durable `execution_events`, supports `after_id` and `Last-Event-ID`, and polls at one-second intervals. Existing cognition queries poll; activity snapshots in `swingtradev3/api/tasks/activity_manager.py` are keyed by agent name and are not a complete run-specific conversation. The current stream defaults to the latest event when no cursor is supplied; it does not by itself supply historical discussion or guarantee atomic event creation with a future research state update. There is no ResearchDesk screen in this revision. Use `git show 8fb5088:<path>` for the exact version; do not confuse it with the current checkout.
