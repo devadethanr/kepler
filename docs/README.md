@@ -17,9 +17,11 @@ This directory now separates current source-of-truth docs from historical planni
 
 ## Proposed Collaborative Research Revamp
 
-- [Research handoff and read order](plans/kepler-research-revamp/README.md) — revision 2, researched against `main` at `8fb5088`; covers collaborative research rooms, local models, context/browser skills, TimesFM and live discussion UI. This is a proposed implementation, not deployed behavior.
+- [Research handoff and read order](plans/kepler-research-revamp/README.md) — revision 4, updated after reviewing completed local spike reports at `8d7ddfc` against the application baseline `8fb5088`; covers collaborative research rooms, local models, context/browser skills, TimesFM and live discussion UI. This is a proposed implementation, not deployed behavior.
 - [Pre-implementation configuration audit](plans/kepler-research-revamp/PRE_IMPLEMENTATION_AUDIT.md) — required reading before tests or implementation; includes a confirmed destructive graph-test target risk and the configuration migration inventory.
-- [Mandatory local spike](plans/kepler-research-revamp/INITIAL_SPIKE_PLAN.md) and [spike findings](plans/kepler-research-revamp/SPIKE_FINDINGS.md) — evaluate the confirmed dual-GPU hardware, vLLM/SGLang, model/tool behavior and Codex before product implementation; local Codex must report findings and stop for review.
+- [Completed spike review](plans/kepler-research-revamp/SPIKE_REVIEW.md) — current decisions and evidence limits after the initial spike and all three isolated follow-ups; no production promotion.
+- [Next validation plan](plans/kepler-research-revamp/NEXT_VALIDATION_PLAN.md) — export existing sanitized evidence and audit grounding/evaluator failures before new inference; do not repeat the completed matrix unchanged.
+- [Original spike procedure](plans/kepler-research-revamp/INITIAL_SPIKE_PLAN.md), [initial findings](plans/kepler-research-revamp/SPIKE_FINDINGS.md) and [follow-up findings](plans/kepler-research-revamp/FOLLOW_UP_FINDINGS.md) — retain the executed experiment scope and operator-reported measurements for reproducibility.
 
 ## Historical References
 

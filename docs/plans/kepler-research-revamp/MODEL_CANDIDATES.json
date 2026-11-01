@@ -1,9 +1,9 @@
 {
   "researched_at": "2026-10-31",
   "baseline_commit": "8fb50888c47a8b4f62e0917dd0475ee5dfaa6fb0",
-  "status": "Initial local spike required before product implementation. Model metadata researched; local performance, serving-engine compatibility and Codex compatibility NOT_RUN.",
+  "status": "Initial spike and all three authorized isolated follow-ups EXECUTED. Local operator-reported results reviewed at 8d7ddfc; private runners/logs not independently reproduced in cloud. Grounding and production selection remain unqualified. See SPIKE_REVIEW.md and NEXT_VALIDATION_PLAN.md.",
   "hardware": {
-    "source": "User-provided local nvcc and nvidia-smi output, received 2026-11-01; not measured in this cloud task.",
+    "source": "User-provided GPU output and refreshed local inventory in SPIKE_FINDINGS.md; operator-reported, not measured in this cloud review.",
     "confirmed": "Both GPUs are in the same PC.",
     "driver_version": "610.43.02",
     "reported_cuda_umd": "13.3",
@@ -27,35 +27,52 @@
       }
     ],
     "still_to_verify_locally": [
-      "GPU UUIDs and current free memory",
-      "OS distribution/kernel and native versus WSL",
-      "CPU/system RAM and free disk",
-      "actual PyTorch/framework bundled CUDA and architecture kernels",
-      "current display/browser GPU use and all running model services"
+      "Refresh current GPU UUID/free memory and display/browser use before any new run",
+      "Refresh host available RAM/swap/disk and service identities before any new run",
+      "Sustained combined model/browser/forecast/production-service resource headroom before deployment"
     ],
-    "preflight": "Refresh inventory and bind by UUID; preserve the working driver/toolkit. Host nvcc version is not the CUDA runtime bundled in each framework."
+    "preflight": "Refresh inventory and bind by UUID; preserve the working driver/toolkit. Host nvcc version is not the CUDA runtime bundled in each framework.",
+    "reported_local_inventory": {
+      "os": "Native Ubuntu 24.04.4 LTS",
+      "kernel": "7.0.0-31-generic",
+      "cpu": "Intel Core Ultra 7 270K Plus",
+      "ram_total_mib": 15605,
+      "swap_total_mib": 4095,
+      "initial_free_disk_gib": 118
+    }
   },
   "runtime": {
-    "selection": "Pending INITIAL_SPIKE_PLAN.md and SPIKE_FINDINGS.md",
-    "first_candidate": "vLLM",
-    "mandatory_comparison": "SGLang, if a compatible pinned model/runtime configuration is available; record unsupported or blocked combinations explicitly.",
+    "selection": "No production selection. Preserve the measured default llama.cpp arm as an experimental comparison baseline; optimized arms did not yield a passing replacement in the tested configurations.",
+    "first_candidate": "Historical initial-spike order: vLLM. Not a new instruction to reinstall or rerun.",
+    "mandatory_comparison": "Initial vLLM/SGLang comparisons executed and reported; do not repeat unchanged. These outcomes do not establish a universal engine ranking.",
     "baseline": {
       "name": "llama.cpp",
       "researched_tag": "v0.8.0",
       "researched_commit": "8642541b255bfb5dc39cd351a178be09013a55d6",
-      "note": "Preserve existing working local binary/model and record its actual version; researched tag is not a local benchmark."
+      "note": "Researched tag/commit are historical source research, not the measured binary. Tested build/source above are operator-reported; binary hashes remain in local R evidence. Default placement retains CPU parameter buffers.",
+      "reported_tested_build": "9067",
+      "reported_tested_source_commit": "44dbe8c5218829be1603a08dee8847f4d0bca323",
+      "concurrent_e2e_p95_seconds": {
+        "gemma": 1.385,
+        "qwen": 1.087,
+        "n_per_lane": 30
+      },
+      "json_valid_per_lane": "30/30",
+      "selected_record_all_fields_and_citations_correct_per_lane": "2/30",
+      "promotion": "NOT QUALIFIED: audit evaluator and grounding first; latency is not correctness."
     },
-    "deployment": "Native isolated virtual environments and start scripts are accepted, with Docker optional. One process per GPU UUID, one request slot initially, TP=1, loopback-only spike endpoints.",
+    "deployment": "Native isolated environments/start scripts remain accepted, Docker optional. Loopback-only endpoints and one process per GPU UUID for the measured baseline; CPU parameter placement must be explicit and resource-tested. No production default approved.",
     "quantization_gate": "Existing GGUF artifacts remain baseline pins. vLLM/SGLang need separately verified architecture/quantization/parser support; do not reinterpret Q4_0 or Q5_K_M as AWQ/GPTQ or assume a QAT-unquantized checkpoint is packed 4-bit.",
-    "optimized_checkpoint_status": "UNRESOLVED: record source/revision/tokenizer/template/license/quantization/checksum before each optimized-engine arm. No model substitutions without disclosure."
+    "optimized_checkpoint_status": "Exact tested artifact/runtime pins are in SPIKE_FINDINGS.md, not unresolved preflight. vLLM 0.28.0 and SGLang 0.5.23 did not produce a passing preferred-pair arm under those conditions; startup/generation failures do not prove all configurations unsupported.",
+    "codex_status": "Codex 0.164 with explicitly authorized experimental Responses-to-Chat adapter and externally coordinated top-level threads passed bounded fixtures on both models. Native heterogeneous child routing remains unproven; production coordinator not selected."
   },
   "candidates": [
     {
       "id": "existing-baseline",
       "role": "baseline",
       "model": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
-      "revision": "Resolve and record the existing local file SHA256; do not replace before baseline evaluation.",
-      "license": "Verify existing artifact provenance"
+      "revision": "unsloth/Qwen3-4B-Instruct-2507-GGUF@a06e946bb6b655725eafa393f4a9745d460374c9; operator reports local Q4_K_M bytes matched. Exact local hashes remain in R evidence.",
+      "license": "Apache-2.0 metadata reported at matched revision"
     },
     {
       "id": "fast-gemma4-e4b",
@@ -75,7 +92,8 @@
       "context_start": 4096,
       "max_final_tokens": 256,
       "thinking": "off; use matched Gemma template, not Qwen tokens",
-      "caveat": "Omit vision projector for text-only. 6GB VRAM can be tight; measure actual buffers/KV/display headroom and concurrent latency before promotion."
+      "caveat": "Text-only, no vision projector. File size is not VRAM usage; default tested placement retains CPU parameters. Measure host RAM, GPU headroom and task correctness; strict placement failure is not universal.",
+      "local_status": "Default llama.cpp placement measured; strict full-GPU Gemma exceeded 10-second deadline at n=1. Grounding 2/30, no production approval."
     },
     {
       "id": "fast-qwen35",
@@ -109,7 +127,8 @@
       "preferred_gpu": "RTX 5070 Ti",
       "context_start": 8192,
       "max_final_tokens": 1200,
-      "thinking": "bounded; measure combined reasoning/final budget separately"
+      "thinking": "bounded; measure combined reasoning/final budget separately",
+      "local_status": "Default llama.cpp placement measured concurrently with Gemma; retains CPU parameters. Grounding 2/30, no production approval."
     },
     {
       "id": "fast-liquid-challenger",
@@ -156,12 +175,47 @@
       "id": "timesfm-25-tool-cpu",
       "role": "shared-forecast-tool",
       "model": "google/timesfm-2.5-200m-pytorch",
-      "revision": "Pin model and compatible library commit during local preflight; current requirements uses unpinned Git HEAD",
+      "revision": "1d952420fba87f3c6dee4f240de0f1a0fbc790e3",
       "device": "CPU first; bounded shared process, explicit GPU opt-in only after measurement",
       "context_start": 512,
       "max_horizon": 128,
       "default_horizon": 20,
-      "caveat": "Typed point-in-time bars and input-hash cache required. No invented stop/target, no calibrated-interval claim without evaluation."
+      "caveat": "Product contracts/cache remain unrepaired. Preserve returned point and explicit version-specific quantiles. Crossing correction is not calibration; no generated stop/target or calibrated-confidence claim.",
+      "reported_library_version": "3.0.2",
+      "inspected_source_commit": "e51928e27119cb17bebc005be2696b75e0a9e688",
+      "source_mapping_status": "Exact installed package-to-source mapping to export; package version alone does not prove source identity. Unchanged product requirements still use unpinned Git HEAD.",
+      "tested_profile": {
+        "device": "CPU",
+        "threads": 2,
+        "compile": false,
+        "continuous_quantiles": true,
+        "normalization": true,
+        "crossing_fix": true,
+        "point_channel": 5,
+        "quantile_channels": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "nominal_quantile_levels": [
+          0.1,
+          0.2,
+          0.3,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9
+        ]
+      },
+      "local_status": "36/36 disposable wrapper checks passed; six unchanged-product defects reproduced. Historical MAE showed no demonstrated baseline advantage; nominal 80% coverage 64.5% in limited SP500 sample. Informational experimental use only; no score/risk influence."
     },
     {
       "id": "d1-decision-experiment",
@@ -172,12 +226,20 @@
       "caveat": "Not a third required resident model. Pin/review code and calibrate own outcomes; no zero-shot trading authority or production promotion from model probabilities."
     }
   ],
-  "plan_revision": 3,
+  "plan_revision": 4,
   "default_profiles": {
     "fast": "fast-gemma4-e4b",
     "slow": "slow-qwen35",
     "fast_fallback": "fast-qwen35",
     "forecast": "timesfm-25-tool-cpu"
   },
-  "updated_at": "2026-11-01"
+  "updated_at": "2026-11-01",
+  "reviewed_report_commit": "8d7ddfc4f66603feb89dae83eb569a30af252163",
+  "tested_runtime_commit": "5ebdd171cf3dc3862e1b7a1dd17427ad626471a3",
+  "production_selection": {
+    "status": "UNDECIDED",
+    "approved_profiles": [],
+    "next_step": "Export existing sanitized evidence and audit evaluator/grounding failures (G0/G1); no repeat of completed spike unchanged."
+  },
+  "profile_status": "default_profiles below are historical preferred candidate IDs, not approved production defaults."
 }

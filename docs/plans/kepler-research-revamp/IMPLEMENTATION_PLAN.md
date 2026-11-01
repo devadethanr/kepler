@@ -1,12 +1,12 @@
 # Kepler collaborative-research revamp — revised handoff
 
-Revision 3, 1 November 2026. This replaces the original fixed-pipeline and two-Qwen default plan. Read PRE_IMPLEMENTATION_AUDIT.md BEFORE tests. The mandatory INITIAL_SPIKE_PLAN.md now precedes product implementation; populate SPIKE_FINDINGS.md and STOP for user review before starting P0–P6.
+Revision 4, 1 November 2026. Read SPIKE_REVIEW.md first: the local spike and all three authorized follow-ups are complete and recorded at `8d7ddfc`. They do not approve production deployment. Read PRE_IMPLEMENTATION_AUDIT.md before tests; the destructive graph-target defect is still unfixed. The next validation scope is evidence export and grounding/evaluator review, not a repetition of the whole spike.
 
 ## Mandatory stage before product implementation
 
-The local spike must test actual model/runtime fit and quality, concurrent vLLM/SGLang/cache/context performance, Codex Responses and collaboration, safe tools/skills and relevant read-only probes. Isolated start scripts, virtual environments and minimal disposable spike runners are permitted; Docker is optional. Product logic, schemas, risk and live services remain unchanged. Use fixtures instead of the unsafe graph deletion tests.
+The local spike tested runtime/model fit, cache/context, tools, Codex and forecasting with scoped successes and failures. Follow-ups resolved isolated browser execution and adapter-backed Codex worker functionality. Grounding, representative adaptive research, product durability, optimized runtimes and market data/forecast quality remain unresolved. Review the existing evidence before further implementation. Docker remains optional; neither host driver changes nor an unconditional all-GPU placement rule is justified.
 
-The known-format llama.cpp/GGUF pair is the baseline, not a predetermined serving-engine decision. vLLM is the first optimized candidate; SGLang is the comparison. Compatible checkpoint formats and model parsers are a gate. Do not silently treat existing GGUF files as AWQ/GPTQ or load BF16 weights that cannot fit. All runtime decisions remain provisional until measured findings are returned to the user.
+Keep the measured default llama.cpp/GGUF pair, including explicit CPU embedding placement, as a comparison baseline. The measured vLLM/SGLang arms did not yield a passing replacement; this is not a universal engine ranking. Selected-record correctness was 2/30 per preferred lane despite valid JSON. No production engine/model/coordinator is selected. Inspect the sanitized runner/evaluator/bridge artifacts and follow NEXT_VALIDATION_PLAN.md rather than reinstall or retest unchanged arms.
 
 ## 1. User decisions and scope
 
@@ -92,8 +92,10 @@ Decision:
 1. Build one framework-neutral Python/Postgres Research Room contract and read-only tool gateway.
 2. Run the bounded Codex App Server conformance spike before choosing its production room adapter.
 3. If EVERY mandatory gate passes, use Codex App Server as the selected room coordinator and retire the ADK room coordinator. Reuse existing Python data/forecast/validation services behind tools.
-4. If ANY mandatory gate fails, ship a dynamic ADK room with the same semantics; record failure and do not build an open-ended Responses translator or silently call paid cloud models.
+4. A definitive inability to meet a mandatory product gate selects the dynamic ADK contingency; BLOCKED or unreviewed gates leave selection undecided. A scoped adapter worker pass is not a product coordinator pass. Preserve the explicitly authorized adapter experiment and do not silently call paid cloud models.
 5. Never run two competing coordinators for one room or add LangGraph/another framework just to obtain chat.
+
+Post-spike qualification: original native endpoints failed, but the user explicitly authorized an isolated Responses/Chat adapter and it passed bounded worker/tool fixtures on both models. Native multi-agent tools remain disabled; routing used externally coordinated top-level threads. Do not automatically discard that result or call it unmodified native compatibility. Definitive inability to meet required behavior selects the ADK contingency; blocked/unreviewed gates leave selection undecided. The 1-run controlled Codex/ADK comparison proves neither a quality nor latency winner, and its conservative reserved-token counts are not actual consumption.
 
 Mandatory Codex gates:
 - Both actual local models support the required Responses request/stream/tool/result/cancellation behavior, not only chat completions.
@@ -146,7 +148,7 @@ See SKILLS_AND_CONTEXT_TOOLS.md for actual repository gaps, capability contracts
 
 ## 8. Heterogeneous two-model deployment
 
-Serving-engine selection is pending the mandatory initial spike. Existing artifact pins below are GGUF baseline profiles; optimized vLLM/SGLang checkpoint formats must be verified and separately recorded. Native launch scripts are a first-class option, not a failed-Docker workaround. Consult MODEL_CANDIDATES.json and INITIAL_SPIKE_PLAN.md for the confirmed hardware and unresolved runtime gates.
+The initial spike is executed. Existing artifact pins below identify candidate and comparison profiles, not approved production defaults. Only default-placement llama.cpp completed the preferred-pair latency measurements; optimized formats and strict-GPU fast latency failed or were blocked in the measured arms. Native scripts remain a first-class option. Consult MODEL_CANDIDATES.json and SPIKE_REVIEW.md for reported versions and unresolved quality gates.
 
 Preferred pair:
 - RTX 3060: official Google Gemma 4 E4B QAT Q4_0, text only, file5.15GB/4.80GiB; no multimodal projector.
@@ -179,6 +181,8 @@ LiquidAI d1-2B is a real single-forward decision model, not a chat replacement. 
 Measure recall/falsepositives/calibration/drift and eventual outcomes on chronological development/calibration/held-out data. Late, stale or malformed inference abstains explicitly. Urgent broker incidents follow existing deterministic response before research diagnosis.
 
 ## 10. TimesFM: shared tool plus an optional forecasting participant
+
+Post-spike decision: informational CPU use only; NO score, sizing, stop/target or risk influence. The 36/36 disposable wrapper checks do not repair the unchanged product. The reported historical sample showed no baseline accuracy advantage and nominal 80% interval coverage 64.5% (supplementary block interval 54.0–75.2%), with current-vintage/pretraining/NSE-applicability limits. Use the API-returned point (channel 5 at the tested pin), not channel 0 from the full array. Quantile crossing correction is not calibration. See SPIKE_REVIEW.md and FOLLOW_UP_FINDINGS.md before changing this component.
 
 Current integration is TimesFM 2.5 200M, context512/maxhorizon128, dailyclose caller requesting20bars. Existing TimesFMAgent is a deterministic ADK wrapper, not a conversational LLM.
 
@@ -279,8 +283,8 @@ Required tests:
 - Execution/protection/risk remain correct with allresearch components unavailable, and without awaiting anyLLM/browser under mutationlock.
 - Candidateimprovement rejected/promoted/rolledback independently.
 
-No new benchmark/test/inference outcome is claimed by these docs. Record passed/failed/skipped/unrun and actualsourceentitlement distinctly.
+This review adds no new benchmark/test/inference run beyond the operator-reported findings. Record passed/failed/skipped/unrun and actual source entitlement distinctly.
 
 ## 16. Local Codex starter
 
-Read README.md, PRE_IMPLEMENTATION_AUDIT.md and INITIAL_SPIKE_PLAN.md. Preserve local work and inspect the current branch before changing anything. Execute the isolated spike only, populate SPIKE_FINDINGS.md with measured evidence and blockers, return its copyable handback to the user, and STOP before product P0–P6. Native start scripts are accepted; Docker is optional. Keep Zerodha and manual LIVE-entry approval. Do not run destructive graph fixtures, alter product agents or schemas, bypass access controls, expose credentials, install every optional model/framework or silently call hosted inference. The user will bring findings back for planning review; subsequent product work starts only after that review.
+Read README.md, SPIKE_REVIEW.md, both completed findings reports and PRE_IMPLEMENTATION_AUDIT.md. Do not rerun the old spike or closed follow-up queue. The next bounded task is G0/G1 in NEXT_VALIDATION_PLAN.md: export sanitized existing evidence and audit evaluator/grounding failures, without new inference. Preserve the original results and private artifacts. Any later inference experiment needs a fresh declared scope and budget. Do not run destructive graph fixtures, change product agents/schemas, expose credentials or promote a model/coordinator. Keep Zerodha and manual LIVE-entry approval; report evidence and the smallest justified next step.

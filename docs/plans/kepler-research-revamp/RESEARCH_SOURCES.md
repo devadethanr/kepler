@@ -184,3 +184,9 @@ Runtime research used these primary sources:
 Current main-branch support does not prove a stable release/checkpoint/kernel combination. GGUF, AWQ/GPTQ and BF16 QAT-unquantized are different artifacts. The spike must freeze actual engine and model revisions, test compatible formats and compare quality as well as speed. No local-engine compatibility or performance result was produced by the documentation task.
 
 The spike includes vLLM first, SGLang comparison and retained llama.cpp baseline. Native isolated environments/start scripts are explicitly accepted. Local Codex must populate SPIKE_FINDINGS.md, return a copyable handback to the user and stop before product implementation.
+
+## Completed local evidence review — 1 November 2026
+
+- Operator-reported initial and follow-up results: [SPIKE_FINDINGS.md](SPIKE_FINDINGS.md), [FOLLOW_UP_FINDINGS.md](FOLLOW_UP_FINDINGS.md), [closed request queue](FOLLOW_UP_REQUESTS.md), pushed in commit `8d7ddfc`. Runtime under test was `5ebdd17`; private R/F runners/logs were not independently executed or inspected in this cloud review.
+- [Current review and corrections](SPIKE_REVIEW.md) and [next bounded validation scope](NEXT_VALIDATION_PLAN.md) supersede pre-spike unmeasured/NOT_RUN assumptions. Browser and authorized adapter fixtures passed; record grounding and production readiness remain unqualified.
+- [Pinned TimesFM return statement](https://github.com/google-research/timesfm/blob/e51928e27119cb17bebc005be2696b75e0a9e688/src/timesfm/timesfm_2p5/timesfm_2p5_torch.py#L473-L513) and [quantile configuration](https://github.com/google-research/timesfm/blob/e51928e27119cb17bebc005be2696b75e0a9e688/src/timesfm/timesfm_2p5/timesfm_2p5_base.py#L90-L95): API point is channel 5 of the full forecast array, not channel 0. Installed library 3.0.2 does not change the checkpoint identity from TimesFM 2.5. Ordering fixes are not calibration.
