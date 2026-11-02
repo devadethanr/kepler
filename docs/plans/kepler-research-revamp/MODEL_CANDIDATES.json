@@ -1,7 +1,7 @@
 {
   "researched_at": "2026-10-31",
   "baseline_commit": "8fb50888c47a8b4f62e0917dd0475ee5dfaa6fb0",
-  "status": "Fresh-source service delivered at 0ba305a / findings 34a3f40; Codex/model/active policy retained, candidates inactive. Review found stream-terminal, predecessor-cutoff and undated-omission issues. Next: fix those and implement read-only GIFT/Singapore context.",
+  "status": "Market integrity/context source 30b5c39 and findings e70a3b0 are locally reported delivered; no live GIFT/STI feed qualified. Preserve A/B and implement required Pixel workspace now as remaining Track C of same phase. No office code delivered by this planning update.",
   "hardware": {
     "source": "User-provided GPU output and refreshed local inventory in SPIKE_FINDINGS.md; operator-reported, not measured in this cloud review.",
     "confirmed": "Both GPUs are in the same PC.",
@@ -64,7 +64,7 @@
     "deployment": "Native isolated environments/start scripts remain accepted, Docker optional. Loopback-only endpoints and one process per GPU UUID for the measured baseline; CPU parameter placement must be explicit and resource-tested. Use these measured profiles for initial integration; record any configuration changes.",
     "quantization_gate": "Existing GGUF artifacts remain baseline pins. vLLM/SGLang need separately verified architecture/quantization/parser support; do not reinterpret Q4_0 or Q5_K_M as AWQ/GPTQ or assume a QAT-unquantized checkpoint is packed 4-bit.",
     "optimized_checkpoint_status": "Exact tested artifact/runtime pins are in SPIKE_FINDINGS.md, not unresolved preflight. vLLM 0.28.0 and SGLang 0.5.23 did not produce a passing preferred-pair arm under those conditions; startup/generation failures do not prove all configurations unsupported.",
-    "codex_status": "Installed Codex/local adapter with current source tools. Tool/no-mail and marked model denial attribution fixed. Review reproduced missing-terminal stream completion; next correction required. Current policy unchanged; no candidate activation.",
+    "codex_status": "Installed Codex/local adapter and active policy unchanged. Latest local market findings report terminal-stream/cutoff/omission corrections; this scope publication does not independently rerun those tests. Required visual workspace remains to implement.",
     "fresh_grounding_g2": {
       "source": "evidence/review-v1/grounding-summary.json",
       "transport": "Direct chat-completions constrained extraction; not end-to-end room research",
@@ -85,9 +85,9 @@
       "general_web_search": "not wired",
       "Scrapling": "not wired",
       "TimesFM": "not wired",
-      "GIFT_STI": "not yet wired; current GIFT scheduler method only logs. Qualified read-only context is next scope.",
+      "GIFT_STI": "Read-only market_context snapshot service/cards reported at 30b5c39; real quote feeds unavailable/unqualified. UI must preserve provider/identity/calendar gaps.",
       "scheduled_room_triggers": "not wired",
-      "news_snapshots": "wired: bounded read-only news_search/news_read; first-seen/version cutoff with predecessor-registration/undated omission fixes outstanding"
+      "news_snapshots": "Wired bounded read-only saved sources; predecessor cutoff/undated omission corrections reported at 30b5c39, preserve them during UI work."
     },
     "active_participant_policy": "research_room/codex.py INSTRUCTIONS; no candidate prompt is loaded by installed RPC initialization.",
     "prompt_confirmation": {
@@ -292,7 +292,7 @@
     "fast_fallback": "fast-qwen35",
     "forecast": "timesfm-25-tool-cpu"
   },
-  "updated_at": "2026-11-02",
+  "updated_at": "2026-11-04",
   "reviewed_report_commit": "8d7ddfc4f66603feb89dae83eb569a30af252163",
   "tested_runtime_commit": "5ebdd171cf3dc3862e1b7a1dd17427ad626471a3",
   "profile_status": "default_profiles identify the initial personal implementation profiles; fallback models are not silently substituted and TimesFM remains informational.",
@@ -303,8 +303,8 @@
     "adapter": "Reuse tested local Responses-to-Chat adapter",
     "collaboration": "Python room manager with externally coordinated top-level Codex threads",
     "model_serving": "Measured default-placement llama.cpp/GGUF pair",
-    "next_step": "MARKET_CONTEXT_IMPLEMENTATION.md and MARKET_CONTEXT_HANDOFF.md: integrity corrections plus truthful GIFT/STI snapshot service.",
-    "delivery": "Installed room plus source snapshots/news tools/Desk provenance delivered; source/body/company coverage and useful grounded conclusions remain limited."
+    "next_step": "MARKET_CONTEXT_HANDOFF.md: retain A integrity and B GIFT/STI work, implement required Pixel Agents-style office workspace now as Track C in the same phase and budget.",
+    "delivery": "Room/source foundation plus A/B market integrity/context implementation reported at 30b5c39; required visual Track C remains unimplemented."
   },
   "reviewed_implementation_commit": "34a3f40",
   "ui_delivery": {
@@ -312,9 +312,14 @@
     "visual_agent_workspace": {
       "required": true,
       "implemented": false,
-      "next_after": "Current integrity/market-context phase",
       "plan": "UI_MILESTONE_PLAN.md",
-      "backend": "Existing Kepler/Codex events; no new agent runtime"
+      "backend": "Existing Kepler/Codex events; no new agent runtime",
+      "phase": "Current integrity/market-context phase",
+      "track": "C",
+      "timing": "Required remaining Track C now, in same phase; preserve reported A/B and closed41/39 run; default UI verification uses no new inference.",
+      "verification_budget": "Default UI/offline replay uses no new inference; closed market run41/39 unchanged; separate optional UI live check at most19 model/21 tool additional, aggregate<=60/60."
     }
-  }
+  },
+  "latest_reported_implementation_commit": "30b5c39",
+  "latest_reported_findings_commit": "e70a3b0"
 }

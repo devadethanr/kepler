@@ -2,19 +2,25 @@
 
 Clarified with the user on 2 November 2026. The existing Research Desk is a working form, discussion and evidence interface. The requested Pixel Agents/Gather-like visual workspace is **not implemented** and is a **required revamp deliverable**, not optional decoration.
 
-## Order from here
+## Current phase: preserve A/B, deliver required Track C now
 
-1. **Finish the current integrity and market-context phase.** Follow MARKET_CONTEXT_HANDOFF.md: stream terminal handling, source cutoff/omission fixes, read-only GIFT/Singapore context and existing desk integration. Do not interrupt that work or expand its model-call budget for office development. If a provider entitlement is blocked, finish the available service/UI and explicit unavailable state, document the gap and hand back that phase; do not postpone the visual workspace indefinitely for an external data entitlement.
-2. **Build the visual agent workspace next.** The existing room/thread/tool/message/history events provide its backend foundation. There is no need to wait for TimesFM, Harness² or every autonomous-research feature before making the agents visible.
-3. **Add TimesFM reuse and advisory fast-brain integration.** Preserve explicit uncertainty and deterministic broker/risk authority; forecast quality remains unqualified.
-4. **Add broader scheduled/event-driven research rooms.** Reuse the same workspace, source context, deduplication, limits and durable events.
-5. **Add Harness² improvement experiments and remaining research-quality refinements.** User-selected harness promotion and manual live-entry approval remain in force.
+Publication note, 4 November: A/B are now reported delivered in source `30b5c39` with findings `e70a3b0`. Preserve those changes and provider limitations; implement C as required remaining work of this same phase. The office is not yet delivered.
 
-Model/source evaluation and concrete regressions continue within the relevant implementation. Do not reopen framework selection or repeat the old prompt study.
+The user's latest instruction includes this workspace **now, in the existing phase**. This supersedes the earlier wording that deferred it until after market context. Keep all work already assigned through MARKET_CONTEXT_HANDOFF.md:
+
+- **A:** the three reproduced stream/cutoff/undated-omission fixes.
+- **B:** verified read-only GIFT Nifty and Singapore/STI context, with truthful missing/delayed/unavailable states.
+- **C:** implement the Pixel Agents-style visual workspace and integrate the market/source context into that same Research Desk.
+
+Implement Track C using existing saved rooms/events and offline fixtures, independently of any remaining provider follow-up. Preserve the reported A/B integrity fixes and data qualifications. Do not restart the completed market study or drop its limitations. A provider entitlement blocker does not block the office renderer; finish independent work and show the actual unavailable state.
+
+The existing **combined 60 model / 60 tool phase ceilings remain unchanged**. UI development and saved-history replay require no new inference. The completed market run stays closed at 41/39. If a live UI/model check is necessary, record a separate UI run with at most 19 additional model / 21 tool admissions and reconcile cumulative totals; do not reset the original run or grant a new 60/60 allocation.
+
+After this combined phase: TimesFM/advisory integration → broader scheduled/event-driven research → Harness² improvement experiments. Source/model evaluation continues within the relevant work, without reopening framework selection or repeating seen prompt rounds.
 
 ## What the visual milestone must deliver
 
-- A Pixel Agents-style office/war-room scene is the main Research Desk view, visible before a room is selected. Show configured agents honestly as idle, active or unknown within the displayed scope; an empty selection must not become a blank form-only page.
+- A real pixel-art office/war-room scene, with character sprites, desks and discussion space, is the main Research Desk view, visible before a room is selected. A form, status cards or avatar icons alone do not satisfy this deliverable. With no selection show configured avatars/health and explicit no-selection state; do not infer global idle from missing room data. Show selected agents honestly as idle, active or unknown within the displayed scope; an empty selection must not become a blank form-only page.
 - Visible analyst/skeptic avatars, desks and a discussion area. Multiple logical roles share the existing two model services; an avatar does not imply another loaded model or GPU.
 - Observed queued/researching/tool-use/waiting/speaking/finished/failed/cancelled states. Public-message bubbles and handoffs are driven by actual published messages and addressed interactions. Decorative motion must not imply nonexistent research, meetings or consensus.
 - Clicking an avatar or message opens the actual discussion, tool outcomes and cited source/market snapshots in a side panel. Keep disagreements, missing data and unassessed interpretations visible.
@@ -28,10 +34,10 @@ Use [Pixel Agents](https://github.com/pixel-agents-hq/pixel-agents) as the concr
 
 Keep the existing React dashboard and Python/Postgres/SSE room contract. Start with a lightweight Canvas/React scene and an explicit event-to-visual-state mapping. Avoid an extra agent runtime, standalone office service or heavy game engine solely for this view. Pause/throttle rendering when hidden and measure browser/resource impact on the PC hosting both model services.
 
-Use separate ownership for renderer/layout, event-state adapter, and evidence/interaction panels. One integrator owns the screen wiring and actual-browser verification. Prepare the concrete UI implementation handoff when the current market-context phase is reviewed; this plan does not claim office implementation has started.
+Use separate ownership for renderer/layout, event-state adapter, and evidence/interaction panels. One integrator owns the screen wiring and actual-browser verification. MARKET_CONTEXT_HANDOFF.md Track C is the current implementation instruction. One UI owner integrates both the renderer and market/source cards so concurrent agents do not overwrite ResearchDeskScreen.tsx. This documentation change does not claim the office is already implemented.
 
 ## Completion evidence
 
-Verify the office is visible with no selected room, real agent/tool/message events update it, clicking an agent opens matching evidence, and saved history/reload/reconnect/cancellation do not invent activity. Test state projection with explicit offline fixtures first, then reuse saved real rooms and one bounded live run if needed. Test actual localhost and LAN browser views, not just TypeScript or server rendering. Capture the visible workspace and report performance, accessibility and remaining limits. Replay alone needs no new model inference; any live checks use an explicitly declared budget for that later phase.
+Verify the office is visible with no selected room, real agent/tool/message events update it, clicking an agent opens matching evidence, and saved history/reload/reconnect/cancellation do not invent activity. Test state projection with explicit offline fixtures first, then reuse saved real rooms and one bounded live run if needed. Test actual localhost and LAN browser views, not just TypeScript or server rendering. Capture the visible workspace and report performance, accessibility and remaining limits. Replay alone needs no new model inference; any live checks share the already declared current-phase budget. Record actual localhost/LAN screenshots and evidence in MARKET_CONTEXT_FINDINGS.md, including no-selection, live/saved discussion, error and reconnect states. Do not mark this phase complete with only the existing form/transcript.
 
-The current market-context task remains first. This clarification makes the next UI deliverable explicit and removes the earlier assumption that the requested visual workspace was optional.
+The active phase keeps its integrity/market scope and includes this required visual workspace now. Completion must report Tracks A, B and C separately, including concrete blockers, rather than quietly deferring C.

@@ -22,7 +22,7 @@ This directory now separates current source-of-truth docs from historical planni
 - [Market-context implementation](plans/kepler-research-revamp/MARKET_CONTEXT_IMPLEMENTATION.md) and [local handoff](plans/kepler-research-revamp/MARKET_CONTEXT_HANDOFF.md) — three integrity fixes and read-only GIFT/Singapore context.
 - [Fresh-source findings](plans/kepler-research-revamp/FRESH_SOURCE_FINDINGS.md), [results](plans/kepler-research-revamp/FRESH_SOURCE_RESULTS.md) and [work history](plans/kepler-research-revamp/WORK_HISTORY.md) — completed source, preserved observations, tests and budgets.
 - [Runbook](plans/kepler-research-revamp/RESEARCH_ROOM_RUNBOOK.md) — :8502 Research Desk and supported model/API/worker/source operations.
-- [Required visual workspace](plans/kepler-research-revamp/UI_MILESTONE_PLAN.md) — Pixel Agents-style office/avatars are not yet built; this is the required next UI milestone after the current market-context task.
+- [Required visual workspace](plans/kepler-research-revamp/UI_MILESTONE_PLAN.md) — Pixel Agents-style office/avatars are not yet built; this is required Track C now within the current integrity/market-context task, with A/B retained.
 - [Overall plan](plans/kepler-research-revamp/IMPLEMENTATION_PLAN.md) — later informational TimesFM, scheduled rooms, Harness² and UI improvements.
 
 ## Historical References

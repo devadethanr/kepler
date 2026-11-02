@@ -118,3 +118,7 @@ original stash and new private backup remain local. The only schema addition is
 market observations; an existing config/auth read invoked the additive upgrade
 after backup but before the intended disposable-validation step, transparently
 recorded in findings. The required visual workspace remains next, unimplemented.
+
+## Required current-phase visual workspace — scope published 4 November 2026
+
+The user requested the Pixel Agents-style office **now in the existing integrity/market-context phase**. This supersedes earlier next-milestone wording. Local A/B source `30b5c39` and findings `e70a3b0` arrived while the scope commit was unpublished and are preserved unchanged. The updated MARKET_CONTEXT_HANDOFF.md makes C required remaining work; the form/cards alone do not complete it. UI development/replay needs no new inference. The closed market run stays at 41 model / 39 tool admissions; any separately recorded UI live check must preserve the original combined 60/60 phase ceiling, leaving at most 19/21 additional. This publication changes planning only, not application source or delivered UI.

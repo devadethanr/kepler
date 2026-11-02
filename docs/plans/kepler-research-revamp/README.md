@@ -1,17 +1,17 @@
 # Kepler collaborative research revamp
 
-Implementation handoff, revision 9 — market-context source `30b5c39`, 3 November 2026.
+Implementation handoff, revision 10 — market-context source `30b5c39`; current-phase UI scope published 4 November 2026.
 
 **Current:** source `30b5c39` fixes terminal streams, predecessor cutoffs and undated omissions, and adds immutable read-only market context with Research Desk provenance cards. [Market-context findings](MARKET_CONTEXT_FINDINGS.md) record the delivered service and its limits: GIFT/STI quotes are honestly unavailable, and the actual rooms still show query/citation/repetition failures. The installed Codex/local adapter, active participant policy and Gemma/Qwen serving pair remain selected; tuning candidates remain inactive.
 
-**Next:** review [MARKET_CONTEXT_FINDINGS.md](MARKET_CONTEXT_FINDINGS.md), then follow the required [visual agent workspace milestone](UI_MILESTONE_PLAN.md). Provider entitlement/calendar gaps remain explicit follow-ups, not a reason to postpone that UI indefinitely. Both source and market evaluation runs are closed; do not renew them or replay a prompt-only experiment.
+**Required remaining work in this phase:** implement the Pixel Agents-style visual workspace now as **Track C**, following [MARKET_CONTEXT_HANDOFF.md](MARKET_CONTEXT_HANDOFF.md) and [UI_MILESTONE_PLAN.md](UI_MILESTONE_PLAN.md). The reported A/B work at `30b5c39` is preserved; do not restart those completed investigations. Provider gaps/unavailable quotes are not a blocker to implementing the office.
 
-**Required next UI milestone:** build the Pixel Agents-style visual agent workspace described in [UI_MILESTONE_PLAN.md](UI_MILESTONE_PLAN.md) after reviewing the market-context handback. The existing form/transcript is the foundation; the office/avatars are not implemented yet. This requested workspace is required.
+The existing form/transcript/cards are the foundation; actual office/avatars are still unimplemented and required before this combined phase is complete. Source and market runs remain closed. Build and verify the UI using saved real events/offline fixtures first; no new inference is needed for that. Any separately recorded live UI check must keep combined phase totals within 60 model / 60 tool admissions (41/39 already recorded, at most 19/21 additional). Do not reopen or reset the completed market run.
 
 ## Read this first
 
 1. [Market-context findings](MARKET_CONTEXT_FINDINGS.md): integrity fixes, real provider gaps, actual rooms, preservation and handback.
-2. [Visual workspace milestone](UI_MILESTONE_PLAN.md): next implementation order. [Market-context implementation](MARKET_CONTEXT_IMPLEMENTATION.md), [handoff](MARKET_CONTEXT_HANDOFF.md) and [source review](FRESH_SOURCE_REVIEW.md) retain the preceding scope and reproducers.
+2. [Current Track C scope](UI_MILESTONE_PLAN.md) and [local handoff](MARKET_CONTEXT_HANDOFF.md): required visual workspace in this same phase; [market-context plan](MARKET_CONTEXT_IMPLEMENTATION.md) retains A/B requirements and corrected UI acceptance.
 3. [Fresh-source findings](FRESH_SOURCE_FINDINGS.md) and [results](FRESH_SOURCE_RESULTS.md): completed ingestion, tests, frozen rooms and accounting.
 4. [Runbook](RESEARCH_ROOM_RUNBOOK.md), [reboot checks](REBOOT_BROWSER_CHECKS.md) and [work history](WORK_HISTORY.md): normal :8502 entry point, supported host services and implementation history.
 5. [Overall plan](IMPLEMENTATION_PLAN.md), [Codex design](CODEX_IMPLEMENTATION.md), [model/status manifest](MODEL_CANDIDATES.json), [skills](SKILLS_AND_CONTEXT_TOOLS.md) and [TimesFM](TIMESFM_AUDIT_AND_REUSE.md): existing design and later capabilities.
@@ -51,7 +51,7 @@ Use the measured llama.cpp profile as the initial implementation baseline; do no
 | Implement GIFT and Singapore | Required context service. Verify the existing Kite GIFT quote entitlement; optional delayed provider fallback. Singapore context is a hypothesis to evaluate, not proof that STI causes Nifty moves. |
 | Put Harness² into agents' work | Agents can propose and review research-harness experiments through tools. Candidate testing is isolated and promotion remains manual; ordinary research uses an approved immutable version. |
 | Add Scrapling | Required bounded extraction adapter behind the existing provider boundary, with source profiles and quality tests. |
-| Gather-like live discussion UI | Transcript/evidence foundation is implemented. The required Pixel Agents-style workspace comes next after market context, driven by the same real events. Check code and art licenses separately. |
+| Gather-like live discussion UI | Transcript/evidence foundation is implemented. The Pixel Agents-style workspace is required now as Track C, driven by the same real events. Check code and art licenses separately. |
 | Agent-browser skill available while researching | Pin and load official guidance plus matching executable functionality through a constrained tool bridge. Merely adding skill text is insufficient. |
 | Evaluate/reuse Codex | Selected: Codex App Server plus the tested local adapter, with externally coordinated threads. The first room is installed; extend it using the same external-thread design. |
 | Multiple small model families | Use Gemma and Qwen for complementary roles. Multiple roles share two resident services; agreement is not independent corroboration. |
@@ -66,4 +66,4 @@ The pinned API returns channel 5 as the point forecast, not the full-array chann
 
 ## Start instructions for local Codex
 
-Read [MARKET_CONTEXT_FINDINGS.md](MARKET_CONTEXT_FINDINGS.md) and its handback first. The next required milestone is [UI_MILESTONE_PLAN.md](UI_MILESTONE_PLAN.md), with the same real room/thread/message/tool/history foundation. Keep current runtime/model/prompt choices, source/market histories, manual approval and local changing state. Declare any later live-verification budget independently; neither completed run is renewable.
+Read the updated [MARKET_CONTEXT_HANDOFF.md](MARKET_CONTEXT_HANDOFF.md) and implement required Track C now, preserving the reported A/B source/data and all local work. Use [UI_MILESTONE_PLAN.md](UI_MILESTONE_PLAN.md) for actual pixel-art office/avatars, event-driven states/bubbles, source/market inspectors and browser acceptance. Prefer saved history/offline verification without new model calls. Append a dated Track C report or create VISUAL_WORKSPACE_FINDINGS.md linked from the existing findings; do not overwrite historical room failures, source qualifications or accounting.

@@ -262,14 +262,14 @@ Harness² needs a Kepler task/evaluator adapter. Reuse the selected working Code
 
 ## 15. Acceptance and delivery order
 
-Current next order: integrity/market context → required visual agent workspace → TimesFM/advisory integration → broader scheduled research → Harness². [UI_MILESTONE_PLAN.md](UI_MILESTONE_PLAN.md) supersedes earlier optional-office wording and the historical phase grouping below. The current local task is unchanged.
+Current phase: integrity fixes + read-only market context + required visual agent workspace, with parallel A/B/C ownership. After this combined phase: TimesFM/advisory integration → broader scheduled research → Harness². [UI_MILESTONE_PLAN.md](UI_MILESTONE_PLAN.md) supersedes earlier optional-office wording and the historical phase grouping below. Keep the previously assigned A/B work; the latest user instruction includes visual Track C now in that same task and budget.
 
 P0 Before destructive graph tests: fix configuration precedence and the isolated-target refusal guard; preserve operator data. Independent adapter/UI implementation can proceed without destructive fixtures.
 P1 Shared room/message/job/evidence contracts, transactional outbox, lease fencing, parent budgets and read-only tool/skill gateway.
 P2 Reuse and integrate the tested Codex App Server adapter, model profiles and actual tools. Improve grounding during integration; runtime selection is already made.
 P3 Feed/news correctness, GIFT/STIservice, TimesFMtyped tool/cache/cutoff; enable diagnostic UI, no new decision authority.
 P4 Adaptive collaborative rooms, scheduled/event triggers, graph/artifact/browser research skills, ForecastAnalyst and intelligent advisory fast policy.
-P5 Real-time Research Desk and required Pixel Agents-style workspace. Transcript/evidence/reconnect foundation exists; implement the visual workspace after the current market-context phase.
+P5 Real-time Research Desk and required Pixel Agents-style workspace. Transcript/evidence/reconnect foundation exists; implement the visual workspace now as Track C of the current integrity/market-context phase.
 P6 Agent-invoked Harness² experiments and optionald1/Flint challengers; manual promotion only.
 
 Required tests:
