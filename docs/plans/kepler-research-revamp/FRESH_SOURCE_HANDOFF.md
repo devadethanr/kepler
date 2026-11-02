@@ -1,5 +1,7 @@
 # Local Codex handoff — primary-source evidence
 
+> Delivered source-service phase: implementation `0ba305a`, findings `34a3f40`. Read [FRESH_SOURCE_REVIEW.md](FRESH_SOURCE_REVIEW.md) for independently checked behavior and three remaining integrity findings. The active next task is [MARKET_CONTEXT_HANDOFF.md](MARKET_CONTEXT_HANDOFF.md). Preserve this original scope and its closed budget as history; do not repeat it.
+
 Use the branch containing `ae7d45f` and the subsequent review-doc commit. The earlier room-fix phase and prompt experiment are complete. Codex stays selected; the retained prompt candidates stay inactive.
 
 ```text

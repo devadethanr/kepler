@@ -1,0 +1,47 @@
+{
+  "reviewed_commit": "34a3f40",
+  "scope": "Actual application classes with disposable SQLite and loopback SSE fixture. No real model/graph/broker or external-network requests.",
+  "probes": {
+    "predecessor_cutoff": {
+      "earlier_cutoff": "2026-01-02T12:00:00+00:00",
+      "cutoff_after_successor_search": "2026-01-04T00:00:00+00:00",
+      "read_cutoff": "2026-01-04T00:00:00+00:00",
+      "read_version_status": "superseded",
+      "scope": "Within room maximum cutoff; earlier explicit search cutoff is widened and later revision metadata exposed, immutable A body unchanged."
+    },
+    "undated_omission": {
+      "matching_dummy_undated_records": 3,
+      "returned": 2,
+      "reported_undated_truncated": false,
+      "status": "partial",
+      "scope": "Service caps returned undated items at two while repository cap is six."
+    },
+    "missing_terminal_reason": [
+      {
+        "case": "text_eof",
+        "terminal": "response.completed",
+        "tool_call_available_for_dispatch": false
+      },
+      {
+        "case": "text_done_without_reason",
+        "terminal": "response.completed",
+        "tool_call_available_for_dispatch": false
+      },
+      {
+        "case": "tool_eof",
+        "terminal": "response.completed",
+        "tool_call_available_for_dispatch": true
+      },
+      {
+        "case": "text_stop_control",
+        "terminal": "response.completed",
+        "tool_call_available_for_dispatch": false
+      },
+      {
+        "case": "text_length_control",
+        "terminal": "response.incomplete",
+        "tool_call_available_for_dispatch": false
+      }
+    ]
+  }
+}

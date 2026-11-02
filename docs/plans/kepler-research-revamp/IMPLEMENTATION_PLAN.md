@@ -1,5 +1,7 @@
 # Kepler collaborative-research revamp — revised handoff
 
+Current work after `34a3f40`: source snapshots/tools/Desk provenance are delivered. Read [FRESH_SOURCE_REVIEW.md](FRESH_SOURCE_REVIEW.md), [MARKET_CONTEXT_IMPLEMENTATION.md](MARKET_CONTEXT_IMPLEMENTATION.md) and [handoff](MARKET_CONTEXT_HANDOFF.md). These supersede earlier milestone notices below. Keep the installed Codex/model/prompt setup.
+
 Current work after `ae7d45f`: the first room and repair phase are delivered. Read [POST_TUNING_REVIEW.md](POST_TUNING_REVIEW.md), then [FRESH_SOURCE_IMPLEMENTATION.md](FRESH_SOURCE_IMPLEMENTATION.md) / [handoff](FRESH_SOURCE_HANDOFF.md). These supersede older current-handoff notices below. The selected runtime remains installed; inactive prompt candidates are evaluation history.
 
 Current handoff after reviewing `aebd42d`: the first room is installed/activated. Follow [ROOM_REVIEW.md](ROOM_REVIEW.md), [NEXT_PHASE_IMPLEMENTATION.md](NEXT_PHASE_IMPLEMENTATION.md) and [NEXT_PHASE_HANDOFF.md](NEXT_PHASE_HANDOFF.md). They supersede old “build the first room” start instructions below. Codex remains selected; the graph test guard is implemented and must be retained.

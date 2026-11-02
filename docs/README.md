@@ -17,12 +17,12 @@ This directory now separates current source-of-truth docs from historical planni
 
 ## Personal Kepler Research Revamp
 
-- [Current handoff/read order](plans/kepler-research-revamp/README.md) — revision 7 after `ae7d45f`; room/UI repaired, Codex installed, tuning candidates inactive.
-- [Post-tuning review](plans/kepler-research-revamp/POST_TUNING_REVIEW.md) — confirmation replay, tests, source diagnostics and actual limits.
-- [Fresh-source implementation](plans/kepler-research-revamp/FRESH_SOURCE_IMPLEMENTATION.md) and [local Codex handoff](plans/kepler-research-revamp/FRESH_SOURCE_HANDOFF.md) — active next scope.
-- [Work history](plans/kepler-research-revamp/WORK_HISTORY.md), [prompt results](plans/kepler-research-revamp/PROMPT_TUNING_RESULTS.md) and [phase findings](plans/kepler-research-revamp/NEXT_PHASE_FINDINGS.md) — completed work and frozen evidence.
-- [Runbook](plans/kepler-research-revamp/RESEARCH_ROOM_RUNBOOK.md) and [reboot checks](plans/kepler-research-revamp/REBOOT_BROWSER_CHECKS.md) — :8502 Research Desk and supported local services.
-- [Overall plan](plans/kepler-research-revamp/IMPLEMENTATION_PLAN.md) — later GIFT/Singapore, informational TimesFM, scheduled rooms and harness improvements.
+- [Current read order](plans/kepler-research-revamp/README.md) — revision 8 after `34a3f40`; fresh-source service delivered, Codex installed.
+- [Fresh-source review](plans/kepler-research-revamp/FRESH_SOURCE_REVIEW.md) — checked delivery, actual-class reproductions and room/source limits.
+- [Market-context implementation](plans/kepler-research-revamp/MARKET_CONTEXT_IMPLEMENTATION.md) and [local handoff](plans/kepler-research-revamp/MARKET_CONTEXT_HANDOFF.md) — three integrity fixes and read-only GIFT/Singapore context.
+- [Fresh-source findings](plans/kepler-research-revamp/FRESH_SOURCE_FINDINGS.md), [results](plans/kepler-research-revamp/FRESH_SOURCE_RESULTS.md) and [work history](plans/kepler-research-revamp/WORK_HISTORY.md) — completed source, preserved observations, tests and budgets.
+- [Runbook](plans/kepler-research-revamp/RESEARCH_ROOM_RUNBOOK.md) — :8502 Research Desk and supported model/API/worker/source operations.
+- [Overall plan](plans/kepler-research-revamp/IMPLEMENTATION_PLAN.md) — later informational TimesFM, scheduled rooms, Harness² and UI improvements.
 
 ## Historical References
 

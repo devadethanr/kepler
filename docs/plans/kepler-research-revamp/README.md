@@ -1,31 +1,29 @@
 # Kepler collaborative research revamp
 
-Implementation handoff, revision 8 — fresh-source slice, 2 November 2026.
+Implementation handoff, revision 8 — reviewed `34a3f40`, 2 November 2026.
 
-**Current:** the local room/Research Desk is installed and restored after reboot. The LAN UUID loading bug and most earlier room findings are fixed. Codex App Server + the local adapter and measured Gemma/Qwen serving pair remain selected. Installed participants still use `research_room/codex.py:INSTRUCTIONS`; retained tuning candidates are inactive.
+**Current:** the fresh-source service and Research Desk provenance views are delivered at source `0ba305a`, with findings at `34a3f40`. The installed Codex/local adapter, active participant policy and Gemma/Qwen serving pair remain selected; tuning candidates remain inactive. The LAN UI loading bug is fixed.
 
-**Current source slice:** [FRESH_SOURCE_FINDINGS.md](FRESH_SOURCE_FINDINGS.md) and [results](FRESH_SOURCE_RESULTS.md) record controlled SEBI/RBI/PIB ingestion, immutable versions, bounded read tools, Desk provenance and terminal-reason fixes. The 93-model/88-tool run found the relevant title in 3/3 saved-source rooms versus 0/3 ordinary rooms; narrative and completion limitations remain. Candidates stay inactive. Do not repeat completed room or prompt studies.
+**Next:** fix three reproduced integrity issues and implement read-only GIFT Nifty / Singapore market context. Start with [FRESH_SOURCE_REVIEW.md](FRESH_SOURCE_REVIEW.md), then [MARKET_CONTEXT_IMPLEMENTATION.md](MARKET_CONTEXT_IMPLEMENTATION.md) and [MARKET_CONTEXT_HANDOFF.md](MARKET_CONTEXT_HANDOFF.md). Provider discovery can proceed in parallel with offline integrity fixes. Do not replay the completed source run or another prompt-only experiment.
 
 ## Read this first
 
-1. [Fresh-source findings and handback](FRESH_SOURCE_FINDINGS.md), [results](FRESH_SOURCE_RESULTS.md) and [evidence](evidence/fresh-source-v1/manifest.json): implemented scope, tests, source terms/dates, actual discussions, recovery and limits.
-2. [Fresh-source implementation](FRESH_SOURCE_IMPLEMENTATION.md) and [local Codex handoff](FRESH_SOURCE_HANDOFF.md): the scope just executed. [Post-tuning review](POST_TUNING_REVIEW.md) preserves the prior review and official-feed diagnostics.
-3. [Runbook](RESEARCH_ROOM_RUNBOOK.md), [reboot/browser checks](REBOOT_BROWSER_CHECKS.md) and [local activation](LOCAL_ACTIVATION.md): normal :8502 entry point, model/API/worker services and supported IDE launch context.
-4. [Work history](WORK_HISTORY.md), [phase findings](NEXT_PHASE_FINDINGS.md), [prompt results](PROMPT_TUNING_RESULTS.md) and [prompt findings](PROMPT_TUNING_FINDINGS.md): completed source, tests, frozen scores, call accounting and filenames.
-5. [Overall implementation plan](IMPLEMENTATION_PLAN.md), [Codex architecture](CODEX_IMPLEMENTATION.md), [models/status](MODEL_CANDIDATES.json), [skills/tools](SKILLS_AND_CONTEXT_TOOLS.md), [harness](COLLABORATIVE_HARNESS_RESEARCH.md) and [TimesFM](TIMESFM_AUDIT_AND_REUSE.md): design and later capabilities.
+1. [Current source-phase review](FRESH_SOURCE_REVIEW.md): independent tests/reproductions, source delivery, actual room results and limits.
+2. [Market-context implementation](MARKET_CONTEXT_IMPLEMENTATION.md) and [local handoff](MARKET_CONTEXT_HANDOFF.md): active next scope.
+3. [Fresh-source findings](FRESH_SOURCE_FINDINGS.md) and [results](FRESH_SOURCE_RESULTS.md): completed ingestion, tests, frozen rooms and accounting.
+4. [Runbook](RESEARCH_ROOM_RUNBOOK.md), [reboot checks](REBOOT_BROWSER_CHECKS.md) and [work history](WORK_HISTORY.md): normal :8502 entry point, supported host services and implementation history.
+5. [Overall plan](IMPLEMENTATION_PLAN.md), [Codex design](CODEX_IMPLEMENTATION.md), [model/status manifest](MODEL_CANDIDATES.json), [skills](SKILLS_AND_CONTEXT_TOOLS.md) and [TimesFM](TIMESFM_AUDIT_AND_REUSE.md): existing design and later capabilities.
 
-[ROOM_REVIEW.md](ROOM_REVIEW.md), [NEXT_PHASE_IMPLEMENTATION.md](NEXT_PHASE_IMPLEMENTATION.md), [NEXT_PHASE_HANDOFF.md](NEXT_PHASE_HANDOFF.md), the initial spike reports and [NEXT_VALIDATION_PLAN.md](NEXT_VALIDATION_PLAN.md) retain historical scope. Their early “UI not loading”, graph blocker and first-room build instructions are not current tasks. Retain the now-implemented graph/Toolbox precedence and verified disposable-target guard; destructive tests still require that launcher, never the user's graph.
+Older fresh-source/room-fix handoffs, prompt-iteration plans and spike documents retain historical scopes. The fresh-source allocation is closed at 93 model / 88 tool admissions; unspent limits do not renew it. The graph isolation/precedence fixes remain implemented; destructive tests still require the verified disposable launcher.
 
-## Current evidence and limitations
+## Current evidence and limits
 
-- Fresh-source local checks: **157 guarded backend tests passed / 1 Docker host-parser skip**, **22 frontend tests**, TypeScript/build/Ruff and actual LAN/localhost source cards, cancellation, reload and API restart passed. The skipped Scrapling extraction passed in the pinned host environment. All 2,003 initial news IDs remain; ongoing normal ingestion updates and five local runtime files were preserved.
-- SEBI/RBI/PIB feeds returned 30/10/20 records locally; one reviewed PIB HTML excerpt is stored. SEBI date-only precision is implemented; RBI timezone and PIB RSS dates remain unknown. Company-disclosure coverage remains unavailable. Three real paired questions are too small to establish financial accuracy; unsupported assertions and three failed room endings are retained in the report.
-
-- Independent cloud checks: **55 backend tests passed / 11 infrastructure-specific skips; 21 frontend tests, TypeScript, build and changed-file Ruff passed**. Local guarded 125-test and browser/GPU/reboot results remain local reports, not tests rerun on the user's PC.
-- All 25 phase-2 and 235 prompt-evidence files matched supplied manifests. Replaying all 120 final confirmation proposals through the actual gateway/scorer and temporary SQLite reproduced every score.
-- Final matched confirmation: Gemma **25/30**, Qwen **24/30**, below the frozen 27/30 objective; candidates remain inactive. This is a supplied-claim contract task, not financial accuracy or live-room quality. Earlier failed scores remain separate history.
-- The earlier bounded cloud check found populated SEBI/RBI feeds and an empty NSE feed. Its unresolved SEBI-date observation is historical; the fresh-source findings record the implemented parser and honest remaining coverage/timezone limits.
-- Manual live-entry approval, existing broker controls and TimesFM's lack of new score/risk authority remain unchanged. Preserve the changing local runtime files.
+- Independent cloud checks: **87 backend/source tests passed / 11 infrastructure skips; 22 frontend tests, TypeScript, build and Ruff passed**. The local 157-test/UI/graph/reboot observations were not rerun on the user's PC.
+- All 30 fresh-source export files matched manifest sizes/hashes. Actual application helpers reproduced missing stream-terminal completion, widened predecessor read cutoff and incorrect undated omission reporting using scratch SQLite/loopback HTTP; no real model or broker calls.
+- Three paired real questions: relevant titles retrieved 3/3 saved-source versus 0/3 ordinary; unsupported messages 1/23 versus 5/11 in the saved audit. Repeated messages are not independent facts. All six ended in three abstentions/three failures; they do not establish reliable research conclusions.
+- Source snapshots preserve first-seen/revisions and explicit date/identity limits. Company filings, broad archive coverage and RBI/PIB timezone gaps remain open. Metadata/real quote validity does not prove interpretation.
+- GIFT/Singapore provider support is not yet implemented. The existing GIFT scheduler method only logs; macro float/cache helpers do not qualify live index data. The next scope addresses that directly.
+- Manual live-entry approval and existing broker/protection controls remain; TimesFM receives no new score/risk authority. Preserve local changing runtime files and original evidence.
 
 ## Hardware and runtime update
 
@@ -65,4 +63,4 @@ The pinned API returns channel 5 as the point forecast, not the full-array chann
 
 ## Start instructions for local Codex
 
-Use [FRESH_SOURCE_HANDOFF.md](FRESH_SOURCE_HANDOFF.md). Reuse the installed room and existing news infrastructure, fix the small terminal-reason edge, preserve timestamp/identity/version provenance and connect bounded source tools to actual discussions. Keep the old runtime policy active, preserve local state and run one predeclared source-backed check after offline fixes. Report actual outcomes in FRESH_SOURCE_FINDINGS.md and push source/sanitized docs on this branch.
+Use [MARKET_CONTEXT_HANDOFF.md](MARKET_CONTEXT_HANDOFF.md). Fix the three precise integrity findings, qualify read-only GIFT/STI sources and add truthful session/delay/quality snapshots to the existing desk and tool gateway. Keep current runtime/model/prompt choices, preserve source history and local state, and verify with a fresh bounded run. Record actual outcomes in MARKET_CONTEXT_FINDINGS.md.

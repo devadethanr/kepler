@@ -1,0 +1,31 @@
+{
+  "reviewed_commit": "34a3f403c20895b2c5179fd5c6cbc2e202e606a3",
+  "room_counts_recomputed": {
+    "model": 93,
+    "tool": 88,
+    "reserved_tokens": 3047424,
+    "input_tokens": 643713,
+    "output_tokens": 9962,
+    "unknown_usage_calls": 2
+  },
+  "paired_outcomes": {
+    "ordinary": {
+      "failed": 2,
+      "abstention": 1
+    },
+    "saved": {
+      "failed": 1,
+      "abstention": 2
+    }
+  },
+  "paired_message_denominators": {
+    "ordinary": 11,
+    "saved": 23
+  },
+  "unsupported_message_counts_from_saved_audit": {
+    "ordinary": 5,
+    "saved": 1
+  },
+  "scope": "Arithmetic and outcome/denominator cross-check from exported records; unsupported counts reuse authored narrative audit, not an independent factual regrading.",
+  "limits": "Three unique questions per arm, repeated claims not independent facts; ordinary tools have current-view time confounding."
+}

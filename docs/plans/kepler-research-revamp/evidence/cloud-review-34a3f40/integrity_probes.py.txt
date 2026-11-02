@@ -1,0 +1,94 @@
+"""Actual helpers + temporary SQLite + controlled loopback SSE, no model/market/broker calls."""
+from contextlib import contextmanager
+from datetime import datetime, timezone
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+import json
+import os
+from pathlib import Path
+import tempfile
+import threading
+from urllib.request import Request, build_opener, ProxyHandler
+from uuid import uuid4
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
+from memory.models import Base, CognitionRunRow, CognitionReportRow
+from memory.news_snapshot import NewsSnapshotRepository
+from research_room.settings import Settings
+from research_room.store import Store, Budget
+from research_room.tools import Gateway
+from research_room.news_evidence import NewsEvidence
+from research_room.adapter import Bridge
+
+report={'reviewed_commit':'34a3f40','scope':'Actual application classes with disposable SQLite and loopback SSE fixture. No real model/graph/broker or external-network requests.','probes':{}}
+with tempfile.TemporaryDirectory(prefix='kepler-integrity-review-') as temporary:
+    db=Path(temporary)/'review.db'
+    os.environ['DATABASE_URL']='sqlite:///'+str(db)
+    engine=create_engine(os.environ['DATABASE_URL'])
+    tables=[Base.metadata.tables[n] for n in ['cognition_runs','cognition_reports','news_source_versions','news_source_observations','news_source_fetches']]
+    Base.metadata.create_all(engine,tables=tables)
+    @contextmanager
+    def scope():
+        with Session(engine,expire_on_commit=False) as session,session.begin():
+            yield session
+    base={'provider':'sebi_rss','provider_entry_id':'reversion-demo','source_type':'regulator','canonical_url':'https://example.invalid/review','title':'DUMMY SnapshotAlpha','summary':None,'publication_precision':'date','published_date':'2026-01-01','published_raw':'01 Jan 2026 +0530','timezone_basis':'source offset +0530','identity_basis':'unmapped'}
+    with scope() as session:
+        repo=NewsSnapshotRepository(session)
+        a=repo.record(base,fetched_at='2026-01-02T00:00:00Z')
+        b=repo.record({**base,'title':'DUMMY SnapshotBeta'},fetched_at='2026-01-03T00:00:00Z')
+        for n in range(3):
+            repo.record({**base,'provider_entry_id':f'undated-{n}','title':f'DUMMY UndatedReview {n}','publication_precision':'unknown','published_date':None,'published_raw':None,'timezone_basis':'unknown'},fetched_at='2026-01-02T00:00:00Z')
+    store=Store(scope)
+    room=store.create('Inspect DUMMY source snapshots','DUMMY',str(uuid4()),{'model':8,'tool':8,'seconds':120})
+    owner='review';store.claim(owner,120)
+    config=json.loads(Path('research_room/local.example.json').read_text());config.update(artifact_root=str(Path.cwd().parent/'docs'),state_root=str(Path(temporary)/'state'))
+    settings=Settings.model_validate(config)
+    gateway=Gateway(settings,store,room,owner,Budget(store,room['id'],owner))
+    query={'topic':'SnapshotAlpha','start':'2025-12-30T00:00:00Z','end':'2026-01-02T12:00:00Z','cutoff':'2026-01-02T12:00:00Z','sources':'sebi_rss','offset':''}
+    first=gateway.dispatch('analyst','q1','news_search',query)
+    early=gateway.news_versions[a]
+    later=gateway.dispatch('analyst','q2','news_search',{**query,'topic':'SnapshotBeta','end':'2026-01-04T00:00:00Z','cutoff':'2026-01-04T00:00:00Z'})
+    changed=gateway.news_versions[a]
+    reread=gateway.dispatch('analyst','q3','news_read',{'version_id':a,'offset':''})
+    report['probes']['predecessor_cutoff']={'earlier_cutoff':early,'cutoff_after_successor_search':changed,'read_cutoff':reread['evidence'][0]['decision_cutoff'],'read_version_status':reread['evidence'][0]['source_snapshot']['version_status'],'scope':'Within room maximum cutoff; earlier explicit search cutoff is widened and later revision metadata exposed, immutable A body unchanged.'}
+    assert early<changed and reread['evidence'][0]['decision_cutoff']==changed
+    service=NewsEvidence({**room,'source_cutoff':'2026-01-04T00:00:00Z'},scope=scope)
+    undated=service.search({**query,'topic':'UndatedReview','end':'2026-01-04T00:00:00Z','cutoff':''})
+    report['probes']['undated_omission']={'matching_dummy_undated_records':3,'returned':len(undated['evidence']),'reported_undated_truncated':undated['retrieval']['undated_truncated'],'status':undated['status'],'scope':'Service caps returned undated items at two while repository cap is six.'}
+    assert len(undated['evidence'])==2 and undated['retrieval']['undated_truncated'] is False
+    gateway.close()
+
+    class Upstream(BaseHTTPRequestHandler):
+        protocol_version='HTTP/1.0'
+        body=b''
+        def do_POST(self):
+            self.rfile.read(int(self.headers.get('Content-Length','0')))
+            self.send_response(200);self.send_header('Content-Type','text/event-stream');self.end_headers()
+            self.wfile.write(type(self).body);self.wfile.flush()
+        def log_message(self,*args):pass
+    upstream=ThreadingHTTPServer(('127.0.0.1',0),Upstream)
+    thread=threading.Thread(target=upstream.serve_forever,daemon=True);thread.start()
+    tests=[('text_eof',False,False,None),('text_done_without_reason',False,True,None),('tool_eof',True,False,None),('text_stop_control',False,True,'stop'),('text_length_control',False,True,'length')]
+    observed=[]
+    for name,tool,done,finish in tests:
+        room2=store.create('Loopback protocol fixture only','DUMMY',str(uuid4()),{'model':2,'tool':2,'seconds':120});store.claim(owner,120)
+        budget=Budget(store,room2['id'],owner);budget.begin_turn('analyst');budget.model_roles={'fixture-model':'analyst'}
+        bridge=Bridge({},budget);bridge.allowed={'lookup':('fixture',{'entity':{'type':'string'}})}
+        port=bridge.start(0,'fixture-model',upstream.server_address[1])
+        delta={'tool_calls':[{'index':0,'id':'fixture-call','type':'function','function':{'name':'lookup','arguments':'{"entity":"DUMMY"}'}}]} if tool else {'content':'Partial fixture text'}
+        chunks=[{'choices':[{'index':0,'delta':delta,'finish_reason':None}]}]
+        if finish:chunks.append({'choices':[{'index':0,'delta':{},'finish_reason':finish}]})
+        Upstream.body=b''.join(('data: '+json.dumps(c)+'\n\n').encode() for c in chunks)+(b'data: [DONE]\n\n' if done else b'')
+        payload={'model':'fixture-model','input':[{'role':'user','content':'Protocol fixture'}],'tools':[{'type':'function','name':'lookup','parameters':{'type':'object','properties':{'entity':{'type':'string'}},'required':['entity']}}],'stream':True}
+        with build_opener(ProxyHandler({})).open(Request(f'http://127.0.0.1:{port}/v1/responses',json.dumps(payload).encode(),{'Content-Type':'application/json'}),timeout=5) as response:
+            events=[json.loads(line[6:]) for line in response.read().decode().splitlines() if line.startswith('data: ')]
+        terminal=next(e for e in reversed(events) if e['type'] in ['response.completed','response.failed','response.incomplete'])
+        observed.append({'case':name,'terminal':terminal['type'],'tool_call_available_for_dispatch':any(item.get('type')=='function_call' for item in terminal['response'].get('output',[]))})
+        bridge.close();store.finish(room2['id'],owner,'abstention','Fixture complete')
+    upstream.shutdown();upstream.server_close();thread.join(timeout=2)
+    report['probes']['missing_terminal_reason']=observed
+    assert observed[0]['terminal']=='response.completed' and observed[1]['terminal']=='response.completed'
+    assert observed[2]['terminal']=='response.completed' and observed[2]['tool_call_available_for_dispatch']
+    assert observed[3]['terminal']=='response.completed' and observed[4]['terminal']=='response.incomplete'
+    engine.dispose()
+print(json.dumps(report,indent=2))

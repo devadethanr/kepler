@@ -1,0 +1,38 @@
+{
+  "reviewed_commit": "34a3f403c20895b2c5179fd5c6cbc2e202e606a3",
+  "source_commit": "0ba305a",
+  "date": "2026-11-02 Asia/Kolkata",
+  "backend": {
+    "passed": 87,
+    "skipped": 11,
+    "failed": 0,
+    "command": "python -m pytest -q -p no:cacheprovider tests/test_research_room tests/test_data/test_fresh_source.py tests/test_news_snapshots.py",
+    "scope": "Isolated pinned Python3.12 host environment, SQLite/temp files, sentinel graph/DB. Actual graph integration directory not collected.",
+    "warnings": [
+      "Existing Starlette TestClient deprecation",
+      "lxml strip_cdata deprecation"
+    ]
+  },
+  "frontend": {
+    "tests_passed": 22,
+    "typescript": "PASS",
+    "build": "PASS, temporary output",
+    "warning": "Existing KnowledgeScreen chunk size warning"
+  },
+  "ruff": {
+    "changed_python_files": 27,
+    "result": "PASS"
+  },
+  "evidence_manifest": {
+    "files_matched": 30,
+    "sizes_matched": 30,
+    "mismatches": 0
+  },
+  "local_checks_not_reproduced": {
+    "backend_reported_passed": 157,
+    "docker_parser_skip": 1,
+    "UI_graph_reboot_broker_preservation": "Committed local reports; cloud did not access user localhost/GPUs/services"
+  },
+  "new_probes": "Actual Store/NewsSnapshotRepository/Gateway/NewsEvidence + controlled loopback HTTP through actual Bridge. No real model inference, external fetch, broker, migration or graph operation. Scratch fixture model admissions do not alter the actual run accounting.",
+  "preserved": "Application source, original findings/manifest/evidence, models/runtime policy, user-PC runtime state and manual live-entry approval."
+}

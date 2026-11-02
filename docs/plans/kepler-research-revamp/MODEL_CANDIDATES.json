@@ -1,7 +1,7 @@
 {
   "researched_at": "2026-10-31",
   "baseline_commit": "8fb50888c47a8b4f62e0917dd0475ee5dfaa6fb0",
-  "status": "Room/UI repair phase delivered and seven prompt rounds reviewed at ae7d45f. Installed Codex/model profiles remain selected; retained candidate prompts inactive below their functional target. Next: fresh primary-source evidence plus minor terminal-reason fix.",
+  "status": "Fresh-source service delivered at 0ba305a / findings 34a3f40; Codex/model/active policy retained, candidates inactive. Review found stream-terminal, predecessor-cutoff and undated-omission issues. Next: fix those and implement read-only GIFT/Singapore context.",
   "hardware": {
     "source": "User-provided GPU output and refreshed local inventory in SPIKE_FINDINGS.md; operator-reported, not measured in this cloud review.",
     "confirmed": "Both GPUs are in the same PC.",
@@ -64,7 +64,7 @@
     "deployment": "Native isolated environments/start scripts remain accepted, Docker optional. Loopback-only endpoints and one process per GPU UUID for the measured baseline; CPU parameter placement must be explicit and resource-tested. Use these measured profiles for initial integration; record any configuration changes.",
     "quantization_gate": "Existing GGUF artifacts remain baseline pins. vLLM/SGLang need separately verified architecture/quantization/parser support; do not reinterpret Q4_0 or Q5_K_M as AWQ/GPTQ or assume a QAT-unquantized checkpoint is packed 4-bit.",
     "optimized_checkpoint_status": "Exact tested artifact/runtime pins are in SPIKE_FINDINGS.md, not unresolved preflight. vLLM 0.28.0 and SGLang 0.5.23 did not produce a passing preferred-pair arm under those conditions; startup/generation failures do not prove all configurations unsupported.",
-    "codex_status": "Installed Codex 0.164.0 App Server/local adapter with repaired room lifecycle, LAN UI fallback and actual graph/file/browser tools. Recovery remains linked fresh attempts. Small no-mail budget-denial reason edge remains.",
+    "codex_status": "Installed Codex/local adapter with current source tools. Tool/no-mail and marked model denial attribution fixed. Review reproduced missing-terminal stream completion; next correction required. Current policy unchanged; no candidate activation.",
     "fresh_grounding_g2": {
       "source": "evidence/review-v1/grounding-summary.json",
       "transport": "Direct chat-completions constrained extraction; not end-to-end room research",
@@ -85,9 +85,9 @@
       "general_web_search": "not wired",
       "Scrapling": "not wired",
       "TimesFM": "not wired",
-      "GIFT_STI": "not wired",
+      "GIFT_STI": "not yet wired; current GIFT scheduler method only logs. Qualified read-only context is next scope.",
       "scheduled_room_triggers": "not wired",
-      "news_snapshots": "planned next; existing data.news infrastructure not yet exposed as versioned room evidence service"
+      "news_snapshots": "wired: bounded read-only news_search/news_read; first-seen/version cutoff with predecessor-registration/undated omission fixes outstanding"
     },
     "active_participant_policy": "research_room/codex.py INSTRUCTIONS; no candidate prompt is loaded by installed RPC initialization.",
     "prompt_confirmation": {
@@ -110,6 +110,18 @@
       "candidate_prompts_active": false,
       "candidate_text_preserved_after_rename": true,
       "interpretation": "Finite matched functional scores; both fail target. Policy and assessment-task changed together, no causal live-room quality claim."
+    },
+    "fresh_source_result": {
+      "source_commit": "0ba305a",
+      "findings_commit": "34a3f40",
+      "unique_paired_questions": 3,
+      "model_admissions": 93,
+      "tool_admissions": 88,
+      "saved_relevant_title_retrieval": "3/3",
+      "ordinary_relevant_title_retrieval": "0/3",
+      "unsupported_messages_saved": "1/23",
+      "unsupported_messages_ordinary": "5/11",
+      "interpretation": "Message audit with repeats, not fact-accuracy trials; all six paired rooms abstained/failed. Source data access improved but general grounding is not qualified."
     }
   },
   "candidates": [
@@ -273,7 +285,7 @@
       "caveat": "Not a third required resident model. Pin/review code and calibrate own outcomes; no zero-shot trading authority or production promotion from model probabilities."
     }
   ],
-  "plan_revision": 7,
+  "plan_revision": 8,
   "default_profiles": {
     "fast": "fast-gemma4-e4b",
     "slow": "slow-qwen35",
@@ -291,8 +303,8 @@
     "adapter": "Reuse tested local Responses-to-Chat adapter",
     "collaboration": "Python room manager with externally coordinated top-level Codex threads",
     "model_serving": "Measured default-placement llama.cpp/GGUF pair",
-    "next_step": "FRESH_SOURCE_IMPLEMENTATION.md: source/date/identity/version service on installed room, not further prompt tuning on seen sets.",
-    "delivery": "First room plus lifecycle/tool/claim/UI repair phase implemented; local reboot restoration documented. Semantic quality remains limited."
+    "next_step": "MARKET_CONTEXT_IMPLEMENTATION.md and MARKET_CONTEXT_HANDOFF.md: integrity corrections plus truthful GIFT/STI snapshot service.",
+    "delivery": "Installed room plus source snapshots/news tools/Desk provenance delivered; source/body/company coverage and useful grounded conclusions remain limited."
   },
-  "reviewed_implementation_commit": "ae7d45f"
+  "reviewed_implementation_commit": "34a3f40"
 }

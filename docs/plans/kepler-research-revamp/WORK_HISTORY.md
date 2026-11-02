@@ -83,3 +83,7 @@ serving configuration and manual entry approval retain their existing authority.
 ## Independent review after ae7d45f — 2 November 2026
 
 [POST_TUNING_REVIEW.md](POST_TUNING_REVIEW.md) records independent cloud checks and replay of all 120 final confirmation proposals, without model calls. Existing raw reports/scores stay unchanged. The active next implementation is [FRESH_SOURCE_IMPLEMENTATION.md](FRESH_SOURCE_IMPLEMENTATION.md), with [local handoff](FRESH_SOURCE_HANDOFF.md): primary-source evidence and the remaining minor terminal-reason edge. No new prompt was activated by the review.
+
+## Fresh-source delivery and independent review — 2 November 2026
+
+Source `0ba305a`, findings `34a3f40`: immutable source revisions/observations, source-aware dates and identity gaps, bounded news tools, controlled graph references and Desk provenance. [FRESH_SOURCE_REVIEW.md](FRESH_SOURCE_REVIEW.md) records independent tests, arithmetic and three actual-class reproductions. The next active task is [MARKET_CONTEXT_IMPLEMENTATION.md](MARKET_CONTEXT_IMPLEMENTATION.md) / [handoff](MARKET_CONTEXT_HANDOFF.md): integrity fixes plus read-only GIFT/Singapore context. The 93/88 source run and old prompt scores stay closed/unchanged.

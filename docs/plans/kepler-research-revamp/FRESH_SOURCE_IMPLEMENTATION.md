@@ -1,5 +1,7 @@
 # Next implementation: fresh primary-source evidence
 
+> Delivered source-service phase: implementation `0ba305a`, findings `34a3f40`. Read [FRESH_SOURCE_REVIEW.md](FRESH_SOURCE_REVIEW.md) for independently checked behavior and three remaining integrity findings. The active next task is [MARKET_CONTEXT_HANDOFF.md](MARKET_CONTEXT_HANDOFF.md). Preserve this original scope and its closed budget as history; do not repeat it.
+
 2 November 2026. Starting point: `feat-generic-broker@ae7d45f` plus the review-doc commit. Read [POST_TUNING_REVIEW.md](POST_TUNING_REVIEW.md). The room, LAN UI and most R1–R8 fixes are delivered. Keep Codex, the local adapter, Gemma/Qwen profiles and current active participant instructions.
 
 ## Intended result
