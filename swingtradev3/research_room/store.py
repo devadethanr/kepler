@@ -22,7 +22,9 @@ TERMINAL = {"conclusion", "disagreement", "abstention", "cancelled", "interrupte
 
 
 class RoomStopped(RuntimeError):
-    pass
+    def __init__(self, message, code=None):
+        super().__init__(message)
+        self.code = code
 
 
 class Store:
@@ -36,6 +38,7 @@ class Store:
         request_id: str,
         limits: dict,
         parent_room: str | None = None,
+        evidence_scope: dict | None = None,
     ) -> dict:
         room_id = "room:" + str(uuid.UUID(request_id))
 
@@ -45,6 +48,7 @@ class Store:
                 or row.payload.get("question") != question
                 or row.payload.get("target") != target
                 or row.payload.get("parent_room") != parent_room
+                or row.payload.get("evidence_scope") != evidence_scope
             ):
                 raise ValueError("Request ID already used for a different room")
             return self._view(row)
@@ -60,8 +64,10 @@ class Store:
                 started_at=datetime.now(timezone.utc),
                 payload={
                     "parent_room": parent_room,
+                    "evidence_scope": evidence_scope,
                     "question": question,
                     "target": target,
+                    "source_cutoff": datetime.now(timezone.utc).isoformat(),
                     "seq": 0,
                     "limits": limits,
                     "counts": {
@@ -265,8 +271,13 @@ class Store:
             p = dict(row.payload)
             counts, active = dict(p["counts"]), dict(p["active"])
             limits = p["limits"]
-            if counts[kind] >= limits[kind] or active[kind] >= (2 if kind == "model" else 1):
-                raise RoomStopped("Shared room call/concurrency budget exhausted")
+            if counts[kind] >= limits[kind]:
+                raise RoomStopped(
+                    f"Shared room {kind} budget exhausted",
+                    "call_limit" if kind == "model" else "tool_limit",
+                )
+            if active[kind] >= (2 if kind == "model" else 1):
+                raise RoomStopped("Shared room concurrency budget exhausted", "concurrency_limit")
             counts[kind] += 1
             if kind == "model":
                 counts["reserved_tokens"] += 32768
@@ -341,13 +352,40 @@ class Budget:
     def __init__(self, store, room_id, owner):
         self.store, self.room_id, self.owner = store, room_id, owner
         self.last_denial = None
+        self.limiting_denial = None
+        self.limiting_denials = {}
+        self.turns = {}
+        self.model_roles = {}
 
-    def admit(self, kind):
+    def begin_turn(self, role):
+        self.turns[role] = self.turns.get(role, 0) + 1
+
+    def denial_for(self, role):
+        denial = self.limiting_denials.get(role)
+        return denial if denial and denial["turn"] == self.turns.get(role) else None
+
+    def admit(self, kind, role=None):
         try:
             self.store.admit(self.room_id, self.owner, kind)
             return True
         except RoomStopped as exc:
             self.last_denial = str(exc)
+            if exc.code in {"call_limit", "tool_limit"}:
+                event = self.store.event(
+                    self.room_id,
+                    self.owner,
+                    f"denied:{kind}:{time.time_ns()}",
+                    "budget.denied",
+                    {"kind": kind, "reason": str(exc), "code": exc.code},
+                )
+                denial = {
+                    **event["data"],
+                    "seq": event["seq"],
+                    "role": role,
+                    "turn": self.turns.get(role),
+                }
+                self.limiting_denial = denial
+                self.limiting_denials[role] = denial
             return False
 
     def release(self, kind, usage=None):

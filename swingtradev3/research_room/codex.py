@@ -11,6 +11,7 @@ import threading
 import time
 
 from .browser import checked_hash
+from .admission_errors import classify_model_admission_error
 from .store import RoomStopped
 from .tools import specs
 
@@ -164,7 +165,7 @@ stream_max_retries = 0
                     "sandbox": "read-only",
                     "ephemeral": True,
                     "baseInstructions": INSTRUCTIONS,
-                    "dynamicTools": specs(),
+                    "dynamicTools": specs(self.gateway.granted_tools(role)),
                     "experimentalRawEvents": False,
                 },
             )
@@ -273,6 +274,14 @@ stream_max_retries = 0
                 if turn["status"] != "completed" and not (
                     published and turn["status"] == "interrupted"
                 ):
+                    denial = classify_model_admission_error(
+                        turn.get("error"),
+                        role=self.role,
+                        turn=self.gateway.budget.turns.get(self.role),
+                        denial=self.gateway.budget.denial_for(self.role),
+                    )
+                    if denial is not None:
+                        raise denial
                     raise RuntimeError("Codex turn " + turn["status"])
                 return
             if method == "process/exited":

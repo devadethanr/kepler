@@ -52,6 +52,7 @@ class Settings(BaseModel):
     room_seconds: int = 1200
     lease_seconds: int = 45
     max_messages: int = 12
+    source_stale_after_seconds: int = Field(default=86400, ge=60, le=2592000)
 
     @model_validator(mode="after")
     def pinned_limits(self):

@@ -183,6 +183,21 @@ class TestResearchFlow:
 
 
 class TestNews:
+    def test_news_projection_keeps_source_version_reference(self, graph: ContextGraphRepository) -> None:
+        item = {"news_id": "snapshot-1", "title": "Synthetic release", "tickers": [],
+                "source_key": "provider-entry-key", "version_id": "version-a",
+                "content_hash": "hash-a", "first_seen_at": "2026-01-01T00:00:00+00:00",
+                "version_first_seen_at": "2026-01-01T00:00:00+00:00"}
+        graph.upsert_news_item(item, source="test")
+        node = _get(graph, "NewsArticle", "news:snapshot-1")
+        assert node["source_key"] == "provider-entry-key"
+        assert node["source_version_id"] == "version-a"
+        assert node["source_content_hash"] == "hash-a"
+        assert node["source_first_seen_at"] == item["first_seen_at"]
+        assert node["source_projection_scope"] == "current_only_no_cutoff_guarantee"
+        graph.upsert_news_item({**item, "source_version_id": "version-b"}, source="test")
+        assert _get(graph, "NewsArticle", "news:snapshot-1")["source_version_id"] == "version-b"
+
     def test_upsert_news_item_creates_node(self, graph: ContextGraphRepository) -> None:
         graph.upsert_news_item(
             {"news_id": "n1", "title": "Test News", "tickers": []},

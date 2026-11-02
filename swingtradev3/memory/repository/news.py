@@ -35,9 +35,11 @@ class NewsRepository:
         )
         if not source_id:
             return
-        news_id = source_id if len(source_id) <= 120 else hashlib.sha256(
-            source_id.encode("utf-8")
-        ).hexdigest()
+        news_id = (
+            source_id
+            if len(source_id) <= 120
+            else hashlib.sha256(source_id.encode("utf-8")).hexdigest()
+        )
         tickers = [str(t).upper() for t in item.get("tickers", [])]
         verified_tickers = [str(t).upper() for t in item.get("verified_tickers", [])]
         mentioned_tickers = [str(t).upper() for t in item.get("mentioned_tickers", [])]
@@ -59,6 +61,16 @@ class NewsRepository:
             "published_at_utc": item.get("published_at_utc"),
             "fetched_at_ist": item.get("fetched_at_ist"),
         }
+        # The controlled source owner supplies these; text mentions never establish them.
+        for key in (
+            "source_version_id",
+            "source_key",
+            "source_content_hash",
+            "source_first_seen_at",
+            "source_version_first_seen_at",
+        ):
+            if key in item:
+                payload[key] = item[key]
 
         row = self.session.get(models_module.NewsArticleRow, news_id)
         if row is None:
@@ -70,9 +82,7 @@ class NewsRepository:
         row.title = str(item.get("title") or "")
         row.canonical_url = payload["url"]
         row.published_at = _parse_datetime(
-            item.get("published_at_utc")
-            or item.get("published_at")
-            or item.get("published_at_ist")
+            item.get("published_at_utc") or item.get("published_at") or item.get("published_at_ist")
         )
         row.category = payload["category"]
         try:

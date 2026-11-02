@@ -104,6 +104,14 @@ def _browser_excerpt(text, retrieval, offset):
 
 
 TOOLS = {
+    "news_search": (
+        "Search saved primary regulatory sources; no network or issuer inference. All fields are strings: topic is title keywords (empty lists the window); start/end/cutoff are aware ISO times (empty uses last 30 days and room snapshot); sources is comma-separated source IDs (empty all); offset is a decimal page offset (empty 0). Returns at most six records with source coverage, dates and exact quote spans. Absence is not proof of no release.",
+        {key: STRING for key in ("topic", "start", "end", "cutoff", "sources", "offset")},
+    ),
+    "news_read": (
+        "Read an immutable saved version or its explicitly linked supersedes_version_id retrieved in this room. version_id is the saved ID; offset is a decimal character offset (empty 0). Content can be partial, metadata-only or superseded; provider identity is not company/event identity.",
+        {"version_id": STRING, "offset": STRING},
+    ),
     "graph_lookup": (
         "Look up scoped stock evidence in the actual current graph; historical as_of unsupported.",
         {"entity": STRING},
@@ -170,7 +178,7 @@ TOOLS = {
 }
 
 
-def specs():
+def specs(names=None):
     return [
         {
             "type": "function",
@@ -185,6 +193,7 @@ def specs():
             },
         }
         for name, (desc, props) in TOOLS.items()
+        if names is None or name in names
     ]
 
 
@@ -200,8 +209,10 @@ class Gateway:
         self.turn_reads = {}
         self.published = set()
         self.delivered = {}
+        self.news_versions = {}
 
     def begin_turn(self, role):
+        self.budget.begin_turn(role)
         self.turn_reads[role] = 0
         self.published.discard(role)
 
@@ -210,7 +221,10 @@ class Gateway:
             return set()
         if self.turn_reads.get(role, 0) >= 4:
             return {"room_message"}
-        return set(TOOLS)
+        tools = set(TOOLS)
+        if (self.room.get("evidence_scope") or {}).get("mode") == "ordinary":
+            tools -= {"news_search", "news_read"}
+        return tools
 
     def close(self):
         if self.graph:
@@ -282,6 +296,7 @@ class Gateway:
             }
         if (
             name not in TOOLS
+            or name not in self.granted_tools(role)
             or not isinstance(args, dict)
             or set(args) != set(TOOLS[name][1])
             or any(not isinstance(v, str) or len(v) > 4096 for v in args.values())
@@ -335,7 +350,7 @@ class Gateway:
                 from .store import RoomStopped
 
                 raise RoomStopped("Repeated tool action without new evidence")
-            if not self.budget.admit("tool"):
+            if not self.budget.admit("tool", role=role):
                 return {"status": "denied", "error": "Room stopped or shared tool budget exhausted"}
             try:
                 self.store.event(
@@ -382,6 +397,33 @@ class Gateway:
 
     def dispatch(self, role, cid, name, args):
         target = self.room["target"]
+        if name in {"news_search", "news_read"}:
+            from .news_evidence import NewsEvidence
+
+            service = NewsEvidence(
+                self.room, stale_after_seconds=self.settings.source_stale_after_seconds
+            )
+            if name == "news_search":
+                output = service.search(args)
+                for item in output["evidence"]:
+                    version, cutoff = item["record_id"], item["decision_cutoff"]
+                    self.news_versions[version] = min(
+                        self.news_versions.get(version, cutoff), cutoff
+                    )
+            else:
+                if args["version_id"] not in self.news_versions:
+                    raise ValueError("Read requires a saved version retrieved in this room")
+                output = service.read(
+                    args["version_id"],
+                    args["offset"],
+                    cutoff=self.news_versions[args["version_id"]],
+                )
+            for item in output["evidence"]:
+                self.evidence[item["id"]] = item
+                prior_version = item.get("source_snapshot", {}).get("supersedes_version_id")
+                if prior_version:
+                    self.news_versions[prior_version] = item["decision_cutoff"]
+            return output
         if name in ("graph_lookup", "graph_neighbors"):
             from config import cfg
 
@@ -656,6 +698,7 @@ class Gateway:
                     "delay",
                     "retrieval",
                     "source_type",
+                    "source_snapshot",
                 )
             }
             if selected

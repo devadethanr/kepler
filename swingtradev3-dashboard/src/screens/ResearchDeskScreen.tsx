@@ -1,8 +1,51 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { mergeRoomEvents, newRequestId, research, RoomEventSchema, shouldStreamRoom, terminalStatuses, type Room, type RoomEvent } from '../lib/research';
+import { mergeRoomEvents, newRequestId, research, RoomEventSchema, shouldStreamRoom, terminalStatuses, type Room, type RoomEvent, type SourceCoverage } from '../lib/research';
 
 const terminal = terminalStatuses;
 const text = (value: unknown) => typeof value === 'string' ? value : '';
+const object = (value: unknown): Record<string, unknown> => value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
+const display = (value: unknown): string => value == null || value === '' ? 'unknown' : typeof value === 'string' ? value : JSON.stringify(value);
+const ist = (value: unknown): string => {
+  if (typeof value !== 'string' || !value) return 'unknown';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? value : `${value} (${date.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', timeZoneName: 'short' })})`;
+};
+
+export function SourceEvidence({ packet }: { packet: Record<string, unknown> }) {
+  const snapshot = object(packet.source_snapshot);
+  const content = object(packet.content);
+  const retrieval = object(packet.retrieval);
+  const sources = Array.isArray(content.sources) ? content.sources.map(object) : [];
+  const records = sources.length ? sources : Object.keys(snapshot).length ? [snapshot] : [];
+  if (!records.length && !Object.keys(snapshot).length) return null;
+  return <section aria-label="Source evidence" className="mt-2 space-y-2 rounded border border-slate-700 p-3 text-xs text-slate-300">
+    <h4 className="font-semibold text-cyan-300">Source evidence</h4>
+    {Object.keys(snapshot).length > 0 && <p>Snapshot coverage: {display(snapshot.coverage ?? snapshot.completeness)} · Cutoff: {ist(snapshot.requested_cutoff ?? snapshot.cutoff)}</p>}
+    {records.map((item, index) => <div key={`${text(item.version_id)}-${index}`} className="border-t border-slate-700 pt-2">
+      <p>Source: {display(item.source_id ?? item.provider)} · Type: {display(item.source_type)} · Revision: {display(item.version_id)} · Supersedes: {display(item.supersedes_version_id ?? item.supersedes)}</p>
+      <p>Published: {display(item.published_raw ?? item.published_date ?? item.published_at_utc ?? item.published_at_or_date ?? item.published_at)} · Precision: {display(item.publication_precision ?? item.precision)} · Timezone basis: {display(item.timezone_basis)}</p>
+      <p>Event: {ist(item.event_at)} · First seen: {ist(item.first_seen_at)} · Fetched: {ist(item.fetched_at)}</p>
+      <p>Identity basis: {display(item.identity_basis)} · Availability: {display(item.availability)} · Cutoff: {ist(item.requested_cutoff ?? item.cutoff)}</p>
+      <p>Retrieval completeness: {display(item.retrieval_completeness ?? item.completeness ?? item.retrieval_scope ?? retrieval.completeness)}</p>
+      {text(item.canonical_url) && /^https?:\/\//i.test(text(item.canonical_url)) && <a href={text(item.canonical_url)} target="_blank" rel="noreferrer" className="text-cyan-300 underline">Original source</a>}
+      {text(item.excerpt) && <blockquote className="mt-1 whitespace-pre-wrap">Excerpt: “{text(item.excerpt)}”</blockquote>}
+    </div>)}
+    {Array.isArray(packet.quote_spans) && packet.quote_spans.map((raw, index) => { const span = object(raw); return <blockquote key={text(span.id) || index} className="whitespace-pre-wrap">{display(span.id)}: “{text(span.text)}” {span.start != null || span.end != null ? `(offsets ${display(span.start)}–${display(span.end)})` : ''}</blockquote>; })}
+  </section>;
+}
+
+export function SourceStatus({ value, error }: { value: SourceCoverage | null; error: string }) {
+  return <section aria-label="Source coverage" className="my-4 rounded border border-slate-700 p-3 text-sm">
+    <h2 className="font-semibold">Source coverage</h2>
+    {error ? <p role="status">Source status unavailable: {error}</p> : !value ? <p>Loading source status…</p> : <>
+      <p>{display(value.coverage)}</p>
+      {!value.sources.length && <p>No source status records available.</p>}
+      {value.sources.map(source => <p key={source.source_id}>{source.source_id} · {display(source.source_type)} · {display(source.status)} · Entries: {display(source.entry_count)} · Freshness: {display(source.freshness)} · Fetched: {ist(source.fetched_at)} · Coverage: {display(source.coverage)}</p>)}
+    </>}
+  </section>;
+}
+
 
 export function DiscussionEvent({ event }: { event: RoomEvent }) {
   const data = event.data;
@@ -25,18 +68,25 @@ export function DiscussionEvent({ event }: { event: RoomEvent }) {
           return `${text(item.evidence_id)} / ${text(item.quote_id)}`;
         }).filter(Boolean).join(', ') || 'none'}</p>}
         {(text(claim.target_entity) || text(claim.event_id)) && <p className="text-slate-400">Entity: {text(claim.target_entity) || 'unknown'} · Event: {text(claim.event_id) || 'unknown'}</p>}
+        {claim.source_metadata != null && <p className="text-slate-400">Source provenance: {display(claim.source_metadata)}</p>}
         {claim.metadata_policy != null && <p className="text-slate-400">Metadata policy: {typeof claim.metadata_policy === 'string' ? claim.metadata_policy : JSON.stringify(claim.metadata_policy)}</p>}
       </div>)}
       <p className="text-xs text-slate-400">{text(data.validation)} · {new Date(event.at).toLocaleTimeString()}</p>
     </article>;
   }
+  const output = object(data.output);
+  const evidence = Array.isArray(output.evidence) ? output.evidence.map(object) : [];
   return <details className="rounded border border-slate-800 p-2 text-sm text-slate-400">
     <summary>{event.agent} · {event.kind}{data.name ? ` · ${text(data.name)}` : ''}</summary>
+    {evidence.map((packet, index) => <SourceEvidence key={text(packet.id) || index} packet={packet} />)}
+    <SourceEvidence packet={output} />
     <pre className="max-h-72 overflow-auto whitespace-pre-wrap p-2 text-xs">{JSON.stringify(data, null, 2)}</pre>
   </details>;
 }
 
 export function ResearchDeskScreen() {
+  const [sourceStatus, setSourceStatus] = useState<SourceCoverage | null>(null);
+  const [sourceError, setSourceError] = useState('');
   const [rooms, setRooms] = useState<Room[]>([]);
   const [selected, setSelected] = useState('');
   const [roomId, setRoomId] = useState('');
@@ -49,6 +99,8 @@ export function ResearchDeskScreen() {
   const [connection, setConnection] = useState('Disconnected');
   const [busy, setBusy] = useState(false);
   const [retryBusy, setRetryBusy] = useState(false);
+  const [cancelBusy, setCancelBusy] = useState(false);
+  const cancelInFlight = useRef(false);
   const retryInFlight = useRef(false);
   const retryIds = useRef(new Map<string, string>());
   const [models, setModels] = useState('Checking local model services');
@@ -56,13 +108,18 @@ export function ResearchDeskScreen() {
 
   useEffect(() => {
     let live = true;
+    let sourceRequest = 0;
     const refresh = () => research.list().then(value => { if (live) { setRooms(value); setRoomsLoading(false); setError(previous => previous.startsWith('Saved rooms unavailable:') ? '' : previous); } })
       .catch(err => { if (live) { setRoomsLoading(false); setError(`Saved rooms unavailable: ${String(err)}`); } });
     const health = () => research.health().then(value => { if (live) setModels(
       Object.entries(value.models).map(([role, model]) => `${role}: ${model.model} · ${model.status}`).join(' / ') || value.status,
     ); }).catch(() => { if (live) setModels('Local model health unavailable'); });
-    void refresh(); void health();
-    const timer = setInterval(() => { void refresh(); void health(); }, 5000);
+    const sources = () => {
+      const request = ++sourceRequest;
+      return research.sources().then(value => { if (live && request === sourceRequest) { setSourceStatus(value); setSourceError(''); } }).catch(err => { if (live && request === sourceRequest) setSourceError(String(err)); });
+    };
+    void refresh(); void health(); void sources();
+    const timer = setInterval(() => { void refresh(); void health(); void sources(); }, 5000);
     return () => { live = false; clearInterval(timer); };
   }, []);
   useEffect(() => {
@@ -72,6 +129,7 @@ export function ResearchDeskScreen() {
     let initialized = false;
     let initializing = false;
     let terminalSynced = false;
+    let refreshInFlight = false;
     const syncTerminal = () => {
       source?.close();
       setConnection('Saved discussion');
@@ -85,12 +143,16 @@ export function ResearchDeskScreen() {
       });
     };
     setEvents([]); setRoom(null); setConnection('Connecting');
-    const refresh = () => research.get(selected).then(value => {
+    const refresh = () => {
+      if (refreshInFlight) return;
+      refreshInFlight = true;
+      return research.get(selected).then(value => {
       if (!live) return;
-      setRoom(value);
+      setRoom(previous => previous?.id === value.id && (previous.seq > value.seq || (terminal.has(previous.status) && !terminal.has(value.status))) ? previous : value);
       setError(previous => previous.startsWith('Room unavailable:') ? '' : previous);
       if (terminal.has(value.status)) syncTerminal();
-    }).catch(err => { if (live) setError(`Room unavailable: ${String(err)}`); });
+    }).catch(err => { if (live) setError(`Room unavailable: ${String(err)}`); }).finally(() => { refreshInFlight = false; });
+    };
     const initialize = () => {
       if (initializing || initialized) return;
       initializing = true;
@@ -140,10 +202,20 @@ export function ResearchDeskScreen() {
     } catch (err) { setError(String(err)); }
     finally { retryInFlight.current = false; setRetryBusy(false); }
   }
+  async function cancel(id: string) {
+    if (cancelInFlight.current) return;
+    cancelInFlight.current = true; setCancelBusy(true);
+    try {
+      const result = await research.cancel(id);
+      setRoom(previous => previous?.id === id ? result : previous);
+    } catch (err) { setError(String(err)); }
+    finally { cancelInFlight.current = false; setCancelBusy(false); }
+  }
   return <main className="flex-1 overflow-auto p-5 text-slate-200">
     <h1 className="text-2xl font-semibold">Research Desk</h1>
     <p className="my-2 text-sm text-slate-400">Analyst and skeptic · read-only research · live entries require your approval</p>
     <p className="text-xs text-slate-400" role="status">{models}. A running research worker processes queued rooms.</p>
+    <SourceStatus value={sourceStatus} error={sourceError} />
     <form onSubmit={start} className="my-4 flex flex-wrap gap-3">
       <label className="flex flex-col text-sm">Target
         <input required maxLength={64} value={target} onChange={e => { setTarget(e.target.value); setRequestId(newRequestId()); }}
@@ -171,14 +243,12 @@ export function ResearchDeskScreen() {
       </label>
       <button className="rounded border border-slate-600 px-3 py-2">Open room</button>
     </form>
-    <p className="text-xs text-slate-400">{roomsLoading ? 'Loading saved rooms…' : rooms.length ? 'Showing recent rooms. Open older rooms by ID.' : 'No saved rooms shown.'}</p>
+    <p className="text-xs text-slate-400">{roomsLoading ? 'Loading saved rooms…' : error.startsWith('Saved rooms unavailable:') ? 'Saved rooms could not be loaded.' : rooms.length ? 'Showing recent rooms. Open older rooms by ID.' : 'No saved rooms shown.'}</p>
     {room && <section className="my-4" aria-label="Room status">
       <div className="flex flex-wrap items-center gap-3"><h2 className="font-semibold">{room.target}: {room.question}</h2>
         <span role="status">{room.status} · {room.worker_state === 'stale' ? 'Worker lease expired; awaiting recovery' : connection}</span>
         {terminal.has(room.status) && <button disabled={retryBusy} className="rounded border border-slate-600 px-3 py-1 disabled:opacity-50" onClick={() => { void retry(room.id); }}>Retry as new room</button>}
-        {!terminal.has(room.status) && <button className="rounded border border-red-700 px-3 py-1" onClick={() => {
-          research.cancel(room.id).then(setRoom).catch(err => setError(String(err)));
-        }}>Cancel research</button>}
+        {!terminal.has(room.status) && <button disabled={cancelBusy} className="rounded border border-red-700 px-3 py-1 disabled:opacity-50" onClick={() => { void cancel(room.id); }}>Cancel research</button>}
       </div>
       {text(room.termination_reason) && <p className="my-2 text-xs text-slate-400">Termination reason: {text(room.termination_reason)}</p>}
       {room.activity_state === 'unknown' && <p className="my-2 text-xs text-amber-300">In-flight activity is unknown after interruption or lease expiry.</p>}

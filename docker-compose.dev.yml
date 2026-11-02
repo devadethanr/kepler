@@ -216,6 +216,7 @@ services:
       - "--storage-wal-enabled=false"
     healthcheck:
       test: ["CMD-SHELL", "echo 'RETURN 0;' | mgconsole || exit 1"]
+      start_period: 90s
       interval: 2s
       timeout: 5s
       retries: 20

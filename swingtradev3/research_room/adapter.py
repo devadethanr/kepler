@@ -202,8 +202,29 @@ class Bridge:
                         self.send_error(429, "Pinned model already has an active inference")
                         return
                     slot_acquired = True
-                    if not bridge.budget.admit("model"):
-                        self.send_error(429, "shared budget exhausted")
+                    role = bridge.budget.model_roles.get(model)
+                    if not bridge.budget.admit("model", role=role):
+                        # An HTTP 429 loses its body in Codex's generic retry error.
+                        # A Responses failure preserves a specific causal marker;
+                        # no model admission or provider request occurs here.
+                        self.send_response(200)
+                        self.send_header("Content-Type", "text/event-stream")
+                        self.send_header("Connection", "close")
+                        self.end_headers()
+                        emit("response.created", response=response.copy())
+                        response.update(
+                            status="failed",
+                            error={
+                                "code": "server_error",
+                                "message": "kepler_budget_exhausted: "
+                                + (
+                                    (bridge.budget.denial_for(role) or {}).get("reason")
+                                    or bridge.budget.last_denial
+                                    or "room stopped"
+                                ),
+                            },
+                        )
+                        emit("response.failed", response=response)
                         return
                     admitted = True
                     self.send_response(200)

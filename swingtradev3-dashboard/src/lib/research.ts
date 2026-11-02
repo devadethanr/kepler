@@ -44,7 +44,15 @@ async function request(path: string, body?: unknown) {
   if (!response.ok) throw new Error(`Research API ${response.status}: ${await response.text()}`);
   return response.json();
 }
+export const SourceStatusSchema = z.object({
+  source_id: z.string(), status: z.string().optional(), fetched_at: z.string().nullish(),
+  entry_count: z.number().nullish(), coverage: z.unknown().optional(), source_type: z.string().nullish(),
+}).passthrough();
+export const SourceCoverageSchema = z.object({ sources: SourceStatusSchema.array(), coverage: z.unknown().optional() }).passthrough();
+export type SourceCoverage = z.infer<typeof SourceCoverageSchema>;
+
 export const research = {
+  sources: async () => SourceCoverageSchema.parse(await request('/sources')),
   health: async () => z.object({ status: z.string(), models: z.record(z.string(), z.object({ model: z.string(), status: z.string() })) }).parse(await request('/health')),
   list: async () => z.object({ rooms: RoomSchema.array() }).parse(await request('/rooms')).rooms,
   get: async (id: string) => RoomSchema.parse(await request(`/rooms/${encodeURIComponent(id)}`)),

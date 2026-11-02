@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from data.news.aggregator import NewsAggregator
 from data.news.parsers import (
     clean_text,
     extract_tickers_from_text,
@@ -27,3 +26,11 @@ __all__ = [
     "parse_source_specific_html",
     "parse_upstox_news",
 ]
+
+
+def __getattr__(name: str):
+    if name == "NewsAggregator":
+        from data.news.aggregator import NewsAggregator
+
+        return NewsAggregator
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

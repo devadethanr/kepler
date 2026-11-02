@@ -16,6 +16,16 @@ from research_room.store import Store, TERMINAL
 router = APIRouter()
 
 
+@router.get("/sources")
+def research_sources():
+    from research_room.news_evidence import source_status
+
+    try:
+        return source_status(stale_after_seconds=load_settings().source_stale_after_seconds)
+    except Exception as exc:
+        raise HTTPException(503, "Saved source service unavailable; check ingestion/schema") from exc
+
+
 class CreateRoom(BaseModel):
     request_id: UUID
     target: str = Field(min_length=1, max_length=64, pattern=r"^[A-Za-z0-9 .&_-]+$")

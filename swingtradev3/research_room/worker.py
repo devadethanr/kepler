@@ -97,8 +97,27 @@ def initial_turns(tasks, stop):
             raise
 
 
+def no_mail_reason(budget, public):
+    """Only a limiting admission after the last publication explains a silent exit.
+
+    Outcomes are evaluated before this path. Cancellation remains owned by Store.finish;
+    an unrelated exception never uses this helper or stale denial text.
+    """
+    for denial in sorted(
+        budget.limiting_denials.values(), key=lambda item: item["seq"], reverse=True
+    ):
+        if (
+            denial["role"] is not None
+            and budget.denial_for(denial["role"])
+            and not any(event["seq"] > denial["seq"] for event in public)
+        ):
+            return denial["reason"], denial["code"]
+    return "No pending addressed mail", "no_pending_mail"
+
+
 def run_room(settings, store, room, owner, shutdown=None):
     budget = Budget(store, room["id"], owner)
+    budget.model_roles = {profile.model: role for role, profile in settings.profiles.items()}
     bridge = Bridge({}, budget)
     bridge.allowed = TOOLS
     gateway = Gateway(settings, store, room, owner, budget)
@@ -112,8 +131,12 @@ def run_room(settings, store, room, owner, shutdown=None):
                     "",
                     *{q["id"] for e in gateway.evidence.values() for q in e.get("quote_spans", [])},
                 ],
-                "event_id": ["", *sorted({e["event_id"] for e in gateway.evidence.values()
-                                         if e.get("event_id")})],
+                "event_id": [
+                    "",
+                    *sorted(
+                        {e["event_id"] for e in gateway.evidence.values() if e.get("event_id")}
+                    ),
+                ],
             }
         }
         if gateway.evidence
@@ -188,7 +211,10 @@ def run_room(settings, store, room, owner, shutdown=None):
                 )
                 break
             if len(public) >= settings.max_messages:
-                reason, reason_code = "Public message limit reached with unresolved mail or positions", "message_limit"
+                reason, reason_code = (
+                    "Public message limit reached with unresolved mail or positions",
+                    "message_limit",
+                )
                 break
             mail = [
                 (e, role)
@@ -199,6 +225,7 @@ def run_room(settings, store, room, owner, shutdown=None):
                 and e["seq"] > delivered[role]
             ]
             if not mail:
+                reason, reason_code = no_mail_reason(budget, public)
                 break
             if turns >= settings.model_calls:
                 reason, reason_code = "Turn/call limit reached with unresolved mail", "call_limit"
@@ -222,8 +249,11 @@ def run_room(settings, store, room, owner, shutdown=None):
                 + prompt
             )
             response = next(
-                (e for e in reversed(messages(store, room["id"]))
-                 if e["agent"] == role and e["id"] not in {x["id"] for x in public}),
+                (
+                    e
+                    for e in reversed(messages(store, room["id"]))
+                    if e["agent"] == role and e["id"] not in {x["id"] for x in public}
+                ),
                 None,
             )
             exchange["response_id"] = response["id"] if response else None
@@ -237,12 +267,13 @@ def run_room(settings, store, room, owner, shutdown=None):
                 "shutdown" if shutdown and shutdown.is_set() else "deadline_or_lease",
             )
     except RoomStopped as exc:
-        status, reason, reason_code = "abstention", str(exc), "call_or_resource_limit"
+        status, reason, reason_code = "abstention", str(exc), exc.code or "call_or_resource_limit"
     except Exception as exc:
-        status, reason, reason_code = "failed", f"{type(exc).__name__}: {str(exc)[:400]}", "peer_failure"
-        if budget.last_denial:
-            status, reason = "abstention", budget.last_denial
-            reason_code = "call_limit" if "budget" in reason.lower() else "deadline_or_lease"
+        status, reason, reason_code = (
+            "failed",
+            f"{type(exc).__name__}: {str(exc)[:400]}",
+            "peer_failure",
+        )
     finally:
         stop.set()
         for rpc in rpcs.values():

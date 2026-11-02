@@ -639,6 +639,15 @@ class ContextGraphRepository:
             "source_type": str(item.get("source_type") or "unknown"),
             "category": str(item.get("category") or "unknown"),
             "url": str(item.get("canonical_url") or item.get("url") or ""),
+            # This node is a current projection, not a historical snapshot.
+            # The immutable source version remains authoritative in Postgres.
+            "source_key": item.get("source_key"),
+            "source_version_id": item.get("source_version_id") or item.get("version_id"),
+            "source_content_hash": item.get("source_content_hash") or item.get("content_hash"),
+            "source_first_seen_at": item.get("source_first_seen_at") or item.get("first_seen_at"),
+            "source_version_first_seen_at": item.get("source_version_first_seen_at")
+            or item.get("version_first_seen_at"),
+            "source_projection_scope": "current_only_no_cutoff_guarantee",
             "verified_tickers": ",".join(verified_tickers),
             "mentioned_tickers": ",".join(mentioned_tickers),
             "mapping_reason": str(item.get("mapping_reason") or ""),

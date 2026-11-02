@@ -239,3 +239,7 @@ research-stop:
 
 research-status:
 	$(RESEARCH_PYTHON) -m ops.research_services status
+
+.PHONY: research-ingest
+research-ingest:
+	$(RESEARCH_PYTHON) -m ops.research_sources $(ARGS)
