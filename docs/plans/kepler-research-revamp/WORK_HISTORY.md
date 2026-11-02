@@ -87,3 +87,7 @@ serving configuration and manual entry approval retain their existing authority.
 ## Fresh-source delivery and independent review — 2 November 2026
 
 Source `0ba305a`, findings `34a3f40`: immutable source revisions/observations, source-aware dates and identity gaps, bounded news tools, controlled graph references and Desk provenance. [FRESH_SOURCE_REVIEW.md](FRESH_SOURCE_REVIEW.md) records independent tests, arithmetic and three actual-class reproductions. The next active task is [MARKET_CONTEXT_IMPLEMENTATION.md](MARKET_CONTEXT_IMPLEMENTATION.md) / [handoff](MARKET_CONTEXT_HANDOFF.md): integrity fixes plus read-only GIFT/Singapore context. The 93/88 source run and old prompt scores stay closed/unchanged.
+
+## Visual UI scope clarification — 2 November 2026
+
+The user confirmed that the intended agent UI is the Pixel Agents/Gather-like workspace, beyond the delivered form/transcript. [UI_MILESTONE_PLAN.md](UI_MILESTONE_PLAN.md) makes it a required next milestone after the current integrity/market-context phase. The active phase remains unchanged. This clarification updates planning only; no office renderer or avatars have been implemented.

@@ -2,6 +2,8 @@
 
 Start from the branch containing `34a3f40` and this review-doc commit. Read the current review first. The source-service phase is delivered and its budget is closed.
 
+Scope/order clarification: complete this integrity/market-context task first. The required visual agent workspace follows under [UI_MILESTONE_PLAN.md](UI_MILESTONE_PLAN.md); do not add its implementation or model calls to this current phase.
+
 ```text
 Continue on feat-generic-broker; pull safely and preserve current local changes,
 including the five changing runtime files and private backups/stash.

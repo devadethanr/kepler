@@ -6,6 +6,8 @@ Implementation handoff, revision 8 — reviewed `34a3f40`, 2 November 2026.
 
 **Next:** fix three reproduced integrity issues and implement read-only GIFT Nifty / Singapore market context. Start with [FRESH_SOURCE_REVIEW.md](FRESH_SOURCE_REVIEW.md), then [MARKET_CONTEXT_IMPLEMENTATION.md](MARKET_CONTEXT_IMPLEMENTATION.md) and [MARKET_CONTEXT_HANDOFF.md](MARKET_CONTEXT_HANDOFF.md). Provider discovery can proceed in parallel with offline integrity fixes. Do not replay the completed source run or another prompt-only experiment.
 
+**Required next UI milestone:** after the current market-context phase, build the Pixel Agents-style visual agent workspace described in [UI_MILESTONE_PLAN.md](UI_MILESTONE_PLAN.md). The existing form/transcript is the foundation; the office/avatars are not implemented yet. This requested workspace is required, and the current phase stays first.
+
 ## Read this first
 
 1. [Current source-phase review](FRESH_SOURCE_REVIEW.md): independent tests/reproductions, source delivery, actual room results and limits.
@@ -48,7 +50,7 @@ Use the measured llama.cpp profile as the initial implementation baseline; do no
 | Implement GIFT and Singapore | Required context service. Verify the existing Kite GIFT quote entitlement; optional delayed provider fallback. Singapore context is a hypothesis to evaluate, not proof that STI causes Nifty moves. |
 | Put Harness² into agents' work | Agents can propose and review research-harness experiments through tools. Candidate testing is isolated and promotion remains manual; ordinary research uses an approved immutable version. |
 | Add Scrapling | Required bounded extraction adapter behind the existing provider boundary, with source profiles and quality tests. |
-| Gather-like live discussion UI | Real discussion transcript and evidence inspector first; optional Pixel Agents-style office view driven by the same events. Check code and art licenses separately. |
+| Gather-like live discussion UI | Transcript/evidence foundation is implemented. The required Pixel Agents-style workspace comes next after market context, driven by the same real events. Check code and art licenses separately. |
 | Agent-browser skill available while researching | Pin and load official guidance plus matching executable functionality through a constrained tool bridge. Merely adding skill text is insufficient. |
 | Evaluate/reuse Codex | Selected: Codex App Server plus the tested local adapter, with externally coordinated threads. The first room is installed; extend it using the same external-thread design. |
 | Multiple small model families | Use Gemma and Qwen for complementary roles. Multiple roles share two resident services; agreement is not independent corroboration. |

@@ -238,7 +238,7 @@ Do not use freeNewsAPI/GNews as timelyproductionbackbone: inspectedfreeplans hav
 
 Primary: existing ReactResearchDesk with actualpublishedmessages, replies, objections, evidence and conclusions. Use typedstreamingrecords and durablefinalmessages. Source drawer shows quote/artifact, sourceURL, dates, asof/firstseen/version, model/tool identity and unknown/stale state.
 
-Optionalofficeview: selectively reuse/reference PixelAgents' MITReactCanvas approach after third-partyasset review. Its current Claudehook provider is not a Kepler/Codexadapter; implement the Kepler eventprovider. Each actor maps to real run/step/agentinstance, speaking only on actualmessageevents. Staleconnection must not look active. Transcript remains usable withoutcanvas.
+Required visual agent workspace: selectively reuse/reference Pixel Agents’ React/Canvas approach after pinned code/art licence review, following UI_MILESTONE_PLAN.md. Its current Claudehook provider is not a Kepler/Codexadapter; implement the Kepler eventprovider. Each actor maps to real run/step/agentinstance, speaking only on actualmessageevents. Staleconnection must not look active. Transcript remains usable withoutcanvas.
 
 StarOfficeUI art has noncommercial restrictions; WorkAdventure adds a heavier stack and CommonsClause restrictions. Do not call alltheirassets/commercialuse unrestrictedopensource.
 
@@ -262,12 +262,14 @@ Harness² needs a Kepler task/evaluator adapter. Reuse the selected working Code
 
 ## 15. Acceptance and delivery order
 
+Current next order: integrity/market context → required visual agent workspace → TimesFM/advisory integration → broader scheduled research → Harness². [UI_MILESTONE_PLAN.md](UI_MILESTONE_PLAN.md) supersedes earlier optional-office wording and the historical phase grouping below. The current local task is unchanged.
+
 P0 Before destructive graph tests: fix configuration precedence and the isolated-target refusal guard; preserve operator data. Independent adapter/UI implementation can proceed without destructive fixtures.
 P1 Shared room/message/job/evidence contracts, transactional outbox, lease fencing, parent budgets and read-only tool/skill gateway.
 P2 Reuse and integrate the tested Codex App Server adapter, model profiles and actual tools. Improve grounding during integration; runtime selection is already made.
 P3 Feed/news correctness, GIFT/STIservice, TimesFMtyped tool/cache/cutoff; enable diagnostic UI, no new decision authority.
 P4 Adaptive collaborative rooms, scheduled/event triggers, graph/artifact/browser research skills, ForecastAnalyst and intelligent advisory fast policy.
-P5 Real-time Research Desk, evidence/history/reconnect, optional Pixel office adapter after the transcript works.
+P5 Real-time Research Desk and required Pixel Agents-style workspace. Transcript/evidence/reconnect foundation exists; implement the visual workspace after the current market-context phase.
 P6 Agent-invoked Harness² experiments and optionald1/Flint challengers; manual promotion only.
 
 Required tests:
