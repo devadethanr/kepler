@@ -1,0 +1,77 @@
+{
+  "source": "first room.started and room.finished timestamps in run-native room events",
+  "rooms": [
+    {
+      "room_key": "development-cancel",
+      "first_room_started_at": "2026-11-01T20:15:31.774314+00:00",
+      "room_finished_at": "2026-11-01T20:15:41.253352+00:00",
+      "elapsed_seconds": 9.479,
+      "model_admissions": 2,
+      "tool_admissions": 0,
+      "per_role_model_admissions": "unknown; budget.admitted event has no participant role"
+    },
+    {
+      "room_key": "development-source",
+      "first_room_started_at": "2026-11-01T20:14:55.215240+00:00",
+      "room_finished_at": "2026-11-01T20:15:29.722319+00:00",
+      "elapsed_seconds": 34.507,
+      "model_admissions": 12,
+      "tool_admissions": 12,
+      "per_role_model_admissions": "unknown; budget.admitted event has no participant role"
+    },
+    {
+      "room_key": "real-pib-company-coverage-ordinary",
+      "first_room_started_at": "2026-11-01T20:22:25.585890+00:00",
+      "room_finished_at": "2026-11-01T20:22:45.530731+00:00",
+      "elapsed_seconds": 19.945,
+      "model_admissions": null,
+      "tool_admissions": null,
+      "per_role_model_admissions": "unknown; budget.admitted event has no participant role"
+    },
+    {
+      "room_key": "real-pib-company-coverage-saved",
+      "first_room_started_at": "2026-11-01T20:22:47.539599+00:00",
+      "room_finished_at": "2026-11-01T20:23:20.239635+00:00",
+      "elapsed_seconds": 32.7,
+      "model_admissions": null,
+      "tool_admissions": null,
+      "per_role_model_admissions": "unknown; budget.admitted event has no participant role"
+    },
+    {
+      "room_key": "real-rbi-treasury-bills-ordinary",
+      "first_room_started_at": "2026-11-01T20:22:14.952927+00:00",
+      "room_finished_at": "2026-11-01T20:22:24.572830+00:00",
+      "elapsed_seconds": 9.62,
+      "model_admissions": null,
+      "tool_admissions": null,
+      "per_role_model_admissions": "unknown; budget.admitted event has no participant role"
+    },
+    {
+      "room_key": "real-rbi-treasury-bills-saved",
+      "first_room_started_at": "2026-11-01T20:21:32.071383+00:00",
+      "room_finished_at": "2026-11-01T20:22:13.942846+00:00",
+      "elapsed_seconds": 41.871,
+      "model_admissions": null,
+      "tool_admissions": null,
+      "per_role_model_admissions": "unknown; budget.admitted event has no participant role"
+    },
+    {
+      "room_key": "real-sebi-digital-accessibility-ordinary",
+      "first_room_started_at": "2026-11-01T20:20:11.108319+00:00",
+      "room_finished_at": "2026-11-01T20:20:46.075252+00:00",
+      "elapsed_seconds": 34.967,
+      "model_admissions": null,
+      "tool_admissions": null,
+      "per_role_model_admissions": "unknown; budget.admitted event has no participant role"
+    },
+    {
+      "room_key": "real-sebi-digital-accessibility-saved",
+      "first_room_started_at": "2026-11-01T20:20:47.087397+00:00",
+      "room_finished_at": "2026-11-01T20:21:31.062824+00:00",
+      "elapsed_seconds": 43.975,
+      "model_admissions": null,
+      "tool_admissions": null,
+      "per_role_model_admissions": "unknown; budget.admitted event has no participant role"
+    }
+  ]
+}

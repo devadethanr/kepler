@@ -19,7 +19,7 @@ browser/API/worker checks are recorded in [REBOOT_BROWSER_CHECKS.md](REBOOT_BROW
 
 ## Processes and configuration
 
-The existing API now registers `/research`. Inference belongs to a separate **host** worker, not the broker process. The optional host research API imports only the research routes, existing API-key authentication and existing Postgres storage; it does not start trading, the scheduler or model warmup. There are no new database tables or schema migrations: room state uses `cognition_runs` with phase `research_room_v1`, and immutable messages/evidence/tool events use `cognition_reports` with schema `room.event.v1`.
+The existing API now registers `/research`. Inference belongs to a separate **host** worker, not the broker process. The optional host research API imports only the research routes, existing API-key authentication and existing Postgres storage; it does not start trading, the scheduler or model warmup. Room state still uses `cognition_runs` with phase `research_room_v1`, and immutable messages/evidence/tool events use `cognition_reports` with schema `room.event.v1`. The subsequent [fresh-source slice](FRESH_SOURCE_FINDINGS.md) adds three source-history tables via explicit additive migration `20261102_0008`, applied locally only after a database backup and disposable validation. Source reads do not migrate at startup.
 
 1. Use Python 3.12. Install `swingtradev3/research_room/requirements-host.lock` in an isolated virtual environment, or use the retained local environment at `~/.local/state/kepler-rooms/venv`. These dependencies do not replace the application or model environments.
 2. Copy `swingtradev3/research_room/local.example.json` to a new private local configuration file. Point `KEPLER_RESEARCH_CONFIG` at that copy. Check the explicit binary/model/skill paths against this PC. Keep weights, Codex homes and browser profiles outside Git. The example contains measured runtime paths and hashes, not credentials.
@@ -57,12 +57,46 @@ Cancel affects research only. A worker crash leaves an expired lease, shown as s
 
 ## Tool boundaries
 
+- Saved news: `news_search` / `news_read` read observed immutable versions with a room cutoff, explicit source/window/topic bounds, exact title/snippet spans, identity basis and date precision. Undated items are separate from dated matches. Reads do not ingest or write graph/account state. Company-disclosure coverage is unavailable; current regulatory/government feed windows are not comprehensive. A valid empty result is not proof of no announcement. See [fresh-source findings](FRESH_SOURCE_FINDINGS.md) for terms and source limits.
 - Graph: parameterized stock lookup against the actual graph, plus one bounded neighbor hop from a retrieved node. No arbitrary Cypher, schema writes, trading/account mutations or historical `as_of` capability. Empty, unavailable and rejected traversal are explicit states. The current graph projection does not prove point-in-time completeness.
 - Files/search: an explicitly approved research root, bounded keyword search excerpts and target-relevant paragraphs with adjacent qualifications. The configured workspace target can search that approved workspace corpus. Files are opened through directory descriptors without symlink traversal; hidden paths, escapes, hard links and oversized/nonregular files are refused. Packets disclose scope, offsets, omissions and truncation. `artifact_read_more` and `artifact_search_more` provide bounded continuation (6,000 characters per read, 2,000 scan entries per search, six search results, 10,000 total tree entries). Search offsets refer to a live tree and may shift. Retrieval is bounded, not exhaustive.
 - Browser: discover and load the complete pinned official skill before execution. The gateway fetches only exact allowlisted public HTTPS hosts, checks all resolved IPs and redirects, pins the validated address with TLS/SNI, and sends captured HTML to actual pinned agent-browser/Chrome in a private networkless namespace. Chrome reads that page through its own loopback and closes. There are no credentials, cookies, personal profiles, external subresources or arbitrary shell. This supports bounded page reading, not full navigation with externally loaded JavaScript. Browser jobs share one 100-second deadline from before fetch through DNS/redirect/read/DOM. Owned fetch processes are terminated/joined on cancellation or deadline. Browser continuation refetches the capped 12,000-character DOM body, so offsets may shift; this is not exhaustive page retrieval.
 - Citation validation: unknown/cross-target IDs, invented inline IDs, wrong quote provenance and future-known timestamps are rejected. Exact verified excerpts are distinguished from agent interpretation. Source freshness stays unknown when not established. This is not a semantic truth verifier.
 
-TimesFM, scheduler-triggered rooms, additional specialists, source ingestion upgrades, GIFT/STI feeds and Harness² remain outside this first slice. Forecasts gain no score, position, stop or target influence.
+TimesFM, scheduler-triggered rooms, additional specialists, further company-disclosure coverage, GIFT/STI feeds and Harness² remain later work. Forecasts gain no score, position, stop or target influence.
+
+## Controlled primary-source refresh
+
+The current local schema is already upgraded and the host parser dependencies are
+pinned in `research_room/requirements-host.lock`. For another installation, first
+back up its existing database and explicitly apply the additive migration; do not
+reset or backfill legacy history. Run source refresh from `swingtradev3/`:
+
+```bash
+make research-ingest ARGS='--run-id manual-primary-refresh --sources sebi_rss rbi_press_releases_rss pib_rss'
+```
+
+Use a distinct audit run ID for a new batch. The wrapper uses the already prepared
+host database configuration without shell-sourcing JSON, exposing credentials,
+starting models, changing broker controls or migrating the schema. Refresh checks
+are serialized across processes and refuse another check within 60 seconds. This
+is an explicit ingestion owner; model tools remain saved-data reads. Feed failures,
+empty/partial content, conditional 304, stale fetch and unknown coverage are distinct.
+
+One approved PIB release can be ingested with `--pib-release URL` plus
+`--first-party-reviewed` after reviewing its terms and third-party exclusions.
+The flag records that review; it is not automatic copyright detection. Only exact
+PIB release hosts/paths and numeric release IDs are allowed; no broad crawl or
+challenge bypass is available. SEBI/RBI feed intake is metadata/link-only. Source
+fetch freshness defaults to 24 hours (`source_stale_after_seconds` in the host
+research settings); recent checking does not establish publication freshness.
+
+The completed model evaluation has a fixed, durably registered plan under run
+`fresh-source-20261101T195640Z`. `research_room.source_eval` rejects a replacement
+plan for that ID; reboot/cancellation do not renew its allocation. Do not reuse its
+now-seen cases as untouched validation. Its actual counters remain 93 model and
+88 tool admissions after recovery. See the findings for failed-room history and
+the subsequent zero-admission protocol correction.
 
 ## Graph-test safety
 

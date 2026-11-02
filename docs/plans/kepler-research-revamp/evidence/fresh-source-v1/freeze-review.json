@@ -1,0 +1,8 @@
+{
+  "case_sha256": "b5b8a502bf2ac854a1516e0fb866ef1117f51fd0d7819fa5c1cf778ea629011e",
+  "independent_author": "Terra UI owner",
+  "independent_reviewer": "Terra storage/provenance owner",
+  "result": "passed before model admissions",
+  "execution_window_in_both_arms": "explicitly embedded in canonical run plan",
+  "status_note": "Original case status label remains proposed to preserve reviewed bytes; this separate record confirms freeze."
+}

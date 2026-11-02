@@ -1,0 +1,1830 @@
+{
+  "run_id": "fresh-source-20261101T195640Z",
+  "scope": "public participant messages, claim/source reference metadata and event counts; no private reasoning or quote payloads",
+  "rooms": [
+    {
+      "room_key": "real-pib-company-coverage-ordinary",
+      "event_counts": {
+        "budget.admitted": 32,
+        "budget.denied": 1,
+        "mail.delivery_attempted": 5,
+        "mail.response_opportunity": 4,
+        "message": 6,
+        "room.created": 1,
+        "room.finished": 1,
+        "room.started": 1,
+        "thread.started": 2,
+        "tool.result": 16,
+        "tool.started": 16,
+        "turn.finished": 7,
+        "turn.started": 7
+      },
+      "messages": [
+        {
+          "seq": 27,
+          "at": "2026-11-01T20:22:28.664913+00:00",
+          "sender": "analyst",
+          "kind": "question",
+          "text": "I have searched the approved research documents for \"Coal India PIB feed\" and \"Coal India SEBI RSS feed\" but found no evidence. Can you confirm if these sources are expected to contain information about Coal India disclosures within the specified window?",
+          "claims": [
+            {
+              "claim_id": "claim:d35cfdffea547f8c",
+              "evidence_id": null,
+              "evidence_refs": [],
+              "source_metadata": null
+            }
+          ]
+        },
+        {
+          "seq": 40,
+          "at": "2026-11-01T20:22:31.616458+00:00",
+          "sender": "skeptic",
+          "kind": "question",
+          "text": "The PIB and SEBI RSS feeds for Coal India in the declared window (2026-10-01 to 2026-11-01) are empty. Can you confirm if these sources were actually populated during this period, or if the feeds are inactive? Without data, we cannot assess disclosures.",
+          "claims": [
+            {
+              "claim_id": "claim:786f4ad0f2da6a4b",
+              "evidence_id": null,
+              "evidence_refs": [],
+              "source_metadata": null
+            }
+          ]
+        },
+        {
+          "seq": 52,
+          "at": "2026-11-01T20:22:34.656558+00:00",
+          "sender": "skeptic",
+          "kind": "abstention",
+          "text": "My searches for \"Coal India PIB feed\" and \"Coal India SEBI RSS feed\" also returned empty. The approved research documents appear to lack any Coal India disclosures in the declared window. Are these feeds expected to be populated, or is the data genuinely missing?",
+          "claims": [
+            {
+              "claim_id": "claim:9317f8aba3c0a1de",
+              "evidence_id": null,
+              "evidence_refs": [],
+              "source_metadata": null
+            }
+          ]
+        },
+        {
+          "seq": 61,
+          "at": "2026-11-01T20:22:36.593830+00:00",
+          "sender": "analyst",
+          "kind": "question",
+          "text": "Both searches for PIB and SEBI RSS feeds for Coal India yielded no results in the approved research documents. Can you confirm if these feeds are expected to contain disclosures for Coal India during the specified window, or if the data is genuinely missing?",
+          "claims": [
+            {
+              "claim_id": "claim:93842e68ab449c82",
+              "evidence_id": null,
+              "evidence_refs": [],
+              "source_metadata": null
+            }
+          ]
+        },
+        {
+          "seq": 78,
+          "at": "2026-11-01T20:22:39.450445+00:00",
+          "sender": "skeptic",
+          "kind": "abstention",
+          "text": "My searches for \"PIB feed Coal India\" and \"SEBI RSS Coal India\" also returned empty. The approved research documents appear to lack any Coal India disclosures in the declared window. Are these feeds expected to be populated, or is the data genuinely missing?",
+          "claims": [
+            {
+              "claim_id": "claim:3743dadd5c150a80",
+              "evidence_id": null,
+              "evidence_refs": [],
+              "source_metadata": null
+            }
+          ]
+        },
+        {
+          "seq": 87,
+          "at": "2026-11-01T20:22:41.197694+00:00",
+          "sender": "analyst",
+          "kind": "question",
+          "text": "Both searches for PIB and SEBI RSS feeds for Coal India yielded no results in the approved research documents. Can you confirm if these feeds are expected to contain disclosures for Coal India during the specified window, or if the data is genuinely missing?",
+          "claims": [
+            {
+              "claim_id": "claim:f138c214ad6e2e70",
+              "evidence_id": null,
+              "evidence_refs": [],
+              "source_metadata": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "room_key": "real-pib-company-coverage-saved",
+      "event_counts": {
+        "budget.admitted": 19,
+        "mail.delivery_attempted": 6,
+        "mail.response_opportunity": 5,
+        "message": 7,
+        "room.created": 1,
+        "room.finished": 1,
+        "room.started": 1,
+        "thread.started": 2,
+        "tool.result": 9,
+        "tool.started": 9,
+        "turn.finished": 7,
+        "turn.started": 8
+      },
+      "messages": [
+        {
+          "seq": 19,
+          "at": "2026-11-01T20:22:54.733972+00:00",
+          "sender": "skeptic",
+          "kind": "question",
+          "text": "PIB feed shows one Coal India record: \"Coal India Marks 51 Glorious Years with Record-Breaking Performance in October 2026\" (q:3432984e51af). But the record has unknown publication date and unknown event date. Does this mean it was published after the 2026-11-01 cutoff, or is the date simply missing? Need to know if this qualifies as an observation by cutoff.",
+          "claims": [
+            {
+              "claim_id": "claim:6ee269e9b7976b48",
+              "evidence_id": "ev:583497fa9115d15933aa31f8",
+              "evidence_refs": [
+                {
+                  "evidence_id": "ev:583497fa9115d15933aa31f8",
+                  "quote_id": "q:3432984e51af"
+                }
+              ],
+              "source_metadata": {
+                "published_at": null,
+                "event_at": null,
+                "fetched_at": "2026-11-01T20:22:50.981671+00:00",
+                "decision_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                "delay": null,
+                "source_type": "government_release",
+                "source_snapshot": {
+                  "provider": "pib_rss",
+                  "source_id": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+                  "provider_entry_id": null,
+                  "source_type": "government_release",
+                  "canonical_url": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+                  "published_raw": null,
+                  "published_at_utc": null,
+                  "published_date": null,
+                  "timezone_basis": null,
+                  "publication_precision": "unknown",
+                  "event_at": null,
+                  "identity_basis": "provider regulator/government origin; issuer unmapped",
+                  "issuer_identifiers": [],
+                  "content_hash": "87e0446a7f45f0f7ecd6ed9cd1fc194262828dfe8eef2cc1d37a0802ad2d29f3",
+                  "news_id": "primary:34c8d1ce0b706c6f456f07dea30d7b8d6781286c40b2b2cb92f963f03d33fe26",
+                  "terms": {
+                    "url": "https://www.pib.gov.in/content/102_2_Copyright-Policy.aspx?lang=1&reg=30",
+                    "retention": "attributed feed metadata; reviewed first-party excerpt only on explicit request",
+                    "restriction": "accurate reproduction with acknowledgement; third-party material excluded"
+                  },
+                  "retention": "feed_metadata_only",
+                  "source_owner": "pib_rss",
+                  "raw_provider_entry_id": null,
+                  "resolved_entry_id": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+                  "source_key": "c0930235248aa61a3b57d9e3605ce0650da8d937ca4d0e595943c83de4dfcc3c",
+                  "source_identity_basis": "canonical_url_fallback",
+                  "provider_content_hash": "baf67a9f6f48997c65f7fbc3c7032fbc01e596f0fd3a9bb8705ff4a42b481652",
+                  "duplicate_group": "0bdb00f851a4f70571f08f13d8d780fcd21d23d84ab1beb4d562fb9e49aa1eef",
+                  "version_id": "fb8f2ce8f57a5d7f4b5d4653edba0ff1e133627611e65f806d16d950e5b56551",
+                  "version_first_seen_at": "2026-11-01T20:09:33.607855+00:00",
+                  "first_seen_at": "2026-11-01T20:09:33.607855+00:00",
+                  "fetched_at": "2026-11-01T20:09:33.607855+00:00",
+                  "fetched_at_basis": "version_transition_observation",
+                  "supersedes_version_id": null,
+                  "temporal_membership": "unknown",
+                  "requested_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                  "availability": "observed_by_cutoff",
+                  "units": null,
+                  "currency": null,
+                  "period": null,
+                  "graph_link": {
+                    "node_id": "news:primary:34c8d1ce0b706c6f456f07dea30d7b8d6781286c40b2b2cb92f963f03d33fe26",
+                    "scope": "current projection only; source snapshot authoritative"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "seq": 24,
+          "at": "2026-11-01T20:22:55.054901+00:00",
+          "sender": "analyst",
+          "kind": "question",
+          "text": "The PIB feed shows a record-breaking performance announcement for Coal India in October 2026. Can you confirm if this is a formal disclosure or just a press release?",
+          "claims": [
+            {
+              "claim_id": "claim:82d5c5143b5f3b74",
+              "evidence_id": "ev:583497fa9115d15933aa31f8",
+              "evidence_refs": [
+                {
+                  "evidence_id": "ev:583497fa9115d15933aa31f8",
+                  "quote_id": "q:3432984e51af"
+                }
+              ],
+              "source_metadata": {
+                "published_at": null,
+                "event_at": null,
+                "fetched_at": "2026-11-01T20:22:50.981671+00:00",
+                "decision_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                "delay": null,
+                "source_type": "government_release",
+                "source_snapshot": {
+                  "provider": "pib_rss",
+                  "source_id": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+                  "provider_entry_id": null,
+                  "source_type": "government_release",
+                  "canonical_url": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+                  "published_raw": null,
+                  "published_at_utc": null,
+                  "published_date": null,
+                  "timezone_basis": null,
+                  "publication_precision": "unknown",
+                  "event_at": null,
+                  "identity_basis": "provider regulator/government origin; issuer unmapped",
+                  "issuer_identifiers": [],
+                  "content_hash": "87e0446a7f45f0f7ecd6ed9cd1fc194262828dfe8eef2cc1d37a0802ad2d29f3",
+                  "news_id": "primary:34c8d1ce0b706c6f456f07dea30d7b8d6781286c40b2b2cb92f963f03d33fe26",
+                  "terms": {
+                    "url": "https://www.pib.gov.in/content/102_2_Copyright-Policy.aspx?lang=1&reg=30",
+                    "retention": "attributed feed metadata; reviewed first-party excerpt only on explicit request",
+                    "restriction": "accurate reproduction with acknowledgement; third-party material excluded"
+                  },
+                  "retention": "feed_metadata_only",
+                  "source_owner": "pib_rss",
+                  "raw_provider_entry_id": null,
+                  "resolved_entry_id": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+                  "source_key": "c0930235248aa61a3b57d9e3605ce0650da8d937ca4d0e595943c83de4dfcc3c",
+                  "source_identity_basis": "canonical_url_fallback",
+                  "provider_content_hash": "baf67a9f6f48997c65f7fbc3c7032fbc01e596f0fd3a9bb8705ff4a42b481652",
+                  "duplicate_group": "0bdb00f851a4f70571f08f13d8d780fcd21d23d84ab1beb4d562fb9e49aa1eef",
+                  "version_id": "fb8f2ce8f57a5d7f4b5d4653edba0ff1e133627611e65f806d16d950e5b56551",
+                  "version_first_seen_at": "2026-11-01T20:09:33.607855+00:00",
+                  "first_seen_at": "2026-11-01T20:09:33.607855+00:00",
+                  "fetched_at": "2026-11-01T20:09:33.607855+00:00",
+                  "fetched_at_basis": "version_transition_observation",
+                  "supersedes_version_id": null,
+                  "temporal_membership": "unknown",
+                  "requested_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                  "availability": "observed_by_cutoff",
+                  "units": null,
+                  "currency": null,
+                  "period": null,
+                  "graph_link": {
+                    "node_id": "news:primary:34c8d1ce0b706c6f456f07dea30d7b8d6781286c40b2b2cb92f963f03d33fe26",
+                    "scope": "current projection only; source snapshot authoritative"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "seq": 32,
+          "at": "2026-11-01T20:22:58.237425+00:00",
+          "sender": "analyst",
+          "kind": "question",
+          "text": "The PIB record for Coal India has unknown publication and event dates. Can you confirm if this lack of date information prevents us from establishing if the disclosure occurred within the 2026-10-01 to 2026-11-01 window?",
+          "claims": [
+            {
+              "claim_id": "claim:5f34aa2d760356f1",
+              "evidence_id": "ev:583497fa9115d15933aa31f8",
+              "evidence_refs": [
+                {
+                  "evidence_id": "ev:583497fa9115d15933aa31f8",
+                  "quote_id": "q:3432984e51af"
+                }
+              ],
+              "source_metadata": {
+                "published_at": null,
+                "event_at": null,
+                "fetched_at": "2026-11-01T20:22:50.981671+00:00",
+                "decision_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                "delay": null,
+                "source_type": "government_release",
+                "source_snapshot": {
+                  "provider": "pib_rss",
+                  "source_id": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+                  "provider_entry_id": null,
+                  "source_type": "government_release",
+                  "canonical_url": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+                  "published_raw": null,
+                  "published_at_utc": null,
+                  "published_date": null,
+                  "timezone_basis": null,
+                  "publication_precision": "unknown",
+                  "event_at": null,
+                  "identity_basis": "provider regulator/government origin; issuer unmapped",
+                  "issuer_identifiers": [],
+                  "content_hash": "87e0446a7f45f0f7ecd6ed9cd1fc194262828dfe8eef2cc1d37a0802ad2d29f3",
+                  "news_id": "primary:34c8d1ce0b706c6f456f07dea30d7b8d6781286c40b2b2cb92f963f03d33fe26",
+                  "terms": {
+                    "url": "https://www.pib.gov.in/content/102_2_Copyright-Policy.aspx?lang=1&reg=30",
+                    "retention": "attributed feed metadata; reviewed first-party excerpt only on explicit request",
+                    "restriction": "accurate reproduction with acknowledgement; third-party material excluded"
+                  },
+                  "retention": "feed_metadata_only",
+                  "source_owner": "pib_rss",
+                  "raw_provider_entry_id": null,
+                  "resolved_entry_id": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+                  "source_key": "c0930235248aa61a3b57d9e3605ce0650da8d937ca4d0e595943c83de4dfcc3c",
+                  "source_identity_basis": "canonical_url_fallback",
+                  "provider_content_hash": "baf67a9f6f48997c65f7fbc3c7032fbc01e596f0fd3a9bb8705ff4a42b481652",
+                  "duplicate_group": "0bdb00f851a4f70571f08f13d8d780fcd21d23d84ab1beb4d562fb9e49aa1eef",
+                  "version_id": "fb8f2ce8f57a5d7f4b5d4653edba0ff1e133627611e65f806d16d950e5b56551",
+                  "version_first_seen_at": "2026-11-01T20:09:33.607855+00:00",
+                  "first_seen_at": "2026-11-01T20:09:33.607855+00:00",
+                  "fetched_at": "2026-11-01T20:09:33.607855+00:00",
+                  "fetched_at_basis": "version_transition_observation",
+                  "supersedes_version_id": null,
+                  "temporal_membership": "unknown",
+                  "requested_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                  "availability": "observed_by_cutoff",
+                  "units": null,
+                  "currency": null,
+                  "period": null,
+                  "graph_link": {
+                    "node_id": "news:primary:34c8d1ce0b706c6f456f07dea30d7b8d6781286c40b2b2cb92f963f03d33fe26",
+                    "scope": "current projection only; source snapshot authoritative"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "seq": 41,
+          "at": "2026-11-01T20:23:03.478565+00:00",
+          "sender": "skeptic",
+          "kind": "abstention",
+          "text": "The PIB record has unknown publication and event dates. Without explicit dates, we cannot confirm if the disclosure occurred within the 2026-10-01 to 2026-11-01 window. The record was observed by cutoff, but temporal membership is unknown. This is insufficient to establish a formal disclosure within the window.",
+          "claims": [
+            {
+              "claim_id": "claim:88e841188436cda3",
+              "evidence_id": "ev:583497fa9115d15933aa31f8",
+              "evidence_refs": [
+                {
+                  "evidence_id": "ev:583497fa9115d15933aa31f8",
+                  "quote_id": "q:3432984e51af"
+                }
+              ],
+              "source_metadata": {
+                "published_at": null,
+                "event_at": null,
+                "fetched_at": "2026-11-01T20:22:50.981671+00:00",
+                "decision_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                "delay": null,
+                "source_type": "government_release",
+                "source_snapshot": {
+                  "provider": "pib_rss",
+                  "source_id": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+                  "provider_entry_id": null,
+                  "source_type": "government_release",
+                  "canonical_url": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+                  "published_raw": null,
+                  "published_at_utc": null,
+                  "published_date": null,
+                  "timezone_basis": null,
+                  "publication_precision": "unknown",
+                  "event_at": null,
+                  "identity_basis": "provider regulator/government origin; issuer unmapped",
+                  "issuer_identifiers": [],
+                  "content_hash": "87e0446a7f45f0f7ecd6ed9cd1fc194262828dfe8eef2cc1d37a0802ad2d29f3",
+                  "news_id": "primary:34c8d1ce0b706c6f456f07dea30d7b8d6781286c40b2b2cb92f963f03d33fe26",
+                  "terms": {
+                    "url": "https://www.pib.gov.in/content/102_2_Copyright-Policy.aspx?lang=1&reg=30",
+                    "retention": "attributed feed metadata; reviewed first-party excerpt only on explicit request",
+                    "restriction": "accurate reproduction with acknowledgement; third-party material excluded"
+                  },
+                  "retention": "feed_metadata_only",
+                  "source_owner": "pib_rss",
+                  "raw_provider_entry_id": null,
+                  "resolved_entry_id": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+                  "source_key": "c0930235248aa61a3b57d9e3605ce0650da8d937ca4d0e595943c83de4dfcc3c",
+                  "source_identity_basis": "canonical_url_fallback",
+                  "provider_content_hash": "baf67a9f6f48997c65f7fbc3c7032fbc01e596f0fd3a9bb8705ff4a42b481652",
+                  "duplicate_group": "0bdb00f851a4f70571f08f13d8d780fcd21d23d84ab1beb4d562fb9e49aa1eef",
+                  "version_id": "fb8f2ce8f57a5d7f4b5d4653edba0ff1e133627611e65f806d16d950e5b56551",
+                  "version_first_seen_at": "2026-11-01T20:09:33.607855+00:00",
+                  "first_seen_at": "2026-11-01T20:09:33.607855+00:00",
+                  "fetched_at": "2026-11-01T20:09:33.607855+00:00",
+                  "fetched_at_basis": "version_transition_observation",
+                  "supersedes_version_id": null,
+                  "temporal_membership": "unknown",
+                  "requested_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                  "availability": "observed_by_cutoff",
+                  "units": null,
+                  "currency": null,
+                  "period": null,
+                  "graph_link": {
+                    "node_id": "news:primary:34c8d1ce0b706c6f456f07dea30d7b8d6781286c40b2b2cb92f963f03d33fe26",
+                    "scope": "current projection only; source snapshot authoritative"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "seq": 50,
+          "at": "2026-11-01T20:23:07.039075+00:00",
+          "sender": "analyst",
+          "kind": "question",
+          "text": "The PIB feed contains one entry for Coal India: \"Coal India Marks 51 Glorious Years with Record-Breaking Performance in October 2026\". However, both publication and event dates are unknown. Can the current evidence establish if this disclosure falls within the 2026-10-01 to 2026-11-01 window?",
+          "claims": [
+            {
+              "claim_id": "claim:c6430a7f8dc881ca",
+              "evidence_id": "ev:583497fa9115d15933aa31f8",
+              "evidence_refs": [
+                {
+                  "evidence_id": "ev:583497fa9115d15933aa31f8",
+                  "quote_id": "q:3432984e51af"
+                }
+              ],
+              "source_metadata": {
+                "published_at": null,
+                "event_at": null,
+                "fetched_at": "2026-11-01T20:22:50.981671+00:00",
+                "decision_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                "delay": null,
+                "source_type": "government_release",
+                "source_snapshot": {
+                  "provider": "pib_rss",
+                  "source_id": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+                  "provider_entry_id": null,
+                  "source_type": "government_release",
+                  "canonical_url": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+                  "published_raw": null,
+                  "published_at_utc": null,
+                  "published_date": null,
+                  "timezone_basis": null,
+                  "publication_precision": "unknown",
+                  "event_at": null,
+                  "identity_basis": "provider regulator/government origin; issuer unmapped",
+                  "issuer_identifiers": [],
+                  "content_hash": "87e0446a7f45f0f7ecd6ed9cd1fc194262828dfe8eef2cc1d37a0802ad2d29f3",
+                  "news_id": "primary:34c8d1ce0b706c6f456f07dea30d7b8d6781286c40b2b2cb92f963f03d33fe26",
+                  "terms": {
+                    "url": "https://www.pib.gov.in/content/102_2_Copyright-Policy.aspx?lang=1&reg=30",
+                    "retention": "attributed feed metadata; reviewed first-party excerpt only on explicit request",
+                    "restriction": "accurate reproduction with acknowledgement; third-party material excluded"
+                  },
+                  "retention": "feed_metadata_only",
+                  "source_owner": "pib_rss",
+                  "raw_provider_entry_id": null,
+                  "resolved_entry_id": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+                  "source_key": "c0930235248aa61a3b57d9e3605ce0650da8d937ca4d0e595943c83de4dfcc3c",
+                  "source_identity_basis": "canonical_url_fallback",
+                  "provider_content_hash": "baf67a9f6f48997c65f7fbc3c7032fbc01e596f0fd3a9bb8705ff4a42b481652",
+                  "duplicate_group": "0bdb00f851a4f70571f08f13d8d780fcd21d23d84ab1beb4d562fb9e49aa1eef",
+                  "version_id": "fb8f2ce8f57a5d7f4b5d4653edba0ff1e133627611e65f806d16d950e5b56551",
+                  "version_first_seen_at": "2026-11-01T20:09:33.607855+00:00",
+                  "first_seen_at": "2026-11-01T20:09:33.607855+00:00",
+                  "fetched_at": "2026-11-01T20:09:33.607855+00:00",
+                  "fetched_at_basis": "version_transition_observation",
+                  "supersedes_version_id": null,
+                  "temporal_membership": "unknown",
+                  "requested_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                  "availability": "observed_by_cutoff",
+                  "units": null,
+                  "currency": null,
+                  "period": null,
+                  "graph_link": {
+                    "node_id": "news:primary:34c8d1ce0b706c6f456f07dea30d7b8d6781286c40b2b2cb92f963f03d33fe26",
+                    "scope": "current projection only; source snapshot authoritative"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "seq": 59,
+          "at": "2026-11-01T20:23:10.021778+00:00",
+          "sender": "skeptic",
+          "kind": "abstention",
+          "text": "The PIB record has unknown publication and event dates. Without explicit dates, we cannot confirm if the disclosure occurred within the 2026-10-01 to 2026-11-01 window. The record was observed by cutoff, but temporal membership is unknown. This is insufficient to establish a formal disclosure within the window.",
+          "claims": [
+            {
+              "claim_id": "claim:837268522bd3a53e",
+              "evidence_id": "ev:583497fa9115d15933aa31f8",
+              "evidence_refs": [
+                {
+                  "evidence_id": "ev:583497fa9115d15933aa31f8",
+                  "quote_id": "q:3432984e51af"
+                }
+              ],
+              "source_metadata": {
+                "published_at": null,
+                "event_at": null,
+                "fetched_at": "2026-11-01T20:22:50.981671+00:00",
+                "decision_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                "delay": null,
+                "source_type": "government_release",
+                "source_snapshot": {
+                  "provider": "pib_rss",
+                  "source_id": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+                  "provider_entry_id": null,
+                  "source_type": "government_release",
+                  "canonical_url": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+                  "published_raw": null,
+                  "published_at_utc": null,
+                  "published_date": null,
+                  "timezone_basis": null,
+                  "publication_precision": "unknown",
+                  "event_at": null,
+                  "identity_basis": "provider regulator/government origin; issuer unmapped",
+                  "issuer_identifiers": [],
+                  "content_hash": "87e0446a7f45f0f7ecd6ed9cd1fc194262828dfe8eef2cc1d37a0802ad2d29f3",
+                  "news_id": "primary:34c8d1ce0b706c6f456f07dea30d7b8d6781286c40b2b2cb92f963f03d33fe26",
+                  "terms": {
+                    "url": "https://www.pib.gov.in/content/102_2_Copyright-Policy.aspx?lang=1&reg=30",
+                    "retention": "attributed feed metadata; reviewed first-party excerpt only on explicit request",
+                    "restriction": "accurate reproduction with acknowledgement; third-party material excluded"
+                  },
+                  "retention": "feed_metadata_only",
+                  "source_owner": "pib_rss",
+                  "raw_provider_entry_id": null,
+                  "resolved_entry_id": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+                  "source_key": "c0930235248aa61a3b57d9e3605ce0650da8d937ca4d0e595943c83de4dfcc3c",
+                  "source_identity_basis": "canonical_url_fallback",
+                  "provider_content_hash": "baf67a9f6f48997c65f7fbc3c7032fbc01e596f0fd3a9bb8705ff4a42b481652",
+                  "duplicate_group": "0bdb00f851a4f70571f08f13d8d780fcd21d23d84ab1beb4d562fb9e49aa1eef",
+                  "version_id": "fb8f2ce8f57a5d7f4b5d4653edba0ff1e133627611e65f806d16d950e5b56551",
+                  "version_first_seen_at": "2026-11-01T20:09:33.607855+00:00",
+                  "first_seen_at": "2026-11-01T20:09:33.607855+00:00",
+                  "fetched_at": "2026-11-01T20:09:33.607855+00:00",
+                  "fetched_at_basis": "version_transition_observation",
+                  "supersedes_version_id": null,
+                  "temporal_membership": "unknown",
+                  "requested_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                  "availability": "observed_by_cutoff",
+                  "units": null,
+                  "currency": null,
+                  "period": null,
+                  "graph_link": {
+                    "node_id": "news:primary:34c8d1ce0b706c6f456f07dea30d7b8d6781286c40b2b2cb92f963f03d33fe26",
+                    "scope": "current projection only; source snapshot authoritative"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "seq": 68,
+          "at": "2026-11-01T20:23:13.680004+00:00",
+          "sender": "analyst",
+          "kind": "question",
+          "text": "The PIB feed shows a record for Coal India: \"Coal India Marks 51 Glorious Years with Record-Breaking Performance in October 2026\". Since publication and event dates are unknown, can we definitively state if this disclosure occurred within the 2026-10-01 to 2026-11-01 window?",
+          "claims": [
+            {
+              "claim_id": "claim:cf45f2a2ad8733fe",
+              "evidence_id": "ev:583497fa9115d15933aa31f8",
+              "evidence_refs": [
+                {
+                  "evidence_id": "ev:583497fa9115d15933aa31f8",
+                  "quote_id": "q:3432984e51af"
+                }
+              ],
+              "source_metadata": {
+                "published_at": null,
+                "event_at": null,
+                "fetched_at": "2026-11-01T20:22:50.981671+00:00",
+                "decision_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                "delay": null,
+                "source_type": "government_release",
+                "source_snapshot": {
+                  "provider": "pib_rss",
+                  "source_id": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+                  "provider_entry_id": null,
+                  "source_type": "government_release",
+                  "canonical_url": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+                  "published_raw": null,
+                  "published_at_utc": null,
+                  "published_date": null,
+                  "timezone_basis": null,
+                  "publication_precision": "unknown",
+                  "event_at": null,
+                  "identity_basis": "provider regulator/government origin; issuer unmapped",
+                  "issuer_identifiers": [],
+                  "content_hash": "87e0446a7f45f0f7ecd6ed9cd1fc194262828dfe8eef2cc1d37a0802ad2d29f3",
+                  "news_id": "primary:34c8d1ce0b706c6f456f07dea30d7b8d6781286c40b2b2cb92f963f03d33fe26",
+                  "terms": {
+                    "url": "https://www.pib.gov.in/content/102_2_Copyright-Policy.aspx?lang=1&reg=30",
+                    "retention": "attributed feed metadata; reviewed first-party excerpt only on explicit request",
+                    "restriction": "accurate reproduction with acknowledgement; third-party material excluded"
+                  },
+                  "retention": "feed_metadata_only",
+                  "source_owner": "pib_rss",
+                  "raw_provider_entry_id": null,
+                  "resolved_entry_id": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+                  "source_key": "c0930235248aa61a3b57d9e3605ce0650da8d937ca4d0e595943c83de4dfcc3c",
+                  "source_identity_basis": "canonical_url_fallback",
+                  "provider_content_hash": "baf67a9f6f48997c65f7fbc3c7032fbc01e596f0fd3a9bb8705ff4a42b481652",
+                  "duplicate_group": "0bdb00f851a4f70571f08f13d8d780fcd21d23d84ab1beb4d562fb9e49aa1eef",
+                  "version_id": "fb8f2ce8f57a5d7f4b5d4653edba0ff1e133627611e65f806d16d950e5b56551",
+                  "version_first_seen_at": "2026-11-01T20:09:33.607855+00:00",
+                  "first_seen_at": "2026-11-01T20:09:33.607855+00:00",
+                  "fetched_at": "2026-11-01T20:09:33.607855+00:00",
+                  "fetched_at_basis": "version_transition_observation",
+                  "supersedes_version_id": null,
+                  "temporal_membership": "unknown",
+                  "requested_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                  "availability": "observed_by_cutoff",
+                  "units": null,
+                  "currency": null,
+                  "period": null,
+                  "graph_link": {
+                    "node_id": "news:primary:34c8d1ce0b706c6f456f07dea30d7b8d6781286c40b2b2cb92f963f03d33fe26",
+                    "scope": "current projection only; source snapshot authoritative"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "room_key": "real-rbi-treasury-bills-ordinary",
+      "event_counts": {
+        "budget.admitted": 17,
+        "message": 1,
+        "room.created": 1,
+        "room.finished": 1,
+        "room.started": 1,
+        "thread.started": 2,
+        "tool.result": 8,
+        "tool.started": 8,
+        "turn.finished": 1,
+        "turn.started": 2
+      },
+      "messages": [
+        {
+          "seq": 39,
+          "at": "2026-11-01T20:22:20.796481+00:00",
+          "sender": "skeptic",
+          "kind": "question",
+          "text": "No RBI press releases or auction records found in the feed for Treasury bills between 2026-10-01 and 2026-11-01. Can you confirm if the feed is complete or if auctions were skipped?",
+          "claims": [
+            {
+              "claim_id": "claim:f85c1bfb742e2e94",
+              "evidence_id": null,
+              "evidence_refs": [],
+              "source_metadata": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "room_key": "real-rbi-treasury-bills-saved",
+      "event_counts": {
+        "budget.admitted": 23,
+        "mail.delivery_attempted": 7,
+        "mail.response_opportunity": 6,
+        "message": 8,
+        "room.created": 1,
+        "room.finished": 1,
+        "room.started": 1,
+        "thread.started": 2,
+        "tool.result": 11,
+        "tool.started": 11,
+        "turn.finished": 8,
+        "turn.started": 9
+      },
+      "messages": [
+        {
+          "seq": 19,
+          "at": "2026-11-01T20:21:38.763782+00:00",
+          "sender": "skeptic",
+          "kind": "question",
+          "text": "The only Treasury Bill record in the window is an undated announcement of 91/182/364-day auctions. No publication date is available to confirm it falls within the declared window. Can you confirm whether this record's publication date is missing due to feed limitation or actual absence?",
+          "claims": [
+            {
+              "claim_id": "claim:2bd9d4fe854fc5a1",
+              "evidence_id": "ev:81bc6310f55f0ea58878d659",
+              "evidence_refs": [
+                {
+                  "evidence_id": "ev:81bc6310f55f0ea58878d659",
+                  "quote_id": "q:1ea84f728c33"
+                }
+              ],
+              "source_metadata": {
+                "published_at": null,
+                "event_at": null,
+                "fetched_at": "2026-11-01T20:21:35.652532+00:00",
+                "decision_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                "delay": null,
+                "source_type": "regulator",
+                "source_snapshot": {
+                  "provider": "rbi_press_releases_rss",
+                  "source_id": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "provider_entry_id": null,
+                  "source_type": "regulator",
+                  "canonical_url": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "published_raw": "Fri, 30 Oct 2026 17:40:00",
+                  "published_at_utc": null,
+                  "published_date": null,
+                  "timezone_basis": null,
+                  "publication_precision": "unknown",
+                  "event_at": null,
+                  "identity_basis": "provider regulator/government origin; issuer unmapped",
+                  "issuer_identifiers": [],
+                  "content_hash": "e194ad414ccefb6a20d85d3d583decbcc8defc842728839bbd5a2fffc3681a89",
+                  "news_id": "primary:e88360ce73289fdbe432ba0d13aaa661d496a654b4ed2f766c7f2efd91bb37ec",
+                  "terms": {
+                    "url": "https://www.rbi.org.in/Scripts/Disclaimer.aspx",
+                    "retention": "feed identification metadata and links only; no article bodies",
+                    "restriction": "body retention permission unconfirmed; source locally unavailable"
+                  },
+                  "retention": "feed_metadata_only",
+                  "source_owner": "rbi_press_releases_rss",
+                  "raw_provider_entry_id": null,
+                  "resolved_entry_id": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "source_key": "6b15a32cdf47b0d44cd5519696e6df9cb8fd85b85d867042b5a6729ecc9b33f3",
+                  "source_identity_basis": "canonical_url_fallback",
+                  "provider_content_hash": "8e61d7bfcd5b9b58ff91920f2cfb200c3ae5ade0e9f7cbbd01817b71bbc44901",
+                  "duplicate_group": "ecd591fd6ca8f7ec6b1d08f8abac344427b677b13e64e9e4821b65fb7bd54a58",
+                  "version_id": "5d72530283a996181d01c0672cf132f4dc512f03c54f7245dd0644c4634a0ba9",
+                  "version_first_seen_at": "2026-11-01T20:09:34.211652+00:00",
+                  "first_seen_at": "2026-11-01T20:09:34.211652+00:00",
+                  "fetched_at": "2026-11-01T20:09:34.211652+00:00",
+                  "fetched_at_basis": "version_transition_observation",
+                  "supersedes_version_id": null,
+                  "temporal_membership": "unknown",
+                  "requested_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                  "availability": "observed_by_cutoff",
+                  "units": null,
+                  "currency": null,
+                  "period": null,
+                  "graph_link": {
+                    "node_id": "news:primary:e88360ce73289fdbe432ba0d13aaa661d496a654b4ed2f766c7f2efd91bb37ec",
+                    "scope": "current projection only; source snapshot authoritative"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "seq": 24,
+          "at": "2026-11-01T20:21:39.537865+00:00",
+          "sender": "analyst",
+          "kind": "question",
+          "text": "The retrieved RBI feed mentions an \"Auction of 91-Day, 182-Day and 364-Day Treasury Bills.\" Can you confirm if the feed provides details on what can and cannot be placed within the declared time window for these auctions?",
+          "claims": [
+            {
+              "claim_id": "claim:a0031a5d3412324e",
+              "evidence_id": "ev:81bc6310f55f0ea58878d659",
+              "evidence_refs": [
+                {
+                  "evidence_id": "ev:81bc6310f55f0ea58878d659",
+                  "quote_id": "q:1ea84f728c33"
+                }
+              ],
+              "source_metadata": {
+                "published_at": null,
+                "event_at": null,
+                "fetched_at": "2026-11-01T20:21:35.652532+00:00",
+                "decision_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                "delay": null,
+                "source_type": "regulator",
+                "source_snapshot": {
+                  "provider": "rbi_press_releases_rss",
+                  "source_id": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "provider_entry_id": null,
+                  "source_type": "regulator",
+                  "canonical_url": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "published_raw": "Fri, 30 Oct 2026 17:40:00",
+                  "published_at_utc": null,
+                  "published_date": null,
+                  "timezone_basis": null,
+                  "publication_precision": "unknown",
+                  "event_at": null,
+                  "identity_basis": "provider regulator/government origin; issuer unmapped",
+                  "issuer_identifiers": [],
+                  "content_hash": "e194ad414ccefb6a20d85d3d583decbcc8defc842728839bbd5a2fffc3681a89",
+                  "news_id": "primary:e88360ce73289fdbe432ba0d13aaa661d496a654b4ed2f766c7f2efd91bb37ec",
+                  "terms": {
+                    "url": "https://www.rbi.org.in/Scripts/Disclaimer.aspx",
+                    "retention": "feed identification metadata and links only; no article bodies",
+                    "restriction": "body retention permission unconfirmed; source locally unavailable"
+                  },
+                  "retention": "feed_metadata_only",
+                  "source_owner": "rbi_press_releases_rss",
+                  "raw_provider_entry_id": null,
+                  "resolved_entry_id": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "source_key": "6b15a32cdf47b0d44cd5519696e6df9cb8fd85b85d867042b5a6729ecc9b33f3",
+                  "source_identity_basis": "canonical_url_fallback",
+                  "provider_content_hash": "8e61d7bfcd5b9b58ff91920f2cfb200c3ae5ade0e9f7cbbd01817b71bbc44901",
+                  "duplicate_group": "ecd591fd6ca8f7ec6b1d08f8abac344427b677b13e64e9e4821b65fb7bd54a58",
+                  "version_id": "5d72530283a996181d01c0672cf132f4dc512f03c54f7245dd0644c4634a0ba9",
+                  "version_first_seen_at": "2026-11-01T20:09:34.211652+00:00",
+                  "first_seen_at": "2026-11-01T20:09:34.211652+00:00",
+                  "fetched_at": "2026-11-01T20:09:34.211652+00:00",
+                  "fetched_at_basis": "version_transition_observation",
+                  "supersedes_version_id": null,
+                  "temporal_membership": "unknown",
+                  "requested_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                  "availability": "observed_by_cutoff",
+                  "units": null,
+                  "currency": null,
+                  "period": null,
+                  "graph_link": {
+                    "node_id": "news:primary:e88360ce73289fdbe432ba0d13aaa661d496a654b4ed2f766c7f2efd91bb37ec",
+                    "scope": "current projection only; source snapshot authoritative"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "seq": 32,
+          "at": "2026-11-01T20:21:42.404102+00:00",
+          "sender": "analyst",
+          "kind": "question",
+          "text": "The retrieved evidence only states the auction of 91/182/364-Day T-Bills. I need to know if the feed contains any information regarding what is permissible or restricted within the declared time window for these auctions.",
+          "claims": [
+            {
+              "claim_id": "claim:93d756f213ab749f",
+              "evidence_id": "ev:81bc6310f55f0ea58878d659",
+              "evidence_refs": [
+                {
+                  "evidence_id": "ev:81bc6310f55f0ea58878d659",
+                  "quote_id": "q:1ea84f728c33"
+                }
+              ],
+              "source_metadata": {
+                "published_at": null,
+                "event_at": null,
+                "fetched_at": "2026-11-01T20:21:35.652532+00:00",
+                "decision_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                "delay": null,
+                "source_type": "regulator",
+                "source_snapshot": {
+                  "provider": "rbi_press_releases_rss",
+                  "source_id": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "provider_entry_id": null,
+                  "source_type": "regulator",
+                  "canonical_url": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "published_raw": "Fri, 30 Oct 2026 17:40:00",
+                  "published_at_utc": null,
+                  "published_date": null,
+                  "timezone_basis": null,
+                  "publication_precision": "unknown",
+                  "event_at": null,
+                  "identity_basis": "provider regulator/government origin; issuer unmapped",
+                  "issuer_identifiers": [],
+                  "content_hash": "e194ad414ccefb6a20d85d3d583decbcc8defc842728839bbd5a2fffc3681a89",
+                  "news_id": "primary:e88360ce73289fdbe432ba0d13aaa661d496a654b4ed2f766c7f2efd91bb37ec",
+                  "terms": {
+                    "url": "https://www.rbi.org.in/Scripts/Disclaimer.aspx",
+                    "retention": "feed identification metadata and links only; no article bodies",
+                    "restriction": "body retention permission unconfirmed; source locally unavailable"
+                  },
+                  "retention": "feed_metadata_only",
+                  "source_owner": "rbi_press_releases_rss",
+                  "raw_provider_entry_id": null,
+                  "resolved_entry_id": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "source_key": "6b15a32cdf47b0d44cd5519696e6df9cb8fd85b85d867042b5a6729ecc9b33f3",
+                  "source_identity_basis": "canonical_url_fallback",
+                  "provider_content_hash": "8e61d7bfcd5b9b58ff91920f2cfb200c3ae5ade0e9f7cbbd01817b71bbc44901",
+                  "duplicate_group": "ecd591fd6ca8f7ec6b1d08f8abac344427b677b13e64e9e4821b65fb7bd54a58",
+                  "version_id": "5d72530283a996181d01c0672cf132f4dc512f03c54f7245dd0644c4634a0ba9",
+                  "version_first_seen_at": "2026-11-01T20:09:34.211652+00:00",
+                  "first_seen_at": "2026-11-01T20:09:34.211652+00:00",
+                  "fetched_at": "2026-11-01T20:09:34.211652+00:00",
+                  "fetched_at_basis": "version_transition_observation",
+                  "supersedes_version_id": null,
+                  "temporal_membership": "unknown",
+                  "requested_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                  "availability": "observed_by_cutoff",
+                  "units": null,
+                  "currency": null,
+                  "period": null,
+                  "graph_link": {
+                    "node_id": "news:primary:e88360ce73289fdbe432ba0d13aaa661d496a654b4ed2f766c7f2efd91bb37ec",
+                    "scope": "current projection only; source snapshot authoritative"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "seq": 45,
+          "at": "2026-11-01T20:21:51.559208+00:00",
+          "sender": "skeptic",
+          "kind": "abstention",
+          "text": "The feed only provides a title: \"Auction of 91-Day, 182-Day and 364-Day Treasury Bills.\" No publication date is available to confirm it falls within the declared window. The feed also lacks details on what can/cannot be placed within the window. Evidence is insufficient to answer your question.",
+          "claims": [
+            {
+              "claim_id": "claim:476c544d40634198",
+              "evidence_id": "ev:a22c9adc24793f00517f669c",
+              "evidence_refs": [
+                {
+                  "evidence_id": "ev:a22c9adc24793f00517f669c",
+                  "quote_id": "q:9ba4a068e350"
+                }
+              ],
+              "source_metadata": {
+                "published_at": null,
+                "event_at": null,
+                "fetched_at": "2026-11-01T20:21:46.324919+00:00",
+                "decision_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                "delay": null,
+                "source_type": "regulator",
+                "source_snapshot": {
+                  "provider": "rbi_press_releases_rss",
+                  "source_id": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "provider_entry_id": null,
+                  "source_type": "regulator",
+                  "canonical_url": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "published_raw": "Fri, 30 Oct 2026 17:40:00",
+                  "published_at_utc": null,
+                  "published_date": null,
+                  "timezone_basis": null,
+                  "publication_precision": "unknown",
+                  "event_at": null,
+                  "identity_basis": "provider regulator/government origin; issuer unmapped",
+                  "issuer_identifiers": [],
+                  "content_hash": "e194ad414ccefb6a20d85d3d583decbcc8defc842728839bbd5a2fffc3681a89",
+                  "news_id": "primary:e88360ce73289fdbe432ba0d13aaa661d496a654b4ed2f766c7f2efd91bb37ec",
+                  "terms": {
+                    "url": "https://www.rbi.org.in/Scripts/Disclaimer.aspx",
+                    "retention": "feed identification metadata and links only; no article bodies",
+                    "restriction": "body retention permission unconfirmed; source locally unavailable"
+                  },
+                  "retention": "feed_metadata_only",
+                  "source_owner": "rbi_press_releases_rss",
+                  "raw_provider_entry_id": null,
+                  "resolved_entry_id": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "source_key": "6b15a32cdf47b0d44cd5519696e6df9cb8fd85b85d867042b5a6729ecc9b33f3",
+                  "source_identity_basis": "canonical_url_fallback",
+                  "provider_content_hash": "8e61d7bfcd5b9b58ff91920f2cfb200c3ae5ade0e9f7cbbd01817b71bbc44901",
+                  "duplicate_group": "ecd591fd6ca8f7ec6b1d08f8abac344427b677b13e64e9e4821b65fb7bd54a58",
+                  "version_id": "5d72530283a996181d01c0672cf132f4dc512f03c54f7245dd0644c4634a0ba9",
+                  "version_first_seen_at": "2026-11-01T20:09:34.211652+00:00",
+                  "first_seen_at": "2026-11-01T20:09:34.211652+00:00",
+                  "fetched_at": "2026-11-01T20:09:34.211652+00:00",
+                  "fetched_at_basis": "version_transition_observation",
+                  "supersedes_version_id": null,
+                  "version_status": "current",
+                  "current_version_id": "5d72530283a996181d01c0672cf132f4dc512f03c54f7245dd0644c4634a0ba9",
+                  "requested_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                  "availability": "observed_by_cutoff",
+                  "units": null,
+                  "currency": null,
+                  "period": null,
+                  "graph_link": {
+                    "node_id": "news:primary:e88360ce73289fdbe432ba0d13aaa661d496a654b4ed2f766c7f2efd91bb37ec",
+                    "scope": "current projection only; source snapshot authoritative"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "seq": 54,
+          "at": "2026-11-01T20:21:57.993808+00:00",
+          "sender": "analyst",
+          "kind": "question",
+          "text": "The evidence confirms the announcement of 91/182/364-Day T-Bill auctions, but it does not specify what can or cannot be placed within the declared time window. Can you advise if further evidence is needed to address this part of the question?",
+          "claims": [
+            {
+              "claim_id": "claim:ad662e32853a76da",
+              "evidence_id": "ev:a22c9adc24793f00517f669c",
+              "evidence_refs": [
+                {
+                  "evidence_id": "ev:a22c9adc24793f00517f669c",
+                  "quote_id": "q:9ba4a068e350"
+                }
+              ],
+              "source_metadata": {
+                "published_at": null,
+                "event_at": null,
+                "fetched_at": "2026-11-01T20:21:46.324919+00:00",
+                "decision_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                "delay": null,
+                "source_type": "regulator",
+                "source_snapshot": {
+                  "provider": "rbi_press_releases_rss",
+                  "source_id": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "provider_entry_id": null,
+                  "source_type": "regulator",
+                  "canonical_url": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "published_raw": "Fri, 30 Oct 2026 17:40:00",
+                  "published_at_utc": null,
+                  "published_date": null,
+                  "timezone_basis": null,
+                  "publication_precision": "unknown",
+                  "event_at": null,
+                  "identity_basis": "provider regulator/government origin; issuer unmapped",
+                  "issuer_identifiers": [],
+                  "content_hash": "e194ad414ccefb6a20d85d3d583decbcc8defc842728839bbd5a2fffc3681a89",
+                  "news_id": "primary:e88360ce73289fdbe432ba0d13aaa661d496a654b4ed2f766c7f2efd91bb37ec",
+                  "terms": {
+                    "url": "https://www.rbi.org.in/Scripts/Disclaimer.aspx",
+                    "retention": "feed identification metadata and links only; no article bodies",
+                    "restriction": "body retention permission unconfirmed; source locally unavailable"
+                  },
+                  "retention": "feed_metadata_only",
+                  "source_owner": "rbi_press_releases_rss",
+                  "raw_provider_entry_id": null,
+                  "resolved_entry_id": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "source_key": "6b15a32cdf47b0d44cd5519696e6df9cb8fd85b85d867042b5a6729ecc9b33f3",
+                  "source_identity_basis": "canonical_url_fallback",
+                  "provider_content_hash": "8e61d7bfcd5b9b58ff91920f2cfb200c3ae5ade0e9f7cbbd01817b71bbc44901",
+                  "duplicate_group": "ecd591fd6ca8f7ec6b1d08f8abac344427b677b13e64e9e4821b65fb7bd54a58",
+                  "version_id": "5d72530283a996181d01c0672cf132f4dc512f03c54f7245dd0644c4634a0ba9",
+                  "version_first_seen_at": "2026-11-01T20:09:34.211652+00:00",
+                  "first_seen_at": "2026-11-01T20:09:34.211652+00:00",
+                  "fetched_at": "2026-11-01T20:09:34.211652+00:00",
+                  "fetched_at_basis": "version_transition_observation",
+                  "supersedes_version_id": null,
+                  "version_status": "current",
+                  "current_version_id": "5d72530283a996181d01c0672cf132f4dc512f03c54f7245dd0644c4634a0ba9",
+                  "requested_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                  "availability": "observed_by_cutoff",
+                  "units": null,
+                  "currency": null,
+                  "period": null,
+                  "graph_link": {
+                    "node_id": "news:primary:e88360ce73289fdbe432ba0d13aaa661d496a654b4ed2f766c7f2efd91bb37ec",
+                    "scope": "current projection only; source snapshot authoritative"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "seq": 63,
+          "at": "2026-11-01T20:22:01.972158+00:00",
+          "sender": "skeptic",
+          "kind": "abstention",
+          "text": "The saved RBI feed only contains a title: \"Auction of 91-Day, 182-Day and 364-Day Treasury Bills.\" No publication date is available to confirm it falls within the declared window. The feed also lacks details on what can/cannot be placed within the window. Evidence is insufficient to answer your question.",
+          "claims": [
+            {
+              "claim_id": "claim:59a56e53cd6acb6e",
+              "evidence_id": "ev:a22c9adc24793f00517f669c",
+              "evidence_refs": [
+                {
+                  "evidence_id": "ev:a22c9adc24793f00517f669c",
+                  "quote_id": "q:9ba4a068e350"
+                }
+              ],
+              "source_metadata": {
+                "published_at": null,
+                "event_at": null,
+                "fetched_at": "2026-11-01T20:21:46.324919+00:00",
+                "decision_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                "delay": null,
+                "source_type": "regulator",
+                "source_snapshot": {
+                  "provider": "rbi_press_releases_rss",
+                  "source_id": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "provider_entry_id": null,
+                  "source_type": "regulator",
+                  "canonical_url": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "published_raw": "Fri, 30 Oct 2026 17:40:00",
+                  "published_at_utc": null,
+                  "published_date": null,
+                  "timezone_basis": null,
+                  "publication_precision": "unknown",
+                  "event_at": null,
+                  "identity_basis": "provider regulator/government origin; issuer unmapped",
+                  "issuer_identifiers": [],
+                  "content_hash": "e194ad414ccefb6a20d85d3d583decbcc8defc842728839bbd5a2fffc3681a89",
+                  "news_id": "primary:e88360ce73289fdbe432ba0d13aaa661d496a654b4ed2f766c7f2efd91bb37ec",
+                  "terms": {
+                    "url": "https://www.rbi.org.in/Scripts/Disclaimer.aspx",
+                    "retention": "feed identification metadata and links only; no article bodies",
+                    "restriction": "body retention permission unconfirmed; source locally unavailable"
+                  },
+                  "retention": "feed_metadata_only",
+                  "source_owner": "rbi_press_releases_rss",
+                  "raw_provider_entry_id": null,
+                  "resolved_entry_id": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "source_key": "6b15a32cdf47b0d44cd5519696e6df9cb8fd85b85d867042b5a6729ecc9b33f3",
+                  "source_identity_basis": "canonical_url_fallback",
+                  "provider_content_hash": "8e61d7bfcd5b9b58ff91920f2cfb200c3ae5ade0e9f7cbbd01817b71bbc44901",
+                  "duplicate_group": "ecd591fd6ca8f7ec6b1d08f8abac344427b677b13e64e9e4821b65fb7bd54a58",
+                  "version_id": "5d72530283a996181d01c0672cf132f4dc512f03c54f7245dd0644c4634a0ba9",
+                  "version_first_seen_at": "2026-11-01T20:09:34.211652+00:00",
+                  "first_seen_at": "2026-11-01T20:09:34.211652+00:00",
+                  "fetched_at": "2026-11-01T20:09:34.211652+00:00",
+                  "fetched_at_basis": "version_transition_observation",
+                  "supersedes_version_id": null,
+                  "version_status": "current",
+                  "current_version_id": "5d72530283a996181d01c0672cf132f4dc512f03c54f7245dd0644c4634a0ba9",
+                  "requested_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                  "availability": "observed_by_cutoff",
+                  "units": null,
+                  "currency": null,
+                  "period": null,
+                  "graph_link": {
+                    "node_id": "news:primary:e88360ce73289fdbe432ba0d13aaa661d496a654b4ed2f766c7f2efd91bb37ec",
+                    "scope": "current projection only; source snapshot authoritative"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "seq": 72,
+          "at": "2026-11-01T20:22:04.887313+00:00",
+          "sender": "analyst",
+          "kind": "question",
+          "text": "The evidence confirms the announcement of 91/182/364-Day T-Bill auctions, but it does not specify what can or cannot be placed within the declared time window. Can you advise if further evidence is needed to address this part of the question?",
+          "claims": [
+            {
+              "claim_id": "claim:5f6d9ddc426df9bd",
+              "evidence_id": "ev:a22c9adc24793f00517f669c",
+              "evidence_refs": [
+                {
+                  "evidence_id": "ev:a22c9adc24793f00517f669c",
+                  "quote_id": "q:9ba4a068e350"
+                }
+              ],
+              "source_metadata": {
+                "published_at": null,
+                "event_at": null,
+                "fetched_at": "2026-11-01T20:21:46.324919+00:00",
+                "decision_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                "delay": null,
+                "source_type": "regulator",
+                "source_snapshot": {
+                  "provider": "rbi_press_releases_rss",
+                  "source_id": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "provider_entry_id": null,
+                  "source_type": "regulator",
+                  "canonical_url": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "published_raw": "Fri, 30 Oct 2026 17:40:00",
+                  "published_at_utc": null,
+                  "published_date": null,
+                  "timezone_basis": null,
+                  "publication_precision": "unknown",
+                  "event_at": null,
+                  "identity_basis": "provider regulator/government origin; issuer unmapped",
+                  "issuer_identifiers": [],
+                  "content_hash": "e194ad414ccefb6a20d85d3d583decbcc8defc842728839bbd5a2fffc3681a89",
+                  "news_id": "primary:e88360ce73289fdbe432ba0d13aaa661d496a654b4ed2f766c7f2efd91bb37ec",
+                  "terms": {
+                    "url": "https://www.rbi.org.in/Scripts/Disclaimer.aspx",
+                    "retention": "feed identification metadata and links only; no article bodies",
+                    "restriction": "body retention permission unconfirmed; source locally unavailable"
+                  },
+                  "retention": "feed_metadata_only",
+                  "source_owner": "rbi_press_releases_rss",
+                  "raw_provider_entry_id": null,
+                  "resolved_entry_id": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "source_key": "6b15a32cdf47b0d44cd5519696e6df9cb8fd85b85d867042b5a6729ecc9b33f3",
+                  "source_identity_basis": "canonical_url_fallback",
+                  "provider_content_hash": "8e61d7bfcd5b9b58ff91920f2cfb200c3ae5ade0e9f7cbbd01817b71bbc44901",
+                  "duplicate_group": "ecd591fd6ca8f7ec6b1d08f8abac344427b677b13e64e9e4821b65fb7bd54a58",
+                  "version_id": "5d72530283a996181d01c0672cf132f4dc512f03c54f7245dd0644c4634a0ba9",
+                  "version_first_seen_at": "2026-11-01T20:09:34.211652+00:00",
+                  "first_seen_at": "2026-11-01T20:09:34.211652+00:00",
+                  "fetched_at": "2026-11-01T20:09:34.211652+00:00",
+                  "fetched_at_basis": "version_transition_observation",
+                  "supersedes_version_id": null,
+                  "version_status": "current",
+                  "current_version_id": "5d72530283a996181d01c0672cf132f4dc512f03c54f7245dd0644c4634a0ba9",
+                  "requested_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                  "availability": "observed_by_cutoff",
+                  "units": null,
+                  "currency": null,
+                  "period": null,
+                  "graph_link": {
+                    "node_id": "news:primary:e88360ce73289fdbe432ba0d13aaa661d496a654b4ed2f766c7f2efd91bb37ec",
+                    "scope": "current projection only; source snapshot authoritative"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "seq": 81,
+          "at": "2026-11-01T20:22:07.668324+00:00",
+          "sender": "skeptic",
+          "kind": "abstention",
+          "text": "The saved RBI feed only contains a title: \"Auction of 91-Day, 182-Day and 364-Day Treasury Bills.\" No publication date is available to confirm it falls within the declared window. The feed also lacks details on what can/cannot be placed within the window. Evidence is insufficient to answer your question.",
+          "claims": [
+            {
+              "claim_id": "claim:758be715330c2bf8",
+              "evidence_id": "ev:a22c9adc24793f00517f669c",
+              "evidence_refs": [
+                {
+                  "evidence_id": "ev:a22c9adc24793f00517f669c",
+                  "quote_id": "q:9ba4a068e350"
+                }
+              ],
+              "source_metadata": {
+                "published_at": null,
+                "event_at": null,
+                "fetched_at": "2026-11-01T20:21:46.324919+00:00",
+                "decision_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                "delay": null,
+                "source_type": "regulator",
+                "source_snapshot": {
+                  "provider": "rbi_press_releases_rss",
+                  "source_id": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "provider_entry_id": null,
+                  "source_type": "regulator",
+                  "canonical_url": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "published_raw": "Fri, 30 Oct 2026 17:40:00",
+                  "published_at_utc": null,
+                  "published_date": null,
+                  "timezone_basis": null,
+                  "publication_precision": "unknown",
+                  "event_at": null,
+                  "identity_basis": "provider regulator/government origin; issuer unmapped",
+                  "issuer_identifiers": [],
+                  "content_hash": "e194ad414ccefb6a20d85d3d583decbcc8defc842728839bbd5a2fffc3681a89",
+                  "news_id": "primary:e88360ce73289fdbe432ba0d13aaa661d496a654b4ed2f766c7f2efd91bb37ec",
+                  "terms": {
+                    "url": "https://www.rbi.org.in/Scripts/Disclaimer.aspx",
+                    "retention": "feed identification metadata and links only; no article bodies",
+                    "restriction": "body retention permission unconfirmed; source locally unavailable"
+                  },
+                  "retention": "feed_metadata_only",
+                  "source_owner": "rbi_press_releases_rss",
+                  "raw_provider_entry_id": null,
+                  "resolved_entry_id": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+                  "source_key": "6b15a32cdf47b0d44cd5519696e6df9cb8fd85b85d867042b5a6729ecc9b33f3",
+                  "source_identity_basis": "canonical_url_fallback",
+                  "provider_content_hash": "8e61d7bfcd5b9b58ff91920f2cfb200c3ae5ade0e9f7cbbd01817b71bbc44901",
+                  "duplicate_group": "ecd591fd6ca8f7ec6b1d08f8abac344427b677b13e64e9e4821b65fb7bd54a58",
+                  "version_id": "5d72530283a996181d01c0672cf132f4dc512f03c54f7245dd0644c4634a0ba9",
+                  "version_first_seen_at": "2026-11-01T20:09:34.211652+00:00",
+                  "first_seen_at": "2026-11-01T20:09:34.211652+00:00",
+                  "fetched_at": "2026-11-01T20:09:34.211652+00:00",
+                  "fetched_at_basis": "version_transition_observation",
+                  "supersedes_version_id": null,
+                  "version_status": "current",
+                  "current_version_id": "5d72530283a996181d01c0672cf132f4dc512f03c54f7245dd0644c4634a0ba9",
+                  "requested_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                  "availability": "observed_by_cutoff",
+                  "units": null,
+                  "currency": null,
+                  "period": null,
+                  "graph_link": {
+                    "node_id": "news:primary:e88360ce73289fdbe432ba0d13aaa661d496a654b4ed2f766c7f2efd91bb37ec",
+                    "scope": "current projection only; source snapshot authoritative"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "room_key": "real-sebi-digital-accessibility-ordinary",
+      "event_counts": {
+        "budget.admitted": 32,
+        "budget.denied": 1,
+        "mail.delivery_attempted": 3,
+        "mail.response_opportunity": 2,
+        "message": 4,
+        "room.created": 1,
+        "room.finished": 1,
+        "room.started": 1,
+        "thread.started": 2,
+        "tool.result": 16,
+        "tool.started": 16,
+        "turn.finished": 5,
+        "turn.started": 5
+      },
+      "messages": [
+        {
+          "seq": 39,
+          "at": "2026-11-01T20:20:15.870414+00:00",
+          "sender": "analyst",
+          "kind": "question",
+          "text": "The initial search for SEBI's digital accessibility circular compliance within the specified window yielded no direct evidence. Can you confirm if the SEBI feed (sebi_rss) contains any relevant titles or content regarding digital accessibility?",
+          "claims": [
+            {
+              "claim_id": "claim:d073b269a45eb344",
+              "evidence_id": null,
+              "evidence_refs": [],
+              "source_metadata": null
+            }
+          ]
+        },
+        {
+          "seq": 44,
+          "at": "2026-11-01T20:20:18.297355+00:00",
+          "sender": "skeptic",
+          "kind": "question",
+          "text": "SEBI RSS returned 30 items with dates like \"30 Oct, 2026 +0530\" but the parser left them unresolved. Can you provide the raw XML or a parsed JSON of those 30 items so I can verify if any mention digital accessibility circular compliance?",
+          "claims": [
+            {
+              "claim_id": "claim:58a8272e420c5e13",
+              "evidence_id": "ev:8079cfd4a615fd854ca1edb6",
+              "evidence_refs": [
+                {
+                  "evidence_id": "ev:8079cfd4a615fd854ca1edb6",
+                  "quote_id": "q:0e4a5ca6fa57"
+                }
+              ],
+              "source_metadata": {
+                "published_at": null,
+                "event_at": null,
+                "fetched_at": "2026-11-01T20:20:14.571785+00:00",
+                "decision_cutoff": null,
+                "delay": null,
+                "source_type": "artifact",
+                "source_snapshot": null
+              }
+            }
+          ]
+        },
+        {
+          "seq": 68,
+          "at": "2026-11-01T20:20:33.681187+00:00",
+          "sender": "skeptic",
+          "kind": "question",
+          "text": "The SEBI RSS feed returned 30 items with dates like \"30 Oct, 2026 +0530\", but the parser left them unresolved. Can you provide the raw XML or a parsed JSON of those 30 items so I can verify if any mention digital accessibility circular compliance?",
+          "claims": [
+            {
+              "claim_id": "claim:0cb74f50039fba2b",
+              "evidence_id": "ev:9c1ba1d18ecd6a8ec222e1ee",
+              "evidence_refs": [
+                {
+                  "evidence_id": "ev:9c1ba1d18ecd6a8ec222e1ee",
+                  "quote_id": "q:761f50d5ddb4"
+                }
+              ],
+              "source_metadata": {
+                "published_at": null,
+                "event_at": null,
+                "fetched_at": "2026-11-01T20:20:24.055264+00:00",
+                "decision_cutoff": null,
+                "delay": null,
+                "source_type": "artifact",
+                "source_snapshot": null
+              }
+            }
+          ]
+        },
+        {
+          "seq": 77,
+          "at": "2026-11-01T20:20:38.226435+00:00",
+          "sender": "analyst",
+          "kind": "question",
+          "text": "The SEBI RSS feed returned 30 items with dates like \"30 Oct, 2026 +0530\", but the parser left them unresolved. Can you provide the raw XML or a parsed JSON of those 30 items so I can verify if any mention digital accessibility circular compliance?",
+          "claims": [
+            {
+              "claim_id": "claim:c1a140f58b8b445a",
+              "evidence_id": "ev:9c1ba1d18ecd6a8ec222e1ee",
+              "evidence_refs": [
+                {
+                  "evidence_id": "ev:9c1ba1d18ecd6a8ec222e1ee",
+                  "quote_id": "q:761f50d5ddb4"
+                }
+              ],
+              "source_metadata": {
+                "published_at": null,
+                "event_at": null,
+                "fetched_at": "2026-11-01T20:20:24.055264+00:00",
+                "decision_cutoff": null,
+                "delay": null,
+                "source_type": "artifact",
+                "source_snapshot": null
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "room_key": "real-sebi-digital-accessibility-saved",
+      "event_counts": {
+        "budget.admitted": 32,
+        "budget.denied": 1,
+        "mail.delivery_attempted": 7,
+        "mail.response_opportunity": 6,
+        "message": 8,
+        "room.created": 1,
+        "room.finished": 1,
+        "room.started": 1,
+        "thread.started": 2,
+        "tool.result": 16,
+        "tool.started": 16,
+        "turn.finished": 9,
+        "turn.started": 9
+      },
+      "messages": [
+        {
+          "seq": 19,
+          "at": "2026-11-01T20:20:54.300686+00:00",
+          "sender": "skeptic",
+          "kind": "challenge",
+          "text": "The feed shows a circular titled \"Extension of timeline with respect to compliance of Digital Accessibility Circulars\" published 30 Oct 2026. But the feed metadata says \"feed identification metadata and links only; no article bodies.\" We have no text of the circular itself—only the title. What specific extension terms, deadlines, or scope does the circular contain? Without the body, we cannot assess compliance requirements or the extension's impact.",
+          "claims": [
+            {
+              "claim_id": "claim:717389dc26683e57",
+              "evidence_id": "ev:93c5249619ad93795882ec91",
+              "evidence_refs": [
+                {
+                  "evidence_id": "ev:93c5249619ad93795882ec91",
+                  "quote_id": "q:681fc3b9f954"
+                }
+              ],
+              "source_metadata": {
+                "published_at": null,
+                "event_at": null,
+                "fetched_at": "2026-11-01T20:20:50.876728+00:00",
+                "decision_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                "delay": null,
+                "source_type": "regulator",
+                "source_snapshot": {
+                  "provider": "sebi_rss",
+                  "source_id": "https://www.sebi.gov.in/legal/circulars/oct-2026/extension-of-timeline-with-respect-to-compliance-of-digital-accessibility-circulars_105523.html",
+                  "provider_entry_id": null,
+                  "source_type": "regulator",
+                  "canonical_url": "https://www.sebi.gov.in/legal/circulars/oct-2026/extension-of-timeline-with-respect-to-compliance-of-digital-accessibility-circulars_105523.html",
+                  "published_raw": "30 Oct, 2026 +0530",
+                  "published_at_utc": null,
+                  "published_date": "2026-10-30",
+                  "timezone_basis": "source offset +0530",
+                  "publication_precision": "date",
+                  "event_at": null,
+                  "identity_basis": "provider regulator/government origin; issuer unmapped",
+                  "issuer_identifiers": [],
+                  "content_hash": "8b2e2c7f218b28e801fd9e92364ae4546edf8d73e96277b0013452387395ecc7",
+                  "news_id": "primary:2736d22c21439779dbd69e8a63ce7c202abb07feb7247d6aa57ffdeefaf975c7",
+                  "terms": {
+                    "url": "https://www.sebi.gov.in/website-policy.html",
+                    "retention": "feed identification metadata and links only; no article bodies",
+                    "restriction": "prior permission required for reproduction of material"
+                  },
+                  "retention": "feed_metadata_only",
+                  "source_owner": "sebi_rss",
+                  "raw_provider_entry_id": null,
+                  "resolved_entry_id": "https://www.sebi.gov.in/legal/circulars/oct-2026/extension-of-timeline-with-respect-to-compliance-of-digital-accessibility-circulars_105523.html",
+                  "source_key": "bca5c2107ea79606ce3353de722e2a07cc474fd58b6bf8f75f3776d52ba65bb5",
+                  "source_identity_basis": "canonical_url_fallback",
+                  "provider_content_hash": "329e28b2d6836c524f3b23133c02ae226128bd96c2cf4efeec3e2eac221354b7",
+                  "duplicate_group": "9a410e73ac55bcd3a3b6b9b678acc205918172f4aa2674e469ddb909c944fb85",
+                  "version_id": "246b70f3231abd456e91fce2dce56baeb4ddd9d2aef983f81b4b287db6692244",
+                  "version_first_seen_at": "2026-11-01T20:09:32.823206+00:00",
+                  "first_seen_at": "2026-11-01T20:09:32.823206+00:00",
+                  "fetched_at": "2026-11-01T20:09:32.823206+00:00",
+                  "fetched_at_basis": "version_transition_observation",
+                  "supersedes_version_id": null,
+                  "requested_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                  "availability": "observed_by_cutoff",
+                  "units": null,
+                  "currency": null,
+                  "period": null,
+                  "graph_link": {
+                    "node_id": "news:primary:2736d22c21439779dbd69e8a63ce7c202abb07feb7247d6aa57ffdeefaf975c7",
+                    "scope": "current projection only; source snapshot authoritative"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "seq": 24,
+          "at": "2026-11-01T20:20:54.565961+00:00",
+          "sender": "analyst",
+          "kind": "question",
+          "text": "The SEBI feed contains an entry titled \"Extension of timeline with respect to compliance of Digital Accessibility Circulars.\" Does this entry constitute the circular itself, or merely an announcement about a timeline extension?",
+          "claims": [
+            {
+              "claim_id": "claim:e2fc2beb4df5d1df",
+              "evidence_id": "ev:93c5249619ad93795882ec91",
+              "evidence_refs": [
+                {
+                  "evidence_id": "ev:93c5249619ad93795882ec91",
+                  "quote_id": "q:681fc3b9f954"
+                }
+              ],
+              "source_metadata": {
+                "published_at": null,
+                "event_at": null,
+                "fetched_at": "2026-11-01T20:20:50.876728+00:00",
+                "decision_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                "delay": null,
+                "source_type": "regulator",
+                "source_snapshot": {
+                  "provider": "sebi_rss",
+                  "source_id": "https://www.sebi.gov.in/legal/circulars/oct-2026/extension-of-timeline-with-respect-to-compliance-of-digital-accessibility-circulars_105523.html",
+                  "provider_entry_id": null,
+                  "source_type": "regulator",
+                  "canonical_url": "https://www.sebi.gov.in/legal/circulars/oct-2026/extension-of-timeline-with-respect-to-compliance-of-digital-accessibility-circulars_105523.html",
+                  "published_raw": "30 Oct, 2026 +0530",
+                  "published_at_utc": null,
+                  "published_date": "2026-10-30",
+                  "timezone_basis": "source offset +0530",
+                  "publication_precision": "date",
+                  "event_at": null,
+                  "identity_basis": "provider regulator/government origin; issuer unmapped",
+                  "issuer_identifiers": [],
+                  "content_hash": "8b2e2c7f218b28e801fd9e92364ae4546edf8d73e96277b0013452387395ecc7",
+                  "news_id": "primary:2736d22c21439779dbd69e8a63ce7c202abb07feb7247d6aa57ffdeefaf975c7",
+                  "terms": {
+                    "url": "https://www.sebi.gov.in/website-policy.html",
+                    "retention": "feed identification metadata and links only; no article bodies",
+                    "restriction": "prior permission required for reproduction of material"
+                  },
+                  "retention": "feed_metadata_only",
+                  "source_owner": "sebi_rss",
+                  "raw_provider_entry_id": null,
+                  "resolved_entry_id": "https://www.sebi.gov.in/legal/circulars/oct-2026/extension-of-timeline-with-respect-to-compliance-of-digital-accessibility-circulars_105523.html",
+                  "source_key": "bca5c2107ea79606ce3353de722e2a07cc474fd58b6bf8f75f3776d52ba65bb5",
+                  "source_identity_basis": "canonical_url_fallback",
+                  "provider_content_hash": "329e28b2d6836c524f3b23133c02ae226128bd96c2cf4efeec3e2eac221354b7",
+                  "duplicate_group": "9a410e73ac55bcd3a3b6b9b678acc205918172f4aa2674e469ddb909c944fb85",
+                  "version_id": "246b70f3231abd456e91fce2dce56baeb4ddd9d2aef983f81b4b287db6692244",
+                  "version_first_seen_at": "2026-11-01T20:09:32.823206+00:00",
+                  "first_seen_at": "2026-11-01T20:09:32.823206+00:00",
+                  "fetched_at": "2026-11-01T20:09:32.823206+00:00",
+                  "fetched_at_basis": "version_transition_observation",
+                  "supersedes_version_id": null,
+                  "requested_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                  "availability": "observed_by_cutoff",
+                  "units": null,
+                  "currency": null,
+                  "period": null,
+                  "graph_link": {
+                    "node_id": "news:primary:2736d22c21439779dbd69e8a63ce7c202abb07feb7247d6aa57ffdeefaf975c7",
+                    "scope": "current projection only; source snapshot authoritative"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "seq": 32,
+          "at": "2026-11-01T20:20:57.601488+00:00",
+          "sender": "analyst",
+          "kind": "question",
+          "text": "The feed only provides a title: \"Extension of timeline with respect to compliance of Digital Accessibility Circulars.\" Since the metadata states \"no article bodies,\" I cannot confirm the specific extension terms, deadlines, or scope of the circular. Can you suggest a way to retrieve the full text of this circular?",
+          "claims": [
+            {
+              "claim_id": "claim:e66dc996d3252e29",
+              "evidence_id": "ev:93c5249619ad93795882ec91",
+              "evidence_refs": [
+                {
+                  "evidence_id": "ev:93c5249619ad93795882ec91",
+                  "quote_id": "q:681fc3b9f954"
+                }
+              ],
+              "source_metadata": {
+                "published_at": null,
+                "event_at": null,
+                "fetched_at": "2026-11-01T20:20:50.876728+00:00",
+                "decision_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                "delay": null,
+                "source_type": "regulator",
+                "source_snapshot": {
+                  "provider": "sebi_rss",
+                  "source_id": "https://www.sebi.gov.in/legal/circulars/oct-2026/extension-of-timeline-with-respect-to-compliance-of-digital-accessibility-circulars_105523.html",
+                  "provider_entry_id": null,
+                  "source_type": "regulator",
+                  "canonical_url": "https://www.sebi.gov.in/legal/circulars/oct-2026/extension-of-timeline-with-respect-to-compliance-of-digital-accessibility-circulars_105523.html",
+                  "published_raw": "30 Oct, 2026 +0530",
+                  "published_at_utc": null,
+                  "published_date": "2026-10-30",
+                  "timezone_basis": "source offset +0530",
+                  "publication_precision": "date",
+                  "event_at": null,
+                  "identity_basis": "provider regulator/government origin; issuer unmapped",
+                  "issuer_identifiers": [],
+                  "content_hash": "8b2e2c7f218b28e801fd9e92364ae4546edf8d73e96277b0013452387395ecc7",
+                  "news_id": "primary:2736d22c21439779dbd69e8a63ce7c202abb07feb7247d6aa57ffdeefaf975c7",
+                  "terms": {
+                    "url": "https://www.sebi.gov.in/website-policy.html",
+                    "retention": "feed identification metadata and links only; no article bodies",
+                    "restriction": "prior permission required for reproduction of material"
+                  },
+                  "retention": "feed_metadata_only",
+                  "source_owner": "sebi_rss",
+                  "raw_provider_entry_id": null,
+                  "resolved_entry_id": "https://www.sebi.gov.in/legal/circulars/oct-2026/extension-of-timeline-with-respect-to-compliance-of-digital-accessibility-circulars_105523.html",
+                  "source_key": "bca5c2107ea79606ce3353de722e2a07cc474fd58b6bf8f75f3776d52ba65bb5",
+                  "source_identity_basis": "canonical_url_fallback",
+                  "provider_content_hash": "329e28b2d6836c524f3b23133c02ae226128bd96c2cf4efeec3e2eac221354b7",
+                  "duplicate_group": "9a410e73ac55bcd3a3b6b9b678acc205918172f4aa2674e469ddb909c944fb85",
+                  "version_id": "246b70f3231abd456e91fce2dce56baeb4ddd9d2aef983f81b4b287db6692244",
+                  "version_first_seen_at": "2026-11-01T20:09:32.823206+00:00",
+                  "first_seen_at": "2026-11-01T20:09:32.823206+00:00",
+                  "fetched_at": "2026-11-01T20:09:32.823206+00:00",
+                  "fetched_at_basis": "version_transition_observation",
+                  "supersedes_version_id": null,
+                  "requested_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                  "availability": "observed_by_cutoff",
+                  "units": null,
+                  "currency": null,
+                  "period": null,
+                  "graph_link": {
+                    "node_id": "news:primary:2736d22c21439779dbd69e8a63ce7c202abb07feb7247d6aa57ffdeefaf975c7",
+                    "scope": "current projection only; source snapshot authoritative"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "seq": 57,
+          "at": "2026-11-01T20:21:10.416536+00:00",
+          "sender": "skeptic",
+          "kind": "abstention",
+          "text": "The feed entry is titled \"Extension of timeline with respect to compliance of Digital Accessibility Circulars,\" but the feed metadata explicitly states \"no article bodies.\" The browser read returned empty text. We cannot confirm the circular's terms, deadlines, or scope. The feed only provides a title and link; the circular content itself is unavailable in the saved feed.",
+          "claims": [
+            {
+              "claim_id": "claim:26e0b1ac578e3727",
+              "evidence_id": null,
+              "evidence_refs": [],
+              "source_metadata": null
+            }
+          ]
+        },
+        {
+          "seq": 70,
+          "at": "2026-11-01T20:21:13.542174+00:00",
+          "sender": "analyst",
+          "kind": "question",
+          "text": "The browser read attempt failed, stating it needs to discover and load the agent-browser first. Given the metadata indicates \"no article bodies,\" is there any other way to access the content of the circular, or should we conclude the content is unavailable through the current feed?",
+          "claims": [
+            {
+              "claim_id": "claim:a26b7ff82942a1a3",
+              "evidence_id": "ev:93c5249619ad93795882ec91",
+              "evidence_refs": [
+                {
+                  "evidence_id": "ev:93c5249619ad93795882ec91",
+                  "quote_id": "q:681fc3b9f954"
+                }
+              ],
+              "source_metadata": {
+                "published_at": null,
+                "event_at": null,
+                "fetched_at": "2026-11-01T20:20:50.876728+00:00",
+                "decision_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                "delay": null,
+                "source_type": "regulator",
+                "source_snapshot": {
+                  "provider": "sebi_rss",
+                  "source_id": "https://www.sebi.gov.in/legal/circulars/oct-2026/extension-of-timeline-with-respect-to-compliance-of-digital-accessibility-circulars_105523.html",
+                  "provider_entry_id": null,
+                  "source_type": "regulator",
+                  "canonical_url": "https://www.sebi.gov.in/legal/circulars/oct-2026/extension-of-timeline-with-respect-to-compliance-of-digital-accessibility-circulars_105523.html",
+                  "published_raw": "30 Oct, 2026 +0530",
+                  "published_at_utc": null,
+                  "published_date": "2026-10-30",
+                  "timezone_basis": "source offset +0530",
+                  "publication_precision": "date",
+                  "event_at": null,
+                  "identity_basis": "provider regulator/government origin; issuer unmapped",
+                  "issuer_identifiers": [],
+                  "content_hash": "8b2e2c7f218b28e801fd9e92364ae4546edf8d73e96277b0013452387395ecc7",
+                  "news_id": "primary:2736d22c21439779dbd69e8a63ce7c202abb07feb7247d6aa57ffdeefaf975c7",
+                  "terms": {
+                    "url": "https://www.sebi.gov.in/website-policy.html",
+                    "retention": "feed identification metadata and links only; no article bodies",
+                    "restriction": "prior permission required for reproduction of material"
+                  },
+                  "retention": "feed_metadata_only",
+                  "source_owner": "sebi_rss",
+                  "raw_provider_entry_id": null,
+                  "resolved_entry_id": "https://www.sebi.gov.in/legal/circulars/oct-2026/extension-of-timeline-with-respect-to-compliance-of-digital-accessibility-circulars_105523.html",
+                  "source_key": "bca5c2107ea79606ce3353de722e2a07cc474fd58b6bf8f75f3776d52ba65bb5",
+                  "source_identity_basis": "canonical_url_fallback",
+                  "provider_content_hash": "329e28b2d6836c524f3b23133c02ae226128bd96c2cf4efeec3e2eac221354b7",
+                  "duplicate_group": "9a410e73ac55bcd3a3b6b9b678acc205918172f4aa2674e469ddb909c944fb85",
+                  "version_id": "246b70f3231abd456e91fce2dce56baeb4ddd9d2aef983f81b4b287db6692244",
+                  "version_first_seen_at": "2026-11-01T20:09:32.823206+00:00",
+                  "first_seen_at": "2026-11-01T20:09:32.823206+00:00",
+                  "fetched_at": "2026-11-01T20:09:32.823206+00:00",
+                  "fetched_at_basis": "version_transition_observation",
+                  "supersedes_version_id": null,
+                  "requested_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                  "availability": "observed_by_cutoff",
+                  "units": null,
+                  "currency": null,
+                  "period": null,
+                  "graph_link": {
+                    "node_id": "news:primary:2736d22c21439779dbd69e8a63ce7c202abb07feb7247d6aa57ffdeefaf975c7",
+                    "scope": "current projection only; source snapshot authoritative"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "seq": 79,
+          "at": "2026-11-01T20:21:19.791701+00:00",
+          "sender": "skeptic",
+          "kind": "abstention",
+          "text": "The feed metadata explicitly states \"no article bodies\" and \"feed identification metadata and links only.\" The browser read returned empty text. The circular content is not available in the saved feed. We can only confirm the title and publication date, not the extension terms, deadlines, or scope.",
+          "claims": [
+            {
+              "claim_id": "claim:da208d3537923193",
+              "evidence_id": null,
+              "evidence_refs": [],
+              "source_metadata": null
+            }
+          ]
+        },
+        {
+          "seq": 88,
+          "at": "2026-11-01T20:21:22.007659+00:00",
+          "sender": "analyst",
+          "kind": "question",
+          "text": "Given the evidence, the saved SEBI feed only identifies the existence of a circular titled \"Extension of timeline with respect to compliance of Digital Accessibility Circulars\" (published 2026-10-30). Since the content is unavailable, what specific information about the extension remains unknown?",
+          "claims": [
+            {
+              "claim_id": "claim:f635d07f66a884fe",
+              "evidence_id": "ev:93c5249619ad93795882ec91",
+              "evidence_refs": [
+                {
+                  "evidence_id": "ev:93c5249619ad93795882ec91",
+                  "quote_id": "q:681fc3b9f954"
+                }
+              ],
+              "source_metadata": {
+                "published_at": null,
+                "event_at": null,
+                "fetched_at": "2026-11-01T20:20:50.876728+00:00",
+                "decision_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                "delay": null,
+                "source_type": "regulator",
+                "source_snapshot": {
+                  "provider": "sebi_rss",
+                  "source_id": "https://www.sebi.gov.in/legal/circulars/oct-2026/extension-of-timeline-with-respect-to-compliance-of-digital-accessibility-circulars_105523.html",
+                  "provider_entry_id": null,
+                  "source_type": "regulator",
+                  "canonical_url": "https://www.sebi.gov.in/legal/circulars/oct-2026/extension-of-timeline-with-respect-to-compliance-of-digital-accessibility-circulars_105523.html",
+                  "published_raw": "30 Oct, 2026 +0530",
+                  "published_at_utc": null,
+                  "published_date": "2026-10-30",
+                  "timezone_basis": "source offset +0530",
+                  "publication_precision": "date",
+                  "event_at": null,
+                  "identity_basis": "provider regulator/government origin; issuer unmapped",
+                  "issuer_identifiers": [],
+                  "content_hash": "8b2e2c7f218b28e801fd9e92364ae4546edf8d73e96277b0013452387395ecc7",
+                  "news_id": "primary:2736d22c21439779dbd69e8a63ce7c202abb07feb7247d6aa57ffdeefaf975c7",
+                  "terms": {
+                    "url": "https://www.sebi.gov.in/website-policy.html",
+                    "retention": "feed identification metadata and links only; no article bodies",
+                    "restriction": "prior permission required for reproduction of material"
+                  },
+                  "retention": "feed_metadata_only",
+                  "source_owner": "sebi_rss",
+                  "raw_provider_entry_id": null,
+                  "resolved_entry_id": "https://www.sebi.gov.in/legal/circulars/oct-2026/extension-of-timeline-with-respect-to-compliance-of-digital-accessibility-circulars_105523.html",
+                  "source_key": "bca5c2107ea79606ce3353de722e2a07cc474fd58b6bf8f75f3776d52ba65bb5",
+                  "source_identity_basis": "canonical_url_fallback",
+                  "provider_content_hash": "329e28b2d6836c524f3b23133c02ae226128bd96c2cf4efeec3e2eac221354b7",
+                  "duplicate_group": "9a410e73ac55bcd3a3b6b9b678acc205918172f4aa2674e469ddb909c944fb85",
+                  "version_id": "246b70f3231abd456e91fce2dce56baeb4ddd9d2aef983f81b4b287db6692244",
+                  "version_first_seen_at": "2026-11-01T20:09:32.823206+00:00",
+                  "first_seen_at": "2026-11-01T20:09:32.823206+00:00",
+                  "fetched_at": "2026-11-01T20:09:32.823206+00:00",
+                  "fetched_at_basis": "version_transition_observation",
+                  "supersedes_version_id": null,
+                  "requested_cutoff": "2026-11-01T20:10:35.748399+00:00",
+                  "availability": "observed_by_cutoff",
+                  "units": null,
+                  "currency": null,
+                  "period": null,
+                  "graph_link": {
+                    "node_id": "news:primary:2736d22c21439779dbd69e8a63ce7c202abb07feb7247d6aa57ffdeefaf975c7",
+                    "scope": "current projection only; source snapshot authoritative"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "seq": 97,
+          "at": "2026-11-01T20:21:24.895136+00:00",
+          "sender": "skeptic",
+          "kind": "abstention",
+          "text": "The saved SEBI feed identifies only the circular's title (\"Extension of timeline with respect to compliance of Digital Accessibility Circulars\") and publication date (30 Oct 2026). The feed metadata explicitly states \"no article bodies.\" The circular's specific extension terms, new deadlines, scope of affected entities, or compliance requirements remain unknown and are not available in the feed.",
+          "claims": [
+            {
+              "claim_id": "claim:377351574b69afdf",
+              "evidence_id": null,
+              "evidence_refs": [],
+              "source_metadata": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

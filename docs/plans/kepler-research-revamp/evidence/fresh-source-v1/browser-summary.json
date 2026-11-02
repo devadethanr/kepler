@@ -1,0 +1,124 @@
+{
+  "scope": "fresh isolated headless Chrome; actual localhost and LAN Research Desk; no model calls",
+  "earlier_capture_limit": "Earlier /tmp browser artifacts were lost after reboot; these are newly captured.",
+  "images": [
+    {
+      "path": "/home/devadethanr/.local/state/kepler-rooms/fresh-source-20261101T195640Z/browser/192.168.1.33-5da01789.png",
+      "sha256": "43c1d1bed0616280ebcd3a9adab38502e3ddaea9741df48b73f3426acbeb7160"
+    },
+    {
+      "path": "/home/devadethanr/.local/state/kepler-rooms/fresh-source-20261101T195640Z/browser/192.168.1.33-bb6cd4ff.png",
+      "sha256": "7bb6aee82eb0fc0416eedc11314f926a7e9de88b2b33a6207be41441fe3c16ff"
+    },
+    {
+      "path": "/home/devadethanr/.local/state/kepler-rooms/fresh-source-20261101T195640Z/browser/192.168.1.33-cdc6d1c2.png",
+      "sha256": "a2f413719305e5c2ee87cfafceb3dd70c9b3ce13c5a5d70373173a48cc75e269"
+    },
+    {
+      "path": "/home/devadethanr/.local/state/kepler-rooms/fresh-source-20261101T195640Z/browser/localhost-5da01789.png",
+      "sha256": "43c1d1bed0616280ebcd3a9adab38502e3ddaea9741df48b73f3426acbeb7160"
+    },
+    {
+      "path": "/home/devadethanr/.local/state/kepler-rooms/fresh-source-20261101T195640Z/browser/localhost-bb6cd4ff.png",
+      "sha256": "7bb6aee82eb0fc0416eedc11314f926a7e9de88b2b33a6207be41441fe3c16ff"
+    },
+    {
+      "path": "/home/devadethanr/.local/state/kepler-rooms/fresh-source-20261101T195640Z/browser/localhost-cdc6d1c2.png",
+      "sha256": "3b1696a6585ee202b12c08a9807296bc7322648e26cf7db687f68526dd44d21a"
+    }
+  ],
+  "event_history_before": {
+    "room:5da01789-6195-56a4-aee8-88cfef811f6f": {
+      "event_count": 109,
+      "cursor": 109,
+      "sha256": "0bd23692c5f6414969e6089ee26c1fdbac36192f21a1764c332e6da533953a15"
+    },
+    "room:cdc6d1c2-d538-5996-8438-5c45e38c7643": {
+      "event_count": 88,
+      "cursor": 88,
+      "sha256": "79803439199518503b3560a545d589e2d05290d22fe2623ea0696e1eda7dd331"
+    },
+    "room:bb6cd4ff-1a4e-5711-802e-5b30b79efdf1": {
+      "event_count": 75,
+      "cursor": 75,
+      "sha256": "c61bde8af9d4187ce619eb6caf663f392bd55a28c26c051bd33f925138e706fe"
+    }
+  },
+  "event_history_after": {
+    "room:5da01789-6195-56a4-aee8-88cfef811f6f": {
+      "event_count": 109,
+      "cursor": 109,
+      "sha256": "0bd23692c5f6414969e6089ee26c1fdbac36192f21a1764c332e6da533953a15",
+      "matches_before": true
+    },
+    "room:cdc6d1c2-d538-5996-8438-5c45e38c7643": {
+      "event_count": 88,
+      "cursor": 88,
+      "sha256": "79803439199518503b3560a545d589e2d05290d22fe2623ea0696e1eda7dd331",
+      "matches_before": true
+    },
+    "room:bb6cd4ff-1a4e-5711-802e-5b30b79efdf1": {
+      "event_count": 75,
+      "cursor": 75,
+      "sha256": "c61bde8af9d4187ce619eb6caf663f392bd55a28c26c051bd33f925138e706fe",
+      "matches_before": true
+    }
+  },
+  "reload_manual_reopen": [
+    {
+      "stem": "192.168.1.33-5da01789",
+      "reopened": true,
+      "discussion": true,
+      "room": true,
+      "errors": [
+        404
+      ]
+    },
+    {
+      "stem": "192.168.1.33-bb6cd4ff",
+      "reopened": true,
+      "discussion": true,
+      "room": true,
+      "errors": [
+        404
+      ]
+    },
+    {
+      "stem": "192.168.1.33-cdc6d1c2",
+      "reopened": true,
+      "discussion": true,
+      "room": true,
+      "errors": [
+        404
+      ]
+    },
+    {
+      "stem": "localhost-5da01789",
+      "reopened": true,
+      "discussion": true,
+      "room": true,
+      "errors": [
+        404
+      ]
+    },
+    {
+      "stem": "localhost-bb6cd4ff",
+      "reopened": true,
+      "discussion": true,
+      "room": true,
+      "errors": [
+        404
+      ]
+    },
+    {
+      "stem": "localhost-cdc6d1c2",
+      "reopened": true,
+      "discussion": true,
+      "room": true,
+      "errors": [
+        404
+      ]
+    }
+  ],
+  "ui_observations": "Expanded cards show exact title quotes, source revisions, publication raw/precision/zone, first-seen and fetch UTC and IST, availability and issuer basis. Source coverage notes company disclosure unavailable; snapshot coverage itself reads unknown alongside retrieval completeness. Favicon 404 only."
+}

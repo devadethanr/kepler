@@ -1,0 +1,51 @@
+{
+  "final_code_hashes": {
+    "swingtradev3/research_room/grounding.py": "71ec87323bf32b9958b3ef1adcf34be55e9e1ca84eed2cebf340fa99100daa4e",
+    "swingtradev3/research_room/host_api.py": "e165c6a1623754116667ffc302404bfc56a55af1d343205f7dfdfcf14e86d507",
+    "swingtradev3/research_room/paired_experiment.py": "36eef6b8a3bce645ce2d1b78769a48751c74c35c80cc87b7d7346b807d5f6ab4",
+    "swingtradev3/research_room/tools.py": "cd98c968a820072bdd50c1432a2b847ce7e0eda4245ff3eb4b96b5127bc2d33e",
+    "swingtradev3/research_room/prompt_candidates.py": "8163ecf7e12636279c246408541c63ec90fbd13a2befe16c0064ba1d4748a1c5",
+    "swingtradev3/research_room/iteration_inputs.py": "0da4c7863dfb4d3582eb4aa5da4d97746ccde5d2629ecb87472359030bc52b40",
+    "swingtradev3/research_room/worker.py": "a064f88634d164c241148c52dd2d16a2d5d34c540312305155dd856bf3adf965",
+    "swingtradev3/research_room/models.py": "5e1f59a8294ba6d0df47035f4854e45de2007e02ed280140fe6d67e7e68f851f",
+    "swingtradev3/research_room/export_grounding.py": "7a1ca190d7d7e42bea61a36fea8fbe24de17fdb83752f014f390b285db41c110",
+    "swingtradev3/research_room/news_evidence.py": "f6b55143ccb6602290b821f232fcfefbe4752b00d7b4f733c7487a92e4d7e660",
+    "swingtradev3/research_room/prompt_experiment.py": "1d9e768a9535dd5c1bfafa5b307163a43dde7f577d292459c4df99266469dcd2",
+    "swingtradev3/research_room/store.py": "9c604d81e45c3f203eebc8a2085efc124e3dee9bc878ea880d6346c5e01b95fd",
+    "swingtradev3/research_room/adapter.py": "eaaf397e3ae5a0945d64bc332fcf6b30affa63f07faca17ab8fb2255029e04ae",
+    "swingtradev3/research_room/__init__.py": "cb5b688e9469b2150358268a6b68e7c0f436356ef3b34970992c1988c6de85f4",
+    "swingtradev3/research_room/settings.py": "1c047f19da54c7228b16ee394ac934e07835b48fdd8622d676e87eaaf00175e6",
+    "swingtradev3/research_room/source_eval.py": "c19551998b0c3af734088d10820f3d2f6b96e3d08ddc5c067a5cbfc13dc03527",
+    "swingtradev3/research_room/contract_eval.py": "fbef793c2ad2c32ddde94fbdc71dfffd2b55a29a4c1b651a0fbd88693524313a",
+    "swingtradev3/research_room/grounding_check.py": "99a8abbe44b5108a9d966b4dc9a833c36d67e370f11bc2a2a5e81549f2e4bac7",
+    "swingtradev3/research_room/browser.py": "63ed099fb18338ccc6bfe62f42e209445ecaa9f9d51b895303827b78df984b19",
+    "swingtradev3/research_room/server.py": "860f28656f10670c0f19555865edc057d3a9f67a7a717d7b8b9f6cfcc37b8d44",
+    "swingtradev3/research_room/iteration_scoring.py": "bbe11f80b9c82f67bd5771f05df3d9119b1d1fc51f3fade0ce3815d29bc4c05a",
+    "swingtradev3/research_room/codex.py": "390a0b98e8cea8ff140a016843aa3f73edceea62fd9f3cee1f69a46eeba675b2",
+    "swingtradev3/research_room/admission_errors.py": "8d51183c58aecb6eaddace320498f547cff22caa6789ccf950e607e8346a43b9",
+    "swingtradev3/memory/news_snapshot.py": "5f6dd86466152da79096c561e5b64f2b930bf35cbe1282246c2f2259d9156059"
+  },
+  "final_tool_schema_sha256": "b3222457f045c39d630fa07e9348b462180adcc875de0bb21d79e9c54fe9b2a8",
+  "note": "Paired-generation exact source snapshots are separately frozen; marked admission failure and linked-revision authorization were completed afterward without further model admissions. INSTRUCTIONS remain unchanged.",
+  "profiles": {
+    "analyst": {
+      "model": "gemma-e4b-followup",
+      "gguf_sha256": "676c35070db6dbe52f93e9c864ee0fba4eddea94b9c875d9cb10daff453fbaee",
+      "endpoint": "http://127.0.0.1:19181/v1",
+      "gpu_uuid": "GPU-fe6b9da0-31a7-e026-0b40-8957cb0d5b4c"
+    },
+    "skeptic": {
+      "model": "qwen35-9b-followup",
+      "gguf_sha256": "dc2a39aef291f91a9116ad214058da0d86eb648743a124bd8c333787c4b9c91c",
+      "endpoint": "http://127.0.0.1:19182/v1",
+      "gpu_uuid": "GPU-afdd0316-820f-339d-78c2-d173b72e5457"
+    }
+  },
+  "effective_serving": {
+    "context_tokens": 32768,
+    "output_tokens": 512,
+    "temperature": 0,
+    "policy_promoted": false
+  },
+  "source_commit": "0ba305aff0e6c2fc0ee7acc56d3400f4b84580f6"
+}

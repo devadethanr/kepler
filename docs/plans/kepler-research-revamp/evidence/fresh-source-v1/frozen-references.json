@@ -1,0 +1,84 @@
+{
+  "schema": "real-source-paired-v1",
+  "status": "proposed for independent review; freeze after review",
+  "source_export_sha256": "061c0522e0cea46f79f5d26b0583c5ddb435b9d2545e1e293c0cb868af2e3113",
+  "cutoff": "2026-11-01T20:10:35.748399+00:00",
+  "window": {
+    "start": "2026-10-01T00:00:00+00:00",
+    "end": "2026-11-01T20:10:35.748399+00:00"
+  },
+  "scope": "real saved primary-source records; titles/links only for RSS; no company disclosure coverage",
+  "arms": {
+    "baseline": "same active policy and frozen task/cutoff, ordinary existing tools, no saved-source operations",
+    "source": "same active policy and frozen task/cutoff plus read-only saved-source tools; only listed version IDs permitted"
+  },
+  "limits": {
+    "paired_questions": 3,
+    "rooms_per_question": 2,
+    "model_admissions_per_room": 16,
+    "tool_admissions_per_room": 16,
+    "paired_total_max_model": 96,
+    "paired_total_max_tool": 96,
+    "development_rooms": 2,
+    "development_max_each_model": 12,
+    "development_max_each_tool": 12,
+    "overall_max_each": 120
+  },
+  "case_count": 3,
+  "references": [
+    {
+      "provider": "sebi_rss",
+      "source_id": "https://www.sebi.gov.in/legal/circulars/oct-2026/extension-of-timeline-with-respect-to-compliance-of-digital-accessibility-circulars_105523.html",
+      "canonical_url": "https://www.sebi.gov.in/legal/circulars/oct-2026/extension-of-timeline-with-respect-to-compliance-of-digital-accessibility-circulars_105523.html",
+      "title": "Extension of timeline with respect to compliance of Digital Accessibility Circulars",
+      "published_raw": "30 Oct, 2026 +0530",
+      "published_date": "2026-10-30",
+      "published_at_utc": null,
+      "publication_precision": "date",
+      "timezone_basis": "source offset +0530",
+      "first_seen_at": "2026-11-01T20:09:32.823206+00:00",
+      "fetched_at": "2026-11-01T20:09:32.823206+00:00",
+      "identity_basis": "provider regulator/government origin; issuer unmapped",
+      "issuer_identifiers": [],
+      "retention": "feed_metadata_only",
+      "content_hash": "8b2e2c7f218b28e801fd9e92364ae4546edf8d73e96277b0013452387395ecc7",
+      "version_id": "246b70f3231abd456e91fce2dce56baeb4ddd9d2aef983f81b4b287db6692244"
+    },
+    {
+      "provider": "rbi_press_releases_rss",
+      "source_id": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+      "canonical_url": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=63895",
+      "title": "Auction of 91-Day, 182-Day and 364-Day Treasury Bills",
+      "published_raw": "Fri, 30 Oct 2026 17:40:00",
+      "published_date": null,
+      "published_at_utc": null,
+      "publication_precision": "unknown",
+      "timezone_basis": null,
+      "first_seen_at": "2026-11-01T20:09:34.211652+00:00",
+      "fetched_at": "2026-11-01T20:09:34.211652+00:00",
+      "identity_basis": "provider regulator/government origin; issuer unmapped",
+      "issuer_identifiers": [],
+      "retention": "feed_metadata_only",
+      "content_hash": "e194ad414ccefb6a20d85d3d583decbcc8defc842728839bbd5a2fffc3681a89",
+      "version_id": "5d72530283a996181d01c0672cf132f4dc512f03c54f7245dd0644c4634a0ba9"
+    },
+    {
+      "provider": "pib_rss",
+      "source_id": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+      "canonical_url": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+      "title": "Coal India Marks 51 Glorious Years with Record-Breaking Performance in October 2026",
+      "published_raw": null,
+      "published_date": null,
+      "published_at_utc": null,
+      "publication_precision": "unknown",
+      "timezone_basis": null,
+      "first_seen_at": "2026-11-01T20:09:33.607855+00:00",
+      "fetched_at": "2026-11-01T20:09:33.607855+00:00",
+      "identity_basis": "provider regulator/government origin; issuer unmapped",
+      "issuer_identifiers": [],
+      "retention": "feed_metadata_only",
+      "content_hash": "87e0446a7f45f0f7ecd6ed9cd1fc194262828dfe8eef2cc1d37a0802ad2d29f3",
+      "version_id": "fb8f2ce8f57a5d7f4b5d4653edba0ff1e133627611e65f806d16d950e5b56551"
+    }
+  ]
+}

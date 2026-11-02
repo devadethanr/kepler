@@ -1,0 +1,6 @@
+{
+  "source_probe_report": "Private run source-probes/report.md",
+  "known_command_response_lower_bound": 21,
+  "exact_total": "unknown; report may be incomplete",
+  "raw_probe_files": "kept private"
+}

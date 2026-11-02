@@ -12,6 +12,7 @@ reports and frozen artifacts. The current branch is `feat-generic-broker`.
 | Recoverable local prompt evaluation | `7f6dc9f`; [prompt findings](PROMPT_TUNING_FINDINGS.md) | Seven development rounds, generic policy/contract variants, full/compact inputs and unchanged span-aware scoring. No values or per-case answers embedded in prompts. |
 | Prompt results, restart recovery and native checks | `eda07cb`; [all results](PROMPT_TUNING_RESULTS.md), [browser checks](REBOOT_BROWSER_CHECKS.md), [evidence manifest](evidence/prompt-iteration-v1/manifest.json) | Final confirmation 25/30 Gemma and 24/30 Qwen; 27/30 still failed. 1,232 isolated + 55 native requests. SQLite recovered admissions lost from the reboot-truncated JSONL. |
 | Final prompt filenames and this reference history | 2 November 2026, follow-up to `eda07cb` | Renamed retained prompt files without changing their text; preserved selectors, old hashes and frozen snapshots. No extra inference or runtime-policy promotion. |
+| Fresh primary-source evidence | Source `0ba305a`, starting `7037018`; [findings](FRESH_SOURCE_FINDINGS.md), [results](FRESH_SOURCE_RESULTS.md), [manifest](evidence/fresh-source-v1/manifest.json) | Controlled SEBI/RBI/PIB acquisition, immutable source history, read-only room tools, current-only graph references and Desk provenance. 93 model/88 tool admissions; useful titles recovered, narrative and terminal limitations retained. Actual LAN/localhost/reboot/API-restart checks; no prompt promotion or trading-authority change. |
 
 ## Retained prompt files
 

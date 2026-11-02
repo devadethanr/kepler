@@ -1,0 +1,97 @@
+{
+  "run_id": "fresh-source-20261101T195640Z",
+  "public_browser_fetch": {
+    "browser_tool_jobs": 3,
+    "job_count_by_tool": {
+      "browser_read": 3
+    },
+    "recorded_results_by_status": {
+      "denied": 2,
+      "empty": 1
+    },
+    "http_requests": "unknown; room tool events do not include provider HTTP counts",
+    "confirmed_pre_skill_public_fetch_denials": 2,
+    "tool_level_denials_requiring_agent_browser_discovery_or_load": 2,
+    "denial_interpretation": "Denied tool results are preserved as tool-level capability errors; they are not counted as HTTP requests. No per-job HTTP request trace is available.",
+    "bound": "At most four requested URLs total per eligible public-fetch job (range(4)); exact HTTP count uninstrumented. Two pre-skill denials performed zero fetch requests.",
+    "rooms": [
+      {
+        "room_key": "development-cancel",
+        "browser_jobs": [],
+        "tool_jobs": {}
+      },
+      {
+        "room_key": "development-source",
+        "browser_jobs": [],
+        "tool_jobs": {}
+      },
+      {
+        "room_key": "real-pib-company-coverage-ordinary",
+        "browser_jobs": [],
+        "tool_jobs": {}
+      },
+      {
+        "room_key": "real-pib-company-coverage-saved",
+        "browser_jobs": [],
+        "tool_jobs": {}
+      },
+      {
+        "room_key": "real-rbi-treasury-bills-ordinary",
+        "browser_jobs": [],
+        "tool_jobs": {}
+      },
+      {
+        "room_key": "real-rbi-treasury-bills-saved",
+        "browser_jobs": [],
+        "tool_jobs": {}
+      },
+      {
+        "room_key": "real-sebi-digital-accessibility-ordinary",
+        "browser_jobs": [],
+        "tool_jobs": {}
+      },
+      {
+        "room_key": "real-sebi-digital-accessibility-saved",
+        "browser_jobs": [
+          {
+            "tool": "browser_read",
+            "status": "denied",
+            "error_class": "browser capability discovery/load requirement",
+            "http_status": null,
+            "request_count": 0
+          },
+          {
+            "tool": "browser_read",
+            "status": "empty",
+            "error_class": null,
+            "http_status": "unknown; tool result exposes no HTTP status",
+            "request_count": "unknown; at most4; a completed capture implies at least1 (inference, not an HTTP trace)"
+          },
+          {
+            "tool": "browser_read",
+            "status": "denied",
+            "error_class": "browser capability discovery/load requirement",
+            "http_status": null,
+            "request_count": 0
+          }
+        ],
+        "tool_jobs": {
+          "browser_read": 3
+        }
+      }
+    ]
+  },
+  "source_feed_ingestion": {
+    "known_feed_http_requests": 5,
+    "html_request_count": "unknown; bound 4",
+    "basis": "initial three feed requests plus repeat SEBI 304 and RBI request; ingestion records only"
+  },
+  "other_fetch_and_provider_accounting": {
+    "orphan_probe_report": "at least 21 known commands/responses; exact total may be incomplete; not HTTP count",
+    "killed_orchestrator": "outcome and usage unknown; up to 10 requests reserved as a bound",
+    "model_admissions": 93,
+    "model_provider_http_requests": "Exact forwarding count unverified; 93 admissions, including2 cancelled admissions withunknown usage. Admission is not an HTTP receipt.",
+    "source_http_totals": "not established; do not calculate an exact aggregate"
+  },
+  "scope_note": "Counts public-fetch attempts separately from room tool admissions, feed ingestion HTTP requests, and model admissions."
+}

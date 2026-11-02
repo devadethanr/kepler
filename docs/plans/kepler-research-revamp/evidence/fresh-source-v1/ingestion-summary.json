@@ -1,0 +1,235 @@
+{
+  "ingestion.json": [
+    {
+      "provider": "sebi_rss",
+      "status": "ok",
+      "entries_seen": 30,
+      "entries_skipped": 0,
+      "entry_count": 30,
+      "coverage": "current feed window only; pagination and historical completeness unknown",
+      "http_status": 200,
+      "http_requests": 1,
+      "request_bound": 1,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200
+        }
+      ],
+      "final_url": "https://www.sebi.gov.in/sebirss.xml",
+      "run_id": "fresh-source-20261101T195640Z",
+      "source_type": "regulator",
+      "terms": {
+        "url": "https://www.sebi.gov.in/website-policy.html",
+        "retention": "feed identification metadata and links only; no article bodies",
+        "restriction": "prior permission required for reproduction of material"
+      },
+      "fetched_at": "2026-11-01T20:09:32.823206+00:00",
+      "version_ids": [
+        "7eded3e303088cb81efdca3d68c8881a97288f2a15a95be72fae879835b3781b",
+        "246b70f3231abd456e91fce2dce56baeb4ddd9d2aef983f81b4b287db6692244",
+        "f1cb247edd826fa2dfd05f8d348243ded5d0157cb8fd87d1a66b1ae9e07512df",
+        "4009638c2eb7305995f282a28d41c80ed5e2927c90608316d33f398345097af3",
+        "35b74706a089aa02f57e3b43467734573cf4c8b3c04754e26da7e2b14c112b69",
+        "24e65257092b2e063f18c7867eec6c13ac2b6849e531925df8794e1cb4fe1d1f",
+        "98bc05cf8d0d36fe1e1f852be82022494d33ac5983eb5293788e47c0cf50d5fe",
+        "317f452f1a8c45111537cf1e4d00404193b334fec8fc003fe379410b5d75ae42",
+        "125e77aec2fbc630fb35a1c67700c639273fad1a09c309ed46fab292f7ad9379",
+        "17bd40beb4f5cc1dbd3a532327b3decd48429c99bf27aa77136652544398b672",
+        "7cfa47d68eedd4229fbf618ec4c992c664e666d25703955d89d91384fd91b0e6",
+        "7694f3077282d40aa060ee7253caf816d037bb5aa65dd52d5d9e827c5e103e5d",
+        "d3e76950892e41dfcf4db56687eb3df6e0b58feaccd8033dc35ae821226b956b",
+        "f281d4a413469c10948ffcea95443fb41212d320abf6981350cc9d0afa39c608",
+        "66654c52f51273b0f71e84d659e1c62795313bf3d040b6bcff1196294288c5ad",
+        "96e10eaf331c95885e47b83f27fdc65a26022927f1d2859580e392ef250c8aae",
+        "bd5f1876e7ab2b9ccfb725ac843a7e397cfcacc5ccca3f558cedc2643c3ff175",
+        "37de5eaa1f75a0e30d47137b2b2b53ad5fa2939ccb8d04c566369acac4941b98",
+        "02fd5b38085f827d4a8fd44f2c816da6e9a71d693a3079233936f76df4fdba1f",
+        "9924fa4a71ba921d6685e5556bdfb7b939aca733721539014c8919ffc9b3e3bc",
+        "51c758f50434157f2dc82156273058163b58d6e35ac19a7e0051d13f3997701e",
+        "2439844fc9ecad8ec9501cb68a09dd0ba5f3630a4c60e1bc511e113cc056484e",
+        "215575c038201ae99e35c962dd8d1f75f151d2d154909bfa3ae6b58f838b8cb8",
+        "4fc8e437df5cce86885c414356e32a6d4d63209062266991fe336df122c2d7a5",
+        "294e0351ed381ba2cdfef32e52b859a1efdd683ca68a22e0086a31dfd67dcefa",
+        "6cbfc6f75ca8fca8880113175eb9c99a3e9f995784892e32d1bd29b0acd48589",
+        "f5e0e6feeb7d46876d3dd6542cb0d878d9acbc2540f880c2251946b4cc9c3f54",
+        "7c0d1138f44fe6f971b545fad62907367aabf8d562f22c0c7e40a8796e9d05ef",
+        "082d0127d528afcb66df9c511672db530de358088fa84cbb5aae0511a95b105a",
+        "a5d6f1d429b316824bb5d17386769906d60315c1f1e604b951fe30ef76e1bf3c"
+      ],
+      "changed": 30
+    },
+    {
+      "provider": "pib_rss",
+      "status": "ok",
+      "entries_seen": 20,
+      "entries_skipped": 0,
+      "entry_count": 20,
+      "coverage": "current feed window only; pagination and historical completeness unknown",
+      "http_status": 200,
+      "http_requests": 1,
+      "request_bound": 1,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200
+        }
+      ],
+      "final_url": "https://www.pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=3&reg=48",
+      "run_id": "fresh-source-20261101T195640Z",
+      "source_type": "government_release",
+      "terms": {
+        "url": "https://www.pib.gov.in/content/102_2_Copyright-Policy.aspx?lang=1&reg=30",
+        "retention": "attributed feed metadata; reviewed first-party excerpt only on explicit request",
+        "restriction": "accurate reproduction with acknowledgement; third-party material excluded"
+      },
+      "fetched_at": "2026-11-01T20:09:33.607855+00:00",
+      "version_ids": [
+        "3ecb63e2246eacbf8d33a0d8902242eafcc31d2f327f6b5adb8ca5b7f2170cf2",
+        "546c21efe895a0977b215ba207b6f152322cad97d28a014fb78033af228e745e",
+        "8d8095153b056827019d5a4975a45486f45f811af7f427ea8877dcac5e0e4185",
+        "1c179a194c815818856dfbafcd90a8660f5fefc8e58b5d2a92b8eaaacc4ddbcf",
+        "3fb2340397f22416f9ad9e0ad1ae5b63c37424564bcba35ba8f79e00918ce6d3",
+        "47e9598fccf51ca3c8f598d111626cedffee809e44583c2a101ba88c448c7c22",
+        "9c2e236a4858ce719a5acef5c4535da5756048b5c76dae4b454af356ec21cb36",
+        "93ac941111bc171ac89f18e649bc44a23df4e057bf57816387fa98453f51eb99",
+        "1b24c934667497d3050194516ad30ebfffd703383f3375e8618d9b7f8c4d72bf",
+        "fb8f2ce8f57a5d7f4b5d4653edba0ff1e133627611e65f806d16d950e5b56551",
+        "729c6f2f633ce7fec3bd9db14b2312fd0796532c90c944c2f912f52de69b9222",
+        "bd84ab7f16aba0f9a500be61bb072a8234a8d81fac43e0c4bf1e50762397931a",
+        "f1649aa4b0a98c1548ccb84b6a063b9938ac9fb1f4a8f9d0c630c9680574e160",
+        "82f2750581ae7aff57d5797c7b2e6a5408f775cb4022f4594c77cc02eebbab16",
+        "66a084fdba5e9bc012b053fd710f39857b3185a95f712e7dc418dd7126b05fb3",
+        "7372410c25901765b6176a5d76ce3e921b0cedfda72a985724f363549e5e1902",
+        "cbf190adb4d704d4f8771ee9cc7631d1f97f53e2fc1e337947b290563b5afc73",
+        "e7d24c4fa3d23e88004f539345c80a8565d8877f30a06cb64f3e6e1f70c655ea",
+        "dc8aca3099c8492e21b552b844f6081f32b0cbf8197b871114d5943edb4526fe",
+        "e3dd73bdbd17c7b8332f78d6f01ee368f94b00b0efe36178ac90f135a10125a8"
+      ],
+      "changed": 20
+    },
+    {
+      "provider": "rbi_press_releases_rss",
+      "status": "ok",
+      "entries_seen": 10,
+      "entries_skipped": 0,
+      "entry_count": 10,
+      "coverage": "current feed window only; pagination and historical completeness unknown",
+      "http_status": 200,
+      "http_requests": 1,
+      "request_bound": 1,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200
+        }
+      ],
+      "final_url": "https://rbi.org.in/pressreleases_rss.xml",
+      "run_id": "fresh-source-20261101T195640Z",
+      "source_type": "regulator",
+      "terms": {
+        "url": "https://www.rbi.org.in/Scripts/Disclaimer.aspx",
+        "retention": "feed identification metadata and links only; no article bodies",
+        "restriction": "body retention permission unconfirmed; source locally unavailable"
+      },
+      "fetched_at": "2026-11-01T20:09:34.211652+00:00",
+      "version_ids": [
+        "2d35b4d366cee183d1218ccaa7f6155cc8c2f17aad974e537c40faf4334886fa",
+        "c864ce836216d23c475ee6b20379f31ae48bbb9999fbcb80ecb2c98770907cce",
+        "5d72530283a996181d01c0672cf132f4dc512f03c54f7245dd0644c4634a0ba9",
+        "010626606e7ceeb3af8beec02757f0f09f98c5b6a96d93b25f071fdc41c90e23",
+        "a26ecfd8115e53b9401de17c4629fa5fe1b984e01e20ec8fe8a25f7df310fb55",
+        "f5096c3df88fc3625876633414d44009fcd59a90e3ab49005a585b1835b57706",
+        "ccea6432b5e06e3d4d52a4dbbd7d9fb591a6388598d2fd43f43c93a15f78318c",
+        "1b556b5f65aba9d873003e82746e26e47fbc4733a9330042c2d4234b8a17e355",
+        "18e242e6d06af881202d0e6f7f62cabe45e0c88dc998bb711220bb6585578907",
+        "e83970f51181713f7187cfa8f3d39d8277c700e3f8910fec6b24454e64713a49"
+      ],
+      "changed": 10
+    },
+    {
+      "provider": "pib_html",
+      "status": "ok",
+      "entry_count": 1,
+      "coverage": "one reviewed HTML release; not a feed or company filing",
+      "http_requests": null,
+      "request_bound": 4,
+      "run_id": "fresh-source-20261101T195640Z",
+      "terms": {
+        "url": "https://www.pib.gov.in/content/102_2_Copyright-Policy.aspx?lang=1&reg=30",
+        "retention": "attributed feed metadata; reviewed first-party excerpt only on explicit request",
+        "restriction": "accurate reproduction with acknowledgement; third-party material excluded"
+      },
+      "fetched_at": "2026-11-01T20:09:34.964115+00:00",
+      "version_id": "2bd7de4aaac1361b8e900c2c9dbd485a07180084b582f7c04fc6a45bf09da310",
+      "source_hash": "db19cf41047f2638234f30f02d1ab8c95542689076e24cb5007ae941a43e3fc6"
+    }
+  ],
+  "ingestion-repeat.json": [
+    {
+      "provider": "sebi_rss",
+      "status": "not_modified",
+      "entry_count": 30,
+      "coverage": "current feed window only; pagination and historical completeness unknown",
+      "http_status": 304,
+      "http_requests": 1,
+      "request_bound": 1,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 304
+        }
+      ],
+      "final_url": "https://www.sebi.gov.in/sebirss.xml",
+      "run_id": "fresh-source-20261101T195640Z",
+      "source_type": "regulator",
+      "terms": {
+        "url": "https://www.sebi.gov.in/website-policy.html",
+        "retention": "feed identification metadata and links only; no article bodies",
+        "restriction": "prior permission required for reproduction of material"
+      },
+      "fetched_at": "2026-11-01T20:20:11.971312+00:00",
+      "version_ids": [],
+      "changed": 0
+    },
+    {
+      "provider": "rbi_press_releases_rss",
+      "status": "ok",
+      "entries_seen": 10,
+      "entries_skipped": 0,
+      "entry_count": 10,
+      "coverage": "current feed window only; pagination and historical completeness unknown",
+      "http_status": 200,
+      "http_requests": 1,
+      "request_bound": 1,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200
+        }
+      ],
+      "final_url": "https://rbi.org.in/pressreleases_rss.xml",
+      "run_id": "fresh-source-20261101T195640Z",
+      "source_type": "regulator",
+      "terms": {
+        "url": "https://www.rbi.org.in/Scripts/Disclaimer.aspx",
+        "retention": "feed identification metadata and links only; no article bodies",
+        "restriction": "body retention permission unconfirmed"
+      },
+      "fetched_at": "2026-11-01T20:20:12.492236+00:00",
+      "version_ids": [
+        "9ce050d17f934cb24c969496d2839eca7c27af72dea6db71d8a9b830af6fd887",
+        "0ecdab1ca237544b7e81eed687fcd1618b735516048976f518ac7d7ae7ec067b",
+        "5e562716a4f8f6119db24ea85be26f7e1b89087f2e5bd36bff6a6a67c9b9f0ec",
+        "f0b5c55f66ff82eb2510d8344eabe098f4a305d461a077cdcd74dd8c11816ea9",
+        "b2fd34a8aa32624a219847fa2e25197186b9f7cdc078cd3497e33effb24af626",
+        "c98722a7e807ee317b93577de02d0255de5cdd1ecba380c5494d2a05523de332",
+        "1d433c82c7c8d45bfa18cdab8163f12f1d61ec0e3a6c99908762d0828e38d87b",
+        "d83b65d75cc6ed0c936a563e967fe4702bcb83324a9c35335274e98786ac83d7",
+        "07107598b8fbc90b7259240e2e8f0c6803cf48a3690277b6686c2fb4e5347beb",
+        "ce8bb3fb04102cd7c2fb1afccf90cc089b75c9a3929ef3aa5e393e8392782f90"
+      ],
+      "changed": 10
+    }
+  ]
+}

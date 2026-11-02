@@ -1,0 +1,161 @@
+{
+  "schema": "fresh-source-evidence-v1",
+  "source_commit": "0ba305aff0e6c2fc0ee7acc56d3400f4b84580f6",
+  "run_id": "fresh-source-20261101T195640Z",
+  "file_count": 30,
+  "files": [
+    {
+      "path": "accounting.json",
+      "bytes": 26139,
+      "sha256": "24ce557b0a00e44a2b384cb9cf7816a63ae9944f5f08bba0d19b1737b4b166c6"
+    },
+    {
+      "path": "browser-fetch-accounting.json",
+      "bytes": 3542,
+      "sha256": "332e4efc00a6f09c3a221c3b4d65d1920a4a7a40c8a2a9fe1511b5dcd8c30f25"
+    },
+    {
+      "path": "browser-summary.json",
+      "bytes": 4130,
+      "sha256": "0b4dd75e9596fdf6df10aa26a86a3d3aab68f4d07d80bbadb5b2b26e24ff8003"
+    },
+    {
+      "path": "checks.json",
+      "bytes": 750,
+      "sha256": "bd08d2a3daf0284fd8dd84eb6d1b81cb317dd1755fce10d324e958a82898e4f7"
+    },
+    {
+      "path": "final-execution.json",
+      "bytes": 3888,
+      "sha256": "b4d1971e5ec3c5ac4294ea3781c628b49ac5be06453ce65efa9700e0951c17ef"
+    },
+    {
+      "path": "freeze-review.json",
+      "bytes": 445,
+      "sha256": "be2a0059856e2badc66b0a78a7582fefcfd8bbb81913e3bb92fd8ef551018b29"
+    },
+    {
+      "path": "frozen-cases.json",
+      "bytes": 8211,
+      "sha256": "b5b8a502bf2ac854a1516e0fb866ef1117f51fd0d7819fa5c1cf778ea629011e"
+    },
+    {
+      "path": "frozen-execution.json",
+      "bytes": 4614,
+      "sha256": "c093f83b66dd1ad7e012522f354cc1caf651c91cff0d3329ca66512c5ed03283"
+    },
+    {
+      "path": "frozen-references.json",
+      "bytes": 4109,
+      "sha256": "5885df68246d5191b1d2937b8b2864931772209f101e49e2930156c68e11df99"
+    },
+    {
+      "path": "frozen-source/data/news/__init__.py",
+      "bytes": 854,
+      "sha256": "b0b2fed8b4b178bf59add618cc22b8ba0f84f0fa85bdda043f6f5767aa7d1e14"
+    },
+    {
+      "path": "frozen-source/data/news/fresh_source.py",
+      "bytes": 12936,
+      "sha256": "2e34d96e465fa334dc714da897dffc61a9fc968e30343f28b99a65b640559d33"
+    },
+    {
+      "path": "frozen-source/data/news/fresh_source_html.py",
+      "bytes": 4827,
+      "sha256": "184c1e9b06ea9b00b41660e6ebb5a4e11a60351de685e32665464636dda32262"
+    },
+    {
+      "path": "frozen-source/data/news/ingest_sources.py",
+      "bytes": 11308,
+      "sha256": "3b1ae2c7b2d78aaf8d330d4bf8d379ebd621f230156b1318fd290266cf895d45"
+    },
+    {
+      "path": "frozen-source/memory/news_snapshot.py",
+      "bytes": 13903,
+      "sha256": "5f6dd86466152da79096c561e5b64f2b930bf35cbe1282246c2f2259d9156059"
+    },
+    {
+      "path": "frozen-source/research_room/adapter.py",
+      "bytes": 18678,
+      "sha256": "d06c284bcfa8fb3d7d868f5f07896fa52429b868ebbe23539515c460e253bca5"
+    },
+    {
+      "path": "frozen-source/research_room/codex.py",
+      "bytes": 11558,
+      "sha256": "ddd63e84f6a8e1926502858a58a6105db376e7542e9130776c4dbfec7aad0664"
+    },
+    {
+      "path": "frozen-source/research_room/news_evidence.py",
+      "bytes": 9114,
+      "sha256": "f6b55143ccb6602290b821f232fcfefbe4752b00d7b4f733c7487a92e4d7e660"
+    },
+    {
+      "path": "frozen-source/research_room/settings.py",
+      "bytes": 2544,
+      "sha256": "1c047f19da54c7228b16ee394ac934e07835b48fdd8622d676e87eaaf00175e6"
+    },
+    {
+      "path": "frozen-source/research_room/source_eval.py",
+      "bytes": 6172,
+      "sha256": "c19551998b0c3af734088d10820f3d2f6b96e3d08ddc5c067a5cbfc13dc03527"
+    },
+    {
+      "path": "frozen-source/research_room/store.py",
+      "bytes": 14466,
+      "sha256": "f55e68cbecd3c08b85184f0b0c5808ae674c2b52da0691de5a1bc33e0c9b477b"
+    },
+    {
+      "path": "frozen-source/research_room/tools.py",
+      "bytes": 31522,
+      "sha256": "206f08ecc9cbd7eabc8fc196ef0986afd926770d906436d83f9d962b878220b4"
+    },
+    {
+      "path": "frozen-source/research_room/worker.py",
+      "bytes": 12848,
+      "sha256": "29670013bb6ed16e710778eb3c09d3f7d31b7177e39825e4fcd6890c2129ad28"
+    },
+    {
+      "path": "ingestion-summary.json",
+      "bytes": 10899,
+      "sha256": "92856fd15ce43552999c2e0bc21a3944c366cf1c09f74a81e912561cff499bbc"
+    },
+    {
+      "path": "narrative-audit.json",
+      "bytes": 6883,
+      "sha256": "91bf60347e8fe2e156a9f8c4b68ebcecc54539eb396a7b6b16ab15e1131b8429"
+    },
+    {
+      "path": "preservation.json",
+      "bytes": 3333,
+      "sha256": "bc587357c6b164c60cfbbc9fdef411c5762d55fd6c5093aeacd1046af9157622"
+    },
+    {
+      "path": "protocol-zero-admission.json",
+      "bytes": 897,
+      "sha256": "41a9ab8f0ff9c6606ad0443311b111940d47f738d06069e22cf54d95490faf8d"
+    },
+    {
+      "path": "public-rooms.json",
+      "bytes": 98512,
+      "sha256": "7323725c000df88d260b60e9c1fd202add95e19454d7177b7ba9e0e7906477b2"
+    },
+    {
+      "path": "room-latency.json",
+      "bytes": 3149,
+      "sha256": "332e623c0ff13ab35949898331cf8bceb3cb520ebc1e694dd89987d8ac95d6c5"
+    },
+    {
+      "path": "run-plan.json",
+      "bytes": 17313,
+      "sha256": "5c63c9cf6817682536c13aa0441ff17ddf807a4f27857d9bbb99831113fd96ca"
+    },
+    {
+      "path": "source-probe-accounting.json",
+      "bytes": 202,
+      "sha256": "01180c2b5050f58528474c338b93190a3fc714b00327e55a2cc3053785392d3c"
+    }
+  ],
+  "redactions": "No raw HTML, model reasoning, credentials, private DBs or runtime/account contents; public message references are preserved, source quote payloads withheld. Frozen source files are our implementation code, not model traces.",
+  "hash_scope": "Public sanitized bytes; original private case/source hashes are separately recorded.",
+  "protocol_correction": "After paired generation; zero-admission native test; failed old records unchanged."
+}

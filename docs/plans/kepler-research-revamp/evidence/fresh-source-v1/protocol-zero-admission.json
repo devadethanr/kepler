@@ -1,0 +1,44 @@
+{
+  "typed_limit": "call_limit",
+  "reason": "Shared room model budget exhausted",
+  "counts": {
+    "model": 0,
+    "tool": 0,
+    "reserved_tokens": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "unknown_usage_calls": 0
+  },
+  "denial": {
+    "kind": "model",
+    "reason": "Shared room model budget exhausted",
+    "code": "call_limit",
+    "role": "analyst",
+    "turn": 1
+  },
+  "events": [
+    {
+      "kind": "thread.started",
+      "role": "analyst",
+      "status": null,
+      "published": null,
+      "stop_reason": null
+    },
+    {
+      "kind": "turn.started",
+      "role": "analyst",
+      "status": null,
+      "published": null,
+      "stop_reason": null
+    },
+    {
+      "kind": "turn.finished",
+      "role": "analyst",
+      "status": "failed",
+      "published": false,
+      "stop_reason": null
+    }
+  ],
+  "rejected_admission_requests": 1,
+  "synthetic": true
+}

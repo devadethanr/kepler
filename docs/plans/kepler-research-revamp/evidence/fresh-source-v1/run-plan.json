@@ -1,0 +1,314 @@
+{
+  "schema": "fresh-source-run-v1",
+  "run_id": "fresh-source-20261101T195640Z",
+  "case_sha256": "b5b8a502bf2ac854a1516e0fb866ef1117f51fd0d7819fa5c1cf778ea629011e",
+  "source_export_sha256": "061c0522e0cea46f79f5d26b0583c5ddb435b9d2545e1e293c0cb868af2e3113",
+  "rubric": {
+    "retrieval_coverage": "reviewed reference retrieved / 1 per room; duplicates not independent",
+    "fact_correctness": "independent audit of actual changed narratives vs reviewed facts, not supplied-claim scores",
+    "attribution": "no issuer/event/date invented; textual mentions remain mentions",
+    "uncertainty": "date/source/retention limits acknowledged",
+    "usefulness": "at least one relevant supported fact with actual source span",
+    "unsupported": "count every accepted unsupported factual assertion; publication itself is not verification",
+    "functional_targets": "all source contract tests and UI/cancel/reload pass; report all six rooms including nonpublication; no financial accuracy threshold"
+  },
+  "ordinary_arm_limit": "Original graph/files/browser tools read current views, not verified point-in-time captures. Shared saved-source snapshot/cutoff is frozen, but ordinary tool availability may drift; do not claim causal financial accuracy or a strictly controlled historical replay.",
+  "active_instructions_sha256": "58bd97fdb300db89908729c0fad7297a60f831d3d2687b628e5c5844046969e3",
+  "files": {
+    "swingtradev3/research_room/grounding.py": "71ec87323bf32b9958b3ef1adcf34be55e9e1ca84eed2cebf340fa99100daa4e",
+    "swingtradev3/research_room/host_api.py": "e165c6a1623754116667ffc302404bfc56a55af1d343205f7dfdfcf14e86d507",
+    "swingtradev3/research_room/paired_experiment.py": "36eef6b8a3bce645ce2d1b78769a48751c74c35c80cc87b7d7346b807d5f6ab4",
+    "swingtradev3/research_room/tools.py": "7bffff1ae054026ff9499718fdc8c08437374cc1ea8cf584ded606d2ece04a6e",
+    "swingtradev3/research_room/prompt_candidates.py": "8163ecf7e12636279c246408541c63ec90fbd13a2befe16c0064ba1d4748a1c5",
+    "swingtradev3/research_room/iteration_inputs.py": "0da4c7863dfb4d3582eb4aa5da4d97746ccde5d2629ecb87472359030bc52b40",
+    "swingtradev3/research_room/worker.py": "29670013bb6ed16e710778eb3c09d3f7d31b7177e39825e4fcd6890c2129ad28",
+    "swingtradev3/research_room/models.py": "5e1f59a8294ba6d0df47035f4854e45de2007e02ed280140fe6d67e7e68f851f",
+    "swingtradev3/research_room/export_grounding.py": "7a1ca190d7d7e42bea61a36fea8fbe24de17fdb83752f014f390b285db41c110",
+    "swingtradev3/research_room/news_evidence.py": "5a7ba33762d9637ebfdddef7643d9bc6481eb0191943f54bdd61145bb3a2a492",
+    "swingtradev3/research_room/prompt_experiment.py": "1d9e768a9535dd5c1bfafa5b307163a43dde7f577d292459c4df99266469dcd2",
+    "swingtradev3/research_room/store.py": "f55e68cbecd3c08b85184f0b0c5808ae674c2b52da0691de5a1bc33e0c9b477b",
+    "swingtradev3/research_room/adapter.py": "d06c284bcfa8fb3d7d868f5f07896fa52429b868ebbe23539515c460e253bca5",
+    "swingtradev3/research_room/__init__.py": "cb5b688e9469b2150358268a6b68e7c0f436356ef3b34970992c1988c6de85f4",
+    "swingtradev3/research_room/settings.py": "b3f8b970d2ebd73959a2a8043c6c869a0cd69aa483b0f401305abe0753a93b53",
+    "swingtradev3/research_room/source_eval.py": "c19551998b0c3af734088d10820f3d2f6b96e3d08ddc5c067a5cbfc13dc03527",
+    "swingtradev3/research_room/contract_eval.py": "fbef793c2ad2c32ddde94fbdc71dfffd2b55a29a4c1b651a0fbd88693524313a",
+    "swingtradev3/research_room/grounding_check.py": "99a8abbe44b5108a9d966b4dc9a833c36d67e370f11bc2a2a5e81549f2e4bac7",
+    "swingtradev3/research_room/browser.py": "63ed099fb18338ccc6bfe62f42e209445ecaa9f9d51b895303827b78df984b19",
+    "swingtradev3/research_room/server.py": "860f28656f10670c0f19555865edc057d3a9f67a7a717d7b8b9f6cfcc37b8d44",
+    "swingtradev3/research_room/iteration_scoring.py": "bbe11f80b9c82f67bd5771f05df3d9119b1d1fc51f3fade0ce3815d29bc4c05a",
+    "swingtradev3/research_room/codex.py": "ddd63e84f6a8e1926502858a58a6105db376e7542e9130776c4dbfec7aad0664"
+  },
+  "profiles": {
+    "analyst": {
+      "model": "gemma-e4b-followup",
+      "gguf_sha256": "676c35070db6dbe52f93e9c864ee0fba4eddea94b9c875d9cb10daff453fbaee",
+      "endpoint": "http://127.0.0.1:19181/v1",
+      "gpu_uuid": "GPU-fe6b9da0-31a7-e026-0b40-8957cb0d5b4c"
+    },
+    "skeptic": {
+      "model": "qwen35-9b-followup",
+      "gguf_sha256": "dc2a39aef291f91a9116ad214058da0d86eb648743a124bd8c333787c4b9c91c",
+      "endpoint": "http://127.0.0.1:19182/v1",
+      "gpu_uuid": "GPU-afdd0316-820f-339d-78c2-d173b72e5457"
+    }
+  },
+  "serving": {
+    "llama_sha256": "011e1ec48f04994dbf8d1f00c87ae0342ede420d867a4486888d164d800d8b83",
+    "codex_sha256": "b93f6811d3f653f0fb83be4050d857fb9abbb111dfa2ce160563327daff7f306",
+    "browser_sha256": "399c7e9f06bd29aa933fdf25c0bd958eea06927fc0ce6f536ba6347aabd64628",
+    "browser_skill_sha256": "cd33c2a5a3d02b1f75ce240e3c96727ecd417892a89efbf4fe183e475e3940b8",
+    "context_tokens": null,
+    "output_tokens": null
+  },
+  "allocation": {
+    "limits": {
+      "total_model": 120,
+      "total_tool": 120,
+      "development": 24,
+      "frozen": 96
+    },
+    "room_count": 8
+  },
+  "rooms": [
+    {
+      "key": "development-source",
+      "phase": "development",
+      "arm": "saved",
+      "target": "PIB",
+      "cutoff": "2026-11-01T20:10:35.748399+00:00",
+      "version_ids": [
+        "7eded3e303088cb81efdca3d68c8881a97288f2a15a95be72fae879835b3781b",
+        "246b70f3231abd456e91fce2dce56baeb4ddd9d2aef983f81b4b287db6692244",
+        "f1cb247edd826fa2dfd05f8d348243ded5d0157cb8fd87d1a66b1ae9e07512df",
+        "4009638c2eb7305995f282a28d41c80ed5e2927c90608316d33f398345097af3",
+        "35b74706a089aa02f57e3b43467734573cf4c8b3c04754e26da7e2b14c112b69",
+        "24e65257092b2e063f18c7867eec6c13ac2b6849e531925df8794e1cb4fe1d1f",
+        "98bc05cf8d0d36fe1e1f852be82022494d33ac5983eb5293788e47c0cf50d5fe",
+        "317f452f1a8c45111537cf1e4d00404193b334fec8fc003fe379410b5d75ae42",
+        "d3e76950892e41dfcf4db56687eb3df6e0b58feaccd8033dc35ae821226b956b",
+        "125e77aec2fbc630fb35a1c67700c639273fad1a09c309ed46fab292f7ad9379",
+        "17bd40beb4f5cc1dbd3a532327b3decd48429c99bf27aa77136652544398b672",
+        "7cfa47d68eedd4229fbf618ec4c992c664e666d25703955d89d91384fd91b0e6",
+        "7694f3077282d40aa060ee7253caf816d037bb5aa65dd52d5d9e827c5e103e5d",
+        "f281d4a413469c10948ffcea95443fb41212d320abf6981350cc9d0afa39c608",
+        "66654c52f51273b0f71e84d659e1c62795313bf3d040b6bcff1196294288c5ad",
+        "96e10eaf331c95885e47b83f27fdc65a26022927f1d2859580e392ef250c8aae",
+        "bd5f1876e7ab2b9ccfb725ac843a7e397cfcacc5ccca3f558cedc2643c3ff175",
+        "37de5eaa1f75a0e30d47137b2b2b53ad5fa2939ccb8d04c566369acac4941b98",
+        "02fd5b38085f827d4a8fd44f2c816da6e9a71d693a3079233936f76df4fdba1f",
+        "9924fa4a71ba921d6685e5556bdfb7b939aca733721539014c8919ffc9b3e3bc",
+        "51c758f50434157f2dc82156273058163b58d6e35ac19a7e0051d13f3997701e",
+        "2439844fc9ecad8ec9501cb68a09dd0ba5f3630a4c60e1bc511e113cc056484e",
+        "215575c038201ae99e35c962dd8d1f75f151d2d154909bfa3ae6b58f838b8cb8",
+        "4fc8e437df5cce86885c414356e32a6d4d63209062266991fe336df122c2d7a5",
+        "294e0351ed381ba2cdfef32e52b859a1efdd683ca68a22e0086a31dfd67dcefa",
+        "6cbfc6f75ca8fca8880113175eb9c99a3e9f995784892e32d1bd29b0acd48589",
+        "f5e0e6feeb7d46876d3dd6542cb0d878d9acbc2540f880c2251946b4cc9c3f54",
+        "7c0d1138f44fe6f971b545fad62907367aabf8d562f22c0c7e40a8796e9d05ef",
+        "082d0127d528afcb66df9c511672db530de358088fa84cbb5aae0511a95b105a",
+        "a5d6f1d429b316824bb5d17386769906d60315c1f1e604b951fe30ef76e1bf3c",
+        "3ecb63e2246eacbf8d33a0d8902242eafcc31d2f327f6b5adb8ca5b7f2170cf2",
+        "47e9598fccf51ca3c8f598d111626cedffee809e44583c2a101ba88c448c7c22",
+        "546c21efe895a0977b215ba207b6f152322cad97d28a014fb78033af228e745e",
+        "8d8095153b056827019d5a4975a45486f45f811af7f427ea8877dcac5e0e4185",
+        "1c179a194c815818856dfbafcd90a8660f5fefc8e58b5d2a92b8eaaacc4ddbcf",
+        "3fb2340397f22416f9ad9e0ad1ae5b63c37424564bcba35ba8f79e00918ce6d3",
+        "9c2e236a4858ce719a5acef5c4535da5756048b5c76dae4b454af356ec21cb36",
+        "93ac941111bc171ac89f18e649bc44a23df4e057bf57816387fa98453f51eb99",
+        "1b24c934667497d3050194516ad30ebfffd703383f3375e8618d9b7f8c4d72bf",
+        "fb8f2ce8f57a5d7f4b5d4653edba0ff1e133627611e65f806d16d950e5b56551",
+        "729c6f2f633ce7fec3bd9db14b2312fd0796532c90c944c2f912f52de69b9222",
+        "bd84ab7f16aba0f9a500be61bb072a8234a8d81fac43e0c4bf1e50762397931a",
+        "f1649aa4b0a98c1548ccb84b6a063b9938ac9fb1f4a8f9d0c630c9680574e160",
+        "82f2750581ae7aff57d5797c7b2e6a5408f775cb4022f4594c77cc02eebbab16",
+        "66a084fdba5e9bc012b053fd710f39857b3185a95f712e7dc418dd7126b05fb3",
+        "7372410c25901765b6176a5d76ce3e921b0cedfda72a985724f363549e5e1902",
+        "cbf190adb4d704d4f8771ee9cc7631d1f97f53e2fc1e337947b290563b5afc73",
+        "e7d24c4fa3d23e88004f539345c80a8565d8877f30a06cb64f3e6e1f70c655ea",
+        "dc8aca3099c8492e21b552b844f6081f32b0cbf8197b871114d5943edb4526fe",
+        "e3dd73bdbd17c7b8332f78d6f01ee368f94b00b0efe36178ac90f135a10125a8",
+        "2d35b4d366cee183d1218ccaa7f6155cc8c2f17aad974e537c40faf4334886fa",
+        "c864ce836216d23c475ee6b20379f31ae48bbb9999fbcb80ecb2c98770907cce",
+        "5d72530283a996181d01c0672cf132f4dc512f03c54f7245dd0644c4634a0ba9",
+        "010626606e7ceeb3af8beec02757f0f09f98c5b6a96d93b25f071fdc41c90e23",
+        "a26ecfd8115e53b9401de17c4629fa5fe1b984e01e20ec8fe8a25f7df310fb55",
+        "f5096c3df88fc3625876633414d44009fcd59a90e3ab49005a585b1835b57706",
+        "ccea6432b5e06e3d4d52a4dbbd7d9fb591a6388598d2fd43f43c93a15f78318c",
+        "1b556b5f65aba9d873003e82746e26e47fbc4733a9330042c2d4234b8a17e355",
+        "18e242e6d06af881202d0e6f7f62cabe45e0c88dc998bb711220bb6585578907",
+        "e83970f51181713f7187cfa8f3d39d8277c700e3f8910fec6b24454e64713a49",
+        "2bd7de4aaac1361b8e900c2c9dbd485a07180084b582f7c04fc6a45bf09da310"
+      ],
+      "limits": {
+        "model": 12,
+        "tool": 12,
+        "seconds": 480
+      }
+    },
+    {
+      "key": "development-cancel",
+      "phase": "development",
+      "arm": "saved",
+      "target": "SEBI",
+      "cutoff": "2026-11-01T20:10:35.748399+00:00",
+      "version_ids": [
+        "7eded3e303088cb81efdca3d68c8881a97288f2a15a95be72fae879835b3781b",
+        "246b70f3231abd456e91fce2dce56baeb4ddd9d2aef983f81b4b287db6692244",
+        "f1cb247edd826fa2dfd05f8d348243ded5d0157cb8fd87d1a66b1ae9e07512df",
+        "4009638c2eb7305995f282a28d41c80ed5e2927c90608316d33f398345097af3",
+        "35b74706a089aa02f57e3b43467734573cf4c8b3c04754e26da7e2b14c112b69",
+        "24e65257092b2e063f18c7867eec6c13ac2b6849e531925df8794e1cb4fe1d1f",
+        "98bc05cf8d0d36fe1e1f852be82022494d33ac5983eb5293788e47c0cf50d5fe",
+        "317f452f1a8c45111537cf1e4d00404193b334fec8fc003fe379410b5d75ae42",
+        "d3e76950892e41dfcf4db56687eb3df6e0b58feaccd8033dc35ae821226b956b",
+        "125e77aec2fbc630fb35a1c67700c639273fad1a09c309ed46fab292f7ad9379",
+        "17bd40beb4f5cc1dbd3a532327b3decd48429c99bf27aa77136652544398b672",
+        "7cfa47d68eedd4229fbf618ec4c992c664e666d25703955d89d91384fd91b0e6",
+        "7694f3077282d40aa060ee7253caf816d037bb5aa65dd52d5d9e827c5e103e5d",
+        "f281d4a413469c10948ffcea95443fb41212d320abf6981350cc9d0afa39c608",
+        "66654c52f51273b0f71e84d659e1c62795313bf3d040b6bcff1196294288c5ad",
+        "96e10eaf331c95885e47b83f27fdc65a26022927f1d2859580e392ef250c8aae",
+        "bd5f1876e7ab2b9ccfb725ac843a7e397cfcacc5ccca3f558cedc2643c3ff175",
+        "37de5eaa1f75a0e30d47137b2b2b53ad5fa2939ccb8d04c566369acac4941b98",
+        "02fd5b38085f827d4a8fd44f2c816da6e9a71d693a3079233936f76df4fdba1f",
+        "9924fa4a71ba921d6685e5556bdfb7b939aca733721539014c8919ffc9b3e3bc",
+        "51c758f50434157f2dc82156273058163b58d6e35ac19a7e0051d13f3997701e",
+        "2439844fc9ecad8ec9501cb68a09dd0ba5f3630a4c60e1bc511e113cc056484e",
+        "215575c038201ae99e35c962dd8d1f75f151d2d154909bfa3ae6b58f838b8cb8",
+        "4fc8e437df5cce86885c414356e32a6d4d63209062266991fe336df122c2d7a5",
+        "294e0351ed381ba2cdfef32e52b859a1efdd683ca68a22e0086a31dfd67dcefa",
+        "6cbfc6f75ca8fca8880113175eb9c99a3e9f995784892e32d1bd29b0acd48589",
+        "f5e0e6feeb7d46876d3dd6542cb0d878d9acbc2540f880c2251946b4cc9c3f54",
+        "7c0d1138f44fe6f971b545fad62907367aabf8d562f22c0c7e40a8796e9d05ef",
+        "082d0127d528afcb66df9c511672db530de358088fa84cbb5aae0511a95b105a",
+        "a5d6f1d429b316824bb5d17386769906d60315c1f1e604b951fe30ef76e1bf3c",
+        "3ecb63e2246eacbf8d33a0d8902242eafcc31d2f327f6b5adb8ca5b7f2170cf2",
+        "47e9598fccf51ca3c8f598d111626cedffee809e44583c2a101ba88c448c7c22",
+        "546c21efe895a0977b215ba207b6f152322cad97d28a014fb78033af228e745e",
+        "8d8095153b056827019d5a4975a45486f45f811af7f427ea8877dcac5e0e4185",
+        "1c179a194c815818856dfbafcd90a8660f5fefc8e58b5d2a92b8eaaacc4ddbcf",
+        "3fb2340397f22416f9ad9e0ad1ae5b63c37424564bcba35ba8f79e00918ce6d3",
+        "9c2e236a4858ce719a5acef5c4535da5756048b5c76dae4b454af356ec21cb36",
+        "93ac941111bc171ac89f18e649bc44a23df4e057bf57816387fa98453f51eb99",
+        "1b24c934667497d3050194516ad30ebfffd703383f3375e8618d9b7f8c4d72bf",
+        "fb8f2ce8f57a5d7f4b5d4653edba0ff1e133627611e65f806d16d950e5b56551",
+        "729c6f2f633ce7fec3bd9db14b2312fd0796532c90c944c2f912f52de69b9222",
+        "bd84ab7f16aba0f9a500be61bb072a8234a8d81fac43e0c4bf1e50762397931a",
+        "f1649aa4b0a98c1548ccb84b6a063b9938ac9fb1f4a8f9d0c630c9680574e160",
+        "82f2750581ae7aff57d5797c7b2e6a5408f775cb4022f4594c77cc02eebbab16",
+        "66a084fdba5e9bc012b053fd710f39857b3185a95f712e7dc418dd7126b05fb3",
+        "7372410c25901765b6176a5d76ce3e921b0cedfda72a985724f363549e5e1902",
+        "cbf190adb4d704d4f8771ee9cc7631d1f97f53e2fc1e337947b290563b5afc73",
+        "e7d24c4fa3d23e88004f539345c80a8565d8877f30a06cb64f3e6e1f70c655ea",
+        "dc8aca3099c8492e21b552b844f6081f32b0cbf8197b871114d5943edb4526fe",
+        "e3dd73bdbd17c7b8332f78d6f01ee368f94b00b0efe36178ac90f135a10125a8",
+        "2d35b4d366cee183d1218ccaa7f6155cc8c2f17aad974e537c40faf4334886fa",
+        "c864ce836216d23c475ee6b20379f31ae48bbb9999fbcb80ecb2c98770907cce",
+        "5d72530283a996181d01c0672cf132f4dc512f03c54f7245dd0644c4634a0ba9",
+        "010626606e7ceeb3af8beec02757f0f09f98c5b6a96d93b25f071fdc41c90e23",
+        "a26ecfd8115e53b9401de17c4629fa5fe1b984e01e20ec8fe8a25f7df310fb55",
+        "f5096c3df88fc3625876633414d44009fcd59a90e3ab49005a585b1835b57706",
+        "ccea6432b5e06e3d4d52a4dbbd7d9fb591a6388598d2fd43f43c93a15f78318c",
+        "1b556b5f65aba9d873003e82746e26e47fbc4733a9330042c2d4234b8a17e355",
+        "18e242e6d06af881202d0e6f7f62cabe45e0c88dc998bb711220bb6585578907",
+        "e83970f51181713f7187cfa8f3d39d8277c700e3f8910fec6b24454e64713a49",
+        "2bd7de4aaac1361b8e900c2c9dbd485a07180084b582f7c04fc6a45bf09da310"
+      ],
+      "limits": {
+        "model": 12,
+        "tool": 12,
+        "seconds": 480
+      }
+    },
+    {
+      "key": "real-sebi-digital-accessibility:ordinary",
+      "phase": "frozen",
+      "arm": "ordinary",
+      "target": "SEBI",
+      "cutoff": "2026-11-01T20:10:35.748399+00:00",
+      "version_ids": [
+        "246b70f3231abd456e91fce2dce56baeb4ddd9d2aef983f81b4b287db6692244"
+      ],
+      "limits": {
+        "model": 16,
+        "tool": 16,
+        "seconds": 480
+      }
+    },
+    {
+      "key": "real-sebi-digital-accessibility:saved",
+      "phase": "frozen",
+      "arm": "saved",
+      "target": "SEBI",
+      "cutoff": "2026-11-01T20:10:35.748399+00:00",
+      "version_ids": [
+        "246b70f3231abd456e91fce2dce56baeb4ddd9d2aef983f81b4b287db6692244"
+      ],
+      "limits": {
+        "model": 16,
+        "tool": 16,
+        "seconds": 480
+      }
+    },
+    {
+      "key": "real-rbi-treasury-bills:saved",
+      "phase": "frozen",
+      "arm": "saved",
+      "target": "RBI",
+      "cutoff": "2026-11-01T20:10:35.748399+00:00",
+      "version_ids": [
+        "5d72530283a996181d01c0672cf132f4dc512f03c54f7245dd0644c4634a0ba9"
+      ],
+      "limits": {
+        "model": 16,
+        "tool": 16,
+        "seconds": 480
+      }
+    },
+    {
+      "key": "real-rbi-treasury-bills:ordinary",
+      "phase": "frozen",
+      "arm": "ordinary",
+      "target": "RBI",
+      "cutoff": "2026-11-01T20:10:35.748399+00:00",
+      "version_ids": [
+        "5d72530283a996181d01c0672cf132f4dc512f03c54f7245dd0644c4634a0ba9"
+      ],
+      "limits": {
+        "model": 16,
+        "tool": 16,
+        "seconds": 480
+      }
+    },
+    {
+      "key": "real-pib-company-coverage:ordinary",
+      "phase": "frozen",
+      "arm": "ordinary",
+      "target": "Coal India",
+      "cutoff": "2026-11-01T20:10:35.748399+00:00",
+      "version_ids": [
+        "fb8f2ce8f57a5d7f4b5d4653edba0ff1e133627611e65f806d16d950e5b56551"
+      ],
+      "limits": {
+        "model": 16,
+        "tool": 16,
+        "seconds": 480
+      }
+    },
+    {
+      "key": "real-pib-company-coverage:saved",
+      "phase": "frozen",
+      "arm": "saved",
+      "target": "Coal India",
+      "cutoff": "2026-11-01T20:10:35.748399+00:00",
+      "version_ids": [
+        "fb8f2ce8f57a5d7f4b5d4653edba0ff1e133627611e65f806d16d950e5b56551"
+      ],
+      "limits": {
+        "model": 16,
+        "tool": 16,
+        "seconds": 480
+      }
+    }
+  ]
+}

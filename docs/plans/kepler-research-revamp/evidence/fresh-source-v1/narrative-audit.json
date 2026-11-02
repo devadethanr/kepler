@@ -1,0 +1,132 @@
+{
+  "unit": "published message, not independent facts",
+  "clear_unsupported_messages": {
+    "ordinary": 5,
+    "saved": 1
+  },
+  "message_denominators": {
+    "ordinary": 11,
+    "saved": 23
+  },
+  "method": "Independent Terra audit; repeated claims counted at message level; ambiguous wording tracked separately; not financial accuracy",
+  "cases": [
+    {
+      "case_id": "real-rbi-treasury-bills",
+      "arm": "ordinary",
+      "room_id": "room:f76c558f-706b-5f4d-894c-7d581341ffb6",
+      "outcome": "abstention",
+      "counts": {
+        "model": 9,
+        "tool": 8,
+        "reserved_tokens": 294912,
+        "input_tokens": 22901,
+        "output_tokens": 641,
+        "unknown_usage_calls": 0
+      },
+      "message_count": 1,
+      "messages_with_admitted_refs": 0,
+      "assessment": "One uncited message asserts no RBI feed records despite only empty artifact searches. This does not support source-wide absence; asks about completeness. No relevant title found."
+    },
+    {
+      "case_id": "real-rbi-treasury-bills",
+      "arm": "saved",
+      "room_id": "room:cdc6d1c2-d538-5996-8438-5c45e38c7643",
+      "outcome": "abstention",
+      "counts": {
+        "model": 12,
+        "tool": 11,
+        "reserved_tokens": 393216,
+        "input_tokens": 126658,
+        "output_tokens": 1782,
+        "unknown_usage_calls": 0
+      },
+      "message_count": 8,
+      "messages_with_admitted_refs": 8,
+      "assessment": "Eight exact admitted refs to same relevant title; identifies 91/182/364-day bills, refrains from invented rates/results, and expresses uncertainty of window. First says only record in window even though membership unknown; repeated no publication date omits raw date/time with unspecified zone. A title ref alone does not establish timestamp or comprehensive feed coverage."
+    },
+    {
+      "case_id": "real-pib-company-coverage",
+      "arm": "ordinary",
+      "room_id": "room:baed0025-b791-5766-ae6f-54e63624cc8a",
+      "outcome": "failed",
+      "counts": {
+        "model": 16,
+        "tool": 16,
+        "reserved_tokens": 524288,
+        "input_tokens": 60564,
+        "output_tokens": 1115,
+        "unknown_usage_calls": 0
+      },
+      "message_count": 6,
+      "messages_with_admitted_refs": 0,
+      "assessment": "Six uncited messages; one claims feeds empty when only approved artifact searches were empty, an unsupported source-wide conclusion. Others report limited document searches and ask about coverage, without inferred issuer, event or disclosure details."
+    },
+    {
+      "room_id": "room:745dd6f0-cf1f-5393-8852-a4fd2a93e4f9",
+      "arm": "ordinary",
+      "case_id": "real-sebi-digital-accessibility",
+      "termination": "failed",
+      "termination_reason_recorded": "peer_failure",
+      "counts": {
+        "model": 16,
+        "tool": 16,
+        "reserved_tokens": 524288,
+        "input_tokens": 108865,
+        "output_tokens": 981,
+        "unknown_usage_calls": 0
+      },
+      "independent_assessment": {
+        "public_message_count": 4,
+        "messages_with_admitted_exact_refs": 3,
+        "relevant_case_title_retrieved": false,
+        "useful_frozen_facts": "None stated about the accessibility item; first message honestly reports initial searches yielded no direct evidence.",
+        "unsupported_or_unqualified": "Three messages repeat an old spike report that a parser left SEBI dates unresolved without identifying it as a historical generic-parser observation. The cited artifact records a prior probe; it does not establish the state of the current saved feed/parser. Counts are 3 messages repeating one concern, not 3 independent factual errors.",
+        "calibration": "Asks for underlying items and does not invent extension terms.",
+        "source_provenance": "Three admitted identical historical artifact quotations, not primary source accessibility evidence; artifact timestamp/availability as of pinned cutoff not established.",
+        "incorrect_or_unsupported_message_count": 3
+      }
+    },
+    {
+      "room_id": "room:5da01789-6195-56a4-aee8-88cfef811f6f",
+      "arm": "saved",
+      "case_id": "real-sebi-digital-accessibility",
+      "termination": "failed",
+      "termination_reason_recorded": "peer_failure",
+      "counts": {
+        "model": 16,
+        "tool": 16,
+        "reserved_tokens": 524288,
+        "input_tokens": 171721,
+        "output_tokens": 1913,
+        "unknown_usage_calls": 0
+      },
+      "independent_assessment": {
+        "public_message_count": 8,
+        "messages_with_admitted_exact_refs": 5,
+        "relevant_case_title_retrieved": true,
+        "useful_frozen_facts": "Saved SEBI title identifying extension, and 30 October publication date; multiple messages distinguish title/metadata from circular body and correctly leave terms, deadlines and scope unknown.",
+        "unsupported_or_unqualified": "No definite invented deadline, issuer, or other false fact found. One phrasing says the feed identifies the existence of a circular, which should be read as a feed identification, not independent verification of its full contents.",
+        "calibration": "Repeatedly notes metadata-only retention, unavailability of terms and empty/denied browser attempts; no fabricated precision, though +0530 and date-only precision were not stated explicitly.",
+        "source_provenance": "Five admitted exact title refs to the relevant saved SEBI version; title supports identification, while metadata and date come from separate snapshot fields, not the title quote alone. Three uncited messages convey same relevant content/limitations.",
+        "incorrect_or_unsupported_message_count": 0
+      }
+    },
+    {
+      "case_id": "real-pib-company-coverage",
+      "arm": "saved",
+      "room_id": "room:bb6cd4ff-1a4e-5711-802e-5b30b79efdf1",
+      "outcome": "abstention",
+      "counts": {
+        "model": 10,
+        "tool": 9,
+        "reserved_tokens": 327680,
+        "input_tokens": 109698,
+        "output_tokens": 1633,
+        "unknown_usage_calls": 0
+      },
+      "message_count": 7,
+      "messages_with_admitted_refs": 7,
+      "assessment": "Relevant PIB title and observed-by-cutoff status surfaced; all seven messages cite same admitted exact title. The saved record has no publication or event date, and the skeptic correctly separates observation by cutoff from temporal membership and declines to establish formal disclosure. No ISIN, actual filing, event ID or financial number invented. Some phrasing calls the item a disclosure or says one record without limiting that claim to the scoped retrieved set, risking overstatement; message 24 frames the title as an announcement of record-breaking performance rather than merely a headline claim. Company-disclosure coverage gap is implied by uncertainty, but not explicitly described as unavailable; no broad search-completeness assurance."
+    }
+  ]
+}

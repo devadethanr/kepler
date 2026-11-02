@@ -1,15 +1,15 @@
 # Kepler collaborative research revamp
 
-Implementation handoff, revision 7 — reviewed `ae7d45f`, 2 November 2026.
+Implementation handoff, revision 8 — fresh-source slice, 2 November 2026.
 
 **Current:** the local room/Research Desk is installed and restored after reboot. The LAN UUID loading bug and most earlier room findings are fixed. Codex App Server + the local adapter and measured Gemma/Qwen serving pair remain selected. Installed participants still use `research_room/codex.py:INSTRUCTIONS`; retained tuning candidates are inactive.
 
-**Next:** implement a narrow, fresh primary-source evidence service and close the small remaining terminal-reason edge. Read [POST_TUNING_REVIEW.md](POST_TUNING_REVIEW.md), [FRESH_SOURCE_IMPLEMENTATION.md](FRESH_SOURCE_IMPLEMENTATION.md) and [FRESH_SOURCE_HANDOFF.md](FRESH_SOURCE_HANDOFF.md). Do not restart the completed room-fix handoff or tune an eighth round on now-seen cases.
+**Current source slice:** [FRESH_SOURCE_FINDINGS.md](FRESH_SOURCE_FINDINGS.md) and [results](FRESH_SOURCE_RESULTS.md) record controlled SEBI/RBI/PIB ingestion, immutable versions, bounded read tools, Desk provenance and terminal-reason fixes. The 93-model/88-tool run found the relevant title in 3/3 saved-source rooms versus 0/3 ordinary rooms; narrative and completion limitations remain. Candidates stay inactive. Do not repeat completed room or prompt studies.
 
 ## Read this first
 
-1. [Current review](POST_TUNING_REVIEW.md): independently repeated tests, confirmation replay, repaired findings, remaining limits and official-source diagnostics.
-2. [Fresh-source implementation](FRESH_SOURCE_IMPLEMENTATION.md) and [local Codex handoff](FRESH_SOURCE_HANDOFF.md): active next task and findings template.
+1. [Fresh-source findings and handback](FRESH_SOURCE_FINDINGS.md), [results](FRESH_SOURCE_RESULTS.md) and [evidence](evidence/fresh-source-v1/manifest.json): implemented scope, tests, source terms/dates, actual discussions, recovery and limits.
+2. [Fresh-source implementation](FRESH_SOURCE_IMPLEMENTATION.md) and [local Codex handoff](FRESH_SOURCE_HANDOFF.md): the scope just executed. [Post-tuning review](POST_TUNING_REVIEW.md) preserves the prior review and official-feed diagnostics.
 3. [Runbook](RESEARCH_ROOM_RUNBOOK.md), [reboot/browser checks](REBOOT_BROWSER_CHECKS.md) and [local activation](LOCAL_ACTIVATION.md): normal :8502 entry point, model/API/worker services and supported IDE launch context.
 4. [Work history](WORK_HISTORY.md), [phase findings](NEXT_PHASE_FINDINGS.md), [prompt results](PROMPT_TUNING_RESULTS.md) and [prompt findings](PROMPT_TUNING_FINDINGS.md): completed source, tests, frozen scores, call accounting and filenames.
 5. [Overall implementation plan](IMPLEMENTATION_PLAN.md), [Codex architecture](CODEX_IMPLEMENTATION.md), [models/status](MODEL_CANDIDATES.json), [skills/tools](SKILLS_AND_CONTEXT_TOOLS.md), [harness](COLLABORATIVE_HARNESS_RESEARCH.md) and [TimesFM](TIMESFM_AUDIT_AND_REUSE.md): design and later capabilities.
@@ -18,10 +18,13 @@ Implementation handoff, revision 7 — reviewed `ae7d45f`, 2 November 2026.
 
 ## Current evidence and limitations
 
+- Fresh-source local checks: **157 guarded backend tests passed / 1 Docker host-parser skip**, **22 frontend tests**, TypeScript/build/Ruff and actual LAN/localhost source cards, cancellation, reload and API restart passed. The skipped Scrapling extraction passed in the pinned host environment. All 2,003 initial news IDs remain; ongoing normal ingestion updates and five local runtime files were preserved.
+- SEBI/RBI/PIB feeds returned 30/10/20 records locally; one reviewed PIB HTML excerpt is stored. SEBI date-only precision is implemented; RBI timezone and PIB RSS dates remain unknown. Company-disclosure coverage remains unavailable. Three real paired questions are too small to establish financial accuracy; unsupported assertions and three failed room endings are retained in the report.
+
 - Independent cloud checks: **55 backend tests passed / 11 infrastructure-specific skips; 21 frontend tests, TypeScript, build and changed-file Ruff passed**. Local guarded 125-test and browser/GPU/reboot results remain local reports, not tests rerun on the user's PC.
 - All 25 phase-2 and 235 prompt-evidence files matched supplied manifests. Replaying all 120 final confirmation proposals through the actual gateway/scorer and temporary SQLite reproduced every score.
 - Final matched confirmation: Gemma **25/30**, Qwen **24/30**, below the frozen 27/30 objective; candidates remain inactive. This is a supplied-claim contract task, not financial accuracy or live-room quality. Earlier failed scores remain separate history.
-- SEBI/RBI RSS were populated in a bounded cloud check; NSE RSS was reachable but empty. The current helper returned unknown for the observed SEBI date-only strings. Freshness, identity, completeness and as-of history need source-specific implementation.
+- The earlier bounded cloud check found populated SEBI/RBI feeds and an empty NSE feed. Its unresolved SEBI-date observation is historical; the fresh-source findings record the implemented parser and honest remaining coverage/timezone limits.
 - Manual live-entry approval, existing broker controls and TimesFM's lack of new score/risk authority remain unchanged. Preserve the changing local runtime files.
 
 ## Hardware and runtime update

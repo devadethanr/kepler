@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-02",
+  "guarded_backend": {
+    "passed": 157,
+    "skipped": 1,
+    "failed": 0,
+    "skip_reason": "Scrapling parser host-only; actual pinned host test passed"
+  },
+  "frontend_tests": {
+    "passed": 22,
+    "failed": 0
+  },
+  "typescript": "passed",
+  "vite_build": "passed to private output, existing large chunk warning",
+  "ruff": "passed for changed Python files",
+  "source_protocol_actual_codex": "zero provider admissions, marker preserved, typed call_limit",
+  "graph_current_version_refs_matched": 61,
+  "real_browser": "local+LAN sources/quotes/revisions/cancel/reload; APIrestart event hashes109/88/75 identical",
+  "recovery": "host reboot21:55:33IST; same original run93model88tool verified; no new generation"
+}

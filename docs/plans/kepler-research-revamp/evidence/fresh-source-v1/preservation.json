@@ -1,0 +1,104 @@
+{
+  "runtime": [
+    {
+      "path": "swingtradev3/context/agent_activity.json",
+      "before_size": 3033,
+      "after_size": 3033,
+      "unchanged": false,
+      "original_prefix_preserved": false,
+      "current_sha256": "aefaf0c8b8ac5974676897f297ce1b8141fb6abafc0dbbe6ae61897ba725ec11"
+    },
+    {
+      "path": "swingtradev3/context/event_log.jsonl",
+      "before_size": 80721,
+      "after_size": 88454,
+      "unchanged": false,
+      "original_prefix_preserved": true,
+      "current_sha256": "f64b0c82756842794d5ab783605899d0cc898796dbe5217f0a4675d91831fbb0"
+    },
+    {
+      "path": "swingtradev3/context/macro_cache.json",
+      "before_size": 269,
+      "after_size": 269,
+      "unchanged": true,
+      "original_prefix_preserved": true,
+      "current_sha256": "76ecf1d6bac720961e3e1722138978448a43291d00fe3f7dba2a38386975365e"
+    },
+    {
+      "path": "swingtradev3/context/regime_cache.json",
+      "before_size": 489,
+      "after_size": 489,
+      "unchanged": true,
+      "original_prefix_preserved": true,
+      "current_sha256": "70cf43d93af833d1eb03ab87bcf9cc0013e0868531ac12aa06ee797d6f21cee4"
+    },
+    {
+      "path": "swingtradev3/context/scan_status.json",
+      "before_size": 121,
+      "after_size": 121,
+      "unchanged": true,
+      "original_prefix_preserved": true,
+      "current_sha256": "bdb4d38c869fb33250624dff478c5aeda403139d103888747ee4f7de5a4d7382"
+    }
+  ],
+  "services": [
+    {
+      "name": "/swingtradev3-app",
+      "same_container_id": true,
+      "start_unchanged": false,
+      "current_started": "2026-11-02T16:25:53.299075271Z"
+    },
+    {
+      "name": "/kepler-worker-1",
+      "same_container_id": true,
+      "start_unchanged": false,
+      "current_started": "2026-11-02T16:25:53.2934466Z"
+    },
+    {
+      "name": "/swingtradev3-db",
+      "same_container_id": true,
+      "start_unchanged": false,
+      "current_started": "2026-11-02T16:25:53.326822489Z"
+    },
+    {
+      "name": "/swingtradev3-memgraph",
+      "same_container_id": true,
+      "start_unchanged": false,
+      "current_started": "2026-11-02T16:25:53.287754669Z"
+    },
+    {
+      "name": "/swingtradev3-dashboard",
+      "same_container_id": true,
+      "start_unchanged": false,
+      "current_started": "2026-11-02T16:25:53.319233746Z"
+    }
+  ],
+  "model_config_byte_identical": true,
+  "host_boot_id": "6687f838-efaf-4830-b7d7-99f8767a4f67",
+  "boot_explanation": "Host reboot 2026-11-02 21:55:33 IST; original container IDs retained, start times advanced. No task broker restart performed.",
+  "database": {
+    "legacy_news_before": 2003,
+    "missing_legacy_ids": 0,
+    "changed_legacy_payloads": 9,
+    "current_news_articles": 2065,
+    "source_versions": 71,
+    "source_observations": 71,
+    "controls_identical": {
+      "trading_enabled": true,
+      "new_entries_enabled": true,
+      "exit_only_mode": true,
+      "block_new_entries": true
+    },
+    "require_entry_approval": true,
+    "schema": "20261102_0008"
+  },
+  "source_owner_overwrote_initial_ids": 0,
+  "normal_legacy_updates_preserved": 9,
+  "database_backup": {
+    "sha256": "763ae5a167b3e919c2edf603a49ea2e87419013213066d667315e47ff483ec9e",
+    "bytes": 927593,
+    "location": "private run/database-before.dump"
+  },
+  "stash_ref": "stash@{0}",
+  "stash_sha": "b69b0eb87c9b8f52cecd7dcf595a8f970f04f491"
+}
