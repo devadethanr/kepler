@@ -1,0 +1,26 @@
+{
+  "cancel": {
+    "room_id": "room:0e1c2e36-dc5a-55f9-91c9-100c1f371139",
+    "events": 10,
+    "events_sha256": "dc231be86ca05a339e86482bf9056782b4f249bc98289de9f26b910f03493ecf",
+    "after_events": 10,
+    "after_events_sha256": "dc231be86ca05a339e86482bf9056782b4f249bc98289de9f26b910f03493ecf",
+    "unchanged": true
+  },
+  "source-summary": {
+    "room_id": "room:4feb11c2-948c-5628-adaf-acf1f7b5ab8a",
+    "events": 153,
+    "events_sha256": "f858449a838d85bd429f07c58b8f96387b2bb991e952334b12c9b5a008e05316",
+    "after_events": 153,
+    "after_events_sha256": "f858449a838d85bd429f07c58b8f96387b2bb991e952334b12c9b5a008e05316",
+    "unchanged": true
+  },
+  "market-context": {
+    "room_id": "room:4004fa0c-3f73-5953-9c4d-6fb7a84c0bfb",
+    "events": 125,
+    "events_sha256": "8e58046893d9a4cbbce4836afb881bdb364e8dd91fcf20e51032f150497a6686",
+    "after_events": 125,
+    "after_events_sha256": "8e58046893d9a4cbbce4836afb881bdb364e8dd91fcf20e51032f150497a6686",
+    "unchanged": true
+  }
+}

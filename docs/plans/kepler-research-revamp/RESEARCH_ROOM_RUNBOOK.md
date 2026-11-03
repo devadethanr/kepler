@@ -63,7 +63,7 @@ Cancel affects research only. A worker crash leaves an expired lease, shown as s
 - Browser: discover and load the complete pinned official skill before execution. The gateway fetches only exact allowlisted public HTTPS hosts, checks all resolved IPs and redirects, pins the validated address with TLS/SNI, and sends captured HTML to actual pinned agent-browser/Chrome in a private networkless namespace. Chrome reads that page through its own loopback and closes. There are no credentials, cookies, personal profiles, external subresources or arbitrary shell. This supports bounded page reading, not full navigation with externally loaded JavaScript. Browser jobs share one 100-second deadline from before fetch through DNS/redirect/read/DOM. Owned fetch processes are terminated/joined on cancellation or deadline. Browser continuation refetches the capped 12,000-character DOM body, so offsets may shift; this is not exhaustive page retrieval.
 - Citation validation: unknown/cross-target IDs, invented inline IDs, wrong quote provenance and future-known timestamps are rejected. Exact verified excerpts are distinguished from agent interpretation. Source freshness stays unknown when not established. This is not a semantic truth verifier.
 
-TimesFM, scheduler-triggered rooms, additional specialists, further company-disclosure coverage, GIFT/STI feeds and Harness² remain later work. Forecasts gain no score, position, stop or target influence.
+Read-only market snapshots and the availability recorder are now delivered; GIFT/STI quote feeds remain unqualified. The required visual workspace comes next. TimesFM, scheduler-triggered rooms, additional specialists, further company-disclosure coverage and Harness² follow later. Forecasts gain no score, position, stop or target influence.
 
 ## Controlled primary-source refresh
 
@@ -105,3 +105,53 @@ the subsequent zero-admission protocol correction.
 `make test-file` / `make test-memgraph` no longer stop the broker worker. They use and clean only disposable test services. Use focused checks first. Do not run graph fixtures directly against the operator graph, change the guard to bypass it, or reuse a production endpoint as the expected target.
 
 If a transient research API unit was explicitly stopped, `--collect` can remove it. Use `make research-start` to recreate the owned unit; `systemctl start` cannot recreate a collected unit. An active API can still be restarted independently with `systemctl --user restart kepler-research-api.service`.
+
+## Read-only market context
+
+The current local schema includes additive migration `20261103_0009` and the
+separate `market_context_observations` table. New installations must back up their
+database, validate the additive migration in the disposable stack and explicitly
+upgrade; no reset/backfill is needed. See [market findings](MARKET_CONTEXT_FINDINGS.md)
+for the actual local migration order, qualification gaps and measured tests.
+
+From `swingtradev3/`:
+
+```bash
+make research-start
+make research-market-refresh
+```
+
+Refresh currently saves **unavailable availability/specification records**, makes
+zero provider HTTP calls and never logs in, subscribes, fetches a quote, starts a
+room or places an order. It reads the existing private host DB configuration,
+serializes collection and refuses another collection within 60 seconds. No
+migration is invoked by the recorder. A successful refresh is not a successful
+market feed. The recorded source/contract/calendar/delay gaps stay explicit.
+
+The authenticated `/research/market-context` endpoint accepts `scope` (`all`,
+`gift_nifty`, `singapore_sti`, `nifty_cash`), an optional aware `cutoff`, and optional
+`room_id` to respect its pinned cutoff. The dashboard uses `/api/research` through
+the existing proxy/Unix socket. Model `market_context` reads are budgeted and
+saved-data only, with at most three observations; missing history is unavailable,
+not a current quote backdated into an old room. UI separates quote quality from
+calendar state and observation-time state from cutoff-time state.
+
+For actual GIFT/Nifty quote qualification, use the normal user Kite login workflow
+without sharing secret values, then check master identity, quote, history and
+owned socket capability separately. The observed `EQ/INDICES` GIFT row with blank
+expiry does not establish a futures contract. STI needs a permitted licensed source;
+an ETF/futures proxy must be labeled explicitly. Never assume webpage receipt or
+provider refresh frequency is exchange quote time/delay.
+
+`_gift_nifty_check` now invokes an owned availability-only subprocess with a
+five-second deadline. No broker worker was restarted to load this change. When
+that process is normally restarted, it will load the hook; it still has no quote
+provider, model scheduling or trade authority. Before enabling a future provider,
+qualify contract/session/reference/rights and reuse its shared broker rate limit.
+
+The market validation plan is registered once in cognition storage under
+`market-context-20261102T175740Z`, separately capped at 60 model and 60 tool
+admissions. Its completed counters are **41 / 39**. Do not change its allocation,
+reuse cancelled identities or reopen the old source run. Future work needs its own
+declared scope and budget; the required visual workspace can reuse saved history
+without fresh inference.

@@ -1,0 +1,73 @@
+{
+  "schema": "market-context.evidence.v1",
+  "created_at": "2026-11-03T03:46:45.926156+00:00",
+  "run_id": "market-context-20261102T175740Z",
+  "source_commit": "30b5c397678001a1f8898d3e83cdadc51f75a527",
+  "files": [
+    {
+      "path": "accounting.json",
+      "bytes": 1531,
+      "sha256": "2e8f1b71e5f4171c685c2214a133f3eb3dfd80d4d607dddcd8d8d338eb4e24ba"
+    },
+    {
+      "path": "api-restart.json",
+      "bytes": 1004,
+      "sha256": "cdab746d8e42521b8f28a75f9d80d9265a6325392ecf69dba4fabe89270388bd"
+    },
+    {
+      "path": "browser-summary.json",
+      "bytes": 3420,
+      "sha256": "24bd7d4fd46691fa008bf3d4ed53b30b59d14aace5781aa8aa5d1ebba203e9c3"
+    },
+    {
+      "path": "checks.json",
+      "bytes": 1785,
+      "sha256": "4fa86535c6f9046215301947182addf3a84b2c4ed6281978cfc7e2136544af89"
+    },
+    {
+      "path": "deterministic-source-check.json",
+      "bytes": 8937,
+      "sha256": "c323e68bef99f744be4b670d6953a64271a1f5d14e1f7fe545c35bcd147b7a5c"
+    },
+    {
+      "path": "execution.json",
+      "bytes": 5086,
+      "sha256": "b58faa8c4dca961f06de2f21d31e008f24c7eec7ca91485f5e724f502f730de2"
+    },
+    {
+      "path": "frozen-inputs.json",
+      "bytes": 10109,
+      "sha256": "33606fb4cf3240818ce68c53403da4c6e63a5cc31249d5e48873bbac7c400a5e"
+    },
+    {
+      "path": "narrative-audit.json",
+      "bytes": 25391,
+      "sha256": "907df83fe07937f5d6a6a72bb79f5ab74d5c76e4c0cd972514101cc6f2de58cc"
+    },
+    {
+      "path": "official-sources.json",
+      "bytes": 1195,
+      "sha256": "829afd889bb8a6c97e610d47aec57fc679e0c3fe7036d458832453970254e131"
+    },
+    {
+      "path": "preservation.json",
+      "bytes": 2479,
+      "sha256": "c082476f9edd18707ebbfc5aaed59c15f67dd41023a87d0721741ffd340a8f7f"
+    },
+    {
+      "path": "provider-probes.json",
+      "bytes": 7698,
+      "sha256": "3b08558d2afbfe6db9fad21f77546d09276028d756354f5f6e6eae7ece14cbaf"
+    },
+    {
+      "path": "public-rooms.json",
+      "bytes": 97322,
+      "sha256": "d6c1cef77f8de1eb74c6e3e66b2a21029a9995ebe80ae3db114849a817a4110c"
+    },
+    {
+      "path": "run-plan.json",
+      "bytes": 4504,
+      "sha256": "f5f7af52c01cdf87178c4611d330ebf8cff3634c1d81d240c9fc104e9a40ec9d"
+    }
+  ]
+}

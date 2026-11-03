@@ -1,17 +1,17 @@
 # Kepler collaborative research revamp
 
-Implementation handoff, revision 8 — reviewed `34a3f40`, 2 November 2026.
+Implementation handoff, revision 9 — market-context source `30b5c39`, 3 November 2026.
 
-**Current:** the fresh-source service and Research Desk provenance views are delivered at source `0ba305a`, with findings at `34a3f40`. The installed Codex/local adapter, active participant policy and Gemma/Qwen serving pair remain selected; tuning candidates remain inactive. The LAN UI loading bug is fixed.
+**Current:** source `30b5c39` fixes terminal streams, predecessor cutoffs and undated omissions, and adds immutable read-only market context with Research Desk provenance cards. [Market-context findings](MARKET_CONTEXT_FINDINGS.md) record the delivered service and its limits: GIFT/STI quotes are honestly unavailable, and the actual rooms still show query/citation/repetition failures. The installed Codex/local adapter, active participant policy and Gemma/Qwen serving pair remain selected; tuning candidates remain inactive.
 
-**Next:** fix three reproduced integrity issues and implement read-only GIFT Nifty / Singapore market context. Start with [FRESH_SOURCE_REVIEW.md](FRESH_SOURCE_REVIEW.md), then [MARKET_CONTEXT_IMPLEMENTATION.md](MARKET_CONTEXT_IMPLEMENTATION.md) and [MARKET_CONTEXT_HANDOFF.md](MARKET_CONTEXT_HANDOFF.md). Provider discovery can proceed in parallel with offline integrity fixes. Do not replay the completed source run or another prompt-only experiment.
+**Next:** review [MARKET_CONTEXT_FINDINGS.md](MARKET_CONTEXT_FINDINGS.md), then follow the required [visual agent workspace milestone](UI_MILESTONE_PLAN.md). Provider entitlement/calendar gaps remain explicit follow-ups, not a reason to postpone that UI indefinitely. Both source and market evaluation runs are closed; do not renew them or replay a prompt-only experiment.
 
-**Required next UI milestone:** after the current market-context phase, build the Pixel Agents-style visual agent workspace described in [UI_MILESTONE_PLAN.md](UI_MILESTONE_PLAN.md). The existing form/transcript is the foundation; the office/avatars are not implemented yet. This requested workspace is required, and the current phase stays first.
+**Required next UI milestone:** build the Pixel Agents-style visual agent workspace described in [UI_MILESTONE_PLAN.md](UI_MILESTONE_PLAN.md) after reviewing the market-context handback. The existing form/transcript is the foundation; the office/avatars are not implemented yet. This requested workspace is required.
 
 ## Read this first
 
-1. [Current source-phase review](FRESH_SOURCE_REVIEW.md): independent tests/reproductions, source delivery, actual room results and limits.
-2. [Market-context implementation](MARKET_CONTEXT_IMPLEMENTATION.md) and [local handoff](MARKET_CONTEXT_HANDOFF.md): active next scope.
+1. [Market-context findings](MARKET_CONTEXT_FINDINGS.md): integrity fixes, real provider gaps, actual rooms, preservation and handback.
+2. [Visual workspace milestone](UI_MILESTONE_PLAN.md): next implementation order. [Market-context implementation](MARKET_CONTEXT_IMPLEMENTATION.md), [handoff](MARKET_CONTEXT_HANDOFF.md) and [source review](FRESH_SOURCE_REVIEW.md) retain the preceding scope and reproducers.
 3. [Fresh-source findings](FRESH_SOURCE_FINDINGS.md) and [results](FRESH_SOURCE_RESULTS.md): completed ingestion, tests, frozen rooms and accounting.
 4. [Runbook](RESEARCH_ROOM_RUNBOOK.md), [reboot checks](REBOOT_BROWSER_CHECKS.md) and [work history](WORK_HISTORY.md): normal :8502 entry point, supported host services and implementation history.
 5. [Overall plan](IMPLEMENTATION_PLAN.md), [Codex design](CODEX_IMPLEMENTATION.md), [model/status manifest](MODEL_CANDIDATES.json), [skills](SKILLS_AND_CONTEXT_TOOLS.md) and [TimesFM](TIMESFM_AUDIT_AND_REUSE.md): existing design and later capabilities.
@@ -20,11 +20,12 @@ Older fresh-source/room-fix handoffs, prompt-iteration plans and spike documents
 
 ## Current evidence and limits
 
-- Independent cloud checks: **87 backend/source tests passed / 11 infrastructure skips; 22 frontend tests, TypeScript, build and Ruff passed**. The local 157-test/UI/graph/reboot observations were not rerun on the user's PC.
+- Local market-context verification: **164 guarded backend tests / 3 expected skips, 82 host tests, 25 frontend tests, types/build/Ruff and actual localhost/LAN recovery passed**. The 41-model/39-tool run retained two imperfect 12-message abstentions and active cancellation; exact citations do not establish narrative truth.
+- Historical independent cloud checks at `34a3f40`: **87 backend/source tests passed / 11 infrastructure skips; 22 frontend tests, TypeScript, build and Ruff passed**. That cloud review did not reproduce the earlier local 157-test/UI/graph/reboot observations; the newer local market-context results are listed above.
 - All 30 fresh-source export files matched manifest sizes/hashes. Actual application helpers reproduced missing stream-terminal completion, widened predecessor read cutoff and incorrect undated omission reporting using scratch SQLite/loopback HTTP; no real model or broker calls.
 - Three paired real questions: relevant titles retrieved 3/3 saved-source versus 0/3 ordinary; unsupported messages 1/23 versus 5/11 in the saved audit. Repeated messages are not independent facts. All six ended in three abstentions/three failures; they do not establish reliable research conclusions.
 - Source snapshots preserve first-seen/revisions and explicit date/identity limits. Company filings, broad archive coverage and RBI/PIB timezone gaps remain open. Metadata/real quote validity does not prove interpretation.
-- GIFT/Singapore provider support is not yet implemented. The existing GIFT scheduler method only logs; macro float/cache helpers do not qualify live index data. The next scope addresses that directly.
+- GIFT/Singapore snapshots, tool/UI and bounded availability refresh are implemented. Live quote feeds are unqualified: Kite login expired, the GIFT master row is not a resolved futures contract, STI rights/provider are unverified, and current GIFT overnight hours remain unknown. No quote is fabricated. The new data hook awaits a normal later broker-worker restart; that service was preserved.
 - Manual live-entry approval and existing broker/protection controls remain; TimesFM receives no new score/risk authority. Preserve local changing runtime files and original evidence.
 
 ## Hardware and runtime update
@@ -65,4 +66,4 @@ The pinned API returns channel 5 as the point forecast, not the full-array chann
 
 ## Start instructions for local Codex
 
-Use [MARKET_CONTEXT_HANDOFF.md](MARKET_CONTEXT_HANDOFF.md). Fix the three precise integrity findings, qualify read-only GIFT/STI sources and add truthful session/delay/quality snapshots to the existing desk and tool gateway. Keep current runtime/model/prompt choices, preserve source history and local state, and verify with a fresh bounded run. Record actual outcomes in MARKET_CONTEXT_FINDINGS.md.
+Read [MARKET_CONTEXT_FINDINGS.md](MARKET_CONTEXT_FINDINGS.md) and its handback first. The next required milestone is [UI_MILESTONE_PLAN.md](UI_MILESTONE_PLAN.md), with the same real room/thread/message/tool/history foundation. Keep current runtime/model/prompt choices, source/market histories, manual approval and local changing state. Declare any later live-verification budget independently; neither completed run is renewable.

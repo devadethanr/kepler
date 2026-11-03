@@ -1,0 +1,453 @@
+{
+  "run_id": "market-context-20261102T175740Z",
+  "method": "Read only audit of native public message and tool events, frozen input metadata, immutable plan and accounting. Exact quote spans are checked against attached snapshot identity; model-proposed support and citation admissibility are not semantic verification. No inference or provider requests.",
+  "accounting": {
+    "plan_allocation": {
+      "development": {
+        "model": 12,
+        "tool": 12
+      },
+      "integration": {
+        "model": 48,
+        "tool": 48
+      }
+    },
+    "native_admissions_match_accounting": true,
+    "totals": {
+      "model": 41,
+      "tool": 39,
+      "reserved_tokens": 1343488,
+      "input_tokens": 458776,
+      "output_tokens": 5142,
+      "unknown_usage_calls": 2
+    },
+    "rooms": "Development cancel 2 model / 0 tool; integration source-summary 23 / 23 and market-context 16 / 16. 41 model / 39 tool total. Two cancelled calls have unknown usage; token totals are reported amounts, not complete totals."
+  },
+  "source_summary_audit": {
+    "outcome": "Did not produce the requested useful primary-source summary. 12 public messages, 23 tool admissions (6 news searches, 1 artifact search, 16 room-message attempts), 23 model admissions; room terminated abstention.",
+    "known_inputs": [
+      {
+        "provider": "sebi_rss",
+        "title": "Extension of timeline with respect to compliance of Digital Accessibility Circulars",
+        "publication_date": "2026-10-30",
+        "publication_precision": "date",
+        "issuer_mapping": "provider regulator/government origin; issuer unmapped",
+        "retention": "feed_metadata_only"
+      },
+      {
+        "provider": "pib_rss",
+        "title": "Coal India Marks 51 Glorious Years with Record-Breaking Performance in October 2026",
+        "publication_date": null,
+        "publication_precision": "unknown",
+        "issuer_mapping": "provider regulator/government origin; issuer unmapped",
+        "retention": "feed_metadata_only"
+      }
+    ],
+    "facts_and_limits": "SEBI saved title is date-only 2026-10-30 with feed metadata and no retained article body. PIB Coal India saved title has unknown publication date and cannot be placed in a window; feed metadata only for this frozen record. Neither is mapped to an issuer; the title is not independent verification of its contents or a company filing.",
+    "failed_searches": "Skeptic used literal topic strings Accessibility SEBI and Coal India PIB, both empty; source labels became part of topic matching rather than source filters. Analyst made four denied searches with end after cutoff. No news evidence was returned to the room.",
+    "unsupported_and_repetition": "At seq 44 skeptic incorrectly says analyst searches were not denied; seq 53 analyst accepts this incorrect correction. Seq 136 incorrectly concludes no relevant facts are available in saved records; frozen inputs show two relevant saved titles. Seq 105 and 114 cite only the internal heading Personal Kepler Research Revamp, which cannot substantiate regulatory absence or source health. Several turns repeat empty-result and metadata assertions; the final seq 149 abstains. Feed-window absence itself cannot prove no release."
+  },
+  "market_context_audit": {
+    "outcome": "12 public messages, 16 tool admissions (4 market_context reads, 12 room-message attempts), 16 model admissions; status abstention, termination message_limit. No numerical quote or opening-gap assertion in public messages.",
+    "known_inputs": [
+      {
+        "scope": "gift_nifty",
+        "status": "unavailable",
+        "symbol": "GIFT Nifty",
+        "kind": "future",
+        "exchange": "NSEIX",
+        "quote_value": null,
+        "market_state_at_observation": "unknown",
+        "session_id": null,
+        "contract": null,
+        "exchange_asof": null,
+        "delay_seconds": null,
+        "quality_reasons": [
+          "no_verified_entitled_quote_provider",
+          "contract_not_resolved",
+          "hash_covers_availability_metadata_not_price"
+        ]
+      },
+      {
+        "scope": "singapore_sti",
+        "status": "unavailable",
+        "symbol": "STI",
+        "kind": "cash_index",
+        "exchange": "SGX",
+        "quote_value": null,
+        "market_state_at_observation": "open",
+        "session_id": "sti_calculation",
+        "contract": null,
+        "exchange_asof": null,
+        "delay_seconds": null,
+        "quality_reasons": [
+          "no_verified_licensed_sti_quote_provider",
+          "sti_special_sessions_may_be_unverified",
+          "hash_covers_availability_metadata_not_price"
+        ]
+      },
+      {
+        "scope": "nifty_cash",
+        "status": "unavailable",
+        "symbol": "NIFTY 50",
+        "kind": "cash_index",
+        "exchange": "NSE",
+        "quote_value": null,
+        "market_state_at_observation": "unknown",
+        "session_id": null,
+        "contract": null,
+        "exchange_asof": null,
+        "delay_seconds": null,
+        "quality_reasons": [
+          "no_verified_entitled_nifty_reference"
+        ]
+      }
+    ],
+    "useful": "All three saved quotes are unavailable and null; GIFT contract and expiry unresolved, and none has a quote exchange timestamp or known delay. A numerical comparison requires identified compatible quotes, times, references and a resolved GIFT contract. The saved STI observation separately labels its calculation session open, subject to partial calendar qualification; the requested-cutoff assessment is also open in the actual returned packets. Neither unavailable quote nor an unverified provider proves the market is closed or entitlement impossible.",
+    "citations": "11 of 12 public messages cite spans, all from market:nifty_cash. Seq 23 and 40 use the Nifty cash null quote span for GIFT assertions; seq 49 uses NIFTY cash instrument identity for GIFT. Seq 58 and 112 mark claims as model-proposed supported but cite only NIFTY 50 cash index / NSE, insufficient to establish GIFT future / NSEIX or contract details. Citation admissibility validates a span reference, not the narrative.",
+    "unsupported_and_repetition": "Skeptic at seq 67 and 121 asserts no quote entitlement exists; verification is absent, not proof of no entitlement. Seq 85, 103 and 121 claim no observable market state exists, despite saved STI session marked open (with caveat), and conflate no quote with no market state. The participants repeatedly debate metadata usefulness without developing an STI analysis; seq 32 calls the room cutoff a snapshot time though observations were received earlier.",
+    "packet_quality": "MarketEvidence packets are derived_market_observation_summary with packet status ok, while embedded snapshot status is unavailable and quote null; status ok describes packet, not quote. Saved source and market-state fields remain visible. There is no automatic trading or model price calculation in this audit. Do not present the packet as an exchange quotation."
+  },
+  "rooms": {
+    "source-summary": {
+      "id": "room:4feb11c2-948c-5628-adaf-acf1f7b5ab8a",
+      "status": "abstention",
+      "termination_reason": "outcome",
+      "event_count": 153,
+      "public_message_count": 12,
+      "tool_admissions": 23,
+      "model_admissions": 23,
+      "tool_starts_by_name": {
+        "news_search": 6,
+        "room_message": 16,
+        "artifact_search": 1
+      },
+      "cited_public_messages": 2,
+      "messages": [
+        {
+          "seq": 27,
+          "speaker": "analyst",
+          "text": "I attempted to search for primary sources regarding \"Accessibility (SEBI)\" and \"Coal India (PIB)\" using the news_search tool with a bounded publication window. Both searches were denied, stating the source window must be <=366 days and no later than the cutoff. Can you clarify the required date range for these searches?",
+          "citations": []
+        },
+        {
+          "seq": 32,
+          "speaker": "skeptic",
+          "text": "Both searches returned empty evidence. SEBI RSS shows 30 entries but no article bodies retained; PIB RSS has 20 entries with only one HTML excerpt reviewed. No publication titles, dates, or content established. Source terms confirm: SEBI retains only feed metadata; PIB retains attributed metadata and one reviewed excerpt. Absence in these bounded windows does not prove no release.",
+          "citations": []
+        },
+        {
+          "seq": 44,
+          "speaker": "skeptic",
+          "text": "Your search was not denied. The tool returned empty evidence arrays. The bounded window (Oct 4 - Nov 3, 2026) is valid. SEBI RSS shows 30 entries but retains only feed metadata, no article bodies. PIB RSS has 20 entries with one HTML excerpt reviewed. No publication titles or dates established. Absence in these bounded windows does not prove no release.",
+          "citations": []
+        },
+        {
+          "seq": 53,
+          "speaker": "analyst",
+          "text": "I acknowledge your point that the tool returned empty evidence arrays, not a denial. However, the initial search for \"Accessibility (SEBI)\" and \"Coal India (PIB)\" with an empty cutoff and bounded window failed to yield specific publication titles, dates, or content. Can you confirm if the bounded window used in the previous turn was Oct 4 - Nov 3, 2026?",
+          "citations": []
+        },
+        {
+          "seq": 66,
+          "speaker": "skeptic",
+          "text": "Yes, the bounded window used was Oct 4 - Nov 3, 2026 (cutoff empty, start/end empty). The tool returned empty evidence arrays for both searches. No publication titles, dates, or content were established. Source terms confirm SEBI retains only feed metadata; PIB retains attributed metadata and one reviewed excerpt. Absence in these bounded windows does not prove no release.",
+          "citations": []
+        },
+        {
+          "seq": 75,
+          "speaker": "analyst",
+          "text": "Given the empty evidence arrays for \"Accessibility (SEBI)\" and \"Coal India (PIB)\" within the Oct 4 - Nov 3, 2026 window, and the confirmation that SEBI retains only metadata while PIB retains one excerpt, what is the next step to find relevant primary source facts? Should I broaden the search terms or the time window?",
+          "citations": []
+        },
+        {
+          "seq": 84,
+          "speaker": "skeptic",
+          "text": "Broaden search terms? Try \"Kepler accessibility\" or \"Coal India coal production\" without SEBI/PIB filters. Also check artifact_search for \"Kepler\" to see if any research documents exist. The current primary-source feeds are stale and metadata-only; we need to pivot to available content.",
+          "citations": []
+        },
+        {
+          "seq": 105,
+          "speaker": "analyst",
+          "text": "The primary source search for SEBI/PIB yielded no results in the bounded window. However, artifact search for \"Kepler\" revealed internal research documents detailing implementation status, run limits, and research revamp plans. These documents establish internal project context but do not provide external primary source facts on Accessibility (SEBI) or Coal India (PIB).",
+          "citations": [
+            {
+              "evidence_id": "ev:3e3ebe6343da0300b773fa3c",
+              "quote": "## Personal Kepler Research Revamp",
+              "quote_ids": [
+                "q:73f867abdf4c"
+              ],
+              "scope": "target-filtered search excerpt",
+              "model_proposed_support": "supported",
+              "narrative_verification": "unassessed"
+            }
+          ]
+        },
+        {
+          "seq": 114,
+          "speaker": "skeptic",
+          "text": "Internal research documents do not substitute for external primary-source facts. The research question explicitly asks for \"known saved primary-source facts and their limits.\" The artifact search confirms internal context but does not establish any SEBI/PIB facts. The primary-source feeds remain stale and metadata-only. We must acknowledge the absence of external evidence, not conflate internal notes with regulatory filings.",
+          "citations": [
+            {
+              "evidence_id": "ev:3e3ebe6343da0300b773fa3c",
+              "quote": "## Personal Kepler Research Revamp",
+              "quote_ids": [
+                "q:73f867abdf4c"
+              ],
+              "scope": "target-filtered search excerpt",
+              "model_proposed_support": "contradicted",
+              "narrative_verification": "unassessed"
+            }
+          ]
+        },
+        {
+          "seq": 123,
+          "speaker": "analyst",
+          "text": "I agree that internal documents are not external primary sources. Given the lack of external evidence for SEBI/PIB, and the confirmation that the search window was valid, should I conclude that no relevant primary source facts are currently available in the saved records for the specified topics?",
+          "citations": []
+        },
+        {
+          "seq": 136,
+          "speaker": "skeptic",
+          "text": "Yes. The bounded window search returned empty evidence arrays. SEBI RSS retains only metadata; PIB RSS retains one excerpt. No publication titles, dates, or content established. Internal artifacts do not substitute for external primary sources. Conclusion: no relevant primary-source facts currently available in saved records for Accessibility (SEBI) or Coal India (PIB).",
+          "citations": []
+        },
+        {
+          "seq": 149,
+          "speaker": "analyst",
+          "text": "I abstain from a final conclusion as the search for external primary sources was unsuccessful. The available internal artifacts do not meet the criteria for external primary source facts. Further investigation into broader timeframes or different source types is required.",
+          "citations": []
+        }
+      ]
+    },
+    "market-context": {
+      "id": "room:4004fa0c-3f73-5953-9c4d-6fb7a84c0bfb",
+      "status": "abstention",
+      "termination_reason": "message_limit",
+      "event_count": 125,
+      "public_message_count": 12,
+      "tool_admissions": 16,
+      "model_admissions": 16,
+      "tool_starts_by_name": {
+        "market_context": 4,
+        "room_message": 12
+      },
+      "cited_public_messages": 11,
+      "messages": [
+        {
+          "seq": 23,
+          "speaker": "skeptic",
+          "text": "Your GIFT Nifty observation shows status: unavailable, quote_value: null, and quality_reasons: no_verified_entitled_quote_provider, contract_not_resolved. This is metadata-only availability, not a resolved price. Without a verified quote provider and contract master, no numerical comparison is possible. The saved body is unchanged but unverified.",
+          "citations": [
+            {
+              "evidence_id": "ev:055ae54b8e523cf244b9db56",
+              "quote": "Quote: None; unit: index_points; delay seconds: None.",
+              "quote_ids": [
+                "q:ada7624710b0"
+              ],
+              "scope": "nifty_cash",
+              "model_proposed_support": "insufficient",
+              "narrative_verification": "unassessed"
+            }
+          ]
+        },
+        {
+          "seq": 32,
+          "speaker": "analyst",
+          "text": "The market context for GIFT Nifty, Singapore STI, and Nifty cash shows all three instruments are currently 'unavailable' with no quote value. The data is limited to metadata from a snapshot taken at 2026-11-03T03:34:09.134789+00:00. What specific missing inputs prevent a numerical comparison?",
+          "citations": []
+        },
+        {
+          "seq": 40,
+          "speaker": "analyst",
+          "text": "I acknowledge the lack of a resolved price for GIFT Nifty. However, the data shows the instrument kind is 'future' and the exchange is 'NSEIX'. Can you clarify if the 'no_verified_entitled_quote_provider' reason implies a permanent lack of data or a temporary issue with the provider's verification status?",
+          "citations": [
+            {
+              "evidence_id": "ev:055ae54b8e523cf244b9db56",
+              "quote": "Quote: None; unit: index_points; delay seconds: None.",
+              "quote_ids": [
+                "q:ada7624710b0"
+              ],
+              "scope": "nifty_cash",
+              "model_proposed_support": "unassessed",
+              "narrative_verification": "unassessed"
+            }
+          ]
+        },
+        {
+          "seq": 49,
+          "speaker": "skeptic",
+          "text": "The 'no_verified_entitled_quote_provider' reason is not a temporary provider issue but a fundamental lack of a verified, entitled quote source for GIFT Nifty in the saved metadata. The instrument is 'future' on 'NSEIX', but the contract is null and quote_value is null. Without a resolved contract master and verified provider, no price exists to compare. The snapshot is metadata-only, not a live quote.",
+          "citations": [
+            {
+              "evidence_id": "ev:055ae54b8e523cf244b9db56",
+              "quote": "Instrument: NIFTY 50 (cash_index); venue NSE.",
+              "quote_ids": [
+                "q:cf368f94d54d"
+              ],
+              "scope": "nifty_cash",
+              "model_proposed_support": "insufficient",
+              "narrative_verification": "unassessed"
+            }
+          ]
+        },
+        {
+          "seq": 58,
+          "speaker": "analyst",
+          "text": "I disagree that the lack of a verified quote provider is a fundamental lack of data. The metadata confirms the instrument type (future/cash_index), exchange (NSEIX/NSE), and unit (index_points). The missing inputs are the specific contract ID and a verified quote value, not the instrument's existence in the saved metadata.",
+          "citations": [
+            {
+              "evidence_id": "ev:055ae54b8e523cf244b9db56",
+              "quote": "Instrument: NIFTY 50 (cash_index); venue NSE.",
+              "quote_ids": [
+                "q:cf368f94d54d"
+              ],
+              "scope": "nifty_cash",
+              "model_proposed_support": "supported",
+              "narrative_verification": "unassessed"
+            }
+          ]
+        },
+        {
+          "seq": 67,
+          "speaker": "skeptic",
+          "text": "You conflate instrument existence with quote availability. The metadata shows 'status: unavailable', 'quote_value: null', and 'quality_reasons: no_verified_entitled_quote_provider'. Without a verified entitled provider, no quote entitlement exists. The contract is null, expiry is null, and the source is 'historical specification; current master unverified'. No numerical comparison is possible without a resolved contract master and verified quote.",
+          "citations": [
+            {
+              "evidence_id": "ev:055ae54b8e523cf244b9db56",
+              "quote": "Provider: unconfigured; quote status: unavailable.",
+              "quote_ids": [
+                "q:72f998b43476"
+              ],
+              "scope": "nifty_cash",
+              "model_proposed_support": "insufficient",
+              "narrative_verification": "unassessed"
+            }
+          ]
+        },
+        {
+          "seq": 76,
+          "speaker": "analyst",
+          "text": "Given the metadata confirms the instrument type and exchange, is the 'no_verified_entitled_quote_provider' reason a definitive blocker for *any* comparison, or does it only prevent a *numerical* comparison? I need to know if the metadata itself is useful for structural analysis.",
+          "citations": [
+            {
+              "evidence_id": "ev:055ae54b8e523cf244b9db56",
+              "quote": "Instrument: NIFTY 50 (cash_index); venue NSE.",
+              "quote_ids": [
+                "q:cf368f94d54d"
+              ],
+              "scope": "nifty_cash",
+              "model_proposed_support": "unassessed",
+              "narrative_verification": "unassessed"
+            }
+          ]
+        },
+        {
+          "seq": 85,
+          "speaker": "skeptic",
+          "text": "The metadata is not useful for structural analysis because it lacks the core price data required for any comparison. 'Quote: None', 'quote_value: null', and 'status: unavailable' mean no observable market state exists. Without a verified entitled provider, the instrument is unobservable, not just numerically incomplete. The metadata confirms absence, not presence.",
+          "citations": [
+            {
+              "evidence_id": "ev:055ae54b8e523cf244b9db56",
+              "quote": "Quote: None; unit: index_points; delay seconds: None.",
+              "quote_ids": [
+                "q:ada7624710b0"
+              ],
+              "scope": "nifty_cash",
+              "model_proposed_support": "insufficient",
+              "narrative_verification": "unassessed"
+            }
+          ]
+        },
+        {
+          "seq": 94,
+          "speaker": "analyst",
+          "text": "If the metadata confirms the instrument type and exchange, is the 'no_verified_entitled_quote_provider' reason a definitive blocker for *any* comparison, or does it only prevent a *numerical* comparison? I need to know if the metadata itself is useful for structural analysis.",
+          "citations": [
+            {
+              "evidence_id": "ev:055ae54b8e523cf244b9db56",
+              "quote": "Instrument: NIFTY 50 (cash_index); venue NSE.",
+              "quote_ids": [
+                "q:cf368f94d54d"
+              ],
+              "scope": "nifty_cash",
+              "model_proposed_support": "unassessed",
+              "narrative_verification": "unassessed"
+            }
+          ]
+        },
+        {
+          "seq": 103,
+          "speaker": "skeptic",
+          "text": "The metadata is not useful for structural analysis because it lacks the core price data required for any comparison. 'Quote: None', 'quote_value: null', and 'status: unavailable' mean no observable market state exists. Without a verified entitled provider, the instrument is unobservable, not just numerically incomplete. The metadata confirms absence, not presence.",
+          "citations": [
+            {
+              "evidence_id": "ev:055ae54b8e523cf244b9db56",
+              "quote": "Quality reasons: no_verified_entitled_nifty_reference.",
+              "quote_ids": [
+                "q:8bb0ba69a6e4"
+              ],
+              "scope": "nifty_cash",
+              "model_proposed_support": "insufficient",
+              "narrative_verification": "unassessed"
+            }
+          ]
+        },
+        {
+          "seq": 112,
+          "speaker": "analyst",
+          "text": "I disagree that the metadata is useless. It confirms the instrument type (future/cash_index) and exchange (NSEIX/NSE) are known, even if the quote is null. The missing inputs are the specific contract ID and a verified quote value, not the instrument's existence in the saved metadata.",
+          "citations": [
+            {
+              "evidence_id": "ev:055ae54b8e523cf244b9db56",
+              "quote": "Instrument: NIFTY 50 (cash_index); venue NSE.",
+              "quote_ids": [
+                "q:cf368f94d54d"
+              ],
+              "scope": "nifty_cash",
+              "model_proposed_support": "supported",
+              "narrative_verification": "unassessed"
+            }
+          ]
+        },
+        {
+          "seq": 121,
+          "speaker": "skeptic",
+          "text": "The metadata confirms instrument type and exchange, but 'status: unavailable', 'quote_value: null', and 'quality_reasons: no_verified_entitled_quote_provider' mean no observable market state exists. Without a verified entitled provider and resolved contract master, no quote entitlement exists. The metadata confirms absence, not presence. No numerical or structural comparison is possible without a resolved price.",
+          "citations": [
+            {
+              "evidence_id": "ev:055ae54b8e523cf244b9db56",
+              "quote": "Provider: unconfigured; quote status: unavailable.",
+              "quote_ids": [
+                "q:72f998b43476"
+              ],
+              "scope": "nifty_cash",
+              "model_proposed_support": "insufficient",
+              "narrative_verification": "unassessed"
+            }
+          ]
+        }
+      ]
+    },
+    "cancel": {
+      "id": "room:0e1c2e36-dc5a-55f9-91c9-100c1f371139",
+      "status": "cancelled",
+      "termination_reason": "cancelled",
+      "event_count": 10,
+      "public_message_count": 0,
+      "tool_admissions": 0,
+      "model_admissions": 2,
+      "tool_starts_by_name": {},
+      "cited_public_messages": 0,
+      "messages": []
+    }
+  },
+  "limitations": [
+    "This is a narrative and provenance audit of these saved runs, not verification of live market, provider entitlements, publication text, or external truth.",
+    "Availability metadata represents what the service recorded by the cutoff; labels do not prove current contract resolution or market data rights.",
+    "Model-proposed supported/insufficient labels and valid quote IDs do not establish that claims are entailed by cited spans."
+  ],
+  "integrator_verification": {
+    "sti_state_correction": "All two all-scope tool reads explicitly returned STI market_state_at_cutoff=open at 2026-11-03T03:34:09.134789+00:00; the preliminary audit unknown label was corrected against native outputs."
+  }
+}

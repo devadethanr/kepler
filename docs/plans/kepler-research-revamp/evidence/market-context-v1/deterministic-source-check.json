@@ -1,0 +1,176 @@
+{
+  "model_admissions": 0,
+  "tool_admissions": 0,
+  "provider_http_requests": 0,
+  "checks": [
+    {
+      "topic": "Accessibility",
+      "source": "sebi_rss",
+      "status": "ok",
+      "records": [
+        {
+          "id": "246b70f3231abd456e91fce2dce56baeb4ddd9d2aef983f81b4b287db6692244",
+          "text": "Extension of timeline with respect to compliance of Digital Accessibility Circulars",
+          "snapshot": {
+            "provider": "sebi_rss",
+            "source_id": "https://www.sebi.gov.in/legal/circulars/oct-2026/extension-of-timeline-with-respect-to-compliance-of-digital-accessibility-circulars_105523.html",
+            "provider_entry_id": null,
+            "source_type": "regulator",
+            "canonical_url": "https://www.sebi.gov.in/legal/circulars/oct-2026/extension-of-timeline-with-respect-to-compliance-of-digital-accessibility-circulars_105523.html",
+            "published_raw": "30 Oct, 2026 +0530",
+            "published_at_utc": null,
+            "published_date": "2026-10-30",
+            "timezone_basis": "source offset +0530",
+            "publication_precision": "date",
+            "event_at": null,
+            "identity_basis": "provider regulator/government origin; issuer unmapped",
+            "issuer_identifiers": [],
+            "content_hash": "8b2e2c7f218b28e801fd9e92364ae4546edf8d73e96277b0013452387395ecc7",
+            "news_id": "primary:2736d22c21439779dbd69e8a63ce7c202abb07feb7247d6aa57ffdeefaf975c7",
+            "terms": {
+              "url": "https://www.sebi.gov.in/website-policy.html",
+              "retention": "feed identification metadata and links only; no article bodies",
+              "restriction": "prior permission required for reproduction of material"
+            },
+            "retention": "feed_metadata_only",
+            "source_owner": "sebi_rss",
+            "raw_provider_entry_id": null,
+            "resolved_entry_id": "https://www.sebi.gov.in/legal/circulars/oct-2026/extension-of-timeline-with-respect-to-compliance-of-digital-accessibility-circulars_105523.html",
+            "source_key": "bca5c2107ea79606ce3353de722e2a07cc474fd58b6bf8f75f3776d52ba65bb5",
+            "source_identity_basis": "canonical_url_fallback",
+            "provider_content_hash": "329e28b2d6836c524f3b23133c02ae226128bd96c2cf4efeec3e2eac221354b7",
+            "duplicate_group": "9a410e73ac55bcd3a3b6b9b678acc205918172f4aa2674e469ddb909c944fb85",
+            "version_id": "246b70f3231abd456e91fce2dce56baeb4ddd9d2aef983f81b4b287db6692244",
+            "version_first_seen_at": "2026-11-01T20:09:32.823206+00:00",
+            "first_seen_at": "2026-11-01T20:09:32.823206+00:00",
+            "fetched_at": "2026-11-01T20:09:32.823206+00:00",
+            "fetched_at_basis": "version_transition_observation",
+            "supersedes_version_id": null,
+            "requested_cutoff": "2026-11-03T03:34:09.134789+00:00",
+            "availability": "observed_by_cutoff",
+            "units": null,
+            "currency": null,
+            "period": null,
+            "graph_link": {
+              "node_id": "news:primary:2736d22c21439779dbd69e8a63ce7c202abb07feb7247d6aa57ffdeefaf975c7",
+              "scope": "current projection only; source snapshot authoritative"
+            }
+          }
+        }
+      ],
+      "retrieval": {
+        "undated_truncated": false,
+        "undated_matches_scanned": 0,
+        "scan_truncated": false,
+        "unknown_publication_dates": 0,
+        "truncated": false,
+        "historical_availability": "observed_versions_only",
+        "scope": "saved primary-source revisions; textual topic match only",
+        "cutoff": "2026-11-03T03:34:09.134789+00:00",
+        "start": "2026-10-04T03:34:09.134789+00:00",
+        "end": "2026-11-03T03:34:09.134789+00:00",
+        "query": "Accessibility",
+        "sources": [
+          "sebi_rss"
+        ],
+        "offset": 0,
+        "result_limit": 6,
+        "next_offset": null,
+        "candidate_cap": 50,
+        "undated_returned": 0,
+        "undated_omitted_scanned": 0,
+        "undated_count_scope": "exact within scanned candidates",
+        "undated_continuation": "unavailable; undated records are only included on the first dated page, capped at two",
+        "undated_policy": "not placed in requested publication window; membership unknown",
+        "completeness": "bounded current feed windows; absence does not establish no release",
+        "conflicts": "matching records retained; no semantic contradiction classifier",
+        "identity_basis": "requested topic; no issuer/event mapping inferred"
+      }
+    },
+    {
+      "topic": "Coal India",
+      "source": "pib_rss",
+      "status": "partial",
+      "records": [
+        {
+          "id": "fb8f2ce8f57a5d7f4b5d4653edba0ff1e133627611e65f806d16d950e5b56551",
+          "text": "Coal India Marks 51 Glorious Years with Record-Breaking Performance in October 2026",
+          "snapshot": {
+            "provider": "pib_rss",
+            "source_id": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+            "provider_entry_id": null,
+            "source_type": "government_release",
+            "canonical_url": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+            "published_raw": null,
+            "published_at_utc": null,
+            "published_date": null,
+            "timezone_basis": null,
+            "publication_precision": "unknown",
+            "event_at": null,
+            "identity_basis": "provider regulator/government origin; issuer unmapped",
+            "issuer_identifiers": [],
+            "content_hash": "87e0446a7f45f0f7ecd6ed9cd1fc194262828dfe8eef2cc1d37a0802ad2d29f3",
+            "news_id": "primary:34c8d1ce0b706c6f456f07dea30d7b8d6781286c40b2b2cb92f963f03d33fe26",
+            "terms": {
+              "url": "https://www.pib.gov.in/content/102_2_Copyright-Policy.aspx?lang=1&reg=30",
+              "retention": "attributed feed metadata; reviewed first-party excerpt only on explicit request",
+              "restriction": "accurate reproduction with acknowledgement; third-party material excluded"
+            },
+            "retention": "feed_metadata_only",
+            "source_owner": "pib_rss",
+            "raw_provider_entry_id": null,
+            "resolved_entry_id": "https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2331230",
+            "source_key": "c0930235248aa61a3b57d9e3605ce0650da8d937ca4d0e595943c83de4dfcc3c",
+            "source_identity_basis": "canonical_url_fallback",
+            "provider_content_hash": "baf67a9f6f48997c65f7fbc3c7032fbc01e596f0fd3a9bb8705ff4a42b481652",
+            "duplicate_group": "0bdb00f851a4f70571f08f13d8d780fcd21d23d84ab1beb4d562fb9e49aa1eef",
+            "version_id": "fb8f2ce8f57a5d7f4b5d4653edba0ff1e133627611e65f806d16d950e5b56551",
+            "version_first_seen_at": "2026-11-01T20:09:33.607855+00:00",
+            "first_seen_at": "2026-11-01T20:09:33.607855+00:00",
+            "fetched_at": "2026-11-01T20:09:33.607855+00:00",
+            "fetched_at_basis": "version_transition_observation",
+            "supersedes_version_id": null,
+            "temporal_membership": "unknown",
+            "requested_cutoff": "2026-11-03T03:34:09.134789+00:00",
+            "availability": "observed_by_cutoff",
+            "units": null,
+            "currency": null,
+            "period": null,
+            "graph_link": {
+              "node_id": "news:primary:34c8d1ce0b706c6f456f07dea30d7b8d6781286c40b2b2cb92f963f03d33fe26",
+              "scope": "current projection only; source snapshot authoritative"
+            }
+          }
+        }
+      ],
+      "retrieval": {
+        "undated_truncated": false,
+        "undated_matches_scanned": 1,
+        "scan_truncated": false,
+        "unknown_publication_dates": 1,
+        "truncated": false,
+        "historical_availability": "observed_versions_only",
+        "scope": "saved primary-source revisions; textual topic match only",
+        "cutoff": "2026-11-03T03:34:09.134789+00:00",
+        "start": "2026-10-04T03:34:09.134789+00:00",
+        "end": "2026-11-03T03:34:09.134789+00:00",
+        "query": "Coal India",
+        "sources": [
+          "pib_rss"
+        ],
+        "offset": 0,
+        "result_limit": 6,
+        "next_offset": null,
+        "candidate_cap": 50,
+        "undated_returned": 1,
+        "undated_omitted_scanned": 0,
+        "undated_count_scope": "exact within scanned candidates",
+        "undated_continuation": "unavailable; undated records are only included on the first dated page, capped at two",
+        "undated_policy": "not placed in requested publication window; membership unknown",
+        "completeness": "bounded current feed windows; absence does not establish no release",
+        "conflicts": "matching records retained; no semantic contradiction classifier",
+        "identity_basis": "requested topic; no issuer/event mapping inferred"
+      }
+    }
+  ]
+}

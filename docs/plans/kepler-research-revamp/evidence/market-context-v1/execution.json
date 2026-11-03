@@ -1,0 +1,63 @@
+{
+  "starting_commit": "6b2b84bf62e14b82214b9cde4c8952dd663b0130",
+  "safely_fast_forwarded_review": "410ccef2360c34085fc33c2af131afd4d4ded9a2",
+  "source_commit": "30b5c397678001a1f8898d3e83cdadc51f75a527",
+  "branch": "feat-generic-broker",
+  "plan_hashes": {
+    "plan_sha256": "90f68d8adcff59c73ed1f2399ba519403292e31b30fa02f9f4b17d3cd6af4bbc",
+    "instructions_sha256": "58bd97fdb300db89908729c0fad7297a60f831d3d2687b628e5c5844046969e3",
+    "tools_sha256": "929ce27ddc279a6aa3bbc7ee81dc333f83009f8359c6c603ddee3b58c93b1b56"
+  },
+  "source_hashes": {
+    "swingtradev3-dashboard/src/lib/research-render.test.ts": "4f8f6b1d86d9fb7062426317689af5c4588a80e0036027e5e4715d5cd81866e1",
+    "swingtradev3-dashboard/src/lib/research.test.ts": "9f2c27a03b78263803c92fc5859361f3cb20d51c33c9a44277f4c775935007b7",
+    "swingtradev3-dashboard/src/lib/research.ts": "6552001930a18fe17e4ecf25170013556438f125aeb637c80c64b6f8b6035d3d",
+    "swingtradev3-dashboard/src/screens/ResearchDeskScreen.tsx": "2d7bb5286529a0601dcdd8df95e8e7a0ca00ad672eddcea1c3e51f5e05e3b8d8",
+    "swingtradev3/Makefile": "a40217fcaeb05f4a98f4740e557d6615c43364573740a539a5fec70756a47d8a",
+    "swingtradev3/api/routes/research.py": "6aa59b2c53c1337bf3319a30418d9de0ba755f6ad024360fdd82dd4ce557f71f",
+    "swingtradev3/api/tasks/scheduler.py": "b9901fa20bdd41e8684635017fbe178f1751cddb906e66915f55607caaab9c94",
+    "swingtradev3/data/market_context/__init__.py": "9826d6128347e7543c92df9611a32ddf28137db55fe367e33736a3cb8ef9f7af",
+    "swingtradev3/data/market_context/calendar.py": "37857668dcf8739fc1b7dd633297f657bbf9fdb78dfd67273338bc9aa6a2e2d1",
+    "swingtradev3/data/market_context/collector.py": "ef5d9ad4301e486ce39f7ac68b1f38bcf6d33e6737f37da2e1a9860d4577fba9",
+    "swingtradev3/data/market_context/instruments.py": "6f8efc8e37e4d84891fe1e21412f453d90cfca61015b245a9313205d854768cf",
+    "swingtradev3/data/market_context/refresh.py": "37a1b23642c58ec895234726f91eb95bd520b5e89ccabf2694632b3c4a7e1b74",
+    "swingtradev3/data/market_context/snapshot.py": "493fef7e0a626839faf38bdbf031706d57b57a5e9ecbe1bdfee3c0df769919ef",
+    "swingtradev3/memory/market_snapshot.py": "46af1b25362ce0e2b95d07e19d113955bf590eac990fe577e5dc10fd2b337102",
+    "swingtradev3/memory/migrations/versions/20261103_0009_market_context.py": "57311e8ccb372134c8fe52233ef0166c3b35878ef5764be18b0d4de6418cc2ff",
+    "swingtradev3/memory/models.py": "51d1cce240fe86637b202c91082fba64d162d7098d26b486c5757131fcc5ac5c",
+    "swingtradev3/memory/news_snapshot.py": "da39060b1fda6da87ffe0374f058b9f4d3feea1db1dce64ba4dd25611624457f",
+    "swingtradev3/ops/research_market.py": "3e5d80cc78af862840e7a63a078a921cc3547ebdb4c409d9ee410d9375ca30eb",
+    "swingtradev3/research_room/adapter.py": "d9c5213a88180a4abf0a562a976027bb59ff87ccbd02dbbc57b39ad4e83309d7",
+    "swingtradev3/research_room/market_eval.py": "58a4e8f263c0a26e864670d7169612b16992ff89e85e275e81d17167c387d3ae",
+    "swingtradev3/research_room/market_evidence.py": "5c43d48645a57f3a13bc665736af7741fa592cd5a31e344b23a748f338943c2a",
+    "swingtradev3/research_room/news_evidence.py": "3c52f39be7179d278b64ca596e46e6c0cac58edc4316dfe5e5e19db67d51beaf",
+    "swingtradev3/research_room/tools.py": "7cef3b2968418776a2be6d7ba4043d67794bab9f0c0c6cdf0aa3c162e7c5fbe9",
+    "swingtradev3/tests/test_market_context/test_snapshot.py": "aae39eea310e7f984a462e898618c589207de0bac88d527ee359d2e8bb18d0d8",
+    "swingtradev3/tests/test_market_context/test_storage.py": "bd310aebf873375791ee9c8a583ef2f14e2fc5b76a77226d2861155f31d361c6",
+    "swingtradev3/tests/test_research_room/test_codex_stream_dispatch.py": "834f66854470297144ea48c40c0cfbb6b34af6cfd326ccb1b6feee7fc7247341",
+    "swingtradev3/tests/test_research_room/test_integrity_regression.py": "e6c566ae700fddb12f363fd8471458c68ec9b6c76dc3f883488e305fdc3d6b98",
+    "swingtradev3/tests/test_research_room/test_market_eval.py": "005f7d6c4075ac422065f99c40c602588edc281183410177d9f47364adc607ad",
+    "swingtradev3/tests/test_research_room/test_market_postgres.py": "50b30725fbecd544ba38d03d39cde4b311931d566ab771d0aed5ea69aed8cb5a",
+    "swingtradev3/tests/test_research_room/test_news_evidence.py": "2b5ad5865b2dbbb640605ce86abfc47c786f35135e4cdba7b0fd69210c58a049"
+  },
+  "runtime_config_sha256": "aa843da8d0d06ad24bafc623f65ef6247900d9363403f68c4e10084739d95830",
+  "models": {
+    "analyst": {
+      "model": "gemma-e4b-followup",
+      "gguf_sha256": "676c35070db6dbe52f93e9c864ee0fba4eddea94b9c875d9cb10daff453fbaee"
+    },
+    "skeptic": {
+      "model": "qwen35-9b-followup",
+      "gguf_sha256": "dc2a39aef291f91a9116ad214058da0d86eb648743a124bd8c333787c4b9c91c"
+    }
+  },
+  "binary_hashes": {
+    "codex_sha256": "b93f6811d3f653f0fb83be4050d857fb9abbb111dfa2ce160563327daff7f306",
+    "llama_sha256": "011e1ec48f04994dbf8d1f00c87ae0342ede420d867a4486888d164d800d8b83",
+    "browser_sha256": "399c7e9f06bd29aa933fdf25c0bd958eea06927fc0ce6f536ba6347aabd64628"
+  },
+  "participant_instructions_changed": false,
+  "serving_configuration_changed": false,
+  "model_downloads": 0,
+  "inactive_prompt_candidates_promoted": 0
+}

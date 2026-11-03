@@ -91,3 +91,30 @@ Source `0ba305a`, findings `34a3f40`: immutable source revisions/observations, s
 ## Visual UI scope clarification — 2 November 2026
 
 The user confirmed that the intended agent UI is the Pixel Agents/Gather-like workspace, beyond the delivered form/transcript. [UI_MILESTONE_PLAN.md](UI_MILESTONE_PLAN.md) makes it a required next milestone after the current integrity/market-context phase. The active phase remains unchanged. This clarification updates planning only; no office renderer or avatars have been implemented.
+
+## Integrity and market context delivered — 3 November 2026
+
+Source **`30b5c39`**, starting at `6b2b84b` with safe documentation fast-forward
+`410ccef`. I1 terminal completion/dispatch, I2 earlier predecessor cutoff and I3
+undated omission regressions are corrected. Immutable market observations,
+read-only tools/API, conservative identity/calendar/quality handling and Research
+Desk cards are delivered. The availability collector records explicit missing
+quotes; it is not a live GIFT/STI feed. Normal Kite login, actual futures mapping,
+STI data rights and current GIFT overnight calendar remain qualification gaps.
+
+[MARKET_CONTEXT_FINDINGS.md](MARKET_CONTEXT_FINDINGS.md) records **164 guarded
+backend passes / 3 skips, 82 host passes, 25 frontend passes**, actual localhost
+and LAN `.41` checks, active-inference cancellation and unchanged event hashes
+across API restart. Fixed run `market-context-20261102T175740Z` closed at **41 model /
+39 tool** admissions, with two unknown-usage calls. Source-summary retrieval failed;
+market discussion retained wrong-instrument citations and repetition. Those
+failures were not relabeled or rerun. Active instructions/models/configuration and
+inactive candidates were preserved.
+
+All 2,065 original news IDs/payloads and 71/71/6 source-history IDs survived; normal
+producers added nine records. Four protected controls/manual approval are unchanged;
+heartbeat records and runtime files changed normally. Five tracked runtime files,
+original stash and new private backup remain local. The only schema addition is
+market observations; an existing config/auth read invoked the additive upgrade
+after backup but before the intended disposable-validation step, transparently
+recorded in findings. The required visual workspace remains next, unimplemented.

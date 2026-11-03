@@ -1,0 +1,38 @@
+{
+  "guarded_backend": {
+    "passed": 164,
+    "skipped": 3,
+    "failed": 0,
+    "command": "cd swingtradev3 && make test-file file='tests/test_research_room tests/test_news_snapshots.py tests/test_data/test_fresh_source.py tests/test_market_context'",
+    "skip_reasons": [
+      "2 installed-Codex opt-in checks unavailable in Docker; both passed on pinned host",
+      "1 host-only Scrapling dependency not installed in Docker; parser unchanged this phase"
+    ],
+    "warnings": [
+      "websockets legacy deprecations"
+    ]
+  },
+  "host": {
+    "passed": 82,
+    "failed": 0,
+    "command": "KEPLER_CODEX_PROTOCOL_TEST=1 DATABASE_URL=sqlite:////tmp/kepler-market-final-unused.db MEMGRAPH_URI=bolt://127.0.0.1:9 MEMGRAPH_TEST_ACK= PYTHONPATH=. <host-venv-python> -m pytest -q -p no:cacheprovider tests/test_research_room/test_integrity_regression.py tests/test_research_room/test_codex_stream_dispatch.py tests/test_market_context tests/test_research_room/test_news_evidence.py tests/test_news_snapshots.py tests/test_research_room/test_market_eval.py"
+  },
+  "frontend": {
+    "passed": 25,
+    "types": true,
+    "build": true,
+    "private_build_output": true,
+    "command": "npm test && npm run lint && npm run build -- --outDir /tmp/kepler-market-final-build",
+    "warning": "existing KnowledgeScreen large chunk"
+  },
+  "ruff": {
+    "files": 25,
+    "passed": true
+  },
+  "git_diff_check": true,
+  "initial_failures_fixed": {
+    "sqlite_timezone_adapter": 3
+  },
+  "graph": "protected disposable launcher used; no operator graph deletion; no destructive graph integration directory collected",
+  "stream_dispatch": "actual installed Codex/RPC/Bridge with loopback fake model, EOF rejection zero stub dispatch, recognized tool finish one stub dispatch; no inference"
+}

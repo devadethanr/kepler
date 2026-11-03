@@ -1,0 +1,90 @@
+{
+  "schema": "market-eval.plan.v1",
+  "run_id": "market-context-20261102T175740Z",
+  "rooms": [
+    {
+      "key": "cancel",
+      "phase": "development",
+      "request_id": "0e1c2e36-dc5a-55f9-91c9-100c1f371139",
+      "target": "Kepler",
+      "question": "Use market_context to inspect the saved descriptive inputs and discuss their availability with your peer. Retrieve evidence before concluding.",
+      "cutoff": "2026-11-03T03:34:09.134789+00:00",
+      "version_ids": [
+        "246b70f3231abd456e91fce2dce56baeb4ddd9d2aef983f81b4b287db6692244",
+        "fb8f2ce8f57a5d7f4b5d4653edba0ff1e133627611e65f806d16d950e5b56551"
+      ],
+      "market_snapshot_ids": [
+        "2bee37dc300e56dea0170321ca60d8a252cf74ef0cbb270f67c1a748d06444f0",
+        "b94a92a34d4a648e2428843122fd068a754165dd8b7a01bc16ae383dc6e26ae6",
+        "ed69e312e9081e548ea4af23326c52e698b4f8d245ac82b2216a2858f39952d9"
+      ],
+      "limits": {
+        "model": 12,
+        "tool": 12,
+        "seconds": 900
+      }
+    },
+    {
+      "key": "source-summary",
+      "phase": "integration",
+      "request_id": "4feb11c2-948c-5628-adaf-acf1f7b5ab8a",
+      "target": "Kepler",
+      "question": "Produce a concise useful summary of known saved primary-source facts and their limits for the operator. Start with news_search for Accessibility (SEBI) and Coal India (PIB), using empty cutoff and bounded publication window. Identify the retrieved publication titles and what their dates, issuer mappings and retained content do or do not establish. Send an addressed finding to your peer, answer the concrete objection, then reach a conclusion, disagreement or specific abstention. Do not treat old experiment documents as current source health. Do not invent dates, publication content or company filings.",
+      "cutoff": "2026-11-03T03:34:09.134789+00:00",
+      "version_ids": [
+        "246b70f3231abd456e91fce2dce56baeb4ddd9d2aef983f81b4b287db6692244",
+        "fb8f2ce8f57a5d7f4b5d4653edba0ff1e133627611e65f806d16d950e5b56551"
+      ],
+      "market_snapshot_ids": [
+        "2bee37dc300e56dea0170321ca60d8a252cf74ef0cbb270f67c1a748d06444f0",
+        "b94a92a34d4a648e2428843122fd068a754165dd8b7a01bc16ae383dc6e26ae6",
+        "ed69e312e9081e548ea4af23326c52e698b4f8d245ac82b2216a2858f39952d9"
+      ],
+      "limits": {
+        "model": 24,
+        "tool": 24,
+        "seconds": 900
+      }
+    },
+    {
+      "key": "market-context",
+      "phase": "integration",
+      "request_id": "4004fa0c-3f73-5953-9c4d-6fb7a84c0bfb",
+      "target": "Kepler",
+      "question": "Use market_context with scope all and empty cutoff first. Explain the actual saved GIFT Nifty, Singapore STI and Nifty cash-reference observations to the operator. Distinguish the requested instrument type from a resolved contract, quote entitlement from master presence, known from unknown timestamps, delay and session, and quote status from market state. State what useful facts are known and exactly which missing inputs prevent a numerical comparison. Address your peer's concrete objection before a conclusion, disagreement or specific abstention. Do not infer an opening gap, causality or a price from unavailable metadata. Keep public messages concise.",
+      "cutoff": "2026-11-03T03:34:09.134789+00:00",
+      "version_ids": [
+        "246b70f3231abd456e91fce2dce56baeb4ddd9d2aef983f81b4b287db6692244",
+        "fb8f2ce8f57a5d7f4b5d4653edba0ff1e133627611e65f806d16d950e5b56551"
+      ],
+      "market_snapshot_ids": [
+        "2bee37dc300e56dea0170321ca60d8a252cf74ef0cbb270f67c1a748d06444f0",
+        "b94a92a34d4a648e2428843122fd068a754165dd8b7a01bc16ae383dc6e26ae6",
+        "ed69e312e9081e548ea4af23326c52e698b4f8d245ac82b2216a2858f39952d9"
+      ],
+      "limits": {
+        "model": 24,
+        "tool": 24,
+        "seconds": 900
+      }
+    }
+  ],
+  "provider_activity": {
+    "direct_http_ceiling": 40,
+    "per_job_redirect_ceiling": 2,
+    "authenticated_http_ceiling": 12,
+    "socket_connections_ceiling": 1,
+    "enabled_collector_http": 0
+  },
+  "instructions_sha256": "58bd97fdb300db89908729c0fad7297a60f831d3d2687b628e5c5844046969e3",
+  "tools_sha256": "929ce27ddc279a6aa3bbc7ee81dc333f83009f8359c6c603ddee3b58c93b1b56",
+  "rubric": [
+    "retrieve relevant saved input",
+    "identity/contract and availability precision",
+    "useful known facts",
+    "dates/session/delay unknowns preserved",
+    "unsupported public assertions",
+    "specific disagreement/abstention",
+    "counts and cancellation preserved"
+  ]
+}

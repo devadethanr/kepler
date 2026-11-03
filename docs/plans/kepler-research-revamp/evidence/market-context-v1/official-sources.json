@@ -1,0 +1,21 @@
+{
+  "recorded_utc": "2026-11-02T18:00:40.019832+00:00",
+  "transport": "web search/open; external search index may be stale; no locally controlled HTTP status or attempt count",
+  "sources": [
+    "https://www.nseix.com/",
+    "https://www.nseix.com/resources/holidays",
+    "https://www.nseix.com/api/content/circulars/NSEIFSC_TRADE_2543.pdf",
+    "https://www.nseix.com/api/content/circulars/NSEIFSC_TRADE_2417.pdf",
+    "https://www.nseix.com/api/content/circulars/NSEIFSC_TRADE_2528.pdf",
+    "https://www.nseix.com/api/content/circulars/NSEIFSC_TRADE_904.pdf",
+    "https://www.sgx.com/securities/trading",
+    "https://www.mom.gov.sg/newsroom/press-releases/2025/0616-public-holidays-for-2026",
+    "https://research.ftserussell.com/products/downloads/Straits_Times_Index_Ground_Rules.pdf",
+    "https://www.sgx.com/data-connectivity/our-data-vendors",
+    "https://upstox.com/developer/api-documentation/announcements/global-instruments/",
+    "https://upstox.com/developer/api-documentation/v3/get-market-data-feed/",
+    "https://kite.trade/docs/connect/v3/market-quotes/",
+    "https://kite.trade/docs/connect/v3/historical/",
+    "https://kite.trade/docs/connect/v3/websocket/"
+  ]
+}

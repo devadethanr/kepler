@@ -1,0 +1,67 @@
+{
+  "run_id": "market-context-20261102T175740Z",
+  "allocation": {
+    "development": {
+      "model": 12,
+      "tool": 12
+    },
+    "integration": {
+      "model": 48,
+      "tool": 48
+    }
+  },
+  "totals": {
+    "model": 41,
+    "tool": 39,
+    "reserved_tokens": 1343488,
+    "input_tokens": 458776,
+    "output_tokens": 5142,
+    "unknown_usage_calls": 2
+  },
+  "rooms": [
+    {
+      "key": "cancel",
+      "id": "room:0e1c2e36-dc5a-55f9-91c9-100c1f371139",
+      "status": "cancelled",
+      "counts": {
+        "model": 2,
+        "tool": 0,
+        "reserved_tokens": 65536,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "unknown_usage_calls": 2
+      },
+      "termination_reason": "cancelled"
+    },
+    {
+      "key": "source-summary",
+      "id": "room:4feb11c2-948c-5628-adaf-acf1f7b5ab8a",
+      "status": "abstention",
+      "counts": {
+        "model": 23,
+        "tool": 23,
+        "reserved_tokens": 753664,
+        "input_tokens": 250104,
+        "output_tokens": 3079,
+        "unknown_usage_calls": 0
+      },
+      "termination_reason": "outcome"
+    },
+    {
+      "key": "market-context",
+      "id": "room:4004fa0c-3f73-5953-9c4d-6fb7a84c0bfb",
+      "status": "abstention",
+      "counts": {
+        "model": 16,
+        "tool": 16,
+        "reserved_tokens": 524288,
+        "input_tokens": 208672,
+        "output_tokens": 2063,
+        "unknown_usage_calls": 0
+      },
+      "termination_reason": "message_limit"
+    }
+  ],
+  "closed": true,
+  "unspent_is_not_a_renewal": true
+}

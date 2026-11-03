@@ -1,0 +1,72 @@
+{
+  "news_before": 2065,
+  "news_after": 2074,
+  "original_ids_retained": true,
+  "normal_background_updated_payload_count": 0,
+  "source_tables_retained": {
+    "news_source_versions": true,
+    "news_source_observations": true,
+    "news_source_fetches": true
+  },
+  "source_counts": {
+    "news_source_versions": 71,
+    "news_source_observations": 71,
+    "news_source_fetches": 6
+  },
+  "market_rows": 3,
+  "market_statuses": [
+    "unavailable"
+  ],
+  "controls_unchanged": false,
+  "manual_entry_approval": true,
+  "migration": "20261103_0009",
+  "active_rooms": [],
+  "local_config_unchanged": true,
+  "runtime_files": {
+    "swingtradev3/context/agent_activity.json": {
+      "bytes_before": 3033,
+      "bytes_now": 3028,
+      "same_bytes": false,
+      "original_prefix_preserved": null,
+      "current_sha256": "e5af9b4e272bb8439121b2c38e1f40b3f51fd0de63f75e735953c3cbb2c0d76d"
+    },
+    "swingtradev3/context/event_log.jsonl": {
+      "bytes_before": 88454,
+      "bytes_now": 95676,
+      "same_bytes": false,
+      "original_prefix_preserved": true,
+      "current_sha256": "b65d9936db95844a7715f7e9002f96ec23829bcdd4da59e99bf7b6b04bf71c7c"
+    },
+    "swingtradev3/context/macro_cache.json": {
+      "bytes_before": 269,
+      "bytes_now": 269,
+      "same_bytes": true,
+      "original_prefix_preserved": null,
+      "current_sha256": "76ecf1d6bac720961e3e1722138978448a43291d00fe3f7dba2a38386975365e"
+    },
+    "swingtradev3/context/regime_cache.json": {
+      "bytes_before": 489,
+      "bytes_now": 489,
+      "same_bytes": true,
+      "original_prefix_preserved": null,
+      "current_sha256": "70cf43d93af833d1eb03ab87bcf9cc0013e0868531ac12aa06ee797d6f21cee4"
+    },
+    "swingtradev3/context/scan_status.json": {
+      "bytes_before": 121,
+      "bytes_now": 121,
+      "same_bytes": true,
+      "original_prefix_preserved": null,
+      "current_sha256": "bdb4d38c869fb33250624dff478c5aeda403139d103888747ee4f7de5a4d7382"
+    }
+  },
+  "stash_retained": true,
+  "protected_controls_unchanged": true,
+  "automatic_heartbeat_controls_changed": [
+    "reconciliation_status",
+    "worker_status"
+  ],
+  "operator_container_ids_retained": true,
+  "backup_dump_bytes": 1102718,
+  "migration_order": "Backup existed before additive upgrade. Existing config/auth read invoked ensure_database_ready earlier than intended disposable validation; later protected fresh-schema checks passed. No downgrade/reset/backfill was run.",
+  "no_task_broker_restart": true
+}
