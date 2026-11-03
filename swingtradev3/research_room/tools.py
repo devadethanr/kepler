@@ -104,6 +104,10 @@ def _browser_excerpt(text, retrieval, offset):
 
 
 TOOLS = {
+    "market_context": (
+        "Read saved read-only GIFT Nifty, Singapore STI and Nifty cash context. scope is all, gift_nifty, singapore_sti or nifty_cash; cutoff is an aware ISO timestamp or empty for the room snapshot. No network, quote invention, historical backfill or trading authority. Read instrument/contract, timestamps, sessions, delay and quality reasons before interpreting. Unavailable is a useful result, not proof no market exists; futures basis is not a predicted opening gap.",
+        {"scope": STRING, "cutoff": STRING},
+    ),
     "news_search": (
         "Search saved primary regulatory sources; no network or issuer inference. All fields are strings: topic is title keywords (empty lists the window); start/end/cutoff are aware ISO times (empty uses last 30 days and room snapshot); sources is comma-separated source IDs (empty all); offset is a decimal page offset (empty 0). Returns at most six records with source coverage, dates and exact quote spans. Absence is not proof of no release.",
         {key: STRING for key in ("topic", "start", "end", "cutoff", "sources", "offset")},
@@ -223,7 +227,7 @@ class Gateway:
             return {"room_message"}
         tools = set(TOOLS)
         if (self.room.get("evidence_scope") or {}).get("mode") == "ordinary":
-            tools -= {"news_search", "news_read"}
+            tools -= {"news_search", "news_read", "market_context"}
         return tools
 
     def close(self):
@@ -397,6 +401,13 @@ class Gateway:
 
     def dispatch(self, role, cid, name, args):
         target = self.room["target"]
+        if name == "market_context":
+            from .market_evidence import MarketEvidence
+
+            output = MarketEvidence(self.room).read(args["scope"], args["cutoff"])
+            for item in output["evidence"]:
+                self.evidence[item["id"]] = item
+            return output
         if name in {"news_search", "news_read"}:
             from .news_evidence import NewsEvidence
 
@@ -422,7 +433,10 @@ class Gateway:
                 self.evidence[item["id"]] = item
                 prior_version = item.get("source_snapshot", {}).get("supersedes_version_id")
                 if prior_version:
-                    self.news_versions[prior_version] = item["decision_cutoff"]
+                    cutoff = item["decision_cutoff"]
+                    self.news_versions[prior_version] = min(
+                        self.news_versions.get(prior_version, cutoff), cutoff
+                    )
             return output
         if name in ("graph_lookup", "graph_neighbors"):
             from config import cfg
@@ -699,6 +713,7 @@ class Gateway:
                     "retrieval",
                     "source_type",
                     "source_snapshot",
+                    "market_snapshot",
                 )
             }
             if selected

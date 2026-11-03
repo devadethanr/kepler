@@ -47,3 +47,25 @@ test('source evidence distinguishes publication precision, retrieval and identit
   assert.match(status, /empty/);
   assert.match(status, /Entries: 0/);
 });
+
+test('market context labels instrument, provenance and unknown data without inventing a quote', async () => {
+  const { MarketContextStatus, SourceEvidence } = await import('../screens/ResearchDeskScreen');
+  const unavailable = { snapshot_id: 's1', symbol: 'GIFT', instrument_kind: 'future', status: 'unavailable', quote_value: 123, reference_value: 456, delay_seconds: null, quality_reasons: ['no entitlement'], market_state: 'closed', market_state_at_cutoff: 'open', contract_specification: 'historical specification', source_document_sha256: 'abc' };
+  const html = renderToStaticMarkup(React.createElement(MarketContextStatus, { value: { observations: [unavailable], coverage: 'partial', limits: ['no history'] }, error: '' }));
+  for (const expected of ['Future', 'Quote unavailable', 'Reference: unavailable', 'Delay: unknown', 'no entitlement', 'no history', 'Snapshot ID: s1', 'Market state at observation: closed', 'Market state at cutoff: open', 'historical specification', 'Source document SHA-256: abc']) assert.ok(html.includes(expected), expected);
+  assert.doesNotMatch(html, /Quote: 123/);
+  assert.doesNotMatch(html, /Reference: 456/);
+  const saved = renderToStaticMarkup(React.createElement(SourceEvidence, { packet: { market_snapshot: { ...unavailable, symbol: 'STI proxy', instrument_kind: 'proxy', status: 'ok', quote_value: 12, quote_unit: 'points', delay_seconds: 900, exchange_asof: '2026-11-02T00:00:00Z' } } }));
+  for (const expected of ['Saved market evidence', 'Proxy', 'Quote: 12 points', '900 seconds', 'UTC', 'IST', 'Singapore']) assert.ok(saved.includes(expected), expected);
+  assert.match(renderToStaticMarkup(React.createElement(MarketContextStatus, { value: null, error: 'network' })), /Market context unavailable/);
+});
+
+test('stale market quotes retain their status and unknown identity fields', async () => {
+  const { MarketObservation } = await import('../screens/ResearchDeskScreen');
+  const html = renderToStaticMarkup(React.createElement(MarketObservation, { item: {
+    symbol: 'STI', instrument_kind: 'cash_index', status: 'stale', market_state: null,
+    quote_value: 1234, quote_unit: null, contract: null, delay_seconds: null,
+    exchange_asof: '2026-11-02T00:00:00', quality_reasons: ['old observation'],
+  } }));
+  for (const expected of ['Cash index', 'Status: stale', 'Market state at observation: unknown', 'Market state at cutoff: unknown', 'Quote: 1234 unknown', 'Contract: unknown', 'Delay: unknown', 'timezone unknown', 'old observation']) assert.ok(html.includes(expected), expected);
+});

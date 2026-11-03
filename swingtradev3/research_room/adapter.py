@@ -274,6 +274,8 @@ class Bridge:
                         if data == b"[DONE]":
                             break
                         piece = json.loads(data)
+                        if "error" in piece:
+                            raise ValueError("backend stream reported an error")
                         if piece.get("usage"):
                             usage = piece["usage"]
                         if not piece.get("choices"):
@@ -281,6 +283,8 @@ class Bridge:
                         choice = piece["choices"][0]
                         delta = choice.get("delta", {})
                         if choice.get("finish_reason"):
+                            if finish is not None and finish != choice["finish_reason"]:
+                                raise ValueError("conflicting backend finish reasons")
                             finish = choice["finish_reason"]
                         chunk = delta.get("content") or ""
                         if chunk:
@@ -320,10 +324,36 @@ class Bridge:
                                 x["id"] = c["id"]
                             x["name"] += c.get("function", {}).get("name", "")
                             x["arguments"] += c.get("function", {}).get("arguments", "")
+                    if usage:
+                        response["usage"] = {
+                            "input_tokens": usage.get("prompt_tokens", 0),
+                            "output_tokens": usage.get("completion_tokens", 0),
+                            "total_tokens": usage.get("total_tokens", 0),
+                        }
+                    if finish not in {"stop", "tool_calls", "length"}:
+                        raise ValueError("backend stream lacks a recognized finish reason")
+                    if finish == "length" and calls:
+                        raise ValueError("truncated tool call")
+                    if (finish == "tool_calls") != bool(calls):
+                        raise ValueError("backend finish reason does not match tool calls")
+                    # Validate all calls before completing any output item or issuing a call.
+                    for c in calls.values():
+                        if c["name"] not in bridge.allowed:
+                            raise ValueError("model emitted ungranted tool")
+                        if not isinstance(json.loads(c["arguments"]), dict):
+                            raise ValueError("arguments must be object")
+                        c["id"] = c["id"] or "call_" + uuid.uuid4().hex
+                    ids = [c["id"] for c in calls.values()]
+                    with bridge.lock:
+                        if len(ids) != len(set(ids)) or any(cid in bridge.issued for cid in ids):
+                            raise ValueError("duplicate backend call id")
+                        for c in calls.values():
+                            bridge.issued[c["id"]] = {**c, "model": model}
                     output = []
                     if message:
                         part = {"type": "output_text", "text": text, "annotations": []}
-                        message.update(status="completed", content=[part])
+                        message.update(status="incomplete" if finish == "length" else "completed",
+                                       content=[part])
                         emit(
                             "response.output_text.done",
                             output_index=0,
@@ -340,8 +370,6 @@ class Bridge:
                         )
                         emit("response.output_item.done", output_index=0, item=message)
                         output.append(message)
-                    if finish == "length" and calls:
-                        raise ValueError("truncated tool call")
                     for c in calls.values():
                         if c["name"] not in bridge.allowed:
                             raise ValueError("model emitted ungranted tool")
@@ -352,7 +380,6 @@ class Bridge:
                         # validates all argument keys/types before any action and
                         # returns a typed denial so Codex can repair malformed calls.
                         # Unknown function names remain a protocol-level failure.
-                        c["id"] = c["id"] or "call_" + uuid.uuid4().hex
                         item = {
                             "type": "function_call",
                             "id": "fc_" + uuid.uuid4().hex,
@@ -361,10 +388,6 @@ class Bridge:
                             "arguments": c["arguments"],
                             "status": "completed",
                         }
-                        with bridge.lock:
-                            if c["id"] in bridge.issued:
-                                raise ValueError("duplicate backend call id")
-                            bridge.issued[c["id"]] = {**c, "model": model}
                         idx = len(output)
                         emit(
                             "response.output_item.added",
@@ -390,12 +413,6 @@ class Bridge:
                     )
                     if finish == "length":
                         response["incomplete_details"] = {"reason": "max_output_tokens"}
-                    if usage:
-                        response["usage"] = {
-                            "input_tokens": usage.get("prompt_tokens", 0),
-                            "output_tokens": usage.get("completion_tokens", 0),
-                            "total_tokens": usage.get("total_tokens", 0),
-                        }
                     emit(
                         "response.incomplete" if finish == "length" else "response.completed",
                         response=response,
@@ -405,6 +422,12 @@ class Bridge:
                         self.send_error(400, str(e))
                     else:
                         try:
+                            if usage and "usage" not in response:
+                                response["usage"] = {
+                                    "input_tokens": usage.get("prompt_tokens", 0),
+                                    "output_tokens": usage.get("completion_tokens", 0),
+                                    "total_tokens": usage.get("total_tokens", 0),
+                                }
                             response.update(
                                 status="failed", error={"code": "server_error", "message": str(e)}
                             )
@@ -413,6 +436,12 @@ class Bridge:
                             pass
                 finally:
                     done.set()
+                    if usage and "usage" not in response:
+                        response["usage"] = {
+                            "input_tokens": usage.get("prompt_tokens", 0),
+                            "output_tokens": usage.get("completion_tokens", 0),
+                            "total_tokens": usage.get("total_tokens", 0),
+                        }
                     if conn:
                         conn.close()
                     if slot_acquired:

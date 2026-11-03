@@ -82,6 +82,7 @@ class NewsEvidence:
             undated = [item for item in undated if item["version_id"] in allowed]
         selected = candidates[offset : offset + 6]
         undated = undated[:2] if offset == 0 else []
+        omitted = found["undated_matches_scanned"] - len(undated)
         retrieval = {
             **found,
             "scope": "saved primary-source revisions; textual topic match only",
@@ -95,6 +96,16 @@ class NewsEvidence:
             "next_offset": offset + 6 if offset + 6 < len(candidates) else None,
             "candidate_cap": 50,
             "undated_returned": len(undated),
+            "undated_truncated": omitted > 0 or found["scan_truncated"],
+            "undated_omitted_scanned": omitted,
+            "undated_count_scope": (
+                "lower bound; candidate scan stopped at 1000"
+                if found["scan_truncated"] else "exact within scanned candidates"
+            ),
+            "undated_continuation": (
+                "unavailable; undated records are only included on the first dated page, "
+                "capped at two"
+            ),
             "undated_policy": "not placed in requested publication window; membership unknown",
             "completeness": "bounded current feed windows; absence does not establish no release",
             "conflicts": "matching records retained; no semantic contradiction classifier",

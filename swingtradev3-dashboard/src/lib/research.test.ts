@@ -42,3 +42,18 @@ test('retry sends the caller’s same request ID after a lost response', async (
     assert.deepEqual(bodies, [{ request_id: 'same-request-id' }, { request_id: 'same-request-id' }]);
   } finally { globalThis.fetch = original; }
 });
+
+test('market context reads the same-origin endpoint and preserves nullable provenance', async () => {
+  const original = globalThis.fetch;
+  let url = '';
+  globalThis.fetch = async (input) => {
+    url = String(input);
+    return new Response(JSON.stringify({ as_of: '2026-11-02T00:00:00Z', cutoff: null, observations: [{ symbol: 'GIFT', status: 'unavailable', delay_seconds: null }], coverage: 'partial', limits: ['unavailable'] }), { status: 200 });
+  };
+  try {
+    const value = await research.marketContext();
+    assert.equal(url, '/api/research/market-context');
+    assert.equal(value.observations[0].delay_seconds, null);
+    assert.equal(value.cutoff, null);
+  } finally { globalThis.fetch = original; }
+});

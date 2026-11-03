@@ -16,6 +16,23 @@ from research_room.store import Store, TERMINAL
 router = APIRouter()
 
 
+@router.get("/market-context")
+def market_context(
+    scope: str = Query("all", max_length=32),
+    cutoff: str = Query("", max_length=64),
+    room_id: str | None = Query(None, max_length=128),
+):
+    from research_room.market_evidence import MarketEvidence
+
+    room = get_room(room_id) if room_id else None
+    try:
+        return MarketEvidence(room).read(scope, cutoff)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(503, "Saved market context unavailable; check collector/schema") from exc
+
+
 @router.get("/sources")
 def research_sources():
     from research_room.news_evidence import source_status

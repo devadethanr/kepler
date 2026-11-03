@@ -243,3 +243,7 @@ research-status:
 .PHONY: research-ingest
 research-ingest:
 	$(RESEARCH_PYTHON) -m ops.research_sources $(ARGS)
+
+.PHONY: research-market-refresh
+research-market-refresh:
+	$(RESEARCH_PYTHON) -m ops.research_market

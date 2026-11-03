@@ -51,7 +51,8 @@ def source_scope(tmp_path):
                 fetched_at="2026-01-02T00:00:00Z",
             )
         repository.record(
-            {**common, "provider_entry_id": "late", "title": "ACME late record."},
+            {**common, "provider_entry_id": "late", "title": "ACME late record.",
+             "canonical_url": "https://example.invalid/late"},
             fetched_at="2026-01-04T00:00:00Z",
         )
         repository.record_fetch("sebi_rss", fetched_at="2026-01-02T00:00:00Z", status="partial")
@@ -118,3 +119,93 @@ def test_read_resolves_same_revision_and_frozen_allowlist(source_scope):
     assert reader.search(args())["evidence"] == []
     with pytest.raises(ValueError):
         reader.read(evidence["record_id"])
+
+
+def query(**kwargs):
+    return {"topic": "", "start": "2025-12-31T00:00:00Z", "end": "2026-01-05T00:00:00Z",
+            "cutoff": "", "sources": "sebi_rss", "offset": "", **kwargs}
+
+
+@pytest.mark.parametrize("count", [3, 6, 8])
+def test_undated_counts_on_every_dated_page(source_scope, count):
+    with source_scope() as session:
+        repo = NewsSnapshotRepository(session)
+        for n in range(count):
+            repo.record({"provider": "sebi_rss", "provider_entry_id": f"undated-{n}",
+                         "canonical_url": f"https://example.invalid/u{n}", "title": "unknown",
+                         "publication_precision": "unknown"}, fetched_at="2026-01-02T00:00:00Z")
+        for n in range(8):
+            repo.record({"provider": "sebi_rss", "provider_entry_id": f"dated-{n}",
+                         "canonical_url": f"https://example.invalid/d{n}", "title": "dated",
+                         "publication_precision": "date", "published_date": "2026-01-01",
+                         "timezone_basis": "source offset +0000"}, fetched_at="2026-01-02T00:00:00Z")
+    service = NewsEvidence({"target": "ACME", "source_cutoff": "2026-01-05T00:00:00Z"},
+                           scope=source_scope)
+    first = service.search(query())["retrieval"]
+    later = service.search(query(offset="6"))["retrieval"]
+    assert first["undated_returned"] == 2 and first["undated_omitted_scanned"] == count - 2
+    assert later["undated_returned"] == 0 and later["undated_omitted_scanned"] == count
+    assert first["undated_truncated"] and later["undated_truncated"]
+    assert "unavailable" in later["undated_continuation"]
+
+
+def test_gateway_predecessor_reversion_and_frozen_scope(source_scope, monkeypatch):
+    from types import SimpleNamespace
+    import research_room.news_evidence as evidence_module
+    from research_room.tools import Gateway
+
+    base = {"provider": "sebi_rss", "provider_entry_id": "revision",
+            "canonical_url": "https://example.invalid/revision", "title": "Alpha",
+            "publication_precision": "date", "published_date": "2026-01-01",
+            "timezone_basis": "source offset +0000"}
+    with source_scope() as session:
+        repo = NewsSnapshotRepository(session)
+        a = repo.record(base, fetched_at="2026-01-02T00:00:00Z")
+        b = repo.record({**base, "title": "Beta"}, fetched_at="2026-01-03T00:00:00Z")
+        assert repo.record(base, fetched_at="2026-01-04T00:00:00Z") == a
+    original = evidence_module.NewsEvidence
+
+    class LocalEvidence(original):
+        def __init__(self, room, **kwargs):
+            super().__init__(room, scope=source_scope, **kwargs)
+
+    monkeypatch.setattr(evidence_module, "NewsEvidence", LocalEvidence)
+    gateway = Gateway.__new__(Gateway)
+    gateway.room = {"target": "ACME", "source_cutoff": "2026-01-05T00:00:00Z"}
+    gateway.settings = SimpleNamespace(source_stale_after_seconds=86400)
+    gateway.evidence, gateway.news_versions = {}, {}
+    def dispatch(name, values):
+        return gateway.dispatch("analyst", "fixture", name, values)
+
+    dispatch("news_search", query(topic="Alpha", cutoff="2026-01-02T12:00:00Z",
+                                  end="2026-01-02T12:00:00Z"))
+    dispatch("news_search", query(topic="Beta", cutoff="2026-01-03T12:00:00Z",
+                                  end="2026-01-03T12:00:00Z"))
+    dispatch("news_search", query(topic="Alpha", cutoff="2026-01-04T12:00:00Z",
+                                  end="2026-01-04T12:00:00Z"))
+    result = dispatch("news_read", {"version_id": a, "offset": ""})["evidence"][0]
+    assert result["decision_cutoff"] == "2026-01-02T12:00:00+00:00"
+    assert result["source_snapshot"]["version_status"] != "superseded"
+    assert gateway.news_versions[b] == "2026-01-03T12:00:00+00:00"
+    gateway.room["evidence_scope"] = {"version_ids": [a]}
+    with pytest.raises(ValueError, match="frozen"):
+        dispatch("news_read", {"version_id": b, "offset": ""})
+    assert not dispatch("news_search", query(topic="Beta", cutoff="2026-01-03T12:00:00Z",
+                                             end="2026-01-03T12:00:00Z"))["evidence"]
+
+
+def test_undated_scan_limit_reports_lower_bound(source_scope):
+    with source_scope() as session:
+        repo = NewsSnapshotRepository(session)
+        for n in range(1001):
+            repo.record({"provider": "sebi_rss", "provider_entry_id": f"scan-{n}",
+                         "title": "scan", "canonical_url": f"https://example.invalid/scan{n}",
+                         "publication_precision": "unknown"},
+                        fetched_at="2026-01-02T00:00:00Z")
+    service = NewsEvidence({"target": "ACME", "source_cutoff": "2026-01-05T00:00:00Z"},
+                           scope=source_scope)
+    retrieval = service.search(query(topic="scan"))["retrieval"]
+    assert retrieval["scan_truncated"]
+    assert retrieval["undated_matches_scanned"] <= 1000
+    assert "lower bound" in retrieval["undated_count_scope"]
+    assert retrieval["undated_truncated"]

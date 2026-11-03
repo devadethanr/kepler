@@ -212,6 +212,8 @@ class NewsSnapshotRepository:
         # Coverage is an observation, never an assertion that the source is complete.
         return {"items": matches[:limit], "undated_items": undated,
                 "undated_truncated": undated_matches > len(undated) or (include_unknown and truncated),
+                "undated_matches_scanned": undated_matches,
+                "scan_truncated": truncated,
                 "coverage": self.status(cutoff=cutoff, providers=providers),
                 "unknown_publication_dates": unknown,
                 "truncated": truncated or len(matches) > limit,

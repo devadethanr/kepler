@@ -51,7 +51,15 @@ export const SourceStatusSchema = z.object({
 export const SourceCoverageSchema = z.object({ sources: SourceStatusSchema.array(), coverage: z.unknown().optional() }).passthrough();
 export type SourceCoverage = z.infer<typeof SourceCoverageSchema>;
 
+export const MarketContextSchema = z.object({
+  as_of: z.string().nullish(), cutoff: z.string().nullish(),
+  observations: z.array(z.record(z.string(), z.unknown())),
+  coverage: z.unknown().optional(), limits: z.unknown().optional(),
+}).passthrough();
+export type MarketContext = z.infer<typeof MarketContextSchema>;
+
 export const research = {
+  marketContext: async () => MarketContextSchema.parse(await request('/market-context')),
   sources: async () => SourceCoverageSchema.parse(await request('/sources')),
   health: async () => z.object({ status: z.string(), models: z.record(z.string(), z.object({ model: z.string(), status: z.string() })) }).parse(await request('/health')),
   list: async () => z.object({ rooms: RoomSchema.array() }).parse(await request('/rooms')).rooms,

@@ -328,12 +328,32 @@ class TradingScheduler:
                 )
 
     async def _gift_nifty_check(self) -> None:
-        """Check GIFT Nifty / global markets overnight."""
-        now = _now_ist().time()
-        # Only run between 22:00 and 06:00
-        if dt_time(6, 0) <= now < dt_time(22, 0):
-            return
-        print(f"[{_now_ist().isoformat()}] GIFT Nifty / global markets check")
+        """Refresh saved read-only availability; no model, broker request or order."""
+        import sys
+
+        process = None
+        try:
+            import json
+
+            process = await asyncio.create_subprocess_exec(
+                sys.executable, "-m", "ops.research_market",
+                stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.DEVNULL,
+            )
+            output, _ = await asyncio.wait_for(process.communicate(), timeout=5)
+            if process.returncode:
+                raise RuntimeError("Market collector subprocess unavailable")
+            result = json.loads(output)
+            print(f"[{_now_ist().isoformat()}] Market context: {result['status']}")
+        except Exception as exc:
+            print(f"[{_now_ist().isoformat()}] Market context unavailable: {type(exc).__name__}")
+        finally:
+            if process is not None and process.returncode is None:
+                process.terminate()
+                try:
+                    await asyncio.wait_for(process.wait(), timeout=1)
+                except TimeoutError:
+                    process.kill()
+                    await process.wait()
 
     # ─────────────────────────────────────────────────────────────
     # Phase 2: Pre-Market Preparation

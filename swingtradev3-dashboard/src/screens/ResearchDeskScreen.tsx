@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { mergeRoomEvents, newRequestId, research, RoomEventSchema, shouldStreamRoom, terminalStatuses, type Room, type RoomEvent, type SourceCoverage } from '../lib/research';
+import { mergeRoomEvents, newRequestId, research, RoomEventSchema, shouldStreamRoom, terminalStatuses, type Room, type RoomEvent, type SourceCoverage, type MarketContext } from '../lib/research';
 
 const terminal = terminalStatuses;
 const text = (value: unknown) => typeof value === 'string' ? value : '';
@@ -12,12 +12,60 @@ const ist = (value: unknown): string => {
   return Number.isNaN(date.getTime()) ? value : `${value} (${date.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', timeZoneName: 'short' })})`;
 };
 
+const marketTime = (value: unknown): string => {
+  if (typeof value !== 'string' || !value) return 'unknown';
+  // An unzoned timestamp is not silently interpreted in the browser timezone.
+  if (!/(?:Z|[+-]\d{2}:?\d{2})$/i.test(value)) return `${value} (timezone unknown)`;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return `${value} (invalid timestamp)`;
+  const format = (zone: string) => date.toLocaleString('en-GB', { timeZone: zone, timeZoneName: 'short' });
+  return `${date.toISOString()} UTC · ${format('Asia/Kolkata')} IST · ${format('Asia/Singapore')} SGT (Singapore)`;
+};
+
+export function MarketObservation({ item }: { item: Record<string, unknown> }) {
+  const kind = item.instrument_kind === 'future' ? 'Future' : item.instrument_kind === 'cash_index' ? 'Cash index' : item.instrument_kind === 'proxy' ? 'Proxy' : 'Instrument type unknown';
+  const usable = ['ok', 'partial', 'stale'].includes(text(item.status));
+  const hasQuote = usable && typeof item.quote_value === 'number' && Number.isFinite(item.quote_value) && item.quote_value > 0;
+  return <article className="rounded border border-slate-700 bg-slate-900 p-3 text-xs text-slate-300">
+    <h3 className="font-semibold text-sm text-cyan-300">{display(item.symbol ?? item.underlying)} · {kind}</h3>
+    <p>Status: {display(item.status)} · Market state at observation: {display(item.market_state)} · Market state at cutoff: {display(item.market_state_at_cutoff)} · Session at observation: {display(item.session_id)} · Market date: {display(item.market_date)}</p>
+    <p className="my-1 text-sm">{hasQuote ? `Quote: ${display(item.quote_value)} ${display(item.quote_unit)}` : 'Quote unavailable'} · Delay: {typeof item.delay_seconds === 'number' ? `${item.delay_seconds} seconds` : 'unknown'}</p>
+    <p>Instrument ID: {display(item.instrument_id)} · Underlying: {display(item.underlying)} · Exchange: {display(item.exchange)} · Contract: {display(item.contract)} · Expiry: {display(item.expiry)} · Settlement currency: {display(item.settlement_currency)}</p>
+    <p>Provider: {display(item.provider)} · Source: {display(item.source)}</p>
+    <p>Exchange as of: {marketTime(item.exchange_asof)}</p>
+    <p>Provider as of: {marketTime(item.provider_asof)}</p>
+    <p>Received: {marketTime(item.received_at)} · First seen: {marketTime(item.first_seen_at)}</p>
+    <p>Reference: {usable ? display(item.reference_value) : 'unavailable'} · Reference as of: {marketTime(item.reference_asof)} · Basis: {display(item.basis)}</p>
+    <p>Quality reasons: {Array.isArray(item.quality_reasons) && item.quality_reasons.length ? item.quality_reasons.map(display).join('; ') : 'none reported'}</p>
+    <details className="mt-1"><summary>Snapshot provenance</summary>
+      <p>Contract specification: {display(item.contract_specification)} · Multiplier (USD per point): {display(item.contract_multiplier_usd_per_point)} · Expiry rule source: {display(item.expiry_rule_source)}</p>
+      <p>Snapshot ID: {display(item.snapshot_id)} · Schema: {display(item.schema_version)} · Source version: {display(item.source_version)} · Config version: {display(item.config_version)} · Calendar version: {display(item.calendar_version)}</p>
+      <p>Source document SHA-256: {display(item.source_document_sha256)} · Expiry rule document SHA-256: {display(item.expiry_rule_document_sha256)} · Raw observation hash: {display(item.raw_observation_hash)}</p>
+      <p>Saved status: {display(item.saved_status)} · Assessment: {display(item.assessment_basis)} · Observation age: {typeof item.observation_age_seconds === 'number' ? `${item.observation_age_seconds} seconds` : 'unknown'}</p>
+    </details>
+  </article>;
+}
+
+export function MarketContextStatus({ value, error }: { value: MarketContext | null; error: string }) {
+  return <section aria-label="Market context" className="my-4 rounded border border-slate-700 p-3 text-sm">
+    <h2 className="font-semibold">Market context</h2>
+    {error ? <p role="status">Market context unavailable: {error}</p> : !value ? <p>Loading market context…</p> : <>
+      <p className="text-xs text-slate-400">As of: {marketTime(value.as_of)} · Cutoff: {marketTime(value.cutoff)} · Coverage: {display(value.coverage)}</p>
+      {value.limits != null && <p className="text-xs text-slate-400">Limits: {display(value.limits)}</p>}
+      {!value.observations.length && <p>No market observations available.</p>}
+      <div className="mt-2 grid gap-2 lg:grid-cols-2">{value.observations.map((item, index) => <MarketObservation key={`${text(item.snapshot_id)}-${index}`} item={item} />)}</div>
+    </>}
+  </section>;
+}
+
 export function SourceEvidence({ packet }: { packet: Record<string, unknown> }) {
+  const marketSnapshot = object(packet.market_snapshot);
   const snapshot = object(packet.source_snapshot);
   const content = object(packet.content);
   const retrieval = object(packet.retrieval);
   const sources = Array.isArray(content.sources) ? content.sources.map(object) : [];
   const records = sources.length ? sources : Object.keys(snapshot).length ? [snapshot] : [];
+  if (Object.keys(marketSnapshot).length) return <section aria-label="Saved market evidence" className="mt-2"><h4 className="text-xs font-semibold">Saved market evidence</h4><MarketObservation item={marketSnapshot} /></section>;
   if (!records.length && !Object.keys(snapshot).length) return null;
   return <section aria-label="Source evidence" className="mt-2 space-y-2 rounded border border-slate-700 p-3 text-xs text-slate-300">
     <h4 className="font-semibold text-cyan-300">Source evidence</h4>
@@ -85,6 +133,8 @@ export function DiscussionEvent({ event }: { event: RoomEvent }) {
 }
 
 export function ResearchDeskScreen() {
+  const [marketContext, setMarketContext] = useState<MarketContext | null>(null);
+  const [marketError, setMarketError] = useState('');
   const [sourceStatus, setSourceStatus] = useState<SourceCoverage | null>(null);
   const [sourceError, setSourceError] = useState('');
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -109,6 +159,7 @@ export function ResearchDeskScreen() {
   useEffect(() => {
     let live = true;
     let sourceRequest = 0;
+    let marketRequest = 0;
     const refresh = () => research.list().then(value => { if (live) { setRooms(value); setRoomsLoading(false); setError(previous => previous.startsWith('Saved rooms unavailable:') ? '' : previous); } })
       .catch(err => { if (live) { setRoomsLoading(false); setError(`Saved rooms unavailable: ${String(err)}`); } });
     const health = () => research.health().then(value => { if (live) setModels(
@@ -118,9 +169,14 @@ export function ResearchDeskScreen() {
       const request = ++sourceRequest;
       return research.sources().then(value => { if (live && request === sourceRequest) { setSourceStatus(value); setSourceError(''); } }).catch(err => { if (live && request === sourceRequest) setSourceError(String(err)); });
     };
-    void refresh(); void health(); void sources();
+    const market = () => {
+      const request = ++marketRequest;
+      return research.marketContext().then(value => { if (live && request === marketRequest) { setMarketContext(value); setMarketError(''); } }).catch(err => { if (live && request === marketRequest) setMarketError(String(err)); });
+    };
+    void refresh(); void health(); void sources(); void market();
     const timer = setInterval(() => { void refresh(); void health(); void sources(); }, 5000);
-    return () => { live = false; clearInterval(timer); };
+    const marketTimer = setInterval(() => { void market(); }, 30000);
+    return () => { live = false; clearInterval(timer); clearInterval(marketTimer); };
   }, []);
   useEffect(() => {
     if (!selected) return;
@@ -216,6 +272,7 @@ export function ResearchDeskScreen() {
     <p className="my-2 text-sm text-slate-400">Analyst and skeptic · read-only research · live entries require your approval</p>
     <p className="text-xs text-slate-400" role="status">{models}. A running research worker processes queued rooms.</p>
     <SourceStatus value={sourceStatus} error={sourceError} />
+    <MarketContextStatus value={marketContext} error={marketError} />
     <form onSubmit={start} className="my-4 flex flex-wrap gap-3">
       <label className="flex flex-col text-sm">Target
         <input required maxLength={64} value={target} onChange={e => { setTarget(e.target.value); setRequestId(newRequestId()); }}

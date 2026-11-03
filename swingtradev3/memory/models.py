@@ -169,6 +169,18 @@ class NewsSourceFetchRow(Base):
     payload: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
 
 
+class MarketObservationRow(Base):
+    """Immutable read-only context observations, separate from news and broker state."""
+
+    __tablename__ = "market_context_observations"
+
+    snapshot_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    scope: Mapped[str] = mapped_column(String(32), index=True, nullable=False)
+    provider: Mapped[str] = mapped_column(String(128), nullable=False)
+    first_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True, nullable=False)
+    payload: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+
+
 class EntryIntentRow(TimestampMixin, Base):
     __tablename__ = "entry_intents"
 
