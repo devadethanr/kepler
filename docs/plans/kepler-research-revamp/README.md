@@ -1,16 +1,18 @@
 # Kepler collaborative research revamp
 
-Implementation handoff, revision 11 — A/B source `30b5c39`, visual workspace `3bd12d0`, 4 November 2026.
+Implementation handoff, revision 12 — reviewed through `5b3db54`, 4 November 2026.
 
 **Current:** source `30b5c39` fixes terminal streams, predecessor cutoffs and undated omissions, and adds immutable read-only market context with Research Desk provenance cards. [Market-context findings](MARKET_CONTEXT_FINDINGS.md) record the delivered service and its limits: GIFT/STI quotes are honestly unavailable, and the actual rooms still show query/citation/repetition failures. The installed Codex/local adapter, active participant policy and Gemma/Qwen serving pair remain selected; tuning candidates remain inactive.
 
 **Track C delivered in this phase:** source `3bd12d0` adds the central pixel-art office, licensed character sprites, real state/message projection, agent/tool/evidence inspectors and saved replay. [Visual findings and actual screenshots](VISUAL_WORKSPACE_FINDINGS.md) record localhost/LAN, no-selection, replay, mobile and outage/reconnect verification. The existing A/B implementation and its qualification/model failures are preserved.
 
-UI verification used saved real rooms and clearly labeled offline traces, with **zero new model/tool/provider admissions**. Combined phase remains **41/39** within 60/60; the market run stays closed. Research API is running for history; models/worker remain stopped as found and are labeled unavailable. Review the combined delivery before the documented TimesFM/advisory work; no later implementation or new budget is assumed.
+UI verification used saved real rooms and clearly labeled offline traces, with **zero new model/tool/provider admissions**. Combined phase remains **41/39** within 60/60; the market run stays closed. Local findings report the research API running for history and models/worker stopped as found. Refresh service state locally rather than assuming it remains current.
+
+**Next:** [independent UI review](VISUAL_WORKSPACE_REVIEW.md) confirms the office delivery and identifies a reproduced silent-SSE synchronization defect plus a lost broadcast audience label. Fix those, then implement the shared informational CPU forecast tool through [FORECAST_ADVISORY_HANDOFF.md](FORECAST_ADVISORY_HANDOFF.md) and its [implementation plan](FORECAST_ADVISORY_IMPLEMENTATION.md). No forecast implementation or new inference was performed by this review.
 
 ## Read this first
 
-1. [Visual workspace findings](VISUAL_WORKSPACE_FINDINGS.md): delivered Track C, source/license pinning, browser screenshots, preservation and full handback.
+1. [Independent review](VISUAL_WORKSPACE_REVIEW.md), [next implementation](FORECAST_ADVISORY_IMPLEMENTATION.md) and [local handoff](FORECAST_ADVISORY_HANDOFF.md): two UI fixes, then shared CPU advisory forecasting. [Visual workspace findings](VISUAL_WORKSPACE_FINDINGS.md) retain the delivered Track C evidence.
 2. [Market-context findings](MARKET_CONTEXT_FINDINGS.md): retained A/B fixes, provider/model gaps and counters. [Track C scope](UI_MILESTONE_PLAN.md), [handoff](MARKET_CONTEXT_HANDOFF.md) and [market-context plan](MARKET_CONTEXT_IMPLEMENTATION.md) retain the implementation requirements.
 3. [Fresh-source findings](FRESH_SOURCE_FINDINGS.md) and [results](FRESH_SOURCE_RESULTS.md): completed ingestion, tests, frozen rooms and accounting.
 4. [Runbook](RESEARCH_ROOM_RUNBOOK.md), [reboot checks](REBOOT_BROWSER_CHECKS.md) and [work history](WORK_HISTORY.md): normal :8502 entry point, supported host services and implementation history.
@@ -21,6 +23,7 @@ Older fresh-source/room-fix handoffs, prompt-iteration plans and spike documents
 ## Current evidence and limits
 
 - Track C: **35 frontend tests, types/build and 82 protected backend regressions passed**. Actual localhost/LAN office, inspectors, replay/reload, mobile, cached outage/recovery and labeled fixture cancellation verified. No fresh inference; both original research failures and quote gaps remain visible.
+- Independent review at `5b3db54`: **35 frontend tests, types/build, 78 backend passes / 4 infrastructure skips**; all 18 visual evidence files and 15 source hashes matched. Actual-effect offline probe reproduced missing live history masked by successful polling. The local browser/service observations above were not rerun in cloud.
 - Local market-context verification: **164 guarded backend tests / 3 expected skips, 82 host tests, 25 frontend tests, types/build/Ruff and actual localhost/LAN recovery passed**. The 41-model/39-tool run retained two imperfect 12-message abstentions and active cancellation; exact citations do not establish narrative truth.
 - Historical independent cloud checks at `34a3f40`: **87 backend/source tests passed / 11 infrastructure skips; 22 frontend tests, TypeScript, build and Ruff passed**. That cloud review did not reproduce the earlier local 157-test/UI/graph/reboot observations; the newer local market-context results are listed above.
 - All 30 fresh-source export files matched manifest sizes/hashes. Actual application helpers reproduced missing stream-terminal completion, widened predecessor read cutoff and incorrect undated omission reporting using scratch SQLite/loopback HTTP; no real model or broker calls.
@@ -51,8 +54,8 @@ Use the measured llama.cpp profile as the initial implementation baseline; do no
 | Gemma 4 E4B | Gemma E4B on the 3060 and Qwen3.5-9B on the 5070 Ti were measured together. Keep the installed measured profiles and improve their task representation/grounding in the next phase. |
 | Implement GIFT and Singapore | Required context service. Verify the existing Kite GIFT quote entitlement; optional delayed provider fallback. Singapore context is a hypothesis to evaluate, not proof that STI causes Nifty moves. |
 | Put Harness² into agents' work | Agents can propose and review research-harness experiments through tools. Candidate testing is isolated and promotion remains manual; ordinary research uses an approved immutable version. |
-| Add Scrapling | Required bounded extraction adapter behind the existing provider boundary, with source profiles and quality tests. |
-| Gather-like live discussion UI | Transcript/evidence foundation is implemented. The Pixel Agents-style workspace is required now as Track C, driven by the same real events. Check code and art licenses separately. |
+| Add Scrapling | Bounded extraction adapter delivered for the reviewed PIB HTML source; this is not general crawler/source coverage. |
+| Gather-like live discussion UI | Required Pixel Agents-style office delivered at `3bd12d0`, with sprites, events, bubbles, inspectors and replay. Fix the documented live-event synchronization issue; preserve license notices. |
 | Agent-browser skill available while researching | Pin and load official guidance plus matching executable functionality through a constrained tool bridge. Merely adding skill text is insufficient. |
 | Evaluate/reuse Codex | Selected: Codex App Server plus the tested local adapter, with externally coordinated threads. The first room is installed; extend it using the same external-thread design. |
 | Multiple small model families | Use Gemma and Qwen for complementary roles. Multiple roles share two resident services; agreement is not independent corroboration. |
@@ -67,4 +70,4 @@ The pinned API returns channel 5 as the point forecast, not the full-array chann
 
 ## Start instructions for local Codex
 
-Read [VISUAL_WORKSPACE_FINDINGS.md](VISUAL_WORKSPACE_FINDINGS.md) and the retained A/B findings before assigning follow-up work. Track C is delivered in this phase; the [handoff](MARKET_CONTEXT_HANDOFF.md) and [UI plan](UI_MILESTONE_PLAN.md) record its requirements. Preserve the saved histories, provider/model gaps and closed 41/39 accounting. Review the combined delivery before the documented TimesFM/advisory scope; do not repeat completed studies or assume a fresh inference budget.
+Use [FORECAST_ADVISORY_HANDOFF.md](FORECAST_ADVISORY_HANDOFF.md) for the current task. Repair the two reviewed UI issues, then implement the advisory tool. The market handoff and UI scope are retained history, not instructions to rebuild Track C. Preserve old rooms, source/provider gaps and closed accounting. The new plan specifies a separate bounded optional forecast smoke exercise; no older allocation renews.

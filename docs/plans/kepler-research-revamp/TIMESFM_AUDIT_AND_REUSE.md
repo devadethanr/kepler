@@ -1,5 +1,7 @@
 # TimesFM audit and reuse proposal — 31 October 2026
 
+**Implementation update, 4 November 2026:** [FORECAST_ADVISORY_IMPLEMENTATION.md](FORECAST_ADVISORY_IMPLEMENTATION.md) / [local handoff](FORECAST_ADVISORY_HANDOFF.md) now make these concrete repairs the next capability after two reviewed UI fixes. This audit and prior measurements remain reference evidence; no forecast source repair has been made by the cloud review.
+
 Scope: static audit of `/workspace/kepler` Git `origin/main` at `8fb50888c47a8b4f62e0917dd0475ee5dfaa6fb0`; line references below refer to that revision, not the older checked-out tree. No model, runtime, training, test, or dependency installation was run. No claims of current live forecasts, deployed settings, hardware consumption, or profitability follow from this audit.
 
 ## Post-spike correction and current decision

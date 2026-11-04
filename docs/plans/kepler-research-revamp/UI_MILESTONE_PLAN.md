@@ -6,7 +6,9 @@ workspace described below in this same phase. See
 and actual screenshots. The preimplementation scope/history below is retained;
 the 41/39 market run remains closed and UI checks added no inference.
 
-Clarified with the user on 2 November 2026. The existing Research Desk is a working form, discussion and evidence interface. The requested Pixel Agents/Gather-like visual workspace is **not implemented** and is a **required revamp deliverable**, not optional decoration.
+**Review update:** [VISUAL_WORKSPACE_REVIEW.md](VISUAL_WORKSPACE_REVIEW.md) confirms the office milestone and records two scoped UI fixes for [the next handoff](FORECAST_ADVISORY_HANDOFF.md). Everything below records the original required scope, not a request to rebuild the office.
+
+Historical clarification, 2 November 2026: the form/discussion interface alone did not deliver the required Pixel Agents/Gather-like workspace. Track C has now delivered it.
 
 ## Current phase: preserve A/B, deliver required Track C now
 

@@ -1,5 +1,7 @@
 # Local Codex handoff — integrity, market context and visual workspace
 
+**Superseded after delivery through `5b3db54`, 4 November 2026.** Retain this original A/B/C scope as history. The required office is implemented; use [VISUAL_WORKSPACE_REVIEW.md](VISUAL_WORKSPACE_REVIEW.md) and [FORECAST_ADVISORY_HANDOFF.md](FORECAST_ADVISORY_HANDOFF.md) for the current fixes and next capability. Do not rebuild the office or reopen the 41/39 market run from these historical instructions.
+
 Continue from the branch containing market source `30b5c39`, findings `e70a3b0` and this scope update. Preserve the reported A/B delivery and its provider/quality limits. Track C below is required remaining work of the same phase.
 
 **Latest scope clarification:** keep Tracks A/B exactly as assigned and implement the required Pixel Agents-style workspace as Track C **in this same phase, now**. Follow [UI_MILESTONE_PLAN.md](UI_MILESTONE_PLAN.md). This supersedes earlier deferral wording. Local A/B source `30b5c39` and findings `e70a3b0` are now reported delivered and must be preserved. Build/replay Track C without new inference; the closed 41/39 market run stays closed and any separately recorded UI live check must preserve the original combined 60/60 phase ceiling (at most 19/21 additional).

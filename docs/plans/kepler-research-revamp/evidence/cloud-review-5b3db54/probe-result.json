@@ -1,0 +1,17 @@
+{
+  "type": "offline_actual_effect_probe",
+  "source_commit": "5b3db54",
+  "delivered_event_seq": 2,
+  "polled_snapshot_seq": 12,
+  "elapsed_ms": 20000,
+  "history_reads": 1,
+  "connection": "Live",
+  "current_agent_state": "tool",
+  "milliseconds_since_last_sync": 0,
+  "bug": "Successful snapshot polling masks a missing event history; working motion remains enabled.",
+  "broadcast_input_recipient": "room",
+  "broadcast_projected_recipient": null,
+  "model_calls": 0,
+  "tool_admissions": 0,
+  "provider_requests": 0
+}

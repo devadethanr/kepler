@@ -142,3 +142,19 @@ and event hashes intact. Models/worker remained stopped as found; only the API
 was started for history. Four controls, five runtime files and stash were preserved.
 No A/B backend, provider study, failed discussion, prompt or serving profile was
 changed. TimesFM/advisory work and broader scheduling remain subsequent scope.
+
+## Independent visual review and next handoff — 4 November 2026
+
+Reviewed source `3bd12d0` / findings `5b3db54`. The required office milestone is
+implemented. Independent checks: **35 frontend passes**, types/build, **78 focused
+backend passes / 4 infrastructure skips**, all18 visual evidence hashes and15
+source hashes. The review did not reproduce the local browser/GPU/service history.
+An actual-effect offline probe reproduced silent OPEN-SSE gaps masked by polling;
+broadcast `room` recipient labels are also lost by the office projection.
+
+[Review](VISUAL_WORKSPACE_REVIEW.md) records both issues and preserves original
+findings. [Next handoff](FORECAST_ADVISORY_HANDOFF.md) fixes them, then repairs and
+exposes TimesFM as one bounded CPU advisory tool with trusted input/as-of cache,
+evidence/UI and explicit legacy scoring/risk containment. No source code, model,
+broker control, runtime state or original evidence was changed by this review;
+new model/tool/provider admissions were zero. Old market41/39 remains closed.

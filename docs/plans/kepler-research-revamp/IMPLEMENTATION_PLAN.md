@@ -1,5 +1,7 @@
 # Kepler collaborative-research revamp — revised handoff
 
+Current work after reviewing `5b3db54`, 4 November 2026: the required Pixel office is implemented. Read [VISUAL_WORKSPACE_REVIEW.md](VISUAL_WORKSPACE_REVIEW.md), then [FORECAST_ADVISORY_IMPLEMENTATION.md](FORECAST_ADVISORY_IMPLEMENTATION.md) / [handoff](FORECAST_ADVISORY_HANDOFF.md). Fix current-event synchronization and broadcast labels, then implement shared CPU advisory forecasting. This supersedes every older current-handoff notice below.
+
 Current work after `34a3f40`: source snapshots/tools/Desk provenance are delivered. Read [FRESH_SOURCE_REVIEW.md](FRESH_SOURCE_REVIEW.md), [MARKET_CONTEXT_IMPLEMENTATION.md](MARKET_CONTEXT_IMPLEMENTATION.md) and [handoff](MARKET_CONTEXT_HANDOFF.md). These supersede earlier milestone notices below. Keep the installed Codex/model/prompt setup.
 
 Current work after `ae7d45f`: the first room and repair phase are delivered. Read [POST_TUNING_REVIEW.md](POST_TUNING_REVIEW.md), then [FRESH_SOURCE_IMPLEMENTATION.md](FRESH_SOURCE_IMPLEMENTATION.md) / [handoff](FRESH_SOURCE_HANDOFF.md). These supersede older current-handoff notices below. The selected runtime remains installed; inactive prompt candidates are evaluation history.
@@ -208,7 +210,7 @@ See TIMESFM_AUDIT_AND_REUSE.md for code-level findings. Do not silently upgrade 
 
 Implement the market-context service; only its predictive authority is gated.
 
-GIFT Nifty is the Indian index derivative on NSEIX, formerly SGXNifty. Current normal session starts06:30 IST before NSE09:15. Singapore equities also open09:00 SGT=06:30 IST, so 'opens early' does not prove Singapore causes Indian moves.
+GIFT Nifty is the Indian index derivative on NSEIX, formerly SGXNifty. The current NSEIX site reported 05:00 IST opening effective 26 October 2026; full overnight schedule/business-date qualification remains unknown. Singapore equities open09:00 SGT=06:30 IST, so 'opens early' does not prove Singapore causes Indian moves. Follow MARKET_CONTEXT_FINDINGS.md rather than the older 06:30 GIFT assumption.
 
 First probe current Kite master-resolved NSEIX:GIFT NIFTY using existing entitlement, read-only; publicmasterpresence does not prove streaming/history/freshness. Optional Upstox global row declares120secondsdelay; label it and verify actual account support.
 
@@ -216,7 +218,7 @@ Treat discovered quote rows as proxies, not expiry-specific tradable futures. Us
 
 Singapore v1: STI and macro context, separate calendar/lunch/holidays. STI is bank-heavy, not a broadAsia oracle. Yahoo^STI is best-effort/unofficial; no realtimeSLA. Missing input staysunknown, notneutral0.5.
 
-Use current NSEIX session/calendar/circulars (06:30–15:40,16:05–02:45nextday normal sessions), SGX09:00–12:00/13:00–17:00SGT. Initial outputs: morningcontextbriefing, observedovernightmove where definitionvalid, source/staleness and divergence flags. NoSingaporetrading.
+Use versioned effective NSEIX session/calendar/circulars; do not reuse the superseded 06:30–15:40/16:05–02:45 assumption. FTSE STI v3.9 May2026 gives regular index calculation09:00–17:10SGT; SGX securities lunch hours do not establish a break in index calculation. Unknown overnight/special-session coverage remains explicit. Initial outputs: morningcontextbriefing, observedovernightmove where definitionvalid, source/staleness and divergence flags. NoSingaporetrading.
 
 Shadow/ablation: baseline vs+GIFT vs+STI using data available before each decision, fees and chronological splits. Do not claim a causal lead or tradingedge from correlation. GIFTimplementation is required; an unavailable entitlement produces an honest unavailable state until a usable source is configured.
 
@@ -262,14 +264,14 @@ Harness² needs a Kepler task/evaluator adapter. Reuse the selected working Code
 
 ## 15. Acceptance and delivery order
 
-Current phase: integrity fixes + read-only market context + required visual agent workspace, with parallel A/B/C ownership. After this combined phase: TimesFM/advisory integration → broader scheduled research → Harness². [UI_MILESTONE_PLAN.md](UI_MILESTONE_PLAN.md) supersedes earlier optional-office wording and the historical phase grouping below. Keep the previously assigned A/B work; the latest user instruction includes visual Track C now in that same task and budget.
+Delivery through `5b3db54`: integrity fixes, read-only market-context service and required visual agent workspace are implemented; live GIFT/STI feeds and research accuracy remain unqualified. Current work: two UI correctness fixes, then TimesFM/advisory integration → broader scheduled research → Harness². Follow FORECAST_ADVISORY_HANDOFF.md; the original A/B/C scope and historical phase grouping below are retained context.
 
 P0 Before destructive graph tests: fix configuration precedence and the isolated-target refusal guard; preserve operator data. Independent adapter/UI implementation can proceed without destructive fixtures.
 P1 Shared room/message/job/evidence contracts, transactional outbox, lease fencing, parent budgets and read-only tool/skill gateway.
 P2 Reuse and integrate the tested Codex App Server adapter, model profiles and actual tools. Improve grounding during integration; runtime selection is already made.
 P3 Feed/news correctness, GIFT/STIservice, TimesFMtyped tool/cache/cutoff; enable diagnostic UI, no new decision authority.
 P4 Adaptive collaborative rooms, scheduled/event triggers, graph/artifact/browser research skills, ForecastAnalyst and intelligent advisory fast policy.
-P5 Real-time Research Desk and required Pixel Agents-style workspace. Transcript/evidence/reconnect foundation exists; implement the visual workspace now as Track C of the current integrity/market-context phase.
+P5 Real-time Research Desk and required Pixel Agents-style workspace delivered in Track C; repair the reviewed silent-SSE event gap and broadcast label. Extend the same UI for advisory forecast evidence.
 P6 Agent-invoked Harness² experiments and optionald1/Flint challengers; manual promotion only.
 
 Required tests:
@@ -288,4 +290,4 @@ This review adds no new benchmark/test/inference run beyond the operator-reporte
 
 ## 16. Local Codex starter
 
-Use NEXT_PHASE_HANDOFF.md for the current task. The first room and normal app activation are complete. Implement the next conversation/lifecycle/tool-boundary and claim/evidence work from NEXT_PHASE_IMPLEMENTATION.md, preserving local state, installed Codex/model services and manual live-entry approval. Historical G0/G1/G2 and framework/conformance tests are not an open queue.
+Use FORECAST_ADVISORY_HANDOFF.md for the current task. The room, source tools, market-context service and visual workspace are implemented. Preserve their evidence and remaining limits; fix current-event synchronization, then implement the shared informational CPU forecast tool. Historical G0/G1/G2, earlier room handoffs and framework/conformance tests are not an open queue.
