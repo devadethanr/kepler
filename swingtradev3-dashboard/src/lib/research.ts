@@ -36,13 +36,18 @@ export function mergeRoomEvents(current: RoomEvent[], incoming: RoomEvent[]): Ro
 }
 
 async function request(path: string, body?: unknown) {
-  const response = await fetch(`/api/research${path}`, {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+  try {
+    const response = await fetch(`/api/research${path}`, {
+    signal: controller.signal,
     method: body === undefined ? 'GET' : 'POST',
     headers: body === undefined ? undefined : { 'Content-Type': 'application/json' },
     body: body === undefined ? undefined : JSON.stringify(body),
   });
-  if (!response.ok) throw new Error(`Research API ${response.status}: ${await response.text()}`);
-  return response.json();
+    if (!response.ok) throw new Error(`Research API ${response.status}: ${await response.text()}`);
+    return await response.json();
+  } finally { clearTimeout(timeout); }
 }
 export const SourceStatusSchema = z.object({
   source_id: z.string(), status: z.string().optional(), fetched_at: z.string().nullish(),

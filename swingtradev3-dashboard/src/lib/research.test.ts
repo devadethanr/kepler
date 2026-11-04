@@ -57,3 +57,16 @@ test('market context reads the same-origin endpoint and preserves nullable prove
     assert.equal(value.cutoff, null);
   } finally { globalThis.fetch = original; }
 });
+
+test('a stalled research read aborts so the workspace can disclose lost synchronization', async context => {
+  const original = globalThis.fetch;
+  context.mock.timers.enable({ apis: ['setTimeout'] });
+  globalThis.fetch = async (_input, init) => new Promise<Response>((_resolve, reject) => {
+    init?.signal?.addEventListener('abort', () => reject(new DOMException('aborted', 'AbortError')));
+  });
+  try {
+    const pending = research.marketContext();
+    context.mock.timers.tick(8001);
+    await assert.rejects(pending, { name: 'AbortError' });
+  } finally { globalThis.fetch = original; context.mock.timers.reset(); }
+});

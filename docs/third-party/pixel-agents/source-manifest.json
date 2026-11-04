@@ -1,0 +1,44 @@
+{
+  "upstream": "https://github.com/pixel-agents-hq/pixel-agents",
+  "commit": "b1bafd02896d90d83457266575a1e8e5011ce997",
+  "files": [
+    {
+      "path": "webview-ui/public/assets/characters/char_0.png",
+      "source": "https://raw.githubusercontent.com/pixel-agents-hq/pixel-agents/b1bafd02896d90d83457266575a1e8e5011ce997/webview-ui/public/assets/characters/char_0.png",
+      "git_blob_sha1": "68a86c5035b77c0a2f752404080b4bfeb023fa2f",
+      "sha256": "9ece93c20765abb876e3dacfe01e0cd1801323eff41c1779be0c47369886c09a",
+      "size": 3956,
+      "dimensions": [
+        112,
+        96
+      ]
+    },
+    {
+      "path": "webview-ui/public/assets/characters/char_3.png",
+      "source": "https://raw.githubusercontent.com/pixel-agents-hq/pixel-agents/b1bafd02896d90d83457266575a1e8e5011ce997/webview-ui/public/assets/characters/char_3.png",
+      "git_blob_sha1": "89f858c63939e8f1637e0fffef987a84e69bacc4",
+      "sha256": "ee5ebe0847471e4834e367f8a4108e6caf2f402ed506bbfebd90c64a43a79348",
+      "size": 4930,
+      "dimensions": [
+        112,
+        96
+      ]
+    },
+    {
+      "path": "LICENSE",
+      "source": "https://raw.githubusercontent.com/pixel-agents-hq/pixel-agents/b1bafd02896d90d83457266575a1e8e5011ce997/LICENSE",
+      "git_blob_sha1": "0e0268df8b275fcb9a8eeb4c1e4f23cb460e7cd1",
+      "sha256": "20729e3cb9d06d64cdf78d43070ead3eae96e67a5b35b1aa35b5520906cb8ab5",
+      "size": 1071
+    },
+    {
+      "path": "webview-ui/src/office/sprites/spriteCache.ts",
+      "source": "https://raw.githubusercontent.com/pixel-agents-hq/pixel-agents/b1bafd02896d90d83457266575a1e8e5011ce997/webview-ui/src/office/sprites/spriteCache.ts",
+      "git_blob_sha1": "5c320f910594b653afccf1b8b645136a6e82a731",
+      "sha256": "fd615d74508e9dc32ecda030a087a0de2bf0a06b5e242e5cee93e8525b268e60",
+      "size": 2399
+    }
+  ],
+  "character_origin": "Pixel Agents README credits JIK-A-4 MetroCity character pack: https://jik-a-4.itch.io/metrocity-free-topdown-character-pack",
+  "terms": "Pixel Agents MIT; MetroCity creator lists CC0 1.0 Universal and says credits appreciated. No upstream furniture copied."
+}

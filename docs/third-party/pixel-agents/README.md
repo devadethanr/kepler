@@ -1,0 +1,3 @@
+# Pixel Agents attribution
+
+The two character sheets in `swingtradev3-dashboard/public/research-office/` and the adapted sprite cache originate from [Pixel Agents](https://github.com/pixel-agents-hq/pixel-agents) at commit `b1bafd02896d90d83457266575a1e8e5011ce997`, under the MIT license in [LICENSE](LICENSE). Pixel Agents credits the character bases to JIK-A-4’s [MetroCity character pack](https://jik-a-4.itch.io/metrocity-free-topdown-character-pack), whose creator identifies its license as [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) and appreciates credit. No Pixel Agents furniture is included. Exact sources and hashes are in [source-manifest.json](source-manifest.json).

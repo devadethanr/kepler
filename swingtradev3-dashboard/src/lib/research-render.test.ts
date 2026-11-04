@@ -14,6 +14,10 @@ test('desk renders on a LAN origin with only getRandomValues', () => {
     const html = renderToStaticMarkup(React.createElement(ResearchDeskScreen));
     assert.match(html, /Start research/);
     assert.match(html, /Loading saved rooms/);
+    assert.match(html, /aria-label="Research office"/);
+    assert.match(html, /Open analyst details, unknown/);
+    assert.match(html, /Open skeptic details, unknown/);
+    assert.ok(html.indexOf('aria-label="Research office"') < html.indexOf('Ask a research question / open an older room'));
   } finally {
     if (original) Object.defineProperty(globalThis, 'crypto', original);
     else Reflect.deleteProperty(globalThis, 'crypto');

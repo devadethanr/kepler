@@ -1,5 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { mergeRoomEvents, newRequestId, research, RoomEventSchema, shouldStreamRoom, terminalStatuses, type Room, type RoomEvent, type SourceCoverage, type MarketContext } from '../lib/research';
+import { projectOffice, type OfficeAgentId, type OfficeConnection, type OfficeModel } from '../lib/research-office';
+import { ResearchOffice } from '../components/research-office/ResearchOffice';
 
 const terminal = terminalStatuses;
 const text = (value: unknown) => typeof value === 'string' ? value : '';
@@ -104,7 +106,7 @@ export function DiscussionEvent({ event }: { event: RoomEvent }) {
       <p className="mt-2 text-xs text-slate-400">Agent interpretation · excerpts are verified separately below</p>
       <p className="my-3 whitespace-pre-wrap text-slate-100">{text(data.text)}</p>
       {claims.map((claim, i) => <div key={text(claim.id) || i} className="my-2 border-l-2 border-cyan-600 pl-3 text-sm">
-        {text(claim.text) && <p>{text(claim.text)}</p>}
+        {text(claim.text) && text(claim.text) !== text(data.text) && <p>{text(claim.text)}</p>}
         {text(claim.kind) && <p className="text-slate-400">{text(claim.kind)} · narrative unassessed</p>}
         {text(claim.support_assessment) && <p className="text-slate-400">Model support proposal: {text(claim.support_assessment)} · not a truth check</p>}
         {text(claim.quote) && <blockquote>Excerpt verified: “{text(claim.quote)}”</blockquote>}
@@ -116,8 +118,10 @@ export function DiscussionEvent({ event }: { event: RoomEvent }) {
           return `${text(item.evidence_id)} / ${text(item.quote_id)}`;
         }).filter(Boolean).join(', ') || 'none'}</p>}
         {(text(claim.target_entity) || text(claim.event_id)) && <p className="text-slate-400">Entity: {text(claim.target_entity) || 'unknown'} · Event: {text(claim.event_id) || 'unknown'}</p>}
-        {claim.source_metadata != null && <p className="text-slate-400">Source provenance: {display(claim.source_metadata)}</p>}
-        {claim.metadata_policy != null && <p className="text-slate-400">Metadata policy: {typeof claim.metadata_policy === 'string' ? claim.metadata_policy : JSON.stringify(claim.metadata_policy)}</p>}
+        {(claim.source_metadata != null || claim.metadata_policy != null) && <details className="mt-2 text-xs text-slate-400"><summary>Citation provenance</summary>
+          {claim.source_metadata != null && <p>Source provenance: {display(claim.source_metadata)}</p>}
+          {claim.metadata_policy != null && <p>Metadata policy: {display(claim.metadata_policy)}</p>}
+        </details>}
       </div>)}
       <p className="text-xs text-slate-400">{text(data.validation)} · {new Date(event.at).toLocaleTimeString()}</p>
     </article>;
@@ -138,7 +142,9 @@ export function ResearchDeskScreen() {
   const [sourceStatus, setSourceStatus] = useState<SourceCoverage | null>(null);
   const [sourceError, setSourceError] = useState('');
   const [rooms, setRooms] = useState<Room[]>([]);
-  const [selected, setSelected] = useState('');
+  const [selected, setSelected] = useState(() => {
+    try { return typeof window === 'undefined' ? '' : window.localStorage.getItem('kepler.research.selected-room') || ''; } catch { return ''; }
+  });
   const [roomId, setRoomId] = useState('');
   const [roomsLoading, setRoomsLoading] = useState(true);
   const [room, setRoom] = useState<Room | null>(null);
@@ -154,7 +160,16 @@ export function ResearchDeskScreen() {
   const retryInFlight = useRef(false);
   const retryIds = useRef(new Map<string, string>());
   const [models, setModels] = useState('Checking local model services');
+  const [modelHealth, setModelHealth] = useState<Partial<Record<OfficeAgentId, OfficeModel>>>({});
+  const [inspectedAgent, setInspectedAgent] = useState<OfficeAgentId | null>(null);
+  const [focusedMessage, setFocusedMessage] = useState('');
+  const [inspectorTab, setInspectorTab] = useState<'discussion' | 'tools'>('discussion');
+  const [replayCursor, setReplayCursor] = useState<number | null>(null);
+  const [playing, setPlaying] = useState(false);
+  const [lastSync, setLastSync] = useState(0);
+  const [clock, setClock] = useState(Date.now());
   const [requestId, setRequestId] = useState(() => newRequestId());
+  const orderedEvents = useMemo(() => mergeRoomEvents([], events.filter(event => event.room_id === selected)), [events, selected]);
 
   useEffect(() => {
     let live = true;
@@ -162,9 +177,13 @@ export function ResearchDeskScreen() {
     let marketRequest = 0;
     const refresh = () => research.list().then(value => { if (live) { setRooms(value); setRoomsLoading(false); setError(previous => previous.startsWith('Saved rooms unavailable:') ? '' : previous); } })
       .catch(err => { if (live) { setRoomsLoading(false); setError(`Saved rooms unavailable: ${String(err)}`); } });
-    const health = () => research.health().then(value => { if (live) setModels(
-      Object.entries(value.models).map(([role, model]) => `${role}: ${model.model} · ${model.status}`).join(' / ') || value.status,
-    ); }).catch(() => { if (live) setModels('Local model health unavailable'); });
+    const health = () => research.health().then(value => { if (live) {
+      setModels(Object.entries(value.models).map(([role, model]) => `${role}: ${model.model} · ${model.status}`).join(' / ') || value.status);
+      setModelHealth(value.models);
+    } }).catch(() => { if (live) {
+      setModels('Local model health unavailable');
+      setModelHealth(previous => Object.fromEntries(Object.entries(previous).map(([key, value]) => [key, { ...value, status: 'unknown' }])));
+    } });
     const sources = () => {
       const request = ++sourceRequest;
       return research.sources().then(value => { if (live && request === sourceRequest) { setSourceStatus(value); setSourceError(''); } }).catch(err => { if (live && request === sourceRequest) setSourceError(String(err)); });
@@ -179,6 +198,31 @@ export function ResearchDeskScreen() {
     return () => { live = false; clearInterval(timer); clearInterval(marketTimer); };
   }, []);
   useEffect(() => {
+    try {
+      if (selected) window.localStorage.setItem('kepler.research.selected-room', selected);
+      else window.localStorage.removeItem('kepler.research.selected-room');
+    } catch { /* Storage may be disabled; direct room-ID access still works. */ }
+    setReplayCursor(null); setPlaying(false); setInspectedAgent(null); setFocusedMessage('');
+    if (!selected) { setRoom(null); setEvents([]); setConnection('Disconnected'); }
+  }, [selected]);
+  useEffect(() => { const timer = setInterval(() => setClock(Date.now()), 2000); return () => clearInterval(timer); }, []);
+  useEffect(() => {
+    if (!playing) return;
+    const step = () => {
+      if (document.hidden) return;
+      setReplayCursor(previous => {
+        const next = orderedEvents.find(event => event.seq > (previous ?? 0));
+        if (!next) { setPlaying(false); return previous; }
+        return next.seq;
+      });
+    };
+    const timer = setInterval(step, 650);
+    return () => clearInterval(timer);
+  }, [playing, orderedEvents]);
+  useEffect(() => {
+    if (focusedMessage) document.getElementById('office-event-' + focusedMessage)?.scrollIntoView({ block: 'nearest' });
+  }, [focusedMessage, inspectedAgent, inspectorTab]);
+  useEffect(() => {
     if (!selected) return;
     let live = true;
     let source: EventSource | undefined;
@@ -192,22 +236,24 @@ export function ResearchDeskScreen() {
       if (terminalSynced) return;
       terminalSynced = true;
       research.events(selected).then(history => {
-        if (live) { setEvents(previous => mergeRoomEvents(previous, history.events)); setError(previous => previous.startsWith('Room history unavailable:') ? '' : previous); }
+        if (live) { setEvents(previous => mergeRoomEvents(previous, history.events)); setLastSync(Date.now()); setError(previous => previous.startsWith('Room history unavailable:') ? '' : previous); }
       }).catch(err => {
         terminalSynced = false;
-        if (live) setError(`Room history unavailable: ${String(err)}`);
+        if (live) { setConnection('Unavailable'); setError(`Room history unavailable: ${String(err)}`); }
       });
     };
-    setEvents([]); setRoom(null); setConnection('Connecting');
+    setEvents([]); setRoom(null); setLastSync(0); setConnection('Connecting');
     const refresh = () => {
       if (refreshInFlight) return;
       refreshInFlight = true;
       return research.get(selected).then(value => {
       if (!live) return;
+      setLastSync(Date.now());
+      if (!terminal.has(value.status) && source?.readyState === EventSource.OPEN) setConnection('Live');
       setRoom(previous => previous?.id === value.id && (previous.seq > value.seq || (terminal.has(previous.status) && !terminal.has(value.status))) ? previous : value);
       setError(previous => previous.startsWith('Room unavailable:') ? '' : previous);
       if (terminal.has(value.status)) syncTerminal();
-    }).catch(err => { if (live) setError(`Room unavailable: ${String(err)}`); }).finally(() => { refreshInFlight = false; });
+    }).catch(err => { if (live) { setConnection('Unavailable'); setError(`Room unavailable: ${String(err)}`); } }).finally(() => { refreshInFlight = false; });
     };
     const initialize = () => {
       if (initializing || initialized) return;
@@ -215,8 +261,9 @@ export function ResearchDeskScreen() {
       Promise.all([research.get(selected), research.events(selected)]).then(([value, history]) => {
       if (!live) return;
       initialized = true;
+      setLastSync(Date.now());
       setError(previous => previous.startsWith('Room unavailable:') ? '' : previous);
-      setRoom(value); setEvents(history.events);
+      setRoom(value); setEvents(mergeRoomEvents([], history.events.filter(event => event.room_id === selected)));
       if (!shouldStreamRoom(value, history.events)) { syncTerminal(); return; }
       source = new EventSource(`/api/research/rooms/${encodeURIComponent(selected)}/stream?after=${history.cursor}`);
       source.onopen = () => { if (live) setConnection('Live'); };
@@ -226,7 +273,7 @@ export function ResearchDeskScreen() {
           const event = RoomEventSchema.parse(JSON.parse((raw as MessageEvent).data));
           if (!live) return;
           setEvents(previous => mergeRoomEvents(previous, [event]));
-          if (event.kind === 'room.finished') { terminalSynced = true; source?.close(); setConnection('Saved discussion'); }
+          if (event.kind === 'room.finished') syncTerminal();
           void refresh();
         } catch (err) { if (live) setError(`Invalid room event: ${String(err)}`); }
       });
@@ -267,53 +314,108 @@ export function ResearchDeskScreen() {
     } catch (err) { setError(String(err)); }
     finally { cancelInFlight.current = false; setCancelBusy(false); }
   }
-  return <main className="flex-1 overflow-auto p-5 text-slate-200">
-    <h1 className="text-2xl font-semibold">Research Desk</h1>
-    <p className="my-2 text-sm text-slate-400">Analyst and skeptic · read-only research · live entries require your approval</p>
-    <p className="text-xs text-slate-400" role="status">{models}. A running research worker processes queued rooms.</p>
-    <SourceStatus value={sourceStatus} error={sourceError} />
-    <MarketContextStatus value={marketContext} error={marketError} />
-    <form onSubmit={start} className="my-4 flex flex-wrap gap-3">
-      <label className="flex flex-col text-sm">Target
-        <input required maxLength={64} value={target} onChange={e => { setTarget(e.target.value); setRequestId(newRequestId()); }}
-          className="rounded border border-slate-600 bg-slate-900 p-2" placeholder="RELIANCE" />
-      </label>
-      <label className="flex min-w-64 flex-1 flex-col text-sm">Research question
-        <textarea required minLength={8} maxLength={3000} value={question}
-          onChange={e => { setQuestion(e.target.value); setRequestId(newRequestId()); }}
-          className="rounded border border-slate-600 bg-slate-900 p-2" placeholder="What does the available evidence support, and what is missing?" />
-      </label>
-      <button disabled={busy} className="self-end rounded bg-cyan-800 px-4 py-2 disabled:opacity-50">Start research</button>
-    </form>
-    {error && <p role="alert" className="my-3 text-red-300">{error}</p>}
-    <label className="text-sm">Saved rooms <select value={selected} onChange={e => setSelected(e.target.value)} className="m-2 rounded bg-slate-900 p-2">
-      <option value="">Choose a room</option>
-      {rooms.map(item => <option key={item.id} value={item.id}>{item.target} · {item.status} · {item.question.slice(0, 70)}</option>)}
-      {selected && !rooms.some(item => item.id === selected) && <option value={selected}>{selected}</option>}
-    </select></label>
-    <form className="my-2 flex flex-wrap items-end gap-2" onSubmit={event => {
-      event.preventDefault(); setError(''); setSelected(roomId.trim());
-    }}>
-      <label className="text-sm">Open saved room by ID
-        <input required value={roomId} onChange={event => setRoomId(event.target.value)}
-          className="ml-2 rounded border border-slate-600 bg-slate-900 p-2" placeholder="Room ID" />
-      </label>
-      <button className="rounded border border-slate-600 px-3 py-2">Open room</button>
-    </form>
-    <p className="text-xs text-slate-400">{roomsLoading ? 'Loading saved rooms…' : error.startsWith('Saved rooms unavailable:') ? 'Saved rooms could not be loaded.' : rooms.length ? 'Showing recent rooms. Open older rooms by ID.' : 'No saved rooms shown.'}</p>
-    {room && <section className="my-4" aria-label="Room status">
-      <div className="flex flex-wrap items-center gap-3"><h2 className="font-semibold">{room.target}: {room.question}</h2>
-        <span role="status">{room.status} · {room.worker_state === 'stale' ? 'Worker lease expired; awaiting recovery' : connection}</span>
-        {terminal.has(room.status) && <button disabled={retryBusy} className="rounded border border-slate-600 px-3 py-1 disabled:opacity-50" onClick={() => { void retry(room.id); }}>Retry as new room</button>}
-        {!terminal.has(room.status) && <button disabled={cancelBusy} className="rounded border border-red-700 px-3 py-1 disabled:opacity-50" onClick={() => { void cancel(room.id); }}>Cancel research</button>}
+  const activeRoom = room?.id === selected ? room : null;
+  const transportStale = connection === 'Unavailable' || connection.startsWith('Reconnecting') || (selected && lastSync > 0 && clock - lastSync > 12000);
+  const officeConnection: OfficeConnection = replayCursor !== null ? 'saved' : transportStale ? 'disconnected' : activeRoom?.worker_state === 'stale' ? 'stale' : connection === 'Live' ? 'connected' : 'saved';
+  const scene = useMemo(() => projectOffice({ room: activeRoom, events: orderedEvents, connection: officeConnection,
+    cursor: replayCursor, models: modelHealth,
+    asOf: replayCursor === null ? (lastSync ? new Date(lastSync).toISOString() : null) : orderedEvents.filter(event => event.seq <= replayCursor).at(-1)?.at || null,
+  }), [activeRoom, orderedEvents, officeConnection, replayCursor, modelHealth, lastSync]);
+  const messageEvents = scene.events.filter(event => event.kind === 'message');
+  const maxSeq = orderedEvents.at(-1)?.seq ?? 0;
+  const agentMessages = messageEvents.filter(event => event.agent === inspectedAgent);
+  const citations = new Set(agentMessages.flatMap(event => (Array.isArray(event.data.claims) ? event.data.claims : []).flatMap(raw => {
+    const claim = object(raw);
+    return [text(claim.evidence_id), ...(Array.isArray(claim.evidence_refs) ? claim.evidence_refs.map(ref => text(object(ref).evidence_id)) : [])].filter(Boolean);
+  })));
+  const agentTools = scene.events.filter(event => event.kind.startsWith('tool.') && (event.agent === inspectedAgent ||
+    (Array.isArray(object(event.data.output).evidence) && (object(event.data.output).evidence as unknown[]).some(raw => citations.has(text(object(raw).id))))));
+  const chooseAgent = (role: OfficeAgentId) => { setInspectedAgent(role); setInspectorTab('discussion'); setFocusedMessage(''); };
+  const chooseMessage = (id: string) => {
+    const message = scene.messages.find(item => item.eventId === id);
+    if (message) { setInspectedAgent(message.agent); setInspectorTab('discussion'); setFocusedMessage(id); }
+  };
+  const nextReplayEvent = () => { setPlaying(false); setReplayCursor(orderedEvents.find(event => event.seq > (replayCursor ?? 0))?.seq ?? maxSeq); };
+  return <main className="flex-1 overflow-auto p-3 text-slate-200 [overflow-wrap:anywhere] sm:p-5" data-workspace="research-office">
+    <header className="mb-3 flex flex-wrap items-start justify-between gap-3">
+      <div><p className="text-[10px] font-semibold uppercase tracking-[.25em] text-cyan-400">Kepler / research floor</p>
+        <h1 className="text-2xl font-semibold">Research Desk</h1>
+        <p className="mt-1 text-xs text-slate-400">Analyst and skeptic · read-only research · live entries require your approval</p></div>
+      <details className="max-w-xl rounded border border-slate-700 px-3 py-2 text-xs text-slate-400"><summary className="cursor-pointer">Local model health</summary><p className="mt-2" role="status">{models}. Current service health is separate from recorded activity.</p></details>
+    </header>
+    <div className="mb-3 flex flex-wrap items-center gap-2 rounded-lg border border-slate-700 bg-slate-900/60 p-3">
+      <label className="min-w-0 flex-1 text-xs text-slate-400">Saved rooms <select aria-label="Saved rooms" value={selected} onChange={e => setSelected(e.target.value)} className="ml-2 max-w-full rounded border border-slate-600 bg-slate-900 p-2 text-sm text-slate-200">
+        <option value="">No room selected</option>
+        {rooms.map(item => <option key={item.id} value={item.id}>{item.target} · {item.status} · {item.question.slice(0, 60)}</option>)}
+        {selected && !rooms.some(item => item.id === selected) && <option value={selected}>{selected}</option>}
+      </select></label>
+      {selected && <button className="rounded border border-slate-600 px-3 py-2 text-xs" onClick={() => setSelected('')}>Clear selection</button>}
+      <span className="text-xs text-slate-400">{roomsLoading ? 'Loading saved rooms…' : error.startsWith('Saved rooms unavailable:') ? 'Saved rooms unavailable' : `${rooms.length} recent rooms`}</span>
+    </div>
+    {error && <p role="alert" className="mb-3 rounded border border-red-800 bg-red-950/40 p-3 text-sm text-red-200">{error}</p>}
+    {transportStale && <p role="status" className="mb-3 rounded border border-amber-700 p-3 text-sm text-amber-200">Connection unavailable or stale. Showing cached recorded events; current work is unknown.</p>}
+    <div className={`grid items-start gap-4 ${inspectedAgent ? 'xl:grid-cols-[minmax(0,1fr)_360px]' : ''}`}>
+      <section className="min-w-0 rounded-xl border border-[#778b7a] bg-[#f2eee3] p-3 text-[#263e3c] shadow-xl sm:p-4" aria-label="Agent workspace">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <div><h2 className="font-semibold">The research room</h2><p className="text-xs text-[#536b5f]">{!selected ? 'No room selected · configured agents, activity unknown' : replayCursor !== null ? 'Recorded replay · no new inference' : terminal.has(activeRoom?.status ?? '') ? 'Saved discussion · recorded outcome' : `${connection} · selected room only`}</p></div>
+          <span className="rounded-full border border-[#b5c7b6] bg-white/50 px-3 py-1 text-xs">{replayCursor !== null ? `Recorded event ${replayCursor}` : activeRoom?.status ?? (selected ? 'Loading room' : 'Awaiting selection')}</span>
+        </div>
+        <ResearchOffice scene={scene} onSelectAgent={chooseAgent} onSelectMessage={chooseMessage} />
+        <div className="mt-2 flex flex-wrap items-center gap-2 border-t border-[#cfdbca] pt-3 text-xs" aria-label="Replay controls">
+          <button disabled={!events.length} className="rounded border border-[#9aac9a] bg-white/60 px-3 py-2 disabled:opacity-40" onClick={() => { setReplayCursor(0); setPlaying(true); }}>Replay saved events</button>
+          {replayCursor !== null && <>
+            <button className="rounded border border-[#9aac9a] px-3 py-2" onClick={() => setPlaying(value => !value)}>{playing ? 'Pause replay' : 'Play replay'}</button>
+            <button className="rounded border border-[#9aac9a] px-3 py-2" onClick={nextReplayEvent}>Next event</button>
+            <button className="rounded border border-[#9aac9a] px-3 py-2" onClick={() => { setPlaying(false); setReplayCursor(null); }}>Return to latest</button>
+          </>}
+          <label className="flex min-w-40 flex-1 items-center gap-2">Event
+            <input aria-label="Replay event" type="range" min={0} max={maxSeq || 1} value={replayCursor ?? maxSeq} disabled={!events.length} className="min-w-16 flex-1 accent-emerald-800"
+              onChange={event => { setPlaying(false); setReplayCursor(Number(event.target.value)); }} />
+            <span className="tabular-nums">{replayCursor ?? maxSeq}/{maxSeq}</span></label>
+        </div>
+        {scene.asOf && <p className="mt-2 text-[10px] text-[#536b5f]">{replayCursor === null ? 'Last synchronized' : 'Recorded event time'}: {ist(scene.asOf)}</p>}
+        <p className="mt-2 text-xs text-[#536b5f]">Click an agent or message to inspect the actual discussion and evidence. Interpretations remain unassessed.</p>
+      </section>
+      {inspectedAgent && <aside className="max-h-[85vh] min-w-0 overflow-auto rounded-xl border border-slate-700 bg-slate-950/70 p-4" aria-label="Agent discussion and evidence">
+        <div className="flex items-center justify-between"><h2 className="font-semibold capitalize">{inspectedAgent} inspector</h2><button className="rounded border border-slate-600 px-2 py-1 text-xs" onClick={() => setInspectedAgent(null)}>Close inspector</button></div>
+        <p className="my-2 text-xs text-slate-400">{scene.agents[inspectedAgent].state} · {selected ? 'Selected room only' : 'No room selected; activity unknown'}</p>
+        <div className="mb-3 flex gap-2" aria-label="Inspector views">
+          <button aria-pressed={inspectorTab === 'discussion'} className="rounded border border-slate-600 px-3 py-2 text-xs" onClick={() => setInspectorTab('discussion')}>Discussion ({agentMessages.length})</button>
+          <button aria-pressed={inspectorTab === 'tools'} className="rounded border border-slate-600 px-3 py-2 text-xs" onClick={() => setInspectorTab('tools')}>Tools & evidence ({agentTools.length})</button>
+        </div>
+        <div className="space-y-3">
+          {inspectorTab === 'discussion' ? agentMessages.length ? agentMessages.map(event => <div key={event.id} id={'office-event-' + event.id} className={focusedMessage === event.id ? 'rounded ring-2 ring-cyan-600' : ''}>
+            <DiscussionEvent event={event} />
+            {(Array.isArray(event.data.claims) ? event.data.claims : []).map((raw, index) => <SourceEvidence key={index} packet={object(object(raw).source_metadata)} />)}
+          </div>) : <p className="text-sm text-slate-400">No published messages at this replay position.</p> : agentTools.length ? agentTools.map(event => <DiscussionEvent key={event.id} event={event} />) : <p className="text-sm text-slate-400">No tool events or cited evidence at this replay position.</p>}
+        </div>
+      </aside>}
+    </div>
+    {activeRoom && <section className="my-3 rounded-lg border border-slate-700 p-3" aria-label="Room status">
+      <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="min-w-0 flex-1 text-sm font-medium">{activeRoom.target}: {activeRoom.question}</h2>
+        {terminal.has(activeRoom.status) ? <button disabled={retryBusy} className="rounded border border-slate-600 px-3 py-2 text-xs disabled:opacity-50" onClick={() => { void retry(activeRoom.id); }}>Retry as new room</button> : <button disabled={cancelBusy} className="rounded border border-red-700 px-3 py-2 text-xs disabled:opacity-50" onClick={() => { void cancel(activeRoom.id); }}>Cancel research</button>}
       </div>
-      {text(room.termination_reason) && <p className="my-2 text-xs text-slate-400">Termination reason: {text(room.termination_reason)}</p>}
-      {room.activity_state === 'unknown' && <p className="my-2 text-xs text-amber-300">In-flight activity is unknown after interruption or lease expiry.</p>}
-      <p className="my-2 text-xs text-slate-400">Model calls {room.counts.model} · Tools {room.counts.tool} · Actual tokens {room.counts.input_tokens + room.counts.output_tokens} · Unknown-usage calls {room.counts.unknown_usage_calls} · Reserved context tokens {room.counts.reserved_tokens}</p>
+      <p className="mt-2 text-xs text-slate-400" role="status">{replayCursor !== null ? 'Latest room snapshot, separate from replay: ' : ''}{activeRoom.status} · {connection} · Model calls {activeRoom.counts.model} · Tools {activeRoom.counts.tool} · {text(activeRoom.termination_reason)}</p>
+      {activeRoom.activity_state === 'unknown' && <p className="mt-2 text-xs text-amber-300">In-flight activity is unknown after interruption or lease expiry.</p>}
     </section>}
-    <section aria-label="Research discussion" aria-live="polite" className="space-y-3">
-      {events.map(event => <DiscussionEvent key={event.id} event={event} />)}
-      {selected && !events.length && <p>No committed discussion events yet.</p>}
-    </section>
+    <details className="my-3 rounded-lg border border-slate-700 bg-slate-900/40 p-3"><summary className="cursor-pointer text-sm">Market & source context · {marketError || sourceError ? 'service unavailable' : marketContext ? `${marketContext.observations.length} market inputs` : 'loading'}</summary>
+      <p className="mt-2 text-xs text-slate-400">Current source health and market observations. Historical evidence is attached to each saved message or tool result.</p>
+      <SourceStatus value={sourceStatus} error={sourceError} /><MarketContextStatus value={marketContext} error={marketError} />
+    </details>
+    <details className="my-3 rounded-lg border border-slate-700 p-3"><summary className="cursor-pointer text-sm">Ask a research question / open an older room</summary>
+      <p className="mt-2 text-xs text-slate-400">A running research worker processes new rooms. Replaying saved events does not invoke the models.</p>
+      <form onSubmit={start} className="my-3 flex flex-wrap gap-3">
+        <label className="flex flex-col text-sm">Target<input required maxLength={64} value={target} onChange={e => { setTarget(e.target.value); setRequestId(newRequestId()); }} className="rounded border border-slate-600 bg-slate-900 p-2" placeholder="RELIANCE" /></label>
+        <label className="flex min-w-48 flex-1 flex-col text-sm">Research question<textarea required minLength={8} maxLength={3000} value={question} onChange={e => { setQuestion(e.target.value); setRequestId(newRequestId()); }} className="rounded border border-slate-600 bg-slate-900 p-2" placeholder="What does the available evidence support, and what is missing?" /></label>
+        <button disabled={busy} className="self-end rounded bg-cyan-800 px-4 py-2 disabled:opacity-50">Start research</button>
+      </form>
+      <form className="flex flex-wrap gap-2" onSubmit={event => { event.preventDefault(); setError(''); setSelected(roomId.trim()); }}>
+        <label className="text-sm">Open saved room by ID<input required value={roomId} onChange={event => setRoomId(event.target.value)} className="ml-2 max-w-full rounded border border-slate-600 bg-slate-900 p-2" placeholder="Room ID" /></label>
+        <button className="rounded border border-slate-600 px-3 py-2 text-sm">Open room</button>
+      </form>
+    </details>
+    <details className="my-3 rounded-lg border border-slate-700 p-3"><summary className="cursor-pointer text-sm">Full room transcript ({messageEvents.length} messages)</summary>
+      <section aria-label="Research discussion" aria-live="polite" className="mt-3 space-y-3">{messageEvents.map(event => <DiscussionEvent key={event.id} event={event} />)}{selected && !messageEvents.length && <p>No committed messages at this replay position.</p>}</section>
+    </details>
   </main>;
 }
