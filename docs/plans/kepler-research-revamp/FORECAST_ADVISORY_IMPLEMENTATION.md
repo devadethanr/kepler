@@ -1,5 +1,10 @@
 # Next implementation: synchronized office and advisory forecasting
 
+**Updated priority:** [VISUAL_WORKSPACE_COMPLETION_HANDOFF.md](VISUAL_WORKSPACE_COMPLETION_HANDOFF.md)
+comes first after the user's screenshots. The office foundation is partial;
+complete its usability and interactions as well as the correctness fixes below
+before starting new forecasting work. Preserve any work already in progress.
+
 4 November 2026. Start from Track C `3bd12d0`, findings `5b3db54` and
 [independent review](VISUAL_WORKSPACE_REVIEW.md). Keep the implemented office and
 Codex/Gemma/Qwen runtime. This phase repairs two UI issues and makes the existing

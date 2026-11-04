@@ -1,18 +1,18 @@
 # Kepler collaborative research revamp
 
-Implementation handoff, revision 12 — reviewed through `5b3db54`, 4 November 2026.
+Implementation handoff, revision 13 — UI completion corrected after user screenshots, 4 November 2026.
 
 **Current:** source `30b5c39` fixes terminal streams, predecessor cutoffs and undated omissions, and adds immutable read-only market context with Research Desk provenance cards. [Market-context findings](MARKET_CONTEXT_FINDINGS.md) record the delivered service and its limits: GIFT/STI quotes are honestly unavailable, and the actual rooms still show query/citation/repetition failures. The installed Codex/local adapter, active participant policy and Gemma/Qwen serving pair remain selected; tuning candidates remain inactive.
 
-**Track C delivered in this phase:** source `3bd12d0` adds the central pixel-art office, licensed character sprites, real state/message projection, agent/tool/evidence inspectors and saved replay. [Visual findings and actual screenshots](VISUAL_WORKSPACE_FINDINGS.md) record localhost/LAN, no-selection, replay, mobile and outage/reconnect verification. The existing A/B implementation and its qualification/model failures are preserved.
+**Track C is partial:** source `3bd12d0` adds the central pixel-art office, licensed character sprites, real state/message projection, agent/tool/evidence inspectors and saved replay. The user's subsequent screenshots show oversized scene layout, hidden discussion/actions and unavailable model labels. The selected queued-cancelled room has zero messages and cannot demonstrate a working discussion. The earlier completion claim was too broad. [Original visual findings](VISUAL_WORKSPACE_FINDINGS.md) remain unchanged; A/B implementation and its qualification/model failures are preserved.
 
 UI verification used saved real rooms and clearly labeled offline traces, with **zero new model/tool/provider admissions**. Combined phase remains **41/39** within 60/60; the market run stays closed. Local findings report the research API running for history and models/worker stopped as found. Refresh service state locally rather than assuming it remains current.
 
-**Next:** [independent UI review](VISUAL_WORKSPACE_REVIEW.md) confirms the office delivery and identifies a reproduced silent-SSE synchronization defect plus a lost broadcast audience label. Fix those, then implement the shared informational CPU forecast tool through [FORECAST_ADVISORY_HANDOFF.md](FORECAST_ADVISORY_HANDOFF.md) and its [implementation plan](FORECAST_ADVISORY_IMPLEMENTATION.md). No forecast implementation or new inference was performed by this review.
+**Next:** finish [VISUAL_WORKSPACE_COMPLETION_HANDOFF.md](VISUAL_WORKSPACE_COMPLETION_HANDOFF.md): bounded viewport layout, visible discussion/actions, truthful readiness, event-driven transitions and the two correctness fixes in [the review](VISUAL_WORKSPACE_REVIEW.md). TimesFM remains the next capability afterward through [its handoff](FORECAST_ADVISORY_HANDOFF.md) and [plan](FORECAST_ADVISORY_IMPLEMENTATION.md). Preserve any forecast work already in progress. No application code or new inference was performed by this documentation correction.
 
 ## Read this first
 
-1. [Independent review](VISUAL_WORKSPACE_REVIEW.md), [next implementation](FORECAST_ADVISORY_IMPLEMENTATION.md) and [local handoff](FORECAST_ADVISORY_HANDOFF.md): two UI fixes, then shared CPU advisory forecasting. [Visual workspace findings](VISUAL_WORKSPACE_FINDINGS.md) retain the delivered Track C evidence.
+1. [UI completion handoff](VISUAL_WORKSPACE_COMPLETION_HANDOFF.md) and [corrected review](VISUAL_WORKSPACE_REVIEW.md): finish the usable workspace first. [Visual workspace findings](VISUAL_WORKSPACE_FINDINGS.md) retain the earlier implementation evidence. [Forecast plan](FORECAST_ADVISORY_IMPLEMENTATION.md) and [handoff](FORECAST_ADVISORY_HANDOFF.md) follow UI completion.
 2. [Market-context findings](MARKET_CONTEXT_FINDINGS.md): retained A/B fixes, provider/model gaps and counters. [Track C scope](UI_MILESTONE_PLAN.md), [handoff](MARKET_CONTEXT_HANDOFF.md) and [market-context plan](MARKET_CONTEXT_IMPLEMENTATION.md) retain the implementation requirements.
 3. [Fresh-source findings](FRESH_SOURCE_FINDINGS.md) and [results](FRESH_SOURCE_RESULTS.md): completed ingestion, tests, frozen rooms and accounting.
 4. [Runbook](RESEARCH_ROOM_RUNBOOK.md), [reboot checks](REBOOT_BROWSER_CHECKS.md) and [work history](WORK_HISTORY.md): normal :8502 entry point, supported host services and implementation history.
@@ -55,7 +55,7 @@ Use the measured llama.cpp profile as the initial implementation baseline; do no
 | Implement GIFT and Singapore | Required context service. Verify the existing Kite GIFT quote entitlement; optional delayed provider fallback. Singapore context is a hypothesis to evaluate, not proof that STI causes Nifty moves. |
 | Put Harness² into agents' work | Agents can propose and review research-harness experiments through tools. Candidate testing is isolated and promotion remains manual; ordinary research uses an approved immutable version. |
 | Add Scrapling | Bounded extraction adapter delivered for the reviewed PIB HTML source; this is not general crawler/source coverage. |
-| Gather-like live discussion UI | Required Pixel Agents-style office delivered at `3bd12d0`, with sprites, events, bubbles, inspectors and replay. Fix the documented live-event synchronization issue; preserve license notices. |
+| Gather-like live discussion UI | Partial office/event implementation at `3bd12d0`; complete viewport sizing, visible discussion/actions, readiness, transitions and reviewed correctness fixes before calling the workspace finished. |
 | Agent-browser skill available while researching | Pin and load official guidance plus matching executable functionality through a constrained tool bridge. Merely adding skill text is insufficient. |
 | Evaluate/reuse Codex | Selected: Codex App Server plus the tested local adapter, with externally coordinated threads. The first room is installed; extend it using the same external-thread design. |
 | Multiple small model families | Use Gemma and Qwen for complementary roles. Multiple roles share two resident services; agreement is not independent corroboration. |
@@ -70,4 +70,4 @@ The pinned API returns channel 5 as the point forecast, not the full-array chann
 
 ## Start instructions for local Codex
 
-Use [FORECAST_ADVISORY_HANDOFF.md](FORECAST_ADVISORY_HANDOFF.md) for the current task. Repair the two reviewed UI issues, then implement the advisory tool. The market handoff and UI scope are retained history, not instructions to rebuild Track C. Preserve old rooms, source/provider gaps and closed accounting. The new plan specifies a separate bounded optional forecast smoke exercise; no older allocation renews.
+Use [VISUAL_WORKSPACE_COMPLETION_HANDOFF.md](VISUAL_WORKSPACE_COMPLETION_HANDOFF.md) for the current task. Preserve and finish the existing office/event implementation. The forecast handoff is queued afterward; preserve any changes already underway. Keep old rooms, source/provider gaps and closed accounting intact. Tests and a rendered scene alone do not establish workspace completion.

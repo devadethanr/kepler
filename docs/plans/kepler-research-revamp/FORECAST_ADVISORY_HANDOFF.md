@@ -1,5 +1,11 @@
 # Local Codex handoff — office synchronization and TimesFM advisory tool
 
+**Priority correction after the user's screenshots, 4 November 2026:** first
+complete [VISUAL_WORKSPACE_COMPLETION_HANDOFF.md](VISUAL_WORKSPACE_COMPLETION_HANDOFF.md).
+The office/event foundation exists, but viewport sizing, visible discussion,
+readiness and interaction work remain. This forecast handoff is queued behind
+that work; preserve any forecast changes already in progress without reverting.
+
 Continue on `feat-generic-broker` after `5b3db54` and this documentation update.
 Read README.md, VISUAL_WORKSPACE_REVIEW.md, FORECAST_ADVISORY_IMPLEMENTATION.md,
 TIMESFM_AUDIT_AND_REUSE.md and the relevant FOLLOW_UP_FINDINGS.md section under

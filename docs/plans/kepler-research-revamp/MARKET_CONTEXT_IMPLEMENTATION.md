@@ -1,6 +1,6 @@
-# Completed scope: integrity fixes, market context and visual agents
+# Original scope: integrity fixes, market context and visual agents
 
-**Delivery/review update, 4 November 2026:** A/B source `30b5c39` and visual Track C `3bd12d0` are implemented; findings through `5b3db54` retain quote/grounding gaps. [Independent review](VISUAL_WORKSPACE_REVIEW.md) and [FORECAST_ADVISORY_HANDOFF.md](FORECAST_ADVISORY_HANDOFF.md) define the next scoped UI fixes and advisory tool. The original requirements below are historical, including their pre-delivery status notices and closed budget; they do not ask for a new office build.
+**Corrected delivery/review update, 4 November 2026:** A/B source `30b5c39` and the visual office/event foundation `3bd12d0` exist; the requested workspace remains partial after user screenshots. [UI completion handoff](VISUAL_WORKSPACE_COMPLETION_HANDOFF.md) and [corrected review](VISUAL_WORKSPACE_REVIEW.md) define the current work before new forecast implementation. Original requirements below are historical, including their status notices and closed budget. Preserve source and quote/grounding gaps; finish the usable workspace.
 
 2 November 2026. Start from `feat-generic-broker@34a3f40` and the subsequent review-doc commit. Read [FRESH_SOURCE_REVIEW.md](FRESH_SOURCE_REVIEW.md). Keep the installed personal Codex room, active participant instructions, inactive prompt candidates, model pair and serving configuration.
 

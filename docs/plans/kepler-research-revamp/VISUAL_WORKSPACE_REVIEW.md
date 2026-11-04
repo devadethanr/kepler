@@ -1,10 +1,14 @@
 # Track C independent review — 4 November 2026
 
-Reviewed `3bd12d0` / findings `5b3db54` on `feat-generic-broker`. **The required
-Pixel Agents-style office is implemented.** It is the main Research Desk view
-before selection, with licensed sprites, addressed public messages, agent and
-evidence inspectors, and saved-event replay. This is a delivered UI milestone,
-with one current-event synchronization defect to fix before extending it.
+Reviewed `3bd12d0` / findings `5b3db54` on `feat-generic-broker`. **An office/event
+foundation is implemented; the requested usable workspace remains partial.**
+The earlier completion claim at `31583db` was too broad. The user's subsequent
+screenshots show a scene that overwhelms the viewport, hidden discussion and
+controls, unavailable model labels, and a queued-cancelled room with no research
+messages. Those facts require UI completion, not merely the two correctness fixes.
+Follow [VISUAL_WORKSPACE_COMPLETION_HANDOFF.md](VISUAL_WORKSPACE_COMPLETION_HANDOFF.md)
+before starting new forecast work. The tests and hash observations below remain
+valid; they do not establish usability acceptance or new live research.
 
 The review changes documentation only. It does not claim to have accessed the
 operator's localhost/LAN, private database, GPUs or browser profiles. Original
@@ -74,7 +78,10 @@ GIFT/STI quote access, session/identity qualifications, source-summary failure,
 wrong citations and repeated abstaining discussion remain unresolved. The UI
 does not improve their financial accuracy.
 
-Next: repair the two scoped UI issues, then implement the shared informational
-CPU forecast tool in [FORECAST_ADVISORY_IMPLEMENTATION.md](FORECAST_ADVISORY_IMPLEMENTATION.md).
-Use [FORECAST_ADVISORY_HANDOFF.md](FORECAST_ADVISORY_HANDOFF.md) locally. Broader
+Next: complete viewport sizing, visible discussion/actions, clear readiness and
+event-driven transitions along with the two correctness fixes through
+[the UI completion handoff](VISUAL_WORKSPACE_COMPLETION_HANDOFF.md). Then implement
+the shared informational CPU forecast tool in
+[FORECAST_ADVISORY_IMPLEMENTATION.md](FORECAST_ADVISORY_IMPLEMENTATION.md).
+Broader
 scheduled rooms and Harness² follow; no new framework/model selection is needed.

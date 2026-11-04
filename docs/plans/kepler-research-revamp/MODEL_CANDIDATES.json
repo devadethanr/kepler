@@ -1,7 +1,7 @@
 {
   "researched_at": "2026-10-31",
   "baseline_commit": "8fb50888c47a8b4f62e0917dd0475ee5dfaa6fb0",
-  "status": "Required Pixel office delivered at3bd12d0/findings5b3db54 and independently reviewed. Fix silent OPEN-SSE event synchronization and broadcast audience labels, then implement shared CPU TimesFM advisory tool. Existing GIFT/STI feeds and research accuracy remain unqualified.",
+  "status": "User screenshot correction: office/event code exists but required workspace completion remains PARTIAL. Finish viewport sizing, visible discussion/actions, truthful readiness, event-driven transitions and SSE/broadcast fixes before new TimesFM work. Original checks and source evidence remain valid.",
   "hardware": {
     "source": "User-provided GPU output and refreshed local inventory in SPIKE_FINDINGS.md; operator-reported, not measured in this cloud review.",
     "confirmed": "Both GPUs are in the same PC.",
@@ -64,7 +64,7 @@
     "deployment": "Native isolated environments/start scripts remain accepted, Docker optional. Loopback-only endpoints and one process per GPU UUID for the measured baseline; CPU parameter placement must be explicit and resource-tested. Use these measured profiles for initial integration; record any configuration changes.",
     "quantization_gate": "Existing GGUF artifacts remain baseline pins. vLLM/SGLang need separately verified architecture/quantization/parser support; do not reinterpret Q4_0 or Q5_K_M as AWQ/GPTQ or assume a QAT-unquantized checkpoint is packed 4-bit.",
     "optimized_checkpoint_status": "Exact tested artifact/runtime pins are in SPIKE_FINDINGS.md, not unresolved preflight. vLLM 0.28.0 and SGLang 0.5.23 did not produce a passing preferred-pair arm under those conditions; startup/generation failures do not prove all configurations unsupported.",
-    "codex_status": "Selected installed Codex/local adapter retained. A/B integrity regressions passed independently; required event-driven Pixel office delivered. Silent OPEN-SSE gap and room broadcast labels need scoped fixes.",
+    "codex_status": "Codex/local adapter selected and retained; office/event foundation implemented, workspace partial after user screenshots. Complete UI through VISUAL_WORKSPACE_COMPLETION_HANDOFF.md; no runtime reselection.",
     "fresh_grounding_g2": {
       "source": "evidence/review-v1/grounding-summary.json",
       "transport": "Direct chat-completions constrained extraction; not end-to-end room research",
@@ -285,7 +285,7 @@
       "caveat": "Not a third required resident model. Pin/review code and calibrate own outcomes; no zero-shot trading authority or production promotion from model probabilities."
     }
   ],
-  "plan_revision": 9,
+  "plan_revision": 10,
   "default_profiles": {
     "fast": "fast-gemma4-e4b",
     "slow": "slow-qwen35",
@@ -303,12 +303,12 @@
     "adapter": "Reuse tested local Responses-to-Chat adapter",
     "collaboration": "Python room manager with externally coordinated top-level Codex threads",
     "model_serving": "Measured default-placement llama.cpp/GGUF pair",
-    "next_step": "FORECAST_ADVISORY_HANDOFF.md: repair two reviewed UI issues, then shared pinned CPU forecast worker/tool, trusted snapshots/cache, advisory evidence/UI and legacy score/risk containment.",
-    "delivery": "Room/source foundation, read-only market context and required Pixel office implemented. Real GIFT/STI feed access and financial grounding remain unqualified; TimesFM room tool is next, not delivered."
+    "next_step": "VISUAL_WORKSPACE_COMPLETION_HANDOFF.md first: usable viewport layout, visible discussion/actions, readiness, transitions and existing correctness fixes. TimesFM advisory tool follows; preserve any forecast work in progress.",
+    "delivery": "Room/source foundation and read-only market context implemented; visual workspace is partial despite implemented office/event code. Quote access and financial grounding remain unqualified. Shared TimesFM room tool remains queued."
   },
   "reviewed_implementation_commit": "5b3db54",
   "ui_delivery": {
-    "functional_desk": "Implemented office, transcript, evidence, source/market panels, inspectors and replay",
+    "functional_desk": "Office/event foundation, transcript and evidence exist; current layout and discussion discoverability need completion.",
     "visual_agent_workspace": {
       "required": true,
       "implemented": true,
@@ -316,15 +316,23 @@
       "backend": "Existing Kepler/Codex events; no new agent runtime",
       "phase": "Current integrity/market-context phase",
       "track": "C",
-      "timing": "Required Track C delivered in the same A/B/C phase. Two correctness issues remain in the independent review; no office rebuild.",
+      "timing": "Complete required Track C now before new forecast work; earlier UI completion claim corrected after user screenshots.",
       "verification_budget": "Delivered UI added zero model/tool/provider admissions; closed market phase remains41/39. No unused allocation is renewed.",
       "source_commit": "3bd12d0",
       "findings_commit": "5b3db54",
       "review": "VISUAL_WORKSPACE_REVIEW.md",
       "open_issues": [
+        "Width-driven office sizing overwhelms viewport and pushes primary controls below scene",
+        "Discussion inspector hidden until agent click; readable activity not visible by default",
+        "Readiness and zero-message queued-cancelled room need clear primary-view explanation",
+        "Renderer has fixed poses/work frames; event-driven spatial transitions remain incomplete",
         "Silent OPEN-SSE gaps can be hidden by healthy snapshot polling",
         "Broadcast recipient room is omitted from office bubble audience"
-      ]
+      ],
+      "complete": false,
+      "status": "PARTIAL",
+      "implementation_meaning": "Office/event code is present; this does not mean the requested usable workspace is complete.",
+      "completion_handoff": "VISUAL_WORKSPACE_COMPLETION_HANDOFF.md"
     }
   },
   "latest_reported_implementation_commit": "3bd12d0",

@@ -1,6 +1,6 @@
 # Local Codex handoff — integrity, market context and visual workspace
 
-**Superseded after delivery through `5b3db54`, 4 November 2026.** Retain this original A/B/C scope as history. The required office is implemented; use [VISUAL_WORKSPACE_REVIEW.md](VISUAL_WORKSPACE_REVIEW.md) and [FORECAST_ADVISORY_HANDOFF.md](FORECAST_ADVISORY_HANDOFF.md) for the current fixes and next capability. Do not rebuild the office or reopen the 41/39 market run from these historical instructions.
+**Superseded after source through `5b3db54`, 4 November 2026.** Retain this original A/B/C scope as history. The office/event foundation exists but workspace completion is partial after user screenshots. Use [VISUAL_WORKSPACE_COMPLETION_HANDOFF.md](VISUAL_WORKSPACE_COMPLETION_HANDOFF.md) and [the corrected review](VISUAL_WORKSPACE_REVIEW.md) before new forecast work. Preserve the office source and the closed41/39 market run.
 
 Continue from the branch containing market source `30b5c39`, findings `e70a3b0` and this scope update. Preserve the reported A/B delivery and its provider/quality limits. Track C below is required remaining work of the same phase.
 

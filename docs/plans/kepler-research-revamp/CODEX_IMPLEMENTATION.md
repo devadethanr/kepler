@@ -1,6 +1,6 @@
 # Codex implementation for personal Kepler
 
-Current work after `5b3db54`, 4 November 2026: the selected Codex runtime and required Pixel office are implemented. Follow [VISUAL_WORKSPACE_REVIEW.md](VISUAL_WORKSPACE_REVIEW.md) and [FORECAST_ADVISORY_HANDOFF.md](FORECAST_ADVISORY_HANDOFF.md): fix live-event synchronization/broadcast labels, then add the shared informational CPU forecast tool. This supersedes older handoff notices below; runtime selection remains settled.
+Current work after the user's UI screenshots, 4 November 2026: the selected Codex runtime and partial Pixel office/event foundation are implemented. Follow [VISUAL_WORKSPACE_COMPLETION_HANDOFF.md](VISUAL_WORKSPACE_COMPLETION_HANDOFF.md) and [the corrected review](VISUAL_WORKSPACE_REVIEW.md) to finish the usable workspace before new shared CPU forecasting work. This supersedes older handoff notices below; runtime selection remains settled.
 
 Current work after `34a3f40`: source snapshots/tools/Desk provenance are delivered. Read [FRESH_SOURCE_REVIEW.md](FRESH_SOURCE_REVIEW.md), [MARKET_CONTEXT_IMPLEMENTATION.md](MARKET_CONTEXT_IMPLEMENTATION.md) and [handoff](MARKET_CONTEXT_HANDOFF.md). These supersede earlier milestone notices below. Keep the installed Codex/model/prompt setup.
 

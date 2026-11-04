@@ -158,3 +158,19 @@ exposes TimesFM as one bounded CPU advisory tool with trusted input/as-of cache,
 evidence/UI and explicit legacy scoring/risk containment. No source code, model,
 broker control, runtime state or original evidence was changed by this review;
 new model/tool/provider admissions were zero. Old market41/39 remains closed.
+
+## UI completion claim corrected after user screenshots — 4 November 2026
+
+The completion claim in `31583db` was too broad. User screenshots show a large
+office pushing controls below the fold, hidden discussion and unavailable model
+labels. The selected room was cancelled while queued, with3events/0messages and
+0model/tool calls; absent conversation is correct for that room, not a working
+discussion demonstration. Source inspection confirms uncapped width-based stage
+sizing, a click-open inspector and limited fixed state poses/work frames.
+
+The status is now **partial office/event foundation**, with UI completion ahead
+of new TimesFM work. [Completion handoff](VISUAL_WORKSPACE_COMPLETION_HANDOFF.md)
+specifies viewport-fit layout, visible discussion/actions, accurate readiness,
+event-driven transitions, SSE/broadcast fixes and browser acceptance at normal
+zoom. Preserve any forecast work already underway. Earlier tests/evidence remain
+valid and untouched; this correction adds no source changes or model admissions.

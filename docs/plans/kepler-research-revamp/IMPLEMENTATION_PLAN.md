@@ -1,6 +1,6 @@
 # Kepler collaborative-research revamp — revised handoff
 
-Current work after reviewing `5b3db54`, 4 November 2026: the required Pixel office is implemented. Read [VISUAL_WORKSPACE_REVIEW.md](VISUAL_WORKSPACE_REVIEW.md), then [FORECAST_ADVISORY_IMPLEMENTATION.md](FORECAST_ADVISORY_IMPLEMENTATION.md) / [handoff](FORECAST_ADVISORY_HANDOFF.md). Fix current-event synchronization and broadcast labels, then implement shared CPU advisory forecasting. This supersedes every older current-handoff notice below.
+Current work after the user's UI screenshots, 4 November 2026: the Pixel office/event foundation exists, but workspace completion remains partial. Follow [VISUAL_WORKSPACE_COMPLETION_HANDOFF.md](VISUAL_WORKSPACE_COMPLETION_HANDOFF.md) and [the corrected review](VISUAL_WORKSPACE_REVIEW.md) before new CPU advisory forecasting work. This supersedes every older current-handoff notice below; preserve any forecast changes already in progress.
 
 Current work after `34a3f40`: source snapshots/tools/Desk provenance are delivered. Read [FRESH_SOURCE_REVIEW.md](FRESH_SOURCE_REVIEW.md), [MARKET_CONTEXT_IMPLEMENTATION.md](MARKET_CONTEXT_IMPLEMENTATION.md) and [handoff](MARKET_CONTEXT_HANDOFF.md). These supersede earlier milestone notices below. Keep the installed Codex/model/prompt setup.
 
@@ -264,14 +264,14 @@ Harness² needs a Kepler task/evaluator adapter. Reuse the selected working Code
 
 ## 15. Acceptance and delivery order
 
-Delivery through `5b3db54`: integrity fixes, read-only market-context service and required visual agent workspace are implemented; live GIFT/STI feeds and research accuracy remain unqualified. Current work: two UI correctness fixes, then TimesFM/advisory integration → broader scheduled research → Harness². Follow FORECAST_ADVISORY_HANDOFF.md; the original A/B/C scope and historical phase grouping below are retained context.
+Delivery through `5b3db54`: integrity fixes and read-only market-context service are implemented; the visual office/event foundation is partial after user review. Live GIFT/STI feeds and research accuracy remain unqualified. Current work: UI completion including two correctness fixes, then TimesFM/advisory integration → broader scheduled research → Harness². Follow VISUAL_WORKSPACE_COMPLETION_HANDOFF.md; the original A/B/C scope and historical phase grouping below are retained context.
 
 P0 Before destructive graph tests: fix configuration precedence and the isolated-target refusal guard; preserve operator data. Independent adapter/UI implementation can proceed without destructive fixtures.
 P1 Shared room/message/job/evidence contracts, transactional outbox, lease fencing, parent budgets and read-only tool/skill gateway.
 P2 Reuse and integrate the tested Codex App Server adapter, model profiles and actual tools. Improve grounding during integration; runtime selection is already made.
 P3 Feed/news correctness, GIFT/STIservice, TimesFMtyped tool/cache/cutoff; enable diagnostic UI, no new decision authority.
 P4 Adaptive collaborative rooms, scheduled/event triggers, graph/artifact/browser research skills, ForecastAnalyst and intelligent advisory fast policy.
-P5 Real-time Research Desk and required Pixel Agents-style workspace delivered in Track C; repair the reviewed silent-SSE event gap and broadcast label. Extend the same UI for advisory forecast evidence.
+P5 Real-time Research Desk/Pixel office foundation implemented; complete viewport layout, visible discussion/actions, readiness, transitions, silent-SSE event gaps and broadcast labels. Forecast evidence extends that same UI afterward.
 P6 Agent-invoked Harness² experiments and optionald1/Flint challengers; manual promotion only.
 
 Required tests:
@@ -290,4 +290,4 @@ This review adds no new benchmark/test/inference run beyond the operator-reporte
 
 ## 16. Local Codex starter
 
-Use FORECAST_ADVISORY_HANDOFF.md for the current task. The room, source tools, market-context service and visual workspace are implemented. Preserve their evidence and remaining limits; fix current-event synchronization, then implement the shared informational CPU forecast tool. Historical G0/G1/G2, earlier room handoffs and framework/conformance tests are not an open queue.
+Use VISUAL_WORKSPACE_COMPLETION_HANDOFF.md for the current task. The room, source tools, market-context service and partial visual workspace are implemented. Preserve their evidence and limits; finish the usable UI before new shared CPU forecast work. Historical G0/G1/G2, earlier room handoffs and framework/conformance tests are not an open queue.

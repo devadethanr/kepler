@@ -1,14 +1,14 @@
 # Required visual agent workspace — delivery order
 
-**Delivery update, 4 November 2026:** Track C source **`3bd12d0`** implements the
-workspace described below in this same phase. See
-[VISUAL_WORKSPACE_FINDINGS.md](VISUAL_WORKSPACE_FINDINGS.md) for measured results
-and actual screenshots. The preimplementation scope/history below is retained;
-the 41/39 market run remains closed and UI checks added no inference.
+**Corrected status, 4 November 2026:** Track C source **`3bd12d0`** implements an
+office/event foundation, but the user's screenshots show that the usable
+workspace remains **partial**. Complete [VISUAL_WORKSPACE_COMPLETION_HANDOFF.md](VISUAL_WORKSPACE_COMPLETION_HANDOFF.md)
+before new forecast work. [Corrected review](VISUAL_WORKSPACE_REVIEW.md) preserves
+the independent checks; [original findings](VISUAL_WORKSPACE_FINDINGS.md) preserve
+the local evidence. Passing tests and rendering the office did not establish
+completion of the requested experience. The 41/39 market run remains closed.
 
-**Review update:** [VISUAL_WORKSPACE_REVIEW.md](VISUAL_WORKSPACE_REVIEW.md) confirms the office milestone and records two scoped UI fixes for [the next handoff](FORECAST_ADVISORY_HANDOFF.md). Everything below records the original required scope, not a request to rebuild the office.
-
-Historical clarification, 2 November 2026: the form/discussion interface alone did not deliver the required Pixel Agents/Gather-like workspace. Track C has now delivered it.
+Historical clarification, 2 November 2026: the form/discussion interface alone did not deliver the required Pixel Agents/Gather-like workspace. The original scope below remains relevant; the completion handoff supplies the current concrete requirements.
 
 ## Current phase: preserve A/B, deliver required Track C now
 
