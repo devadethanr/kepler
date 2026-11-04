@@ -122,3 +122,23 @@ recorded in findings. The required visual workspace remains next, unimplemented.
 ## Required current-phase visual workspace — scope published 4 November 2026
 
 The user requested the Pixel Agents-style office **now in the existing integrity/market-context phase**. This supersedes earlier next-milestone wording. Local A/B source `30b5c39` and findings `e70a3b0` arrived while the scope commit was unpublished and are preserved unchanged. The updated MARKET_CONTEXT_HANDOFF.md makes C required remaining work; the form/cards alone do not complete it. UI development/replay needs no new inference. The closed market run stays at 41 model / 39 tool admissions; any separately recorded UI live check must preserve the original combined 60/60 phase ceiling, leaving at most 19/21 additional. This publication changes planning only, not application source or delivered UI.
+
+## Track C implemented and verified — 4 November 2026
+
+Source **`3bd12d0`** replaces the initial form/cards emphasis with a central
+pixel-art office, two pinned licensed character sheets and original furniture.
+Real durable events drive scoped agent states, addressed bubbles, inspectors,
+tools/market/source evidence and saved sequence replay. No-selection activity stays
+unknown; stale/current health and recorded state remain distinct. Selection,
+reconnect and terminal history are preserved; controls/context are collapsible.
+
+[Visual findings](VISUAL_WORKSPACE_FINDINGS.md) include actual localhost/LAN
+screenshots, mobile/keyboard/reduced-motion checks, a real API outage/recovery,
+and labeled intercepted live/cancellation fixtures. **35 frontend and 82 protected
+backend checks passed**, with types/build. Active fixture animation measured
+29 callbacks/5s and zero/3s offscreen/reduced-motion/cancelled. UI work used
+**0 new model/tool/provider admissions**; phase remains41/39, source/market history
+and event hashes intact. Models/worker remained stopped as found; only the API
+was started for history. Four controls, five runtime files and stash were preserved.
+No A/B backend, provider study, failed discussion, prompt or serving profile was
+changed. TimesFM/advisory work and broader scheduling remain subsequent scope.

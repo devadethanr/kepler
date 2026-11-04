@@ -1,0 +1,103 @@
+{
+  "screens": {
+    "no-selection": "66d179e125d496293c48766d75f3d151516d8fb55f0e9fba27b288b16ed04991",
+    "saved": "3599e2bdfa57cc214bd0a8dfcdcf5fd9cd710f067b3dc101db367b36f15dd37a",
+    "inspector": "a94c18797f4586995e120e60b91fdbbd35f09c83a53c49fc79b8b4aea6a03432",
+    "replay": "f4b4e9f7c7a857791cfbb637aa3034ec6f3c2838a672ba4dac553a5cb44de935",
+    "mobile": "591650ad5971874abcca972df4407dafb37edd4ab8b9ce1506f04fc0f733d307"
+  },
+  "errors": [
+    {
+      "type": "http",
+      "status": 404,
+      "url": "http://localhost:8502/favicon.ico"
+    }
+  ],
+  "assets": [
+    {
+      "status": 200,
+      "url": "http://localhost:8502/research-office/char_0.png"
+    },
+    {
+      "status": 200,
+      "url": "http://localhost:8502/research-office/char_3.png"
+    },
+    {
+      "status": 304,
+      "url": "http://localhost:8502/research-office/char_3.png"
+    },
+    {
+      "status": 304,
+      "url": "http://localhost:8502/research-office/char_0.png"
+    }
+  ],
+  "checks": {
+    "initial": {
+      "text": "The research room\n\nNo room selected · configured agents, activity unknown\n\nAwaiting selection\nAnalyst\nUnknown\nskeptic\nUnknown\nAnalyst · gemma-e4b-followup: unavailable\nSkeptic · qwen35-9b-followup: unavailable\nNo room selected\nReplay saved events\nEvent\n0/0\n\nClick an agent or message to inspect the actual discussion and evidence. Interpretations remain unassessed.",
+      "buttons": [
+        "Open analyst details, unknown, gemma-e4b-followup: unavailable",
+        "Open skeptic details, unknown, qwen35-9b-followup: unavailable",
+        null,
+        null
+      ],
+      "canvas": [
+        {
+          "width": 960,
+          "height": 500
+        }
+      ]
+    },
+    "selected": true,
+    "saved": {
+      "buttons": [
+        "Open analyst details, finished, gemma-e4b-followup: unavailable",
+        "Open analyst message: I disagree that the metadata is useless. It confirms the instrument type (future/cash_index) and exchange (NSEIX/NSE) are known, even if the quote is null. The missing inputs are the specific contract ID and a verified quote value, not the instrument's existence in the saved metadata.",
+        "Open skeptic details, finished, qwen35-9b-followup: unavailable",
+        "Open skeptic message: The metadata confirms instrument type and exchange, but 'status: unavailable', 'quote_value: null', and 'quality_reasons: no_verified_entitled_quote_provider' mean no observable market state exists. Without a verified entitled provider and resolved contract master, no quote entitlement exists. The metadata confirms absence, not presence. No numerical or structural comparison is possible without a resolved price.",
+        null,
+        null,
+        null,
+        null
+      ],
+      "messages": 12,
+      "events": 125
+    },
+    "agentClicked": true,
+    "inspector": {
+      "discussion": true,
+      "saved_evidence": true
+    },
+    "toolsClicked": true,
+    "tools": {
+      "market_context": true,
+      "count": 19
+    },
+    "bubbleClicked": true,
+    "highlight": {
+      "id": "office-event-room:4004fa0c-3f73-5953-9c4d-6fb7a84c0bfb:d15b957dad12e1252053bab76f83929e",
+      "text": "analyst → skeptic · challenge · disagreement\n\nAgent interpretation · excerpts are verified separately below\n\nI disagree that the metadata is useless. It confirms the instrument type (future/cash_index) and exchange (NSEIX/NSE) are known, even if the quote is null. The missing inputs are the specific"
+    },
+    "replay": "The research room\n\nRecorded replay · no new inference\n\nRecorded event 0\nAnalyst\nUnknown\nskeptic\nUnknown\nAnalyst · gemma-e4b-followup: unavailable\nSkeptic · qwen35-9b-followup: unavailable\nReplay saved events\nPlay replay\nNext event\nReturn to latest\nEvent\n0/125\n\nClick an agent or message to inspect the actual discussion and evidence. Interpretations remain unassessed.",
+    "next": "The research room\n\nRecorded replay · no new inference\n\nRecorded event 1\nAnalyst\nQueued\nskeptic\nQueued\nAnalyst · gemma-e4b-followup: unavailable\nSkeptic · qwen35-9b-followup: unavailable\nReplay saved events\nPlay replay\nNext event\nReturn to latest\nEvent\n1/125\n\nRecorded event time: 2026-11-03T03:37:40.423359+00:00 (3/11/2026, 9:07:40 am IST)\n\nClick an agent or message to inspect the actual discussion and evidence. Interpretations remain unassessed.",
+    "reload": {
+      "selected": "room:4004fa0c-3f73-5953-9c4d-6fb7a84c0bfb",
+      "text": "The research room\n\nSaved discussion · recorded outcome\n\nabstention\nAnalyst\nFinished\nAnalyst → Skeptic\nI disagree that the metadata is useless. It confirms the instrument type (future/cash_index) and exchange (NSEIX/NSE) are known, even if the quote is null. The missing inputs are the specific contract ID and a verified quote value, not the instrument's existence in the saved metadata.\nskeptic\nFinished\nSkeptic → Analyst\nThe metadata confirms instrument type and exchange, but 'status: unavailable', 'quote_value: null', and 'quality_reasons: no_verified_entitled_quote_provider' mean no observable market state exists. Without a verified entitled provider and resolved contract master, no quote entitlement exists. The metadata confirms absence, not presence. No numerical or structural comparison is possible without a resolved price.\nAnalyst · gemma-e4b-followup: unavailable\nSkeptic · qwen35-9b-followup: unavailable\nReplay saved events\nEvent\n125/125\n\nLast synchronized: 2026-11-04T15:49:57.783Z (4/11/2026, 9:19:57 pm IST)\n\nClick an agent or message to inspect the actual discussion and evidence. Interpretations remain unassessed."
+    },
+    "performance": {
+      "raf": 0,
+      "taskDuration": 0.09298299999999998,
+      "heapBefore": 22651328,
+      "heapAfter": 37642708
+    },
+    "mobile": {
+      "width": 390,
+      "scrollWidth": 390,
+      "reduced": true
+    },
+    "keyboard": {
+      "tag": "BUTTON",
+      "text": "close",
+      "outline": "auto"
+    }
+  }
+}

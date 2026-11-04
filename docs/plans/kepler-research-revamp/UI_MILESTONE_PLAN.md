@@ -1,5 +1,11 @@
 # Required visual agent workspace — delivery order
 
+**Delivery update, 4 November 2026:** Track C source **`3bd12d0`** implements the
+workspace described below in this same phase. See
+[VISUAL_WORKSPACE_FINDINGS.md](VISUAL_WORKSPACE_FINDINGS.md) for measured results
+and actual screenshots. The preimplementation scope/history below is retained;
+the 41/39 market run remains closed and UI checks added no inference.
+
 Clarified with the user on 2 November 2026. The existing Research Desk is a working form, discussion and evidence interface. The requested Pixel Agents/Gather-like visual workspace is **not implemented** and is a **required revamp deliverable**, not optional decoration.
 
 ## Current phase: preserve A/B, deliver required Track C now

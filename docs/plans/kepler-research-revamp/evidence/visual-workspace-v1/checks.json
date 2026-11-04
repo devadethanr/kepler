@@ -1,0 +1,28 @@
+{
+  "frontend": {
+    "passed": 35,
+    "failed": 0,
+    "types": true,
+    "build": true,
+    "private_out_dir": "/tmp/kepler-visual-final-build",
+    "commands": [
+      "npm test",
+      "npm run lint",
+      "npm run build -- --outDir /tmp/kepler-visual-final-build"
+    ],
+    "warnings": [
+      "existing KnowledgeScreen large chunk"
+    ]
+  },
+  "guarded_backend": {
+    "passed": 82,
+    "failed": 0,
+    "skipped": 0,
+    "command": "make test-file file='tests/test_research_room/test_integrity_regression.py tests/test_research_room/test_news_evidence.py tests/test_news_snapshots.py tests/test_market_context tests/test_research_room/test_market_postgres.py tests/test_research_room/test_research_proxy.py'",
+    "warnings": [
+      "websockets deprecations"
+    ],
+    "unsafe_graph_tests": false
+  },
+  "initial_correction": "A test mock Promise needed its Response type annotation before final TypeScript passed. Independent review repaired replay normalization, terminal resync, current/replay labeling and unknown activity handling before browser verification."
+}

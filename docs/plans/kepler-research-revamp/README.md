@@ -1,17 +1,17 @@
 # Kepler collaborative research revamp
 
-Implementation handoff, revision 10 — market-context source `30b5c39`; current-phase UI scope published 4 November 2026.
+Implementation handoff, revision 11 — A/B source `30b5c39`, visual workspace `3bd12d0`, 4 November 2026.
 
 **Current:** source `30b5c39` fixes terminal streams, predecessor cutoffs and undated omissions, and adds immutable read-only market context with Research Desk provenance cards. [Market-context findings](MARKET_CONTEXT_FINDINGS.md) record the delivered service and its limits: GIFT/STI quotes are honestly unavailable, and the actual rooms still show query/citation/repetition failures. The installed Codex/local adapter, active participant policy and Gemma/Qwen serving pair remain selected; tuning candidates remain inactive.
 
-**Required remaining work in this phase:** implement the Pixel Agents-style visual workspace now as **Track C**, following [MARKET_CONTEXT_HANDOFF.md](MARKET_CONTEXT_HANDOFF.md) and [UI_MILESTONE_PLAN.md](UI_MILESTONE_PLAN.md). The reported A/B work at `30b5c39` is preserved; do not restart those completed investigations. Provider gaps/unavailable quotes are not a blocker to implementing the office.
+**Track C delivered in this phase:** source `3bd12d0` adds the central pixel-art office, licensed character sprites, real state/message projection, agent/tool/evidence inspectors and saved replay. [Visual findings and actual screenshots](VISUAL_WORKSPACE_FINDINGS.md) record localhost/LAN, no-selection, replay, mobile and outage/reconnect verification. The existing A/B implementation and its qualification/model failures are preserved.
 
-The existing form/transcript/cards are the foundation; actual office/avatars are still unimplemented and required before this combined phase is complete. Source and market runs remain closed. Build and verify the UI using saved real events/offline fixtures first; no new inference is needed for that. Any separately recorded live UI check must keep combined phase totals within 60 model / 60 tool admissions (41/39 already recorded, at most 19/21 additional). Do not reopen or reset the completed market run.
+UI verification used saved real rooms and clearly labeled offline traces, with **zero new model/tool/provider admissions**. Combined phase remains **41/39** within 60/60; the market run stays closed. Research API is running for history; models/worker remain stopped as found and are labeled unavailable. Review the combined delivery before the documented TimesFM/advisory work; no later implementation or new budget is assumed.
 
 ## Read this first
 
-1. [Market-context findings](MARKET_CONTEXT_FINDINGS.md): integrity fixes, real provider gaps, actual rooms, preservation and handback.
-2. [Current Track C scope](UI_MILESTONE_PLAN.md) and [local handoff](MARKET_CONTEXT_HANDOFF.md): required visual workspace in this same phase; [market-context plan](MARKET_CONTEXT_IMPLEMENTATION.md) retains A/B requirements and corrected UI acceptance.
+1. [Visual workspace findings](VISUAL_WORKSPACE_FINDINGS.md): delivered Track C, source/license pinning, browser screenshots, preservation and full handback.
+2. [Market-context findings](MARKET_CONTEXT_FINDINGS.md): retained A/B fixes, provider/model gaps and counters. [Track C scope](UI_MILESTONE_PLAN.md), [handoff](MARKET_CONTEXT_HANDOFF.md) and [market-context plan](MARKET_CONTEXT_IMPLEMENTATION.md) retain the implementation requirements.
 3. [Fresh-source findings](FRESH_SOURCE_FINDINGS.md) and [results](FRESH_SOURCE_RESULTS.md): completed ingestion, tests, frozen rooms and accounting.
 4. [Runbook](RESEARCH_ROOM_RUNBOOK.md), [reboot checks](REBOOT_BROWSER_CHECKS.md) and [work history](WORK_HISTORY.md): normal :8502 entry point, supported host services and implementation history.
 5. [Overall plan](IMPLEMENTATION_PLAN.md), [Codex design](CODEX_IMPLEMENTATION.md), [model/status manifest](MODEL_CANDIDATES.json), [skills](SKILLS_AND_CONTEXT_TOOLS.md) and [TimesFM](TIMESFM_AUDIT_AND_REUSE.md): existing design and later capabilities.
@@ -20,6 +20,7 @@ Older fresh-source/room-fix handoffs, prompt-iteration plans and spike documents
 
 ## Current evidence and limits
 
+- Track C: **35 frontend tests, types/build and 82 protected backend regressions passed**. Actual localhost/LAN office, inspectors, replay/reload, mobile, cached outage/recovery and labeled fixture cancellation verified. No fresh inference; both original research failures and quote gaps remain visible.
 - Local market-context verification: **164 guarded backend tests / 3 expected skips, 82 host tests, 25 frontend tests, types/build/Ruff and actual localhost/LAN recovery passed**. The 41-model/39-tool run retained two imperfect 12-message abstentions and active cancellation; exact citations do not establish narrative truth.
 - Historical independent cloud checks at `34a3f40`: **87 backend/source tests passed / 11 infrastructure skips; 22 frontend tests, TypeScript, build and Ruff passed**. That cloud review did not reproduce the earlier local 157-test/UI/graph/reboot observations; the newer local market-context results are listed above.
 - All 30 fresh-source export files matched manifest sizes/hashes. Actual application helpers reproduced missing stream-terminal completion, widened predecessor read cutoff and incorrect undated omission reporting using scratch SQLite/loopback HTTP; no real model or broker calls.
@@ -66,4 +67,4 @@ The pinned API returns channel 5 as the point forecast, not the full-array chann
 
 ## Start instructions for local Codex
 
-Read the updated [MARKET_CONTEXT_HANDOFF.md](MARKET_CONTEXT_HANDOFF.md) and implement required Track C now, preserving the reported A/B source/data and all local work. Use [UI_MILESTONE_PLAN.md](UI_MILESTONE_PLAN.md) for actual pixel-art office/avatars, event-driven states/bubbles, source/market inspectors and browser acceptance. Prefer saved history/offline verification without new model calls. Append a dated Track C report or create VISUAL_WORKSPACE_FINDINGS.md linked from the existing findings; do not overwrite historical room failures, source qualifications or accounting.
+Read [VISUAL_WORKSPACE_FINDINGS.md](VISUAL_WORKSPACE_FINDINGS.md) and the retained A/B findings before assigning follow-up work. Track C is delivered in this phase; the [handoff](MARKET_CONTEXT_HANDOFF.md) and [UI plan](UI_MILESTONE_PLAN.md) record its requirements. Preserve the saved histories, provider/model gaps and closed 41/39 accounting. Review the combined delivery before the documented TimesFM/advisory scope; do not repeat completed studies or assume a fresh inference budget.

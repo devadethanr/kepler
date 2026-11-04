@@ -1,0 +1,69 @@
+{
+  "screens": {
+    "fixture-queued": "6dcfb72a2ca5bafde4be88e4819113faa7dac53d4f8a4d28cb74608764372028",
+    "fixture-researching": "bfc85c3eee08657f0fdb9e8b5069748a2713fde6ce4690f26dfc6953eb214deb",
+    "fixture-tool": "485509d6e65a14aa27cccbff40d15cd7f35e5cd97767d6864191ae293677095d",
+    "fixture-speaking": "245f1a376cd9ad5107af4def77b30d0551d39d0857ae5dbe2b979a079dbe2f65",
+    "fixture-cancelled": "7270b734fb1d5e9ef8ad467d48b20c137e812420f5ce21683685ee0d4fd1553f"
+  },
+  "errors": [
+    {
+      "type": "http",
+      "status": 404,
+      "url": "http://localhost:8502/favicon.ico"
+    }
+  ],
+  "assets": [
+    {
+      "status": 200,
+      "url": "http://localhost:8502/research-office/char_0.png"
+    },
+    {
+      "status": 200,
+      "url": "http://localhost:8502/research-office/char_3.png"
+    },
+    {
+      "status": 304,
+      "url": "http://localhost:8502/research-office/char_3.png"
+    },
+    {
+      "status": 304,
+      "url": "http://localhost:8502/research-office/char_0.png"
+    }
+  ],
+  "checks": {
+    "fixture-queued": {
+      "workspace": "The research room\n\nLive · selected room only\n\nrunning\nAnalyst\nQueued\nskeptic\nQueued\nAnalyst · gemma-e4b-followup: unavailable\nSkeptic · qwen35-9b-followup: unavailable\nReplay saved events\nEvent\n1/1\n\nLast synchronized: 2026-11-04T15:56:08.510Z (4/11/2026, 9:26:08 pm IST)\n\nClick an agent or message to inspect the actual discussion and evidence. Interpretations remain unassessed.",
+      "room": "[Offline fixture]: [Offline fixture] Synthetic trace only\nCancel research\n\nrunning · Live · Model calls 0 · Tools 0 ·"
+    },
+    "fixture-researching": {
+      "workspace": "The research room\n\nLive · selected room only\n\nrunning\nAnalyst\nResearching\nskeptic\nWaiting\nAnalyst · gemma-e4b-followup: unavailable\nSkeptic · qwen35-9b-followup: unavailable\nReplay saved events\nEvent\n3/3\n\nLast synchronized: 2026-11-04T15:56:08.922Z (4/11/2026, 9:26:08 pm IST)\n\nClick an agent or message to inspect the actual discussion and evidence. Interpretations remain unassessed.",
+      "room": "[Offline fixture]: [Offline fixture] Synthetic trace only\nCancel research\n\nrunning · Live · Model calls 0 · Tools 0 ·"
+    },
+    "fixture-tool": {
+      "workspace": "The research room\n\nLive · selected room only\n\nrunning\nAnalyst\nTool\nskeptic\nWaiting\nAnalyst · gemma-e4b-followup: unavailable\nSkeptic · qwen35-9b-followup: unavailable\nReplay saved events\nEvent\n4/4\n\nLast synchronized: 2026-11-04T15:56:09.314Z (4/11/2026, 9:26:09 pm IST)\n\nClick an agent or message to inspect the actual discussion and evidence. Interpretations remain unassessed.",
+      "room": "[Offline fixture]: [Offline fixture] Synthetic trace only\nCancel research\n\nrunning · Live · Model calls 0 · Tools 0 ·"
+    },
+    "cancelButton": true,
+    "fixturePerformance": {
+      "note": "Offline fixture only; offline synthetic fixture; RAF callbacks over 5s active, 3s offscreen with temporary 2000px spacer, 3s reduced motion",
+      "connected": 29,
+      "offscreen": 0,
+      "offRect": {
+        "top": -2025,
+        "bottom": -1460,
+        "height": 1000
+      },
+      "reduced": 0
+    },
+    "speaking": "The research room\n\nLive · selected room only\n\nrunning\nAnalyst\nSpeaking\nAnalyst → Skeptic\n[Offline fixture] Sample discussion.\nskeptic\nWaiting\nAnalyst · gemma-e4b-followup: unavailable\nSkeptic · qwen35-9b-followup: unavailable\nReplay saved events\nEvent\n6/6\n\nLast synchronized: 2026-11-04T15:56:22.505Z (4/11/2026, 9:26:22 pm IST)\n\nClick an agent or message to inspect the actual discussion and evidence. Interpretations remain unassessed.",
+    "cancelled": {
+      "text": "The research room\n\nSaved discussion · recorded outcome\n\ncancelled\nAnalyst\nCancelled\nAnalyst → Skeptic\n[Offline fixture] Sample discussion.\nskeptic\nCancelled\nAnalyst · gemma-e4b-followup: unavailable\nSkeptic · qwen35-9b-followup: unavailable\nReplay saved events\nEvent\n7/7\n\nLast synchronized: 2026-11-04T15:56:22.823Z (4/11/2026, 9:26:22 pm IST)\n\nClick an agent or message to inspect the actual discussion and evidence. Interpretations remain unassessed.",
+      "closed": 2
+    },
+    "cancelledReload": {
+      "text": "The research room\n\nSaved discussion · recorded outcome\n\ncancelled\nAnalyst\nCancelled\nAnalyst → Skeptic\n[Offline fixture] Sample discussion.\nSkeptic\nCancelled\nAnalyst · gemma-e4b-followup: unavailable\nSkeptic · qwen35-9b-followup: unavailable\nReplay saved events\nEvent\n7/7\n\nLast synchronized: 2026-11-04T15:56:30.528Z (4/11/2026, 9:26:30 pm IST)\n\nClick an agent or message to inspect the actual discussion and evidence. Interpretations remain unassessed.",
+      "raf": 0
+    }
+  }
+}

@@ -6,7 +6,7 @@ Implemented from `feat-generic-broker@beaa5df`. See [RESEARCH_ROOM_IMPLEMENTATIO
 
 ## Active personal setup
 
-The normal dashboard at **http://localhost:8502 → Research Desk** is now connected to the running native research services and the normal Kepler database. See [LOCAL_ACTIVATION.md](LOCAL_ACTIVATION.md) for actual UI/cancellation/restart tests. From `swingtradev3/`, use `make research-start`, `make research-status` and `make research-stop`; the retained host virtual environment is selected automatically. The worker starts in a managed scope from the working IDE terminal, preserving sandbox support without changing host security policy. Models/API use user services. This is the default installed path; the separate-terminal commands below remain available for development.
+The normal dashboard at **http://localhost:8502 → Research Desk** uses the native research services and normal Kepler database. Track C adds the pixel office and saved replay; see [visual findings](VISUAL_WORKSPACE_FINDINGS.md). At the latest UI verification only the history API was started; models/worker remained stopped as found, with unavailable health displayed. See [LOCAL_ACTIVATION.md](LOCAL_ACTIVATION.md) for the earlier full activation. From `swingtradev3/`, use `make research-start`, `make research-status` and `make research-stop`; the retained host virtual environment is selected automatically. The worker starts in a managed scope from the working IDE terminal, preserving sandbox support without changing host security policy. Models/API use user services. This is the default installed path; the separate-terminal commands below remain available for development.
 
 The Docker API relays `/research` over the owner-only shared Unix socket configured by `KEPLER_RESEARCH_SOCKET`. It has already been recreated to activate that path; no broker worker restart was needed. The earlier isolated preview was retired.
 
@@ -155,3 +155,29 @@ admissions. Its completed counters are **41 / 39**. Do not change its allocation
 reuse cancelled identities or reopen the old source run. Future work needs its own
 declared scope and budget; the required visual workspace can reuse saved history
 without fresh inference.
+
+## Visual office and saved replay
+
+Research Desk now opens on the office even with no selected room. The two
+configured characters show current model health separately from scoped activity;
+“unknown” before selection does not mean global idle. Select a saved room or use
+the older-room ID control to load its durable history. Click an agent for its
+discussion/tools/evidence, or a bubble to highlight the exact message. Current
+source/market context and new-question controls are collapsible below the office.
+
+“Replay saved events,” pause, next-event and the slider traverse recorded sequence
+positions without requesting inference. “Return to latest” restores the current
+selected-room view. Replay is paced for display, not original elapsed time.
+Selection survives reload; “Clear selection” returns to the unselected office.
+Failed/abstaining interpretations and unavailable quotes remain as recorded.
+
+On connection failure, cached events remain labeled stale/unknown for current
+activity. A cold page without the API can show the office and health errors but
+cannot fetch history. Restoring the research API reconnects the existing records.
+The latest verification used only that API; models/worker stayed stopped as found.
+The normal `make research-start` command activates the existing services for new
+user-requested research. Starting services does not renew a closed evaluation run.
+
+See [visual findings](VISUAL_WORKSPACE_FINDINGS.md) for actual localhost/LAN,
+mobile/reduced-motion, outage/reconnect and clearly labeled browser-fixture
+cancellation checks. No new model/tool admissions were spent on the office.

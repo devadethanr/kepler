@@ -272,3 +272,14 @@ Broker/control/manual-approval and runtime-file preservation: original serviceco
 Sanitized artifacts pushed / private evidence locations: docs evidence/market-context-v1 + findings; private ~/.local/state/kepler-rooms/market-context-20261102T175740Z/.
 Remaining data/model limits and next task: no live GIFT/STI qualification; auth/contracts/rights/session gaps and semantic/query/repetition failures. Required visual agent workspace next per UI_MILESTONE_PLAN; not started here.
 ```
+
+## Track C delivered in this phase — 4 November 2026
+
+The scope update at `c4cedec` supersedes the earlier deferral language above.
+Track C is now implemented at source **`3bd12d0`**: the main pixel-art office,
+licensed character sprites, real event/state/message projection, agent/evidence
+inspectors and saved-event replay. [VISUAL_WORKSPACE_FINDINGS.md](VISUAL_WORKSPACE_FINDINGS.md)
+records actual localhost/LAN screenshots, fixture labeling, outage/reconnect,
+mobile/accessibility and performance checks. The original A/B findings and room
+records above are preserved. UI work added **zero model/tool/provider admissions**;
+combined phase remains **41/39**, and the original market run stays closed.
